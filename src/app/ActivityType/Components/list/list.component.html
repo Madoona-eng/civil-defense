@@ -1,0 +1,56 @@
+<div class="list-card" dir="rtl">
+  <div class="list-header">
+    <div>
+      <h3>قائمة أنواع النشاط</h3>
+      <p>عرض جميع أنواع النشاط المسجلة في النظام.</p>
+    </div>
+
+    <button type="button" class="refresh-btn" (click)="loadActivityTypes()">
+      تحديث
+    </button>
+  </div>
+
+  <div class="message error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="loading-box" *ngIf="isLoading">
+    جاري تحميل البيانات...
+  </div>
+
+  <div class="empty-box" *ngIf="!isLoading && activityTypes.length === 0">
+    لا توجد أنواع نشاط مسجلة حتى الآن.
+  </div>
+
+  <div class="table-wrap" *ngIf="!isLoading && activityTypes.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>اسم نوع النشاط</th>
+          <th>كود التعريف</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of activityTypes; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ item.name }}</td>
+          <td class="id-cell">{{ item.id }}</td>
+          <td>
+            <div class="row-actions">
+              <button type="button" class="edit-btn" (click)="requestEdit(item.id)">
+                تعديل
+              </button>
+
+              <button type="button" class="delete-btn" (click)="requestDelete(item)">
+                حذف
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

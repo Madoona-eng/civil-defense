@@ -1,0 +1,52 @@
+<div class="activity-page" dir="rtl">
+  <div class="page-header">
+    <div>
+      <h2>إدارة أنواع النشاط</h2>
+      <p>من هنا يمكنك إضافة وتعديل وحذف أنواع النشاط المسجلة في النظام.</p>
+    </div>
+
+    <button type="button" class="add-btn" (click)="openAddPopup()">
+      + إضافة نوع نشاط
+    </button>
+  </div>
+
+  <app-list
+    (editRequested)="openEditPopup($event)"
+    (deleteRequested)="openDeletePopup($event)"
+  ></app-list>
+
+  <div class="popup-backdrop" *ngIf="isAddPopupOpen" (click)="closeAddPopup()">
+    <div class="popup-card" (click)="$event.stopPropagation()">
+      <button type="button" class="popup-close" (click)="closeAddPopup()">×</button>
+
+      <app-add
+        (saved)="onAddSaved()"
+        (cancelled)="closeAddPopup()"
+      ></app-add>
+    </div>
+  </div>
+
+  <div class="popup-backdrop" *ngIf="isEditPopupOpen" (click)="closeEditPopup()">
+    <div class="popup-card" (click)="$event.stopPropagation()">
+      <button type="button" class="popup-close" (click)="closeEditPopup()">×</button>
+
+      <app-edit
+        [activityTypeId]="selectedActivityTypeId"
+        (saved)="onEditSaved()"
+        (cancelled)="closeEditPopup()"
+      ></app-edit>
+    </div>
+  </div>
+
+  <div class="popup-backdrop" *ngIf="isDeletePopupOpen" (click)="closeDeletePopup()">
+    <div class="popup-card delete-card" (click)="$event.stopPropagation()">
+      <button type="button" class="popup-close" (click)="closeDeletePopup()">×</button>
+
+      <app-delete
+        [activityType]="selectedActivityType"
+        (deleted)="onDeleteDone()"
+        (cancelled)="closeDeletePopup()"
+      ></app-delete>
+    </div>
+  </div>
+</div>

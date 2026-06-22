@@ -1,0 +1,48 @@
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <div class="brand">
+      <span class="brand-icon">🛡️</span>
+      <div>
+        <h3>الحماية المدنية</h3>
+        <p>{{ userRole }}</p>
+      </div>
+    </div>
+
+    <div class="user-meta">
+      <span>👤</span>
+      <strong>{{ userName }}</strong>
+    </div>
+  </div>
+
+  <nav class="menu">
+    <button type="button" (click)="onStatusSelect('DASHBOARD')" [class.active]="selectedStatus === 'DASHBOARD'">
+      🏠 لوحة الطلبات
+    </button>
+    <button type="button" (click)="onStatusSelect('REQUESTS')" [class.active]="selectedStatus === 'REQUESTS'">
+      📄 الطلبات
+    </button>
+    <button type="button" (click)="onStatusSelect('INSPECTIONS')" [class.active]="selectedStatus === 'INSPECTIONS'">
+      🔍 المعاينات
+    </button>
+    <button type="button" (click)="onStatusSelect('APPROVALS')" [class.active]="selectedStatus === 'APPROVALS'">
+      ✅ الموافقات
+    </button>
+    <button type="button" (click)="onStatusSelect('ARCHIVE')" [class.active]="selectedStatus === 'ARCHIVE'">
+      🗂️ الأرشيف
+    </button>
+    <button type="button" (click)="manageActivityTypes.emit()" [class.active]="selectedStatus === 'ACTIVITY_TYPES'">
+      ⚙️ أنواع النشاط
+    </button>
+  </nav>
+
+  <div class="stats">
+    <div><span>إجمالي</span><strong>{{ totalRequests }}</strong></div>
+    <div><span>جديد</span><strong>{{ newRequests }}</strong></div>
+    <div><span>معاينات</span><strong>{{ inspectionRequests }}</strong></div>
+    <div><span>موافقات</span><strong>{{ finalApprovalRequests }}</strong></div>
+  </div>
+
+  <button type="button" class="logout-btn" (click)="logoutRequested.emit()">
+    تسجيل الخروج
+  </button>
+</aside>

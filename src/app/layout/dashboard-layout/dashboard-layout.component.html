@@ -1,0 +1,74 @@
+<section class="dashboard-layout" dir="rtl">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">🛡️</div>
+      <div>
+        <h3>الحماية المدنية</h3>
+        <span>لوحة التحكم</span>
+      </div>
+    </div>
+
+ <nav class="sidebar-menu">
+  <a routerLink="/civil-defense/dashboard" routerLinkActive="active">
+    <span>🏠</span>
+    الرئيسية
+  </a>
+
+<a [routerLink]="['/civil-defense/activity-types']" routerLinkActive="active">
+  <span>⚙️</span>
+  أنواع النشاط
+</a>
+
+  <a href="javascript:void(0)">
+    <span>📄</span>
+    الطلبات
+  </a>
+
+  <a href="javascript:void(0)">
+    <span>🔍</span>
+    المعاينات
+  </a>
+
+  <a href="javascript:void(0)">
+    <span>📊</span>
+    التقارير
+  </a>
+
+  <a href="javascript:void(0)">
+    <span>🗂️</span>
+    الأرشيف
+  </a>
+</nav>
+
+    <button class="logout-mobile" type="button" (click)="logout()">
+      تسجيل الخروج
+    </button>
+  </aside>
+
+  <main class="dashboard-main">
+    <header class="dashboard-header">
+      <div>
+        <h2>{{ title }}</h2>
+        <p>مرحبًا {{ username }}، يمكنك إدارة الطلبات والمعاينات من هنا</p>
+      </div>
+
+      <div class="header-actions">
+        <div class="user-card">
+          <div class="user-avatar">👤</div>
+          <div>
+            <span>مرحبًا</span>
+            <strong>{{ username }}</strong>
+          </div>
+        </div>
+
+        <button class="logout-btn" type="button" (click)="logout()">
+          تسجيل الخروج
+        </button>
+      </div>
+    </header>
+
+    <section class="dashboard-content">
+      <router-outlet></router-outlet>
+    </section>
+  </main>
+</section>
