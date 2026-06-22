@@ -1,0 +1,151 @@
+.popup-form,
+.delete-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.popup-header,
+.form-card,
+.delete-popup {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 12px 35px rgba(15, 61, 94, 0.08);
+}
+
+.popup-header h2,
+.delete-popup h2 {
+  margin: 0;
+  color: #0f2942;
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.popup-header p,
+.delete-popup p {
+  margin: 8px 0 0;
+  color: #64748b;
+  line-height: 1.8;
+}
+
+.delete-popup {
+  align-items: center;
+  text-align: center;
+}
+
+.delete-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 24px;
+  background: #fee2e2;
+  color: #991b1b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 9px;
+  color: #0f2942;
+  font-weight: 900;
+  font-size: 15px;
+}
+
+.field input {
+  width: 100%;
+  height: 56px;
+  border: 1px solid #dbe5ee;
+  border-radius: 18px;
+  background: #f8fbfe;
+  padding: 0 16px;
+  font-family: inherit;
+  font-size: 15px;
+  color: #0f172a;
+  outline: none;
+}
+
+.field input:focus {
+  border-color: #0d7e80;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(13, 126, 128, 0.12);
+}
+
+.loading-box {
+  padding: 20px;
+  border-radius: 18px;
+  background: #f8fafc;
+  color: #64748b;
+  text-align: center;
+  font-weight: 900;
+}
+
+.message {
+  margin-top: 16px;
+  padding: 13px 16px;
+  border-radius: 16px;
+  font-weight: 800;
+}
+
+.success {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #bbf7d0;
+}
+
+.error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.delete-popup .actions {
+  justify-content: center;
+}
+
+.save-btn,
+.cancel-btn,
+.delete-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 13px 24px;
+  font-family: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #0f3d5e, #0d7e80);
+  color: #ffffff;
+}
+
+.delete-btn {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.cancel-btn {
+  background: #e2e8f0;
+  color: #0f2942;
+}
+
+.save-btn:disabled,
+.delete-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
