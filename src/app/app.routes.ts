@@ -42,7 +42,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./ActivityType/Components/activity-type-management/activity-type-management.component')
             .then(m => m.ActivityTypeManagementComponent)
-      }
+      },
+      {
+     path: 'districts',
+     loadComponent: () =>
+     import('./District/Components/district-management/district-management.component')
+      .then(m => m.DistrictManagementComponent)
+}
     ]
   },
   {

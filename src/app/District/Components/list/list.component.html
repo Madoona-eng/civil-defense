@@ -1,0 +1,53 @@
+<div class="list-card" dir="rtl">
+  <div class="list-header">
+    <div>
+      <h3>قائمة المراكز</h3>
+      <p>عرض جميع المراكز المسجلة في النظام.</p>
+    </div>
+    <button type="button" class="refresh-btn" (click)="loadDistricts()">تحديث</button>
+  </div>
+
+  @if (errorMessage) {
+    <div class="message error">{{ errorMessage }}</div>
+  }
+
+  @if (isLoading) {
+    <div class="loading-box">جاري تحميل البيانات...</div>
+  }
+
+  @if (!isLoading && districts.length === 0 && !errorMessage) {
+    <div class="empty-box">لا توجد مراكز مسجلة حتى الآن.</div>
+  }
+
+  @if (!isLoading && districts.length > 0) {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>الكود</th>
+            <th>اسم المركز</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of districts; track item.id) {
+            <tr>
+              <td>{{ item.code }}</td>
+              <td>{{ item.name }}</td>
+              <td>
+                <div class="row-actions">
+                  <button type="button" class="edit-btn" (click)="requestEdit(item.id)">
+                    تعديل
+                  </button>
+                  <button type="button" class="delete-btn" (click)="requestDelete(item)">
+                    حذف
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
