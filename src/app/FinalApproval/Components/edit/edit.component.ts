@@ -1,24 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import {
   ApiResponse,
-  InspectionFormModel,
-  InspectionItem
-} from '../../Models/inspection';
+  FinalApprovalFormModel,
+  FinalApprovalItem
+} from '../../Models/final-approval';
 
-import { InspectionService } from '../../Services/inspection.service';
+import { FinalApprovalService } from '../../Services/final-approval.service';
 
 @Component({
-  selector: 'app-inspection-form',
+  selector: 'app-final-approval-edit',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './inspection-form.component.html',
-  styleUrl: './inspection-form.component.scss'
+  templateUrl: './edit.component.html',
+  styleUrl: './edit.component.scss'
 })
-export class InspectionFormComponent {
-  @Input() item: InspectionItem | null = null;
+export class EditComponent implements OnChanges {
+  @Input() item: FinalApprovalItem | null = null;
 
   @Output() saved = new EventEmitter<void>();
   @Output() cancelled = new EventEmitter<void>();
@@ -27,10 +27,10 @@ export class InspectionFormComponent {
   errorMessage = '';
   successMessage = '';
 
-  formModel: InspectionFormModel = {
-    inspectorName: '',
-    opinion: 'Compliant',
-    inspectionNote: ''
+  formModel: FinalApprovalFormModel = {
+    reviewStatus: 'Accepted',
+    rejectionNote: '',
+    isPaid: true
   };
 
   entityLetters: File[] = [];
@@ -39,7 +39,30 @@ export class InspectionFormComponent {
   inspectionReports: File[] = [];
   otherAttachments: File[] = [];
 
-  constructor(private readonly inspectionService: InspectionService) {}
+  constructor(private readonly finalApprovalService: FinalApprovalService) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['item'] && this.item) {
+      this.resetForm();
+    }
+  }
+
+  resetForm(): void {
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.formModel = {
+      reviewStatus: 'Accepted',
+      rejectionNote: '',
+      isPaid: true
+    };
+
+    this.entityLetters = [];
+    this.proofDocuments = [];
+    this.engineeringReports = [];
+    this.inspectionReports = [];
+    this.otherAttachments = [];
+  }
 
   onFilesSelected(
     event: Event,
@@ -79,7 +102,7 @@ export class InspectionFormComponent {
     this.successMessage = '';
 
     if (!this.item?.id) {
-      this.errorMessage = 'لم يتم تحديد معاملة المعاينة';
+      this.errorMessage = 'لم يتم تحديد معاملة الموافقة النهائية';
       return;
     }
 
@@ -89,9 +112,9 @@ export class InspectionFormComponent {
 
     const formData = new FormData();
 
-    formData.append('InspectorName', this.formModel.inspectorName.trim());
-    formData.append('Opinion', this.formModel.opinion);
-    formData.append('InspectionNote', this.formModel.inspectionNote.trim());
+    formData.append('ReviewStatus', this.formModel.reviewStatus);
+    formData.append('RejectionNote', this.formModel.rejectionNote.trim());
+    formData.append('IsPaid', String(this.formModel.isPaid));
 
     this.entityLetters.forEach(file => {
       formData.append('EntityLetters', file, file.name);
@@ -115,16 +138,16 @@ export class InspectionFormComponent {
 
     this.saving = true;
 
-    this.inspectionService.saveInspection(this.item.id, formData).subscribe({
+    this.finalApprovalService.saveFinalApproval(this.item.id, formData).subscribe({
       next: (response: ApiResponse<boolean>) => {
         this.saving = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || 'تعذر حفظ بيانات المعاينة';
+          this.errorMessage = response.message || 'تعذر حفظ قرار الموافقة النهائية';
           return;
         }
 
-        this.successMessage = response.message || 'تم حفظ بيانات المعاينة بنجاح';
+        this.successMessage = response.message || 'تم إرسال خطوة الموافقة النهائية بنجاح';
 
         setTimeout(() => {
           this.saved.emit();
@@ -132,33 +155,28 @@ export class InspectionFormComponent {
       },
       error: err => {
         this.saving = false;
-        console.error('Inspection PUT error:', err);
+        console.error('Final approval PUT error:', err);
 
         this.errorMessage =
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء حفظ بيانات المعاينة';
+          'حدث خطأ أثناء حفظ قرار الموافقة النهائية';
       }
     });
   }
 
   validateForm(): boolean {
-    if (!this.formModel.inspectorName.trim()) {
-      this.errorMessage = 'من فضلك أدخلي اسم المعاين';
-      return false;
-    }
-
-    if (!this.formModel.opinion) {
-      this.errorMessage = 'من فضلك اختاري الرأي';
+    if (!this.formModel.reviewStatus) {
+      this.errorMessage = 'من فضلك اختاري حالة القرار';
       return false;
     }
 
     if (
-      this.formModel.opinion === 'NonCompliant' &&
-      !this.formModel.inspectionNote.trim()
+      this.formModel.reviewStatus === 'Rejected' &&
+      !this.formModel.rejectionNote.trim()
     ) {
-      this.errorMessage = 'يجب إدخال السبب عند عدم الاستيفاء';
+      this.errorMessage = 'يجب إدخال سبب الرفض';
       return false;
     }
 

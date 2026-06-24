@@ -1,4 +1,4 @@
-.inspection-form {
+.final-approval-edit {
   background: #ffffff;
   border-radius: 24px;
   padding: 4px;
@@ -35,6 +35,9 @@
   font-size: 24px;
   font-weight: 900;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .summary-card {

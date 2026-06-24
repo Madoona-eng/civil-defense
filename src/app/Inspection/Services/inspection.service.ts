@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import {
   ApiResponse,
+  InspectionDetails,
   InspectionItem,
   InspectionQuery,
   PagedResult
@@ -15,6 +16,7 @@ import {
 export class InspectionService {
   private readonly apiUrl = '/api/LicensingProcess/inspection';
   private readonly processUrl = '/api/LicensingProcess';
+  private readonly filesBaseUrl = 'https://172.30.1.76:7159';
 
   constructor(private readonly http: HttpClient) {}
 
@@ -44,10 +46,28 @@ export class InspectionService {
     });
   }
 
-  saveInspection(id: string, formData: FormData): Observable<ApiResponse<boolean>> {
+  getById(id: string): Observable<ApiResponse<InspectionDetails>> {
+    return this.http.get<ApiResponse<InspectionDetails>>(
+      `${this.processUrl}/${id}`
+    );
+  }
+
+  updateInspection(id: string, formData: FormData): Observable<ApiResponse<boolean>> {
     return this.http.put<ApiResponse<boolean>>(
       `${this.processUrl}/${id}/inspection`,
       formData
     );
+  }
+
+  delete(id: string): Observable<ApiResponse<boolean>> {
+    return this.http.delete<ApiResponse<boolean>>(`${this.processUrl}/${id}`);
+  }
+
+  buildFileUrl(filePath: string): string {
+    const cleanPath = filePath
+      .replace(/^\/+/, '')
+      .replace(/\\/g, '/');
+
+    return encodeURI(`${this.filesBaseUrl}/${cleanPath}`);
   }
 }

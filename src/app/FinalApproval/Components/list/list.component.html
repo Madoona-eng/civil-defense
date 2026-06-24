@@ -1,0 +1,144 @@
+<section class="filters-card" dir="rtl">
+  <div class="filters-grid">
+    <div class="form-group">
+      <label>بحث</label>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="ابحث بكود المعاملة أو اسم المنشأة أو مقدم الطلب"
+        (keyup.enter)="search()"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>الجهة</label>
+      <select [(ngModel)]="requestingEntityId">
+        <option value="">كل الجهات</option>
+        <option *ngFor="let entity of requestingEntities" [value]="entity.id">
+          {{ entity.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>المركز / المنطقة</label>
+      <select [(ngModel)]="districtId">
+        <option value="">كل المراكز</option>
+        <option *ngFor="let district of districts" [value]="district.id">
+          {{ district.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>نوع النشاط</label>
+      <select [(ngModel)]="activityTypeId">
+        <option value="">كل الأنشطة</option>
+        <option *ngFor="let activity of activityTypes" [value]="activity.id">
+          {{ activity.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>رأي المعاينة</label>
+      <select [(ngModel)]="opinion">
+        <option value="">كل الآراء</option>
+        <option value="Compliant">مطابق / مستوفي</option>
+        <option value="NonCompliant">غير مطابق / غير مستوفي</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="filter-actions">
+    <button type="button" class="search-btn" (click)="search()">بحث</button>
+    <button type="button" class="reset-btn" (click)="resetFilters()">إعادة ضبط</button>
+  </div>
+</section>
+
+<section class="table-card" dir="rtl">
+  <div class="table-header">
+    <div>
+      <h3>قائمة الموافقات النهائية</h3>
+      <p>إجمالي النتائج: {{ totalCount }}</p>
+    </div>
+  </div>
+
+  <div class="loading-box" *ngIf="isLoading">
+    جاري تحميل معاملات الموافقة النهائية...
+  </div>
+
+  <div class="message error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="empty-box" *ngIf="!isLoading && items.length === 0 && !errorMessage">
+    لا توجد معاملات في مرحلة الموافقة النهائية.
+  </div>
+
+  <div class="table-scroll" *ngIf="!isLoading && items.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>كود المعاملة</th>
+          <th>تاريخ التقديم</th>
+          <th>اسم المنشأة</th>
+          <th>عنوان المنشأة</th>
+          <th>الجهة</th>
+          <th>المركز / المنطقة</th>
+          <th>نوع النشاط</th>
+          <th>مقدم الطلب</th>
+          <th>المرحلة</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td>{{ item.transactionCode }}</td>
+          <td>{{ item.submissionDate }}</td>
+          <td>{{ item.establishmentName }}</td>
+          <td>{{ item.establishmentAddress }}</td>
+          <td>{{ item.requestingEntity }}</td>
+          <td>{{ item.district }}</td>
+          <td>{{ item.activityType }}</td>
+          <td>{{ item.applicantName }}</td>
+
+          <td>
+            <span class="step-badge">
+              {{ getStepLabel(item.currentStep) }}
+            </span>
+          </td>
+
+          <td class="actions-cell">
+            <div class="row-actions">
+              <button type="button" class="details-btn" (click)="requestDetails(item.id)">
+                👁️ عرض
+              </button>
+
+              <button type="button" class="edit-btn" (click)="requestEdit(item)">
+                ✅ قرار
+              </button>
+
+              <button type="button" class="delete-btn" (click)="requestDelete(item)">
+                🗑️ حذف
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="!isLoading && totalPages > 0">
+    <button type="button" (click)="previousPage()" [disabled]="!hasPreviousPage">
+      السابق
+    </button>
+
+    <span>صفحة {{ pageNumber }} من {{ totalPages }}</span>
+
+    <button type="button" (click)="nextPage()" [disabled]="!hasNextPage">
+      التالي
+    </button>
+  </div>
+</section>

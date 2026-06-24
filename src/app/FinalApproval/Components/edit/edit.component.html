@@ -1,7 +1,7 @@
-<div class="inspection-form" dir="rtl">
+<div class="final-approval-edit" dir="rtl">
   <div class="form-header">
     <div>
-      <h2>تسجيل المعاينة</h2>
+      <h2>قرار الموافقة النهائية</h2>
       <p *ngIf="item">كود المعاملة: {{ item.transactionCode }}</p>
     </div>
 
@@ -29,32 +29,31 @@
 
   <div class="form-grid">
     <div class="form-group">
-      <label>اسم المعاين</label>
-      <input
-        type="text"
-        [(ngModel)]="formModel.inspectorName"
-        placeholder="أدخل اسم المعاين"
-      />
+      <label>حالة القرار</label>
+      <select [(ngModel)]="formModel.reviewStatus">
+        <option value="Accepted">مقبول / اعتماد نهائي</option>
+        <option value="Rejected">مرفوض</option>
+      </select>
     </div>
 
     <div class="form-group">
-      <label>الرأي</label>
-      <select [(ngModel)]="formModel.opinion">
-        <option value="Compliant">مطابق / مستوفي</option>
-        <option value="NonCompliant">غير مطابق / غير مستوفي</option>
+      <label>هل تم السداد؟</label>
+      <select [(ngModel)]="formModel.isPaid">
+        <option [ngValue]="true">نعم</option>
+        <option [ngValue]="false">لا</option>
       </select>
     </div>
 
     <div class="form-group full-width">
       <label>
-        ملاحظات المعاينة
-        <span *ngIf="formModel.opinion === 'NonCompliant'" class="required">*</span>
+        سبب الرفض
+        <span *ngIf="formModel.reviewStatus === 'Rejected'" class="required">*</span>
       </label>
 
       <textarea
         rows="4"
-        [(ngModel)]="formModel.inspectionNote"
-        placeholder="اكتبي سبب عدم الاستيفاء أو ملاحظات المعاينة"
+        [(ngModel)]="formModel.rejectionNote"
+        placeholder="اكتبي سبب الرفض في حالة رفض المعاملة"
       ></textarea>
     </div>
 
@@ -119,7 +118,7 @@
       (click)="save()"
       [disabled]="saving"
     >
-      {{ saving ? 'جاري الحفظ...' : 'حفظ المعاينة' }}
+      {{ saving ? 'جاري الحفظ...' : 'حفظ القرار' }}
     </button>
 
     <button type="button" class="cancel-btn" (click)="cancel()">

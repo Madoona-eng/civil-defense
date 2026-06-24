@@ -50,29 +50,29 @@ export const routes: Routes = [
             .then(m => m.RequestingEntityManagementComponent)
       },
       {
-  path: 'districts',
-  loadComponent: () =>
-    import('./District/Components/district-management/district-management.component')
-      .then(m => m.DistrictManagementComponent)
-},
-{
-  path: 'licensing-processes',
-  loadComponent: () =>
-    import('./LicensingProcess/Components/licensing-process-management/licensing-process-management.component')
-      .then(m => m.LicensingProcessManagementComponent)
-},
-{
-  path: 'inspection',
-  loadComponent: () =>
-    import('./Inspection/Components/inspection-management/inspection-management.component')
-      .then(m => m.InspectionManagementComponent)
-},
-{
-  path: 'final-approval',
-  loadComponent: () =>
-    import('./FinalApproval/Components/final-approval-management/final-approval-management.component')
-      .then(m => m.FinalApprovalManagementComponent)
-}
+        path: 'districts',
+        loadComponent: () =>
+          import('./District/Components/district-management/district-management.component')
+            .then(m => m.DistrictManagementComponent)
+      },
+      {
+        path: 'licensing-processes',
+        loadComponent: () =>
+          import('./LicensingProcess/Components/licensing-process-management/licensing-process-management.component')
+            .then(m => m.LicensingProcessManagementComponent)
+      },
+      {
+        path: 'inspection',
+        loadComponent: () =>
+          import('./Inspection/Components/inspection-management/inspection-management.component')
+            .then(m => m.InspectionManagementComponent)
+      },
+      {
+        path: 'final-approval',
+        loadComponent: () =>
+          import('./FinalApproval/Components/final-approval-management/final-approval-management.component')
+            .then(m => m.FinalApprovalManagementComponent)
+      }
     ]
   },
   {
