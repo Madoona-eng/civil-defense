@@ -1,0 +1,112 @@
+<div class="archived-page" dir="rtl">
+  <div class="page-header">
+    <div>
+      <h2>الأرشيف</h2>
+      <p>عرض جميع المعاملات المؤرشفة في النظام.</p>
+    </div>
+  </div>
+
+  <section class="filters-card">
+    <div class="filters-grid">
+      <div class="form-group search-group">
+        <input
+          type="text"
+          [(ngModel)]="filter.searchTerm"
+          placeholder="بحث بـ: كود المعاملة، اسم المنشأة، العنوان، مقدم الطلب، الرقم القومي، المدير المسؤول، الهاتف..."
+          (keyup.enter)="search()"
+        />
+      </div>
+
+      <div class="filters-row">
+        <div class="form-group">
+          <label>الجهة الطالبه</label>
+          <select [(ngModel)]="filter.requestingEntityId">
+            @for (item of requestingEntities; track item.id) {
+              <option [value]="item.id">{{ item.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label> المركز </label>
+          <select [(ngModel)]="filter.districtId">
+            @for (item of districts; track item.id) {
+              <option [value]="item.id">{{ item.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>نوع النشاط</label>
+          <select [(ngModel)]="filter.activityTypeId">
+            @for (item of activityTypes; track item.id) {
+              <option [value]="item.id">{{ item.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>حالة المراجعة</label>
+          <select [(ngModel)]="filter.reviewStatus">
+            <option value="Accepted">مقبول</option>
+            <option value="Rejected">مرفوض</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-actions">
+      <button type="button" class="search-btn" (click)="search()">بحث</button>
+      <button type="button" class="reset-btn" (click)="resetFilters()">
+        إعادة ضبط
+      </button>
+    </div>
+  </section>
+
+  <app-list
+    (viewRequested)="openDetailsPopup($event)"
+    (deleteRequested)="openDeletePopup($event)"
+  >
+  </app-list>
+
+  @if (isDetailsPopupOpen) {
+    <div class="popup-backdrop" (click)="closeDetailsPopup()">
+      <div class="popup-card" (click)="$event.stopPropagation()">
+        <button type="button" class="popup-close" (click)="closeDetailsPopup()">
+          ×
+        </button>
+        <app-details [id]="selectedId!"></app-details>
+      </div>
+    </div>
+  }
+
+  @if (isDeletePopupOpen) {
+    <div class="popup-backdrop" (click)="closeDeletePopup()">
+      <div class="popup-card delete-card" (click)="$event.stopPropagation()">
+        <button type="button" class="popup-close" (click)="closeDeletePopup()">
+          ×
+        </button>
+        <div class="delete-confirm">
+          <h3>تأكيد الحذف</h3>
+          <p>
+            هل أنت متأكد من حذف المعاملة
+            <strong>{{ selectedItem?.establishmentName }}</strong
+            >؟
+          </p>
+          <div class="delete-actions">
+            <button type="button" class="delete-btn" (click)="confirmDelete()">
+              حذف
+            </button>
+            <button
+              type="button"
+              class="cancel-btn"
+              (click)="closeDeletePopup()"
+            >
+              إلغاء
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
