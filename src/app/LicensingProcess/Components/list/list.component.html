@@ -1,0 +1,147 @@
+<div class="list-card" dir="rtl">
+  <div class="list-header">
+    <div>
+      <h3>قائمة تراخيص المحال</h3>
+      <p>عرض ومتابعة طلبات تراخيص المحال المسجلة في النظام.</p>
+    </div>
+
+    <button type="button" class="refresh-btn" (click)="loadLicensingProcesses()">
+      تحديث
+    </button>
+  </div>
+
+  <div class="filters">
+    <div class="field">
+      <label>بحث</label>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        name="searchTerm"
+        placeholder="ابحث باسم المنشأة أو كود المعاملة"
+      />
+    </div>
+
+    <div class="field">
+      <label>مرحلة الطلب</label>
+      <select [(ngModel)]="processStep" name="processStep">
+        <option *ngFor="let step of processSteps" [value]="step.value">
+          {{ step.label }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-actions">
+      <button type="button" class="search-btn" (click)="search()">
+        بحث
+      </button>
+
+      <button type="button" class="reset-btn" (click)="resetFilters()">
+        إلغاء الفلتر
+      </button>
+    </div>
+  </div>
+
+  <div class="message error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="loading-box" *ngIf="isLoading">
+    جاري تحميل البيانات...
+  </div>
+
+  <div class="empty-box" *ngIf="!isLoading && items.length === 0">
+    لا توجد تراخيص محال مسجلة حتى الآن.
+  </div>
+
+  <div class="table-wrap" *ngIf="!isLoading && items.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>كود المعاملة</th>
+          <th>تاريخ التقديم</th>
+          <th>اسم المنشأة</th>
+          <th>العنوان</th>
+          <th>الجهة</th>
+          <th>المركز / المنطقة</th>
+          <th>نوع النشاط</th>
+          <th>مقدم الطلب</th>
+          <th>المرحلة الحالية</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of items; let i = index">
+          <td>{{ (pageNumber - 1) * pageSize + i + 1 }}</td>
+
+          <td class="code-cell">
+            {{ item.transactionCode }}
+          </td>
+
+          <td>{{ item.submissionDate }}</td>
+          <td>{{ item.establishmentName }}</td>
+          <td>{{ item.establishmentAddress }}</td>
+          <td>{{ item.requestingEntity }}</td>
+          <td>{{ item.district }}</td>
+          <td>{{ item.activityType }}</td>
+          <td>{{ item.applicantName }}</td>
+
+          <td>
+              <span class="status-badge">
+                {{ getStepLabel(item.currentStep) }}
+              </span>
+            </td>
+
+           <td class="actions-cell">
+  <div class="row-actions">
+    <button
+      type="button"
+      class="icon-action view-action"
+      title="عرض التفاصيل"
+      (click)="requestDetails(item.id)"
+    >
+      <span class="icon">👁️</span>
+      <span class="action-label">عرض</span>
+    </button>
+
+    <button
+      type="button"
+      class="icon-action edit-action"
+      title="تعديل الترخيص"
+      (click)="requestEdit(item.id)"
+    >
+      <span class="icon">✏️</span>
+      <span class="action-label">تعديل</span>
+    </button>
+
+    <button
+      type="button"
+      class="icon-action delete-action"
+      title="حذف الترخيص"
+      (click)="requestDelete(item)"
+    >
+      <span class="icon">🗑️</span>
+      <span class="action-label">حذف</span>
+    </button>
+  </div>
+</td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="!isLoading && totalCount > 0">
+    <button type="button" (click)="previousPage()" [disabled]="!hasPreviousPage">
+      السابق
+    </button>
+
+    <span>
+      صفحة {{ pageNumber }} من {{ totalPages }} - إجمالي {{ totalCount }}
+    </span>
+
+    <button type="button" (click)="nextPage()" [disabled]="!hasNextPage">
+      التالي
+    </button>
+  </div>
+</div>

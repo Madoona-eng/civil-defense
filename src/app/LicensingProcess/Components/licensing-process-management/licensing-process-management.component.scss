@@ -1,0 +1,135 @@
+:host {
+  display: block;
+  max-width: 100%;
+}
+
+.licensing-page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 100%;
+}
+
+.page-header,
+.content-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 12px 35px rgba(15, 61, 94, 0.08);
+  max-width: 100%;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.page-header h2,
+.content-card h3 {
+  margin: 0;
+  color: #0f3d5e;
+  font-weight: 900;
+}
+
+.page-header p,
+.content-card p {
+  margin: 8px 0 0;
+  color: #64748b;
+}
+
+.add-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 13px 22px;
+  background: linear-gradient(135deg, #0f3d5e, #0d7e80);
+  color: #ffffff;
+  font-family: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.25s ease;
+}
+
+.add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(13, 126, 128, 0.25);
+}
+
+.popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.popup-card {
+  width: min(1100px, 96vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 28px;
+  position: relative;
+  box-shadow: 0 30px 90px rgba(15, 23, 42, 0.35);
+  animation: popupIn 0.25s ease;
+}
+
+.details-card,
+.edit-card {
+  width: min(1150px, 96vw);
+}
+
+.delete-card {
+  width: min(520px, 96vw);
+}
+
+.popup-close {
+  position: sticky;
+  top: 0;
+  margin-inline-start: auto;
+  display: flex;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: #fee2e2;
+  color: #991b1b;
+  font-size: 24px;
+  font-weight: 900;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+@keyframes popupIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 800px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .popup-card {
+    width: 96vw;
+    padding: 20px;
+  }
+}

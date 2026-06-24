@@ -1,0 +1,273 @@
+<div class="details-page" dir="rtl">
+  <div class="details-header">
+    <div>
+      <h2>تفاصيل ترخيص المحل</h2>
+      <p *ngIf="details">كود المعاملة: {{ details.transactionCode }}</p>
+    </div>
+
+    <button type="button" class="close-btn" (click)="close()">×</button>
+  </div>
+
+  <div class="loading-box" *ngIf="loading">
+    جاري تحميل بيانات المعاملة...
+  </div>
+
+  <div class="message error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <ng-container *ngIf="!loading && details">
+    <section class="section-card">
+      <h3>بيانات المعاملة</h3>
+
+      <div class="info-grid">
+        <div>
+          <span>كود المعاملة</span>
+          <strong>{{ details.transactionCode }}</strong>
+        </div>
+
+        <div>
+          <span>المرحلة الحالية</span>
+          <strong>{{ getStepLabel(details.currentStep) }}</strong>
+        </div>
+
+        <div>
+          <span>تاريخ التقديم</span>
+          <strong>{{ details.submissionDate }}</strong>
+        </div>
+
+        <div>
+          <span>تم الإنشاء بواسطة</span>
+          <strong>{{ details.createdBy }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <h3>بيانات المنشأة</h3>
+
+      <div class="info-grid">
+        <div>
+          <span>اسم المنشأة</span>
+          <strong>{{ details.establishmentName }}</strong>
+        </div>
+
+        <div>
+          <span>عنوان المنشأة</span>
+          <strong>{{ details.establishmentAddress }}</strong>
+        </div>
+
+        <div>
+          <span>الجهة</span>
+          <strong>{{ details.requestingEntity }}</strong>
+        </div>
+
+        <div>
+          <span>المركز / المنطقة</span>
+          <strong>{{ details.district }}</strong>
+        </div>
+
+        <div>
+          <span>نوع النشاط</span>
+          <strong>{{ details.activityType }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <h3>بيانات مقدم الطلب</h3>
+
+      <div class="info-grid">
+        <div>
+          <span>اسم مقدم الطلب</span>
+          <strong>{{ details.applicantName }}</strong>
+        </div>
+
+        <div>
+          <span>صفة مقدم الطلب</span>
+          <strong>{{ details.applicantRole }}</strong>
+        </div>
+
+        <div>
+          <span>الرقم القومي</span>
+          <strong>{{ details.nationalId }}</strong>
+        </div>
+
+        <div>
+          <span>المدير المسؤول</span>
+          <strong>{{ details.responsibleManager }}</strong>
+        </div>
+
+        <div>
+          <span>رقم الهاتف</span>
+          <strong>{{ details.phone }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <h3>بيانات المعاينة</h3>
+
+      <div class="info-grid">
+        <div>
+          <span>اسم المعاين</span>
+          <strong>{{ details.inspectorName || '-' }}</strong>
+        </div>
+
+        <div>
+          <span>الرأي</span>
+          <strong>{{ getOpinionLabel(details.opinion) }}</strong>
+        </div>
+
+        <div>
+          <span>تمت المعاينة بواسطة</span>
+          <strong>{{ details.inspectedBy || '-' }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <h3>الملاحظات</h3>
+
+      <div class="empty-box" *ngIf="details.notes.length === 0">
+        لا توجد ملاحظات.
+      </div>
+
+      <div class="note-card" *ngFor="let note of details.notes">
+        <strong>{{ note.content }}</strong>
+        <span>{{ note.writtenBy }} - {{ getStepLabel(note.processStep) }}</span>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <h3>المرفقات</h3>
+
+      <div class="attachments-grid">
+        <div class="attachment-group">
+          <h4>خطابات الجهة</h4>
+
+          <div class="empty-attachment" *ngIf="details.entityLetters.length === 0">
+            لا توجد ملفات.
+          </div>
+
+          <div class="attachment-item" *ngFor="let file of details.entityLetters">
+            <a [href]="getFileUrl(file.filePath)" target="_blank">
+              <img
+                *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
+                [src]="getPreviewUrl(file.filePath)"
+                [alt]="file.fileName"
+                (error)="onImageError(file.filePath)"
+              />
+
+              <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
+                📎 فتح الملف
+              </span>
+            </a>
+
+            <small>{{ file.fileName }}</small>
+          </div>
+        </div>
+
+        <div class="attachment-group">
+          <h4>مستندات الإثبات</h4>
+
+          <div class="empty-attachment" *ngIf="details.proofDocuments.length === 0">
+            لا توجد ملفات.
+          </div>
+
+          <div class="attachment-item" *ngFor="let file of details.proofDocuments">
+            <a [href]="getFileUrl(file.filePath)" target="_blank">
+              <img
+                *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
+                [src]="getPreviewUrl(file.filePath)"
+                [alt]="file.fileName"
+                (error)="onImageError(file.filePath)"
+              />
+
+              <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
+                📎 فتح الملف
+              </span>
+            </a>
+
+            <small>{{ file.fileName }}</small>
+          </div>
+        </div>
+
+        <div class="attachment-group">
+          <h4>التقارير الهندسية</h4>
+
+          <div class="empty-attachment" *ngIf="details.engineeringReports.length === 0">
+            لا توجد ملفات.
+          </div>
+
+          <div class="attachment-item" *ngFor="let file of details.engineeringReports">
+            <a [href]="getFileUrl(file.filePath)" target="_blank">
+              <img
+                *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
+                [src]="getPreviewUrl(file.filePath)"
+                [alt]="file.fileName"
+                (error)="onImageError(file.filePath)"
+              />
+
+              <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
+                📎 فتح الملف
+              </span>
+            </a>
+
+            <small>{{ file.fileName }}</small>
+          </div>
+        </div>
+
+        <div class="attachment-group">
+          <h4>تقارير المعاينة</h4>
+
+          <div class="empty-attachment" *ngIf="details.inspectionReports.length === 0">
+            لا توجد ملفات.
+          </div>
+
+          <div class="attachment-item" *ngFor="let file of details.inspectionReports">
+            <a [href]="getFileUrl(file.filePath)" target="_blank">
+              <img
+                *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
+                [src]="getPreviewUrl(file.filePath)"
+                [alt]="file.fileName"
+                (error)="onImageError(file.filePath)"
+              />
+
+              <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
+                📎 فتح الملف
+              </span>
+            </a>
+
+            <small>{{ file.fileName }}</small>
+          </div>
+        </div>
+
+        <div class="attachment-group">
+          <h4>مرفقات أخرى</h4>
+
+          <div class="empty-attachment" *ngIf="details.otherAttachments.length === 0">
+            لا توجد ملفات.
+          </div>
+
+          <div class="attachment-item" *ngFor="let file of details.otherAttachments">
+            <a [href]="getFileUrl(file.filePath)" target="_blank">
+              <img
+                *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
+                [src]="getPreviewUrl(file.filePath)"
+                [alt]="file.fileName"
+                (error)="onImageError(file.filePath)"
+              />
+
+              <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
+                📎 فتح الملف
+              </span>
+            </a>
+
+            <small>{{ file.fileName }}</small>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+</div>

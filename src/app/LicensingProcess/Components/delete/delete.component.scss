@@ -1,0 +1,122 @@
+.delete-popup {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px;
+  text-align: center;
+}
+
+.delete-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 24px;
+  background: #fee2e2;
+  color: #991b1b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  margin: 0 auto 16px;
+}
+
+.delete-popup h2 {
+  margin: 0;
+  color: #0f2942;
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.delete-popup p {
+  margin: 14px 0;
+  color: #64748b;
+  line-height: 1.8;
+}
+
+.delete-popup p strong {
+  color: #0f2942;
+}
+
+.transaction-card {
+  margin: 18px auto 0;
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 14px;
+  max-width: 340px;
+}
+
+.transaction-card span {
+  display: block;
+  color: #64748b;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.transaction-card strong {
+  color: #0f3d5e;
+  font-weight: 900;
+}
+
+.message {
+  margin-top: 16px;
+  padding: 13px 16px;
+  border-radius: 16px;
+  font-weight: 800;
+}
+
+.error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.actions {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.delete-action-btn,
+.cancel-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 13px 24px;
+  font-family: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.delete-action-btn {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.delete-action-btn:hover:not(:disabled) {
+  background: #b91c1c;
+  transform: translateY(-2px);
+}
+
+.delete-action-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  background: #e2e8f0;
+  color: #0f2942;
+}
+
+.cancel-btn:hover {
+  background: #cbd5e1;
+}
+
+@media (max-width: 700px) {
+  .actions {
+    flex-direction: column;
+  }
+
+  .delete-action-btn,
+  .cancel-btn {
+    width: 100%;
+  }
+}

@@ -1,0 +1,126 @@
+<div class="licensing-edit" dir="rtl">
+  <div class="page-header">
+    <div>
+      <h2>تعديل ترخيص محل</h2>
+      <p>تعديل بيانات المنشأة، الجهة، نوع النشاط، والمرفقات المطلوبة.</p>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="loading-box" *ngIf="loading">
+      جاري تحميل البيانات...
+    </div>
+
+    <ng-container *ngIf="!loading">
+      <div class="form-grid">
+        <div class="field">
+          <label>تاريخ التقديم</label>
+          <input type="date" [(ngModel)]="formModel.submissionDate" name="submissionDate" />
+        </div>
+
+        <div class="field">
+          <label>الجهة</label>
+          <select [(ngModel)]="formModel.requestingEntityId" name="requestingEntityId">
+            <option value="">اختاري الجهة</option>
+            <option *ngFor="let item of requestingEntities" [value]="item.id">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>اسم المنشأة</label>
+          <input type="text" [(ngModel)]="formModel.establishmentName" name="establishmentName" />
+        </div>
+
+        <div class="field">
+          <label>عنوان المنشأة</label>
+          <input type="text" [(ngModel)]="formModel.establishmentAddress" name="establishmentAddress" />
+        </div>
+
+        <div class="field">
+          <label>المركز / المنطقة</label>
+          <select [(ngModel)]="formModel.districtId" name="districtId">
+            <option value="">اختاري المركز / المنطقة</option>
+            <option *ngFor="let item of districts" [value]="item.id">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>نوع النشاط</label>
+          <select [(ngModel)]="formModel.activityTypeId" name="activityTypeId">
+            <option value="">اختاري نوع النشاط</option>
+            <option *ngFor="let item of activityTypes" [value]="item.id">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>اسم مقدم الطلب</label>
+          <input type="text" [(ngModel)]="formModel.applicantName" name="applicantName" />
+        </div>
+
+        <div class="field">
+          <label>صفة مقدم الطلب</label>
+          <input type="text" [(ngModel)]="formModel.applicantRole" name="applicantRole" />
+        </div>
+
+        <div class="field">
+          <label>الرقم القومي</label>
+          <input type="text" [(ngModel)]="formModel.nationalId" name="nationalId" />
+        </div>
+
+        <div class="field">
+          <label>المدير المسؤول</label>
+          <input type="text" [(ngModel)]="formModel.responsibleManager" name="responsibleManager" />
+        </div>
+
+        <div class="field">
+          <label>رقم الهاتف</label>
+          <input type="text" [(ngModel)]="formModel.phone" name="phone" />
+        </div>
+
+        <div class="field">
+          <label>خطابات الجهة</label>
+          <input type="file" multiple (change)="onFilesSelected($event, 'entityLetters')" />
+        </div>
+
+        <div class="field">
+          <label>مستندات الإثبات</label>
+          <input type="file" multiple (change)="onFilesSelected($event, 'proofDocuments')" />
+        </div>
+
+        <div class="field">
+          <label>التقارير الهندسية</label>
+          <input type="file" multiple (change)="onFilesSelected($event, 'engineeringReports')" />
+        </div>
+
+        <div class="field">
+          <label>مرفقات أخرى</label>
+          <input type="file" multiple (change)="onFilesSelected($event, 'otherAttachments')" />
+        </div>
+      </div>
+
+      <div class="message success" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <div class="message error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="actions">
+        <button type="button" class="save-btn" (click)="save()" [disabled]="saving">
+          {{ saving ? 'جاري الحفظ...' : 'حفظ التعديل' }}
+        </button>
+
+        <button type="button" class="cancel-btn" (click)="cancel()">
+          إلغاء
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</div>
