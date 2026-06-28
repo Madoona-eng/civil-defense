@@ -1,105 +1,126 @@
 <div class="final-approval-edit" dir="rtl">
+  <button type="button" class="close-btn" (click)="cancel()">
+    ×
+  </button>
+
   <div class="form-header">
+    <div class="header-icon">✅</div>
+
     <div>
       <h2>قرار الموافقة النهائية</h2>
-      <p *ngIf="item">كود المعاملة: {{ item.transactionCode }}</p>
+      <p *ngIf="item">
+        كود المعاملة:
+        <strong>{{ item.transactionCode }}</strong>
+      </p>
     </div>
-
-    <button type="button" class="close-btn" (click)="cancel()">
-      ×
-    </button>
   </div>
 
   <div class="summary-card" *ngIf="item">
-    <div>
+    <div class="summary-item">
       <span>اسم المنشأة</span>
       <strong>{{ item.establishmentName }}</strong>
     </div>
 
-    <div>
+    <div class="summary-item">
       <span>العنوان</span>
       <strong>{{ item.establishmentAddress }}</strong>
     </div>
 
-    <div>
+    <div class="summary-item">
       <span>نوع النشاط</span>
       <strong>{{ item.activityType }}</strong>
     </div>
   </div>
 
-  <div class="form-grid">
-    <div class="form-group">
-      <label>حالة القرار</label>
-      <select [(ngModel)]="formModel.reviewStatus">
-        <option value="Accepted">مقبول / اعتماد نهائي</option>
-        <option value="Rejected">مرفوض</option>
-      </select>
+  <div class="form-card">
+    <div class="section-title">
+      <span>📝</span>
+      <h3>بيانات القرار</h3>
     </div>
 
-    <div class="form-group">
-      <label>هل تم السداد؟</label>
-      <select [(ngModel)]="formModel.isPaid">
-        <option [ngValue]="true">نعم</option>
-        <option [ngValue]="false">لا</option>
-      </select>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>حالة القرار</label>
+        <select [(ngModel)]="formModel.reviewStatus">
+          <option value="Accepted">مقبول / اعتماد نهائي</option>
+          <option value="Rejected">مرفوض</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>هل تم السداد؟</label>
+        <select [(ngModel)]="formModel.isPaid">
+          <option [ngValue]="true">نعم</option>
+          <option [ngValue]="false">لا</option>
+        </select>
+      </div>
+
+      <div class="form-group full-width">
+        <label>
+          سبب الرفض
+          <span *ngIf="formModel.reviewStatus === 'Rejected'" class="required">*</span>
+        </label>
+
+        <textarea
+          rows="4"
+          [(ngModel)]="formModel.rejectionNote"
+          placeholder="اكتبي سبب الرفض في حالة رفض المعاملة"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="section-title">
+      <span>📎</span>
+      <h3>المرفقات</h3>
     </div>
 
-    <div class="form-group full-width">
-      <label>
-        سبب الرفض
-        <span *ngIf="formModel.reviewStatus === 'Rejected'" class="required">*</span>
-      </label>
+    <div class="files-grid">
+      <div class="file-group">
+        <label>خطابات الجهة</label>
+        <input
+          type="file"
+          multiple
+          (change)="onFilesSelected($event, 'entityLetters')"
+        />
+      </div>
 
-      <textarea
-        rows="4"
-        [(ngModel)]="formModel.rejectionNote"
-        placeholder="اكتبي سبب الرفض في حالة رفض المعاملة"
-      ></textarea>
-    </div>
+      <div class="file-group">
+        <label>مستندات الإثبات</label>
+        <input
+          type="file"
+          multiple
+          (change)="onFilesSelected($event, 'proofDocuments')"
+        />
+      </div>
 
-    <div class="form-group">
-      <label>خطابات الجهة</label>
-      <input
-        type="file"
-        multiple
-        (change)="onFilesSelected($event, 'entityLetters')"
-      />
-    </div>
+      <div class="file-group">
+        <label>التقارير الهندسية</label>
+        <input
+          type="file"
+          multiple
+          (change)="onFilesSelected($event, 'engineeringReports')"
+        />
+      </div>
 
-    <div class="form-group">
-      <label>مستندات الإثبات</label>
-      <input
-        type="file"
-        multiple
-        (change)="onFilesSelected($event, 'proofDocuments')"
-      />
-    </div>
+      <div class="file-group">
+        <label>تقارير المعاينة</label>
+        <input
+          type="file"
+          multiple
+          (change)="onFilesSelected($event, 'inspectionReports')"
+        />
+      </div>
 
-    <div class="form-group">
-      <label>التقارير الهندسية</label>
-      <input
-        type="file"
-        multiple
-        (change)="onFilesSelected($event, 'engineeringReports')"
-      />
-    </div>
-
-    <div class="form-group">
-      <label>تقارير المعاينة</label>
-      <input
-        type="file"
-        multiple
-        (change)="onFilesSelected($event, 'inspectionReports')"
-      />
-    </div>
-
-    <div class="form-group full-width">
-      <label>مرفقات أخرى</label>
-      <input
-        type="file"
-        multiple
-        (change)="onFilesSelected($event, 'otherAttachments')"
-      />
+      <div class="file-group full-width">
+        <label>مرفقات أخرى</label>
+        <input
+          type="file"
+          multiple
+          (change)="onFilesSelected($event, 'otherAttachments')"
+        />
+      </div>
     </div>
   </div>
 

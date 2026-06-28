@@ -28,6 +28,7 @@ export class ListComponent implements OnInit {
   @Output() detailsRequested = new EventEmitter<string>();
   @Output() editRequested = new EventEmitter<FinalApprovalItem>();
   @Output() deleteRequested = new EventEmitter<FinalApprovalItem>();
+  @Output() returnRequested = new EventEmitter<FinalApprovalItem>();
 
   items: FinalApprovalItem[] = [];
 
@@ -183,6 +184,10 @@ export class ListComponent implements OnInit {
     this.deleteRequested.emit(item);
   }
 
+  requestReturn(item: FinalApprovalItem): void {
+    this.returnRequested.emit(item);
+  }
+
   getStepLabel(step: string): string {
     if (step === 'FinalApproval') {
       return 'الموافقة النهائية';
@@ -194,6 +199,10 @@ export class ListComponent implements OnInit {
 
     if (step === 'Inspection') {
       return 'المعاينة';
+    }
+
+    if (step === 'NewLicense') {
+      return 'ترخيص جديد';
     }
 
     return step || '-';

@@ -10,6 +10,7 @@
     (detailsRequested)="openDetailsPopup($event)"
     (editRequested)="openEditPopup($event)"
     (deleteRequested)="openDeletePopup($event)"
+    (returnRequested)="openReturnPopup($event)"
   ></app-final-approval-list>
 
   <div
@@ -50,6 +51,20 @@
         (deleted)="onDeleteDone()"
         (cancelled)="closeDeletePopup()"
       ></app-final-approval-delete>
+    </div>
+  </div>
+
+  <div
+    class="popup-backdrop"
+    *ngIf="isReturnPopupOpen"
+    (click)="closeReturnPopup()"
+  >
+    <div class="popup-card return-popup-card" (click)="$event.stopPropagation()">
+      <app-final-approval-return-to-inspection
+        [item]="selectedReturnItem"
+        (returned)="onReturnDone()"
+        (cancelled)="closeReturnPopup()"
+      ></app-final-approval-return-to-inspection>
     </div>
   </div>
 </div>

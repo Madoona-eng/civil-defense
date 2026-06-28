@@ -7,6 +7,7 @@ import { ListComponent } from '../list/list.component';
 import { DetailsComponent } from '../details/details.component';
 import { EditComponent } from '../edit/edit.component';
 import { DeleteComponent } from '../delete/delete.component';
+import { ReturnToInspectionComponent } from '../return-to-inspection/return-to-inspection.component';
 
 @Component({
   selector: 'app-final-approval-management',
@@ -16,7 +17,8 @@ import { DeleteComponent } from '../delete/delete.component';
     ListComponent,
     DetailsComponent,
     EditComponent,
-    DeleteComponent
+    DeleteComponent,
+    ReturnToInspectionComponent
   ],
   templateUrl: './final-approval-management.component.html',
   styleUrl: './final-approval-management.component.scss'
@@ -27,10 +29,12 @@ export class FinalApprovalManagementComponent {
   isDetailsPopupOpen = false;
   isEditPopupOpen = false;
   isDeletePopupOpen = false;
+  isReturnPopupOpen = false;
 
   selectedProcessId: string | null = null;
   selectedApprovalItem: FinalApprovalItem | null = null;
   selectedDeleteItem: FinalApprovalItem | null = null;
+  selectedReturnItem: FinalApprovalItem | null = null;
 
   openDetailsPopup(id: string): void {
     this.selectedProcessId = id;
@@ -69,6 +73,21 @@ export class FinalApprovalManagementComponent {
 
   onDeleteDone(): void {
     this.closeDeletePopup();
+    this.listComponent?.loadFinalApprovals();
+  }
+
+  openReturnPopup(item: FinalApprovalItem): void {
+    this.selectedReturnItem = item;
+    this.isReturnPopupOpen = true;
+  }
+
+  closeReturnPopup(): void {
+    this.selectedReturnItem = null;
+    this.isReturnPopupOpen = false;
+  }
+
+  onReturnDone(): void {
+    this.closeReturnPopup();
     this.listComponent?.loadFinalApprovals();
   }
 }

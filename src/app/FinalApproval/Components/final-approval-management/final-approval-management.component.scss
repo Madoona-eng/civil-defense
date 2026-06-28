@@ -62,8 +62,9 @@
   width: min(1000px, 94vw);
 }
 
-.delete-popup-card {
-  width: min(520px, 94vw);
+.delete-popup-card,
+.return-popup-card {
+  width: min(560px, 94vw);
 }
 
 @keyframes popupIn {

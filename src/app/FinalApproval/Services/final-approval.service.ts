@@ -16,7 +16,6 @@ import {
 export class FinalApprovalService {
   private readonly apiUrl = '/api/LicensingProcess/final-approval';
   private readonly processUrl = '/api/LicensingProcess';
-  private readonly filesBaseUrl = 'https://172.30.1.76:7159';
 
   constructor(private readonly http: HttpClient) {}
 
@@ -51,13 +50,24 @@ export class FinalApprovalService {
   }
 
   getById(id: string): Observable<ApiResponse<FinalApprovalDetails>> {
-    return this.http.get<ApiResponse<FinalApprovalDetails>>(`${this.processUrl}/${id}`);
+    return this.http.get<ApiResponse<FinalApprovalDetails>>(
+      `${this.processUrl}/${id}`
+    );
   }
 
   saveFinalApproval(id: string, formData: FormData): Observable<ApiResponse<boolean>> {
     return this.http.put<ApiResponse<boolean>>(
       `${this.processUrl}/${id}/final-approval`,
       formData
+    );
+  }
+
+  returnToInspection(id: string, noteContent: string): Observable<ApiResponse<boolean>> {
+    return this.http.put<ApiResponse<boolean>>(
+      `${this.processUrl}/${id}/return-to-inspection`,
+      {
+        noteContent: noteContent
+      }
     );
   }
 
@@ -70,6 +80,6 @@ export class FinalApprovalService {
       .replace(/^\/+/, '')
       .replace(/\\/g, '/');
 
-    return encodeURI(`${this.filesBaseUrl}/${cleanPath}`);
+    return encodeURI(`/${cleanPath}`);
   }
 }

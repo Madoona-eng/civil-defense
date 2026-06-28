@@ -1,6 +1,19 @@
 <section class="filters-card" dir="rtl">
+  <div class="filters-header">
+    <div>
+      <span class="section-badge">🔎 فلاتر البحث</span>
+      <h3>تصفية معاملات الموافقة النهائية</h3>
+      <p>يمكنك البحث أو التصفية حسب الجهة، المركز، نوع النشاط أو رأي المعاينة.</p>
+    </div>
+
+    <div class="results-chip">
+      إجمالي النتائج
+      <strong>{{ totalCount }}</strong>
+    </div>
+  </div>
+
   <div class="filters-grid">
-    <div class="form-group">
+    <div class="form-group search-group">
       <label>بحث</label>
       <input
         type="text"
@@ -51,16 +64,27 @@
   </div>
 
   <div class="filter-actions">
-    <button type="button" class="search-btn" (click)="search()">بحث</button>
-    <button type="button" class="reset-btn" (click)="resetFilters()">إعادة ضبط</button>
+    <button type="button" class="search-btn" (click)="search()">
+      🔍 بحث
+    </button>
+
+    <button type="button" class="reset-btn" (click)="resetFilters()">
+      ↺ إعادة ضبط
+    </button>
   </div>
 </section>
 
 <section class="table-card" dir="rtl">
   <div class="table-header">
     <div>
+      <span class="section-badge">📊 الموافقات</span>
       <h3>قائمة الموافقات النهائية</h3>
-      <p>إجمالي النتائج: {{ totalCount }}</p>
+      <p>المعاملات التي وصلت إلى مرحلة المراجعة والقرار النهائي.</p>
+    </div>
+
+    <div class="table-count">
+      <span>{{ totalCount }}</span>
+      <small>معاملة</small>
     </div>
   </div>
 
@@ -73,7 +97,9 @@
   </div>
 
   <div class="empty-box" *ngIf="!isLoading && items.length === 0 && !errorMessage">
-    لا توجد معاملات في مرحلة الموافقة النهائية.
+    <div class="empty-icon">📭</div>
+    <h4>لا توجد معاملات</h4>
+    <p>لا توجد معاملات في مرحلة الموافقة النهائية حسب الفلاتر الحالية.</p>
   </div>
 
   <div class="table-scroll" *ngIf="!isLoading && items.length > 0">
@@ -95,13 +121,26 @@
 
       <tbody>
         <tr *ngFor="let item of items">
-          <td>{{ item.transactionCode }}</td>
+          <td>
+            <strong class="transaction-code">{{ item.transactionCode }}</strong>
+          </td>
+
           <td>{{ item.submissionDate }}</td>
-          <td>{{ item.establishmentName }}</td>
+
+          <td>
+            <strong>{{ item.establishmentName }}</strong>
+          </td>
+
           <td>{{ item.establishmentAddress }}</td>
+
           <td>{{ item.requestingEntity }}</td>
+
           <td>{{ item.district }}</td>
-          <td>{{ item.activityType }}</td>
+
+          <td>
+            <span class="activity-text">{{ item.activityType }}</span>
+          </td>
+
           <td>{{ item.applicantName }}</td>
 
           <td>
@@ -112,16 +151,44 @@
 
           <td class="actions-cell">
             <div class="row-actions">
-              <button type="button" class="details-btn" (click)="requestDetails(item.id)">
-                👁️ عرض
+              <button
+                type="button"
+                class="action-btn details-btn"
+                (click)="requestDetails(item.id)"
+                title="عرض التفاصيل"
+              >
+                <span>👁️</span>
+                عرض
               </button>
 
-              <button type="button" class="edit-btn" (click)="requestEdit(item)">
-                ✅ قرار
+              <button
+                type="button"
+                class="action-btn edit-btn"
+                (click)="requestEdit(item)"
+                title="قرار الموافقة النهائية"
+              >
+                <span>✅</span>
+                قرار
               </button>
 
-              <button type="button" class="delete-btn" (click)="requestDelete(item)">
-                🗑️ حذف
+              <button
+                type="button"
+                class="action-btn return-btn"
+                (click)="requestReturn(item)"
+                title="إرجاع للمعاينة"
+              >
+                <span>↩️</span>
+                إرجاع
+              </button>
+
+              <button
+                type="button"
+                class="action-btn delete-btn"
+                (click)="requestDelete(item)"
+                title="حذف"
+              >
+                <span>🗑️</span>
+                حذف
               </button>
             </div>
           </td>

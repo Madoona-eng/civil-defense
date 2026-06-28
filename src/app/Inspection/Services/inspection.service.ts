@@ -16,7 +16,6 @@ import {
 export class InspectionService {
   private readonly apiUrl = '/api/LicensingProcess/inspection';
   private readonly processUrl = '/api/LicensingProcess';
-  private readonly filesBaseUrl = 'https://172.30.1.76:7159';
 
   constructor(private readonly http: HttpClient) {}
 
@@ -68,6 +67,6 @@ export class InspectionService {
       .replace(/^\/+/, '')
       .replace(/\\/g, '/');
 
-    return encodeURI(`${this.filesBaseUrl}/${cleanPath}`);
+    return encodeURI(`/${cleanPath}`);
   }
 }
