@@ -1,0 +1,211 @@
+<section class="filters-card" dir="rtl">
+  <div class="filters-header">
+    <div>
+      <span class="section-badge">🔎 فلاتر البحث</span>
+      <h3>تصفية معاملات الموافقة النهائية</h3>
+      <p>يمكنك البحث أو التصفية حسب الجهة، المركز، نوع النشاط أو رأي المعاينة.</p>
+    </div>
+
+    <div class="results-chip">
+      إجمالي النتائج
+      <strong>{{ totalCount }}</strong>
+    </div>
+  </div>
+
+  <div class="filters-grid">
+    <div class="form-group search-group">
+      <label>بحث</label>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="ابحث بكود المعاملة أو اسم المنشأة أو مقدم الطلب"
+        (keyup.enter)="search()"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>الجهة</label>
+      <select [(ngModel)]="requestingEntityId">
+        <option value="">كل الجهات</option>
+        <option *ngFor="let entity of requestingEntities" [value]="entity.id">
+          {{ entity.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>المركز / المنطقة</label>
+      <select [(ngModel)]="districtId">
+        <option value="">كل المراكز</option>
+        <option *ngFor="let district of districts" [value]="district.id">
+          {{ district.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>نوع النشاط</label>
+      <select [(ngModel)]="activityTypeId">
+        <option value="">كل الأنشطة</option>
+        <option *ngFor="let activity of activityTypes" [value]="activity.id">
+          {{ activity.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>رأي المعاينة</label>
+      <select [(ngModel)]="opinion">
+        <option value="">كل الآراء</option>
+        <option value="Compliant">مطابق / مستوفي</option>
+        <option value="NonCompliant">غير مطابق / غير مستوفي</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="filter-actions">
+    <button type="button" class="search-btn" (click)="search()">
+      🔍 بحث
+    </button>
+
+    <button type="button" class="reset-btn" (click)="resetFilters()">
+      ↺ إعادة ضبط
+    </button>
+  </div>
+</section>
+
+<section class="table-card" dir="rtl">
+  <div class="table-header">
+    <div>
+      <span class="section-badge">📊 الموافقات</span>
+      <h3>قائمة الموافقات النهائية</h3>
+      <p>المعاملات التي وصلت إلى مرحلة المراجعة والقرار النهائي.</p>
+    </div>
+
+    <div class="table-count">
+      <span>{{ totalCount }}</span>
+      <small>معاملة</small>
+    </div>
+  </div>
+
+  <div class="loading-box" *ngIf="isLoading">
+    جاري تحميل معاملات الموافقة النهائية...
+  </div>
+
+  <div class="message error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="empty-box" *ngIf="!isLoading && items.length === 0 && !errorMessage">
+    <div class="empty-icon">📭</div>
+    <h4>لا توجد معاملات</h4>
+    <p>لا توجد معاملات في مرحلة الموافقة النهائية حسب الفلاتر الحالية.</p>
+  </div>
+
+  <div class="table-scroll" *ngIf="!isLoading && items.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>كود المعاملة</th>
+          <th>تاريخ التقديم</th>
+          <th>اسم المنشأة</th>
+          <th>عنوان المنشأة</th>
+          <th>الجهة</th>
+          <th>المركز / المنطقة</th>
+          <th>نوع النشاط</th>
+          <th>مقدم الطلب</th>
+          <th>المرحلة</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td>
+            <strong class="transaction-code">{{ item.transactionCode }}</strong>
+          </td>
+
+          <td>{{ item.submissionDate }}</td>
+
+          <td>
+            <strong>{{ item.establishmentName }}</strong>
+          </td>
+
+          <td>{{ item.establishmentAddress }}</td>
+
+          <td>{{ item.requestingEntity }}</td>
+
+          <td>{{ item.district }}</td>
+
+          <td>
+            <span class="activity-text">{{ item.activityType }}</span>
+          </td>
+
+          <td>{{ item.applicantName }}</td>
+
+          <td>
+            <span class="step-badge">
+              {{ getStepLabel(item.currentStep) }}
+            </span>
+          </td>
+
+          <td class="actions-cell">
+            <div class="row-actions">
+              <button
+                type="button"
+                class="action-btn details-btn"
+                (click)="requestDetails(item.id)"
+                title="عرض التفاصيل"
+              >
+                <span>👁️</span>
+                عرض
+              </button>
+
+              <button
+                type="button"
+                class="action-btn edit-btn"
+                (click)="requestEdit(item)"
+                title="قرار الموافقة النهائية"
+              >
+                <span>✅</span>
+                قرار
+              </button>
+
+              <button
+                type="button"
+                class="action-btn return-btn"
+                (click)="requestReturn(item)"
+                title="إرجاع للمعاينة"
+              >
+                <span>↩️</span>
+                إرجاع
+              </button>
+
+              <button
+                type="button"
+                class="action-btn delete-btn"
+                (click)="requestDelete(item)"
+                title="حذف"
+              >
+                <span>🗑️</span>
+                حذف
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="!isLoading && totalPages > 0">
+    <button type="button" (click)="previousPage()" [disabled]="!hasPreviousPage">
+      السابق
+    </button>
+
+    <span>صفحة {{ pageNumber }} من {{ totalPages }}</span>
+
+    <button type="button" (click)="nextPage()" [disabled]="!hasNextPage">
+      التالي
+    </button>
+  </div>
+</section>

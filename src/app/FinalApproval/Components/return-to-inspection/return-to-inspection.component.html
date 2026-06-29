@@ -1,0 +1,49 @@
+<div class="return-popup" dir="rtl">
+  <button type="button" class="close-btn" (click)="cancel()">
+    ×
+  </button>
+
+  <div class="return-icon">↩️</div>
+
+  <h2>إرجاع المعاملة للمعاينة</h2>
+
+  <p>
+    هل أنتِ متأكدة من إرجاع معاملة
+    <strong>{{ item?.establishmentName }}</strong>
+    إلى مرحلة المعاينة؟
+  </p>
+
+  <div class="transaction-card" *ngIf="item">
+    <span>كود المعاملة</span>
+    <strong>{{ item.transactionCode }}</strong>
+  </div>
+
+  <div class="note-box">
+    <label>سبب الإرجاع للمعاينة</label>
+
+    <textarea
+      rows="4"
+      [(ngModel)]="noteContent"
+      placeholder="اكتبي سبب إرجاع المعاملة إلى مرحلة المعاينة"
+    ></textarea>
+  </div>
+
+  <div class="message error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="actions">
+    <button
+      type="button"
+      class="return-action-btn"
+      (click)="confirmReturn()"
+      [disabled]="processing"
+    >
+      {{ processing ? 'جاري الإرجاع...' : 'نعم، إرجاع للمعاينة' }}
+    </button>
+
+    <button type="button" class="cancel-btn" (click)="cancel()">
+      إلغاء
+    </button>
+  </div>
+</div>

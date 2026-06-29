@@ -1,23 +1,17 @@
-export interface DistrictSummary {
+export interface District {
   id: string;
+  code?: number;
+  name: string;
+}
+
+export interface DistrictRequest {
   code: number;
   name: string;
 }
 
-export interface DistrictDetails {
-  id: string;
-  code: number;
-  name: string;
-}
+export type CreateDistrictRequest = DistrictRequest;
 
-export interface CreateDistrict {
-  code: number;
-  name: string;
-}
-
-export interface UpdateDistrict {
-  name: string;
-}
+export type UpdateDistrictRequest = DistrictRequest;
 
 export interface ApiResponse<T> {
   data: T;

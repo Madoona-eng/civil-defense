@@ -1,0 +1,62 @@
+<div class="licensing-page" dir="rtl">
+  <div class="page-header">
+    <div>
+      <h2>تراخيص المحال</h2>
+      <p>من هنا يمكنك إضافة ومتابعة طلبات تراخيص المحال.</p>
+    </div>
+
+    <button type="button" class="add-btn" (click)="openAddPopup()">
+      + إضافة ترخيص محل
+    </button>
+  </div>
+
+  <app-licensing-process-list
+    (detailsRequested)="openDetailsPopup($event)"
+    (editRequested)="openEditPopup($event)"
+    (deleteRequested)="openDeletePopup($event)"
+  ></app-licensing-process-list>
+
+  <div class="popup-backdrop" *ngIf="isAddPopupOpen" (click)="closeAddPopup()">
+    <div class="popup-card" (click)="$event.stopPropagation()">
+      <button type="button" class="popup-close" (click)="closeAddPopup()">×</button>
+
+      <app-licensing-process-add
+        (saved)="onAddSaved()"
+        (cancelled)="closeAddPopup()"
+      ></app-licensing-process-add>
+    </div>
+  </div>
+
+  <div class="popup-backdrop" *ngIf="isDetailsPopupOpen" (click)="closeDetailsPopup()">
+    <div class="popup-card details-card" (click)="$event.stopPropagation()">
+      <app-licensing-process-details
+        [processId]="selectedProcessId"
+        (closed)="closeDetailsPopup()"
+      ></app-licensing-process-details>
+    </div>
+  </div>
+
+  <div class="popup-backdrop" *ngIf="isEditPopupOpen" (click)="closeEditPopup()">
+    <div class="popup-card edit-card" (click)="$event.stopPropagation()">
+      <button type="button" class="popup-close" (click)="closeEditPopup()">×</button>
+
+      <app-licensing-process-edit
+        [processId]="selectedProcessId"
+        (saved)="onEditSaved()"
+        (cancelled)="closeEditPopup()"
+      ></app-licensing-process-edit>
+    </div>
+  </div>
+
+  <div class="popup-backdrop" *ngIf="isDeletePopupOpen" (click)="closeDeletePopup()">
+    <div class="popup-card delete-card" (click)="$event.stopPropagation()">
+      <button type="button" class="popup-close" (click)="closeDeletePopup()">×</button>
+
+      <app-licensing-process-delete
+        [item]="selectedProcessItem"
+        (deleted)="onDeleteDone()"
+        (cancelled)="closeDeletePopup()"
+      ></app-licensing-process-delete>
+    </div>
+  </div>
+</div>

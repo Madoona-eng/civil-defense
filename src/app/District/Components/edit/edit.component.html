@@ -1,1 +1,67 @@
-<p>edit works!</p>
+<div class="popup-form" dir="rtl">
+  <button type="button" class="close-btn" (click)="cancel()">
+    ×
+  </button>
+
+  <div class="popup-header">
+    <div class="header-icon">📍</div>
+
+    <div>
+      <h2>تعديل مركز / منطقة</h2>
+      <p>عدلي كود واسم المركز أو المنطقة ثم اضغطي حفظ.</p>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="loading-box" *ngIf="loading">
+      جاري تحميل البيانات...
+    </div>
+
+    <ng-container *ngIf="!loading">
+      <div class="form-grid">
+        <div class="field">
+          <label>كود المركز / المنطقة</label>
+          <input
+            type="number"
+            [(ngModel)]="formModel.code"
+            name="code"
+            placeholder="مثال: 20"
+          />
+        </div>
+
+        <div class="field">
+          <label>اسم المركز / المنطقة</label>
+          <input
+            type="text"
+            [(ngModel)]="formModel.name"
+            name="name"
+            placeholder="اسم المركز / المنطقة"
+          />
+        </div>
+      </div>
+
+      <div class="message success" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <div class="message error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="save-btn"
+          (click)="save()"
+          [disabled]="saving"
+        >
+          {{ saving ? 'جاري الحفظ...' : 'حفظ التعديل' }}
+        </button>
+
+        <button type="button" class="cancel-btn" (click)="cancel()">
+          إلغاء
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</div>

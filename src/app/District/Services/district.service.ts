@@ -1,32 +1,38 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ApiResponse, CreateDistrict, DistrictDetails, DistrictSummary, UpdateDistrict } from '../Models/district';
+import {
+  ApiResponse,
+  District,
+  CreateDistrictRequest,
+  UpdateDistrictRequest
+} from '../Models/district';
 
-@Injectable({ providedIn: 'root' })
-
+@Injectable({
+  providedIn: 'root'
+})
 export class DistrictService {
-  private url = '/api/District';
+  private readonly apiUrl = '/api/District';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
-  getAll(): Observable<ApiResponse<DistrictSummary[]>> {
-    return this.http.get<ApiResponse<DistrictSummary[]>>(this.url);
+  getAll(): Observable<ApiResponse<District[]>> {
+    return this.http.get<ApiResponse<District[]>>(this.apiUrl);
   }
 
-  getById(id: string): Observable<ApiResponse<DistrictDetails>> {
-    return this.http.get<ApiResponse<DistrictDetails>>(`${this.url}/${id}`);
+  getById(id: string): Observable<ApiResponse<District>> {
+    return this.http.get<ApiResponse<District>>(`${this.apiUrl}/${id}`);
   }
 
-  create(model: CreateDistrict): Observable<ApiResponse<boolean>> {
-    return this.http.post<ApiResponse<boolean>>(this.url, model);
+  create(model: CreateDistrictRequest): Observable<ApiResponse<boolean>> {
+    return this.http.post<ApiResponse<boolean>>(this.apiUrl, model);
   }
 
-  update(id: string, model: UpdateDistrict): Observable<ApiResponse<boolean>> {
-    return this.http.put<ApiResponse<boolean>>(`${this.url}/${id}`, model);
+  update(id: string, model: UpdateDistrictRequest): Observable<ApiResponse<boolean>> {
+    return this.http.put<ApiResponse<boolean>>(`${this.apiUrl}/${id}`, model);
   }
 
   delete(id: string): Observable<ApiResponse<boolean>> {
-    return this.http.delete<ApiResponse<boolean>>(`${this.url}/${id}`);
+    return this.http.delete<ApiResponse<boolean>>(`${this.apiUrl}/${id}`);
   }
 }

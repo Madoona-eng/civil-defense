@@ -34,6 +34,11 @@
   font-family: inherit;
   font-weight: 900;
   cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.refresh-btn:hover {
+  background: #bae6fd;
 }
 
 .message {
@@ -41,12 +46,6 @@
   padding: 13px 16px;
   border-radius: 16px;
   font-weight: 800;
-}
-
-.success {
-  background: #ecfdf5;
-  color: #047857;
-  border: 1px solid #bbf7d0;
 }
 
 .error {
@@ -73,7 +72,7 @@
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 760px;
+  min-width: 800px;
 }
 
 th,
@@ -104,6 +103,7 @@ td {
 .row-actions {
   display: flex;
   gap: 8px;
+  align-items: center;
 }
 
 .edit-btn,
@@ -114,6 +114,7 @@ td {
   font-family: inherit;
   font-weight: 900;
   cursor: pointer;
+  transition: 0.25s ease;
 }
 
 .edit-btn {
@@ -121,15 +122,26 @@ td {
   color: #92400e;
 }
 
+.edit-btn:hover {
+  background: #fde68a;
+}
+
 .delete-btn {
   background: #fee2e2;
   color: #991b1b;
 }
 
+.delete-btn:hover {
+  background: #fecaca;
+}
 
 @media (max-width: 800px) {
   .list-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  table {
+    min-width: 700px;
   }
 }

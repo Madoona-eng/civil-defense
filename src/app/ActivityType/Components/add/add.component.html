@@ -1,5 +1,11 @@
 <div class="add-page" dir="rtl">
+  <button type="button" class="close-btn" (click)="cancel()">
+    ×
+  </button>
+
   <div class="page-header">
+    <div class="header-icon">⚙️</div>
+
     <div>
       <h2>إضافة نوع نشاط</h2>
       <p>أدخلي كود واسم نوع النشاط لإضافته إلى النظام.</p>
@@ -24,7 +30,7 @@
           type="text"
           [(ngModel)]="formModel.name"
           name="name"
-          placeholder="مثال: dona"
+          placeholder="مثال: اشغال علاجي"
         />
       </div>
     </div>
@@ -38,7 +44,12 @@
     </div>
 
     <div class="actions">
-      <button type="button" class="save-btn" (click)="save()" [disabled]="saving">
+      <button
+        type="button"
+        class="save-btn"
+        (click)="save()"
+        [disabled]="saving"
+      >
         {{ saving ? 'جاري الحفظ...' : 'حفظ نوع النشاط' }}
       </button>
 

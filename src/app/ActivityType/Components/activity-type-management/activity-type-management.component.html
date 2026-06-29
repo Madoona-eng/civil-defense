@@ -17,7 +17,7 @@
 
   <div class="popup-backdrop" *ngIf="isAddPopupOpen" (click)="closeAddPopup()">
     <div class="popup-card" (click)="$event.stopPropagation()">
-      <button type="button" class="popup-close" (click)="closeAddPopup()">×</button>
+     
 
       <app-add
         (saved)="onAddSaved()"
@@ -28,7 +28,7 @@
 
   <div class="popup-backdrop" *ngIf="isEditPopupOpen" (click)="closeEditPopup()">
     <div class="popup-card" (click)="$event.stopPropagation()">
-      <button type="button" class="popup-close" (click)="closeEditPopup()">×</button>
+     
 
       <app-edit
         [activityTypeId]="selectedActivityTypeId"
