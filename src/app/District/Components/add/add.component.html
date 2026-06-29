@@ -1,0 +1,34 @@
+<div class="add-page" dir="rtl">
+  <div class="page-header">
+    <div>
+      <h2>إضافة مركز</h2>
+      <p>أدخل كود واسم المركز لإضافته إلى النظام.</p>
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="form-grid">
+      <div class="field">
+        <label>كود المركز</label>
+        <input type="number" [(ngModel)]="formModel.code" name="code" placeholder="مثال: 20" />
+      </div>
+      <div class="field">
+        <label>اسم المركز</label>
+        <input type="text" [(ngModel)]="formModel.name" name="name" placeholder= "مركز: ملوي " />
+      </div>
+    </div>
+
+    @if (successMessage) {
+      <div class="message success">{{ successMessage }}</div>
+    }
+    @if (errorMessage) {
+      <div class="message error">{{ errorMessage }}</div>
+    }
+
+    <div class="actions">
+      <button type="button" class="save-btn" (click)="save()" [disabled]="saving">
+        {{ saving ? 'جاري الحفظ...' : 'حفظ المركز' }}
+      </button>
+      <button type="button" class="cancel-btn" (click)="cancel()">إلغاء</button>
+    </div>
+  </div>
+</div>

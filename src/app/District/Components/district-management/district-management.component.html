@@ -1,0 +1,52 @@
+<div class="activity-page" dir="rtl">
+  <div class="page-header">
+    <div>
+      <h2>إدارة المراكز</h2>
+      <p>من هنا يمكنك إضافة وتعديل وحذف المراكز المسجلة في النظام.</p>
+    </div>
+    <button type="button" class="add-btn" (click)="openAddPopup()">
+      + إضافة مركز
+    </button>
+  </div>
+
+  <app-list
+    (editRequested)="openEditPopup($event)"
+    (deleteRequested)="openDeletePopup($event)"
+  ></app-list>
+
+  @if (isAddPopupOpen) {
+    <div class="popup-backdrop" (click)="closeAddPopup()">
+      <div class="popup-card" (click)="$event.stopPropagation()">
+        <button type="button" class="popup-close" (click)="closeAddPopup()">×</button>
+        <app-add (saved)="onAddSaved()" (cancelled)="closeAddPopup()"></app-add>
+      </div>
+    </div>
+  }
+<!-- 
+  @if (isEditPopupOpen) {
+    <div class="popup-backdrop" (click)="closeEditPopup()">
+      <div class="popup-card" (click)="$event.stopPropagation()">
+        <button type="button" class="popup-close" (click)="closeEditPopup()">×</button>
+        <app-edit
+          [districtId]="selectedDistrictId"
+          (saved)="onEditSaved()"
+          (cancelled)="closeEditPopup()"
+        ></app-edit>
+      </div>
+    </div>
+  }
+
+  @if (isDeletePopupOpen) {
+    <div class="popup-backdrop" (click)="closeDeletePopup()">
+      <div class="popup-card" (click)="$event.stopPropagation()">
+        <button type="button" class="popup-close" (click)="closeDeletePopup()">×</button>
+        <app-delete
+          [district]="selectedDistrict"
+          (deleted)="onDeleteDone()"
+          (cancelled)="closeDeletePopup()"
+        ></app-delete>
+      </div>
+    </div>
+  } -->
+
+</div>

@@ -44,11 +44,11 @@ export const routes: Routes = [
             .then(m => m.ActivityTypeManagementComponent)
       },
       {
-        path: 'requesting-entities',
-        loadComponent: () =>
-          import('./RequestingEntity/Components/requesting-entity-management/requesting-entity-management.component')
-            .then(m => m.RequestingEntityManagementComponent)
-      }
+     path: 'districts',
+     loadComponent: () =>
+     import('./District/Components/district-management/district-management.component')
+      .then(m => m.DistrictManagementComponent)
+}
     ]
   },
   {
