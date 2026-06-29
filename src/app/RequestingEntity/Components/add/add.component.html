@@ -1,0 +1,40 @@
+<div class="add-page" dir="rtl">
+  <div class="page-header">
+    <div>
+      <h2>إضافة جهة</h2>
+      <p>أدخلي اسم الجهة لإضافتها إلى النظام.</p>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-grid">
+      <div class="field">
+        <label>اسم الجهة</label>
+        <input
+          type="text"
+          [(ngModel)]="formModel.name"
+          name="name"
+          placeholder="مثال: الوحدة المحلية / شركة / جهة حكومية"
+        />
+      </div>
+    </div>
+
+    <div class="message success" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <div class="message error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="actions">
+      <button type="button" class="save-btn" (click)="save()" [disabled]="saving">
+        {{ saving ? 'جاري الحفظ...' : 'حفظ الجهة' }}
+      </button>
+
+      <button type="button" class="cancel-btn" (click)="cancel()">
+        إلغاء
+      </button>
+    </div>
+  </div>
+</div>

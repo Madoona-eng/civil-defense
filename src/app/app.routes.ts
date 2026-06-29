@@ -42,6 +42,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./ActivityType/Components/activity-type-management/activity-type-management.component')
             .then(m => m.ActivityTypeManagementComponent)
+      },
+      {
+        path: 'requesting-entities',
+        loadComponent: () =>
+          import('./RequestingEntity/Components/requesting-entity-management/requesting-entity-management.component')
+            .then(m => m.RequestingEntityManagementComponent)
       }
     ]
   },
