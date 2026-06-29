@@ -1,0 +1,30 @@
+<p>delete works!</p>
+<div class="delete-popup" dir="rtl">
+  <div class="delete-icon">🗑️</div>
+
+  <h2>حذف الجهة</h2>
+
+  <p>
+    هل أنتِ متأكدة من حذف الجهة
+    <strong>{{ requestingEntity?.name }}</strong>؟
+  </p>
+
+  <div class="message error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="actions">
+    <button
+      type="button"
+      class="delete-btn"
+      (click)="confirmDelete()"
+      [disabled]="deleting"
+    >
+      {{ deleting ? 'جاري الحذف...' : 'نعم، حذف' }}
+    </button>
+
+    <button type="button" class="cancel-btn" (click)="cancel()">
+      إلغاء
+    </button>
+  </div>
+</div>

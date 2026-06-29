@@ -61,12 +61,5 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  fillDemoUser(type: 'admin' | 'civil'): void {
-    if (type === 'admin') {
-      this.form.patchValue({ username: 'admin', password: 'admin123' });
-      return;
-    }
-
-    this.form.patchValue({ username: 'civil', password: 'civil123' });
-  }
+ 
 }
