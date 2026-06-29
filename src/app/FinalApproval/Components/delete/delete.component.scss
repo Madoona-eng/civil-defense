@@ -1,0 +1,161 @@
+.delete-popup {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px;
+  text-align: center;
+  direction: rtl;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: #fee2e2;
+  color: #991b1b;
+  font-size: 24px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.25s ease;
+}
+
+.close-btn:hover {
+  background: #fecaca;
+  transform: rotate(90deg);
+}
+
+.delete-icon {
+  width: 76px;
+  height: 76px;
+  border-radius: 24px;
+  background: #fee2e2;
+  color: #991b1b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  margin: 0 auto 18px;
+}
+
+.delete-popup h2 {
+  margin: 0;
+  color: #0f2942;
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.delete-popup p {
+  margin: 16px 0;
+  color: #64748b;
+  line-height: 1.9;
+  font-weight: 700;
+}
+
+.delete-popup p strong {
+  color: #0f2942;
+  font-weight: 900;
+}
+
+.transaction-card {
+  margin: 18px auto 0;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 16px;
+  max-width: 360px;
+}
+
+.transaction-card span {
+  display: block;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.transaction-card strong {
+  display: block;
+  color: #0f3d5e;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.message {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.message.error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.delete-action-btn,
+.cancel-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 13px 26px;
+  font-family: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.delete-action-btn {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.delete-action-btn:hover:not(:disabled) {
+  background: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(220, 38, 38, 0.25);
+}
+
+.delete-action-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  background: #e2e8f0;
+  color: #0f2942;
+}
+
+.cancel-btn:hover {
+  background: #cbd5e1;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 700px) {
+  .delete-popup {
+    padding: 22px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .delete-action-btn,
+  .cancel-btn {
+    width: 100%;
+  }
+}

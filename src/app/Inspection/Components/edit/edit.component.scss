@@ -1,4 +1,4 @@
-.inspection-form {
+.inspection-edit {
   background: #ffffff;
   border-radius: 24px;
   padding: 4px;
@@ -35,6 +35,15 @@
   font-size: 24px;
   font-weight: 900;
   cursor: pointer;
+}
+
+.loading-box {
+  padding: 16px;
+  border-radius: 16px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 900;
+  text-align: center;
 }
 
 .summary-card {

@@ -1,5 +1,11 @@
 <div class="popup-form" dir="rtl">
+  <button type="button" class="close-btn" (click)="cancel()">
+    ×
+  </button>
+
   <div class="popup-header">
+    <div class="header-icon">📍</div>
+
     <div>
       <h2>تعديل مركز / منطقة</h2>
       <p>عدلي كود واسم المركز أو المنطقة ثم اضغطي حفظ.</p>
@@ -43,7 +49,12 @@
       </div>
 
       <div class="actions">
-        <button type="button" class="save-btn" (click)="save()" [disabled]="saving">
+        <button
+          type="button"
+          class="save-btn"
+          (click)="save()"
+          [disabled]="saving"
+        >
           {{ saving ? 'جاري الحفظ...' : 'حفظ التعديل' }}
         </button>
 

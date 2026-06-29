@@ -15,9 +15,6 @@ import {
 export class LicensingProcessService {
   private readonly apiUrl = '/api/LicensingProcess';
 
-  // رابط الباك الخاص بفتح الصور والملفات
-  private readonly filesBaseUrl = 'https://172.30.1.76:7159';
-
   constructor(private readonly http: HttpClient) {}
 
   create(formData: FormData): Observable<ApiResponse<boolean>> {
@@ -71,6 +68,6 @@ export class LicensingProcessService {
       .replace(/^\/+/, '')
       .replace(/\\/g, '/');
 
-    return encodeURI(`${this.filesBaseUrl}/${cleanPath}`);
+    return encodeURI(`/${cleanPath}`);
   }
 }

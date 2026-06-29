@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import {
   ApiResponse,
   LicensingProcessDetails
@@ -14,7 +13,7 @@ import { LicensingProcessService } from '../../Services/licensing-process.servic
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss'
 })
-export class DetailsComponent implements OnChanges, OnDestroy {
+export class DetailsComponent implements OnChanges {
   @Input() processId: string | null = null;
   @Output() closed = new EventEmitter<void>();
 
@@ -23,13 +22,10 @@ export class DetailsComponent implements OnChanges, OnDestroy {
   loading = false;
   errorMessage = '';
 
-  private readonly filesBaseUrl = '';
   failedImages = new Set<string>();
-  private readonly previewUrlByPath = new Map<string, string>();
 
   constructor(
-    private readonly licensingProcessService: LicensingProcessService,
-    private readonly http: HttpClient
+    private readonly licensingProcessService: LicensingProcessService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -54,7 +50,6 @@ export class DetailsComponent implements OnChanges, OnDestroy {
         }
 
         this.details = response.data;
-        this.loadAttachmentPreviews();
       },
       error: (err: any) => {
         this.loading = false;
@@ -67,11 +62,6 @@ export class DetailsComponent implements OnChanges, OnDestroy {
           'حدث خطأ أثناء تحميل بيانات المعاملة';
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    this.previewUrlByPath.forEach(url => URL.revokeObjectURL(url));
-    this.previewUrlByPath.clear();
   }
 
   close(): void {
@@ -110,56 +100,8 @@ export class DetailsComponent implements OnChanges, OnDestroy {
     return opinion || '-';
   }
 
-  private normalizeFilePath(filePath: string): string {
-    const cleanPath = filePath
-      .replace(/^\/+/, '')
-      .replace(/\\/g, '/');
-
-    if (!cleanPath) {
-      return '';
-    }
-
-    return cleanPath.startsWith('uploads/') ? cleanPath : `uploads/${cleanPath}`;
-  }
-
   getFileUrl(filePath: string): string {
-    const normalizedPath = this.normalizeFilePath(filePath);
-    return normalizedPath ? encodeURI(`${this.filesBaseUrl}/${normalizedPath}`) : '';
-  }
-
-  getPreviewUrl(filePath: string): string {
-    return this.previewUrlByPath.get(filePath) || this.getFileUrl(filePath);
-  }
-
-  private loadAttachmentPreviews(): void {
-    if (!this.details) {
-      return;
-    }
-
-    const attachments = [
-      ...this.details.entityLetters,
-      ...this.details.proofDocuments,
-      ...this.details.engineeringReports,
-      ...this.details.inspectionReports,
-      ...this.details.otherAttachments
-    ];
-
-    attachments.forEach(file => {
-      if (!this.isImageFile(file.fileName) || this.previewUrlByPath.has(file.filePath) || this.failedImages.has(file.filePath)) {
-        return;
-      }
-
-      this.http.get(this.getFileUrl(file.filePath), { responseType: 'blob' }).subscribe({
-        next: (blob: Blob) => {
-          const previewUrl = URL.createObjectURL(blob);
-          this.previewUrlByPath.set(file.filePath, previewUrl);
-          this.failedImages.delete(file.filePath);
-        },
-        error: () => {
-          this.failedImages.add(file.filePath);
-        }
-      });
-    });
+    return this.licensingProcessService.buildFileUrl(filePath);
   }
 
   isImageFile(fileName: string): boolean {
@@ -174,6 +116,7 @@ export class DetailsComponent implements OnChanges, OnDestroy {
   }
 
   onImageError(filePath: string): void {
+    console.log('Image failed:', this.getFileUrl(filePath));
     this.failedImages.add(filePath);
   }
 }

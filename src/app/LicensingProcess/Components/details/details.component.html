@@ -16,29 +16,29 @@
     {{ errorMessage }}
   </div>
 
-  <ng-container *ngIf="!loading && details">
+  <ng-container *ngIf="!loading && details as d">
     <section class="section-card">
       <h3>بيانات المعاملة</h3>
 
       <div class="info-grid">
         <div>
           <span>كود المعاملة</span>
-          <strong>{{ details.transactionCode }}</strong>
+          <strong>{{ d.transactionCode }}</strong>
         </div>
 
         <div>
           <span>المرحلة الحالية</span>
-          <strong>{{ getStepLabel(details.currentStep) }}</strong>
+          <strong>{{ getStepLabel(d.currentStep) }}</strong>
         </div>
 
         <div>
           <span>تاريخ التقديم</span>
-          <strong>{{ details.submissionDate }}</strong>
+          <strong>{{ d.submissionDate }}</strong>
         </div>
 
         <div>
           <span>تم الإنشاء بواسطة</span>
-          <strong>{{ details.createdBy }}</strong>
+          <strong>{{ d.createdBy }}</strong>
         </div>
       </div>
     </section>
@@ -49,27 +49,27 @@
       <div class="info-grid">
         <div>
           <span>اسم المنشأة</span>
-          <strong>{{ details.establishmentName }}</strong>
+          <strong>{{ d.establishmentName }}</strong>
         </div>
 
         <div>
           <span>عنوان المنشأة</span>
-          <strong>{{ details.establishmentAddress }}</strong>
+          <strong>{{ d.establishmentAddress }}</strong>
         </div>
 
         <div>
           <span>الجهة</span>
-          <strong>{{ details.requestingEntity }}</strong>
+          <strong>{{ d.requestingEntity }}</strong>
         </div>
 
         <div>
           <span>المركز / المنطقة</span>
-          <strong>{{ details.district }}</strong>
+          <strong>{{ d.district }}</strong>
         </div>
 
         <div>
           <span>نوع النشاط</span>
-          <strong>{{ details.activityType }}</strong>
+          <strong>{{ d.activityType }}</strong>
         </div>
       </div>
     </section>
@@ -80,27 +80,27 @@
       <div class="info-grid">
         <div>
           <span>اسم مقدم الطلب</span>
-          <strong>{{ details.applicantName }}</strong>
+          <strong>{{ d.applicantName }}</strong>
         </div>
 
         <div>
           <span>صفة مقدم الطلب</span>
-          <strong>{{ details.applicantRole }}</strong>
+          <strong>{{ d.applicantRole }}</strong>
         </div>
 
         <div>
           <span>الرقم القومي</span>
-          <strong>{{ details.nationalId }}</strong>
+          <strong>{{ d.nationalId }}</strong>
         </div>
 
         <div>
           <span>المدير المسؤول</span>
-          <strong>{{ details.responsibleManager }}</strong>
+          <strong>{{ d.responsibleManager }}</strong>
         </div>
 
         <div>
           <span>رقم الهاتف</span>
-          <strong>{{ details.phone }}</strong>
+          <strong>{{ d.phone }}</strong>
         </div>
       </div>
     </section>
@@ -111,17 +111,17 @@
       <div class="info-grid">
         <div>
           <span>اسم المعاين</span>
-          <strong>{{ details.inspectorName || '-' }}</strong>
+          <strong>{{ d.inspectorName || '-' }}</strong>
         </div>
 
         <div>
           <span>الرأي</span>
-          <strong>{{ getOpinionLabel(details.opinion) }}</strong>
+          <strong>{{ getOpinionLabel(d.opinion) }}</strong>
         </div>
 
         <div>
           <span>تمت المعاينة بواسطة</span>
-          <strong>{{ details.inspectedBy || '-' }}</strong>
+          <strong>{{ d.inspectedBy || '-' }}</strong>
         </div>
       </div>
     </section>
@@ -129,11 +129,11 @@
     <section class="section-card">
       <h3>الملاحظات</h3>
 
-      <div class="empty-box" *ngIf="details.notes.length === 0">
+      <div class="empty-box" *ngIf="!d.notes || d.notes.length === 0">
         لا توجد ملاحظات.
       </div>
 
-      <div class="note-card" *ngFor="let note of details.notes">
+      <div class="note-card" *ngFor="let note of d.notes || []">
         <strong>{{ note.content }}</strong>
         <span>{{ note.writtenBy }} - {{ getStepLabel(note.processStep) }}</span>
       </div>
@@ -146,15 +146,15 @@
         <div class="attachment-group">
           <h4>خطابات الجهة</h4>
 
-          <div class="empty-attachment" *ngIf="details.entityLetters.length === 0">
+          <div class="empty-attachment" *ngIf="!d.entityLetters || d.entityLetters.length === 0">
             لا توجد ملفات.
           </div>
 
-          <div class="attachment-item" *ngFor="let file of details.entityLetters">
+          <div class="attachment-item" *ngFor="let file of d.entityLetters || []">
             <a [href]="getFileUrl(file.filePath)" target="_blank">
               <img
                 *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
-                [src]="getPreviewUrl(file.filePath)"
+                [src]="getFileUrl(file.filePath)"
                 [alt]="file.fileName"
                 (error)="onImageError(file.filePath)"
               />
@@ -171,15 +171,15 @@
         <div class="attachment-group">
           <h4>مستندات الإثبات</h4>
 
-          <div class="empty-attachment" *ngIf="details.proofDocuments.length === 0">
+          <div class="empty-attachment" *ngIf="!d.proofDocuments || d.proofDocuments.length === 0">
             لا توجد ملفات.
           </div>
 
-          <div class="attachment-item" *ngFor="let file of details.proofDocuments">
+          <div class="attachment-item" *ngFor="let file of d.proofDocuments || []">
             <a [href]="getFileUrl(file.filePath)" target="_blank">
               <img
                 *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
-                [src]="getPreviewUrl(file.filePath)"
+                [src]="getFileUrl(file.filePath)"
                 [alt]="file.fileName"
                 (error)="onImageError(file.filePath)"
               />
@@ -196,15 +196,15 @@
         <div class="attachment-group">
           <h4>التقارير الهندسية</h4>
 
-          <div class="empty-attachment" *ngIf="details.engineeringReports.length === 0">
+          <div class="empty-attachment" *ngIf="!d.engineeringReports || d.engineeringReports.length === 0">
             لا توجد ملفات.
           </div>
 
-          <div class="attachment-item" *ngFor="let file of details.engineeringReports">
+          <div class="attachment-item" *ngFor="let file of d.engineeringReports || []">
             <a [href]="getFileUrl(file.filePath)" target="_blank">
               <img
                 *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
-                [src]="getPreviewUrl(file.filePath)"
+                [src]="getFileUrl(file.filePath)"
                 [alt]="file.fileName"
                 (error)="onImageError(file.filePath)"
               />
@@ -221,15 +221,15 @@
         <div class="attachment-group">
           <h4>تقارير المعاينة</h4>
 
-          <div class="empty-attachment" *ngIf="details.inspectionReports.length === 0">
+          <div class="empty-attachment" *ngIf="!d.inspectionReports || d.inspectionReports.length === 0">
             لا توجد ملفات.
           </div>
 
-          <div class="attachment-item" *ngFor="let file of details.inspectionReports">
+          <div class="attachment-item" *ngFor="let file of d.inspectionReports || []">
             <a [href]="getFileUrl(file.filePath)" target="_blank">
               <img
                 *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
-                [src]="getPreviewUrl(file.filePath)"
+                [src]="getFileUrl(file.filePath)"
                 [alt]="file.fileName"
                 (error)="onImageError(file.filePath)"
               />
@@ -246,15 +246,15 @@
         <div class="attachment-group">
           <h4>مرفقات أخرى</h4>
 
-          <div class="empty-attachment" *ngIf="details.otherAttachments.length === 0">
+          <div class="empty-attachment" *ngIf="!d.otherAttachments || d.otherAttachments.length === 0">
             لا توجد ملفات.
           </div>
 
-          <div class="attachment-item" *ngFor="let file of details.otherAttachments">
+          <div class="attachment-item" *ngFor="let file of d.otherAttachments || []">
             <a [href]="getFileUrl(file.filePath)" target="_blank">
               <img
                 *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
-                [src]="getPreviewUrl(file.filePath)"
+                [src]="getFileUrl(file.filePath)"
                 [alt]="file.fileName"
                 (error)="onImageError(file.filePath)"
               />

@@ -6,169 +6,50 @@
     </div>
   </div>
 
-  <section class="filters-card">
-    <div class="filters-grid">
-      <div class="form-group">
-        <label>بحث</label>
-        <input
-          type="text"
-          [(ngModel)]="searchTerm"
-          placeholder="ابحث بكود المعاملة أو اسم المنشأة أو مقدم الطلب"
-          (keyup.enter)="search()"
-        />
-      </div>
+  <app-inspection-list
+    (detailsRequested)="openDetailsPopup($event)"
+    (editRequested)="openEditPopup($event)"
+    (deleteRequested)="openDeletePopup($event)"
+  ></app-inspection-list>
 
-      <div class="form-group">
-        <label>الجهة</label>
-        <select [(ngModel)]="requestingEntityId">
-          <option value="">كل الجهات</option>
-          <option *ngFor="let entity of requestingEntities" [value]="entity.id">
-            {{ entity.name }}
-          </option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>المركز / المنطقة</label>
-        <select [(ngModel)]="districtId">
-          <option value="">كل المراكز</option>
-          <option *ngFor="let district of districts" [value]="district.id">
-            {{ district.name }}
-          </option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>نوع النشاط</label>
-        <select [(ngModel)]="activityTypeId">
-          <option value="">كل الأنشطة</option>
-          <option *ngFor="let activity of activityTypes" [value]="activity.id">
-            {{ activity.name }}
-          </option>
-        </select>
-      </div>
-    </div>
-
-    <div class="filter-actions">
-      <button type="button" class="search-btn" (click)="search()">
-        بحث
-      </button>
-
-      <button type="button" class="reset-btn" (click)="resetFilters()">
-        إعادة ضبط
-      </button>
-    </div>
-  </section>
-
-  <section class="table-card">
-    <div class="table-header">
-      <div>
-        <h3>قائمة المعاينات</h3>
-        <p>إجمالي النتائج: {{ totalCount }}</p>
-      </div>
-    </div>
-
-    <div class="loading-box" *ngIf="isLoading">
-      جاري تحميل معاملات المعاينة...
-    </div>
-
-    <div class="message error" *ngIf="errorMessage">
-      {{ errorMessage }}
-    </div>
-
-    <div class="empty-box" *ngIf="!isLoading && items.length === 0 && !errorMessage">
-      لا توجد معاملات معاينة.
-    </div>
-
-    <div class="table-scroll" *ngIf="!isLoading && items.length > 0">
-      <table>
-        <thead>
-          <tr>
-            <th>كود المعاملة</th>
-            <th>تاريخ التقديم</th>
-            <th>اسم المنشأة</th>
-            <th>عنوان المنشأة</th>
-            <th>الجهة</th>
-            <th>المركز / المنطقة</th>
-            <th>نوع النشاط</th>
-            <th>مقدم الطلب</th>
-            <th>المرحلة</th>
-            <th>الإجراءات</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let item of items">
-            <td>{{ item.transactionCode }}</td>
-            <td>{{ item.submissionDate }}</td>
-            <td>{{ item.establishmentName }}</td>
-            <td>{{ item.establishmentAddress }}</td>
-            <td>{{ item.requestingEntity }}</td>
-            <td>{{ item.district }}</td>
-            <td>{{ item.activityType }}</td>
-            <td>{{ item.applicantName }}</td>
-
-            <td>
-              <span class="step-badge">
-                {{ getStepLabel(item.currentStep) }}
-              </span>
-            </td>
-
-            <td class="actions-cell">
-              <div class="row-actions">
-                <button
-                  type="button"
-                  class="details-btn"
-                  (click)="openDetailsPopup(item.id)"
-                >
-                  👁️ عرض
-                </button>
-
-                <button
-                  type="button"
-                  class="inspect-btn"
-                  (click)="openInspectionPopup(item)"
-                >
-                  📝 تسجيل
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="pagination" *ngIf="!isLoading && totalPages > 0">
-      <button type="button" (click)="previousPage()" [disabled]="!hasPreviousPage">
-        السابق
-      </button>
-
-      <span>
-        صفحة {{ pageNumber }} من {{ totalPages }}
-      </span>
-
-      <button type="button" (click)="nextPage()" [disabled]="!hasNextPage">
-        التالي
-      </button>
-    </div>
-  </section>
-
-  <div class="popup-backdrop" *ngIf="isDetailsPopupOpen" (click)="closeDetailsPopup()">
-    <div class="popup-card" (click)="$event.stopPropagation()">
-      <app-licensing-process-details
+  <div
+    class="popup-backdrop"
+    *ngIf="isDetailsPopupOpen"
+    (click)="closeDetailsPopup()"
+  >
+    <div class="popup-card details-popup-card" (click)="$event.stopPropagation()">
+      <app-inspection-details
         [processId]="selectedProcessId"
         (closed)="closeDetailsPopup()"
-      ></app-licensing-process-details>
+      ></app-inspection-details>
     </div>
   </div>
 
-  <div class="popup-backdrop" *ngIf="isInspectionPopupOpen" (click)="closeInspectionPopup()">
-    <div class="popup-card inspection-popup-card" (click)="$event.stopPropagation()">
-      <app-inspection-form
+  <div
+    class="popup-backdrop"
+    *ngIf="isEditPopupOpen"
+    (click)="closeEditPopup()"
+  >
+    <div class="popup-card edit-popup-card" (click)="$event.stopPropagation()">
+      <app-inspection-edit
         [item]="selectedInspectionItem"
-        (saved)="onInspectionSaved()"
-        (cancelled)="closeInspectionPopup()"
-      ></app-inspection-form>
+        (saved)="onEditSaved()"
+        (cancelled)="closeEditPopup()"
+      ></app-inspection-edit>
+    </div>
+  </div>
+
+  <div
+    class="popup-backdrop"
+    *ngIf="isDeletePopupOpen"
+    (click)="closeDeletePopup()"
+  >
+    <div class="popup-card delete-popup-card" (click)="$event.stopPropagation()">
+      <app-inspection-delete
+        [item]="selectedDeleteItem"
+        (deleted)="onDeleteDone()"
+        (cancelled)="closeDeletePopup()"
+      ></app-inspection-delete>
     </div>
   </div>
 </div>
