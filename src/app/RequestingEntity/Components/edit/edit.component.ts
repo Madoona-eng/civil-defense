@@ -27,6 +27,7 @@ export class EditComponent implements OnChanges {
   successMessage = '';
 
   formModel: UpdateRequestingEntityRequest = {
+    code: 0,
     name: ''
   };
 
@@ -53,6 +54,7 @@ export class EditComponent implements OnChanges {
         }
 
         this.formModel = {
+          code: res.data.code || 0,
           name: res.data.name || ''
         };
       },
@@ -78,6 +80,7 @@ export class EditComponent implements OnChanges {
     this.errorMessage = '';
     this.successMessage = '';
 
+    const code = this.formModel.code;
     const name = this.formModel.name.trim();
 
     if (!name) {
@@ -86,6 +89,7 @@ export class EditComponent implements OnChanges {
     }
 
     const payload: UpdateRequestingEntityRequest = {
+      code,
       name
     };
 

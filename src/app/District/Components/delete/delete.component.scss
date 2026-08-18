@@ -1,167 +1,196 @@
-.popup-form,
-.delete-popup {
+/* الخلفية المظلمة الشفافة */
+.delete-popup-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.popup-header,
-.form-card,
-.delete-popup {
-  background: #ffffff;
-  border-radius: 24px;
-  padding: 24px;
-  box-shadow: 0 12px 35px rgba(15, 61, 94, 0.08);
-}
-
-.popup-header h2,
-.delete-popup h2 {
-  margin: 0;
-  color: #0f2942;
-  font-size: 26px;
-  font-weight: 900;
-}
-
-.popup-header p,
-.delete-popup p {
-  margin: 8px 0 0;
-  color: #64748b;
-  line-height: 1.8;
-}
-
-.delete-popup {
-  align-items: center;
-  text-align: center;
-}
-
-.delete-icon {
-  width: 68px;
-  height: 68px;
-  border-radius: 24px;
-  background: #fee2e2;
-  color: #991b1b;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  font-size: 32px;
+  align-items: center;
+  z-index: 1000;
+  font-family: 'Tajawal', system-ui, -apple-system, sans-serif;
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 18px;
-}
-
-.field label {
-  display: block;
-  margin-bottom: 9px;
-  color: #0f2942;
-  font-weight: 900;
-  font-size: 15px;
-}
-
-.field input {
-  width: 100%;
-  height: 56px;
-  border: 1px solid #dbe5ee;
-  border-radius: 18px;
-  background: #f8fbfe;
-  padding: 0 16px;
-  font-family: inherit;
-  font-size: 15px;
-  color: #0f172a;
-  outline: none;
-}
-
-.field input:focus {
-  border-color: #0d7e80;
+/* الكارت الخارجي الأبيض للمودال */
+.delete-popup-card {
   background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(13, 126, 128, 0.12);
+  border-radius: 20px;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  box-sizing: border-box;
 }
 
-.loading-box {
-  padding: 20px;
-  border-radius: 18px;
-  background: #f8fafc;
-  color: #64748b;
-  text-align: center;
-  font-weight: 900;
-}
-
-.message {
-  margin-top: 16px;
-  padding: 13px 16px;
-  border-radius: 16px;
-  font-weight: 800;
-}
-
-.success {
-  background: #ecfdf5;
-  color: #047857;
-  border: 1px solid #bbf7d0;
-}
-
-.error {
-  background: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
-}
-
-.actions {
-  margin-top: 20px;
+/* الهيدر العلوي */
+.modal-header {
   display: flex;
-  justify-content: flex-start;
-  gap: 12px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
 }
 
-.delete-popup .actions {
-  justify-content: center;
-}
-
-.save-btn,
-.cancel-btn,
-.delete-btn {
+/* زر الإغلاق (X) */
+.close-btn {
+  background: #f1f5f9;
   border: none;
-  border-radius: 16px;
-  padding: 13px 24px;
-  font-family: inherit;
-  font-weight: 900;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: #64748b;
+  font-size: 16px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
 }
 
-.save-btn {
-  background: linear-gradient(135deg, #0f3d5e, #0d7e80);
-  color: #ffffff;
-}
-
-.delete-btn {
-  background: #dc2626;
-  color: #ffffff;
-}
-
-.cancel-btn {
+.close-btn:hover {
   background: #e2e8f0;
-  color: #0f2942;
 }
 
-.save-btn:disabled,
+/* العنوان العلوي */
+.header-title {
+  text-align: center;
+  flex: 1;
+}
+
+.header-title .subtitle {
+  display: block;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-bottom: 2px;
+}
+
+.header-title .title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0d3b4c;
+}
+
+/* أيقونة التنبيه الاحمراء (!) */
+.alert-icon-wrapper {
+  background-color: #fff1f2;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alert-icon {
+  color: #f43f5e;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* الكارت الأبيض الداخلي المصمم بحواف منحنية */
+.modal-body {
+  background-color: #fafbfc;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  margin-top: 4px;
+}
+
+/* خلفية سلة المهملات الوردي */
+.trash-icon-bg {
+  width: 64px;
+  height: 64px;
+  background-color: #fee2e2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+}
+
+.trash-icon {
+  font-size: 28px;
+}
+
+/* العنوان الرئيسي بالمنتصف */
+.main-heading {
+  margin: 0 0 12px 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0d3b4c;
+}
+
+.description {
+  margin: 0 0 24px 0;
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.entity-name {
+  color: #334155;
+  font-weight: 700;
+}
+
+/* رسالة الخطأ */
+.message.error {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+/* الأزرار السفليّة */
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* زر نعم، حذف البترولي */
+.delete-btn {
+  background-color: #065f60;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  min-width: 110px;
+}
+
+.delete-btn:hover {
+  background-color: #04494a;
+}
+
 .delete-btn:disabled {
-  opacity: 0.65;
+  background-color: #94a3b8;
   cursor: not-allowed;
 }
 
-@media (max-width: 700px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
+/* زر إلغاء الرمادي */
+.cancel-btn {
+  background-color: #e2e8f0;
+  color: #334155;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  min-width: 90px;
+}
 
-  .actions {
-    flex-direction: column;
-  }
-
-  .save-btn,
-  .cancel-btn,
-  .delete-btn {
-    width: 100%;
-  }
+.cancel-btn:hover {
+  background-color: #cbd5e1;
 }

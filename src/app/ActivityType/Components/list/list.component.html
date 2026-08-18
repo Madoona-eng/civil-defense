@@ -26,18 +26,18 @@
     <table>
       <thead>
         <tr>
-          <th>#</th>
-          <th>اسم نوع النشاط</th>
           <th>الكود</th>
+          <th>اسم نوع النشاط</th>
+        
           <th>الإجراءات</th>
         </tr>
       </thead>
 
       <tbody>
         <tr *ngFor="let item of activityTypes; let i = index">
-          <td>{{ i + 1 }}</td>
-          <td>{{ item.name }}</td>
           <td>{{ item.code }}</td>
+          <td>{{ item.name }}</td>
+          
           <td>
             <div class="row-actions">
               <button type="button" class="edit-btn" (click)="requestEdit(item.id)">

@@ -1,14 +1,8 @@
 <div class="popup-form" dir="rtl">
-  <button type="button" class="close-btn" (click)="cancel()">
-    ×
-  </button>
-
   <div class="popup-header">
-    <div class="header-icon">⚙️</div>
-
     <div>
       <h2>تعديل نوع النشاط</h2>
-      <p>عدلي كود واسم نوع النشاط ثم اضغطي حفظ.</p>
+      <p>عدلي اسم نوع النشاط ثم اضغطي حفظ.</p>
     </div>
   </div>
 
@@ -26,6 +20,7 @@
             [(ngModel)]="formModel.code"
             name="code"
             placeholder="مثال: 20"
+            disabled
           />
         </div>
 
@@ -35,7 +30,7 @@
             type="text"
             [(ngModel)]="formModel.name"
             name="name"
-            placeholder="اسم نوع النشاط"
+            placeholder="مثال: اشغال علاجي"
           />
         </div>
       </div>
@@ -49,12 +44,7 @@
       </div>
 
       <div class="actions">
-        <button
-          type="button"
-          class="save-btn"
-          (click)="save()"
-          [disabled]="saving"
-        >
+        <button type="button" class="save-btn" (click)="save()" [disabled]="saving">
           {{ saving ? 'جاري الحفظ...' : 'حفظ التعديل' }}
         </button>
 

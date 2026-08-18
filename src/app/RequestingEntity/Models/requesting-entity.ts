@@ -1,9 +1,11 @@
 export interface RequestingEntity {
   id: string;
+  code: number;
   name: string;
 }
 
 export interface RequestingEntityRequest {
+  code: number;
   name: string;
 }
 

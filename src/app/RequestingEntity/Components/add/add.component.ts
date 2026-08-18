@@ -23,6 +23,7 @@ export class AddComponent {
   successMessage = '';
 
   formModel: CreateRequestingEntityRequest = {
+    code: 0,
     name: ''
   };
 
@@ -32,7 +33,13 @@ export class AddComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
+    const code = this.formModel.code;
     const name = this.formModel.name.trim();
+
+    if (!code) {
+      this.errorMessage = 'من فضلك أدخلي كود الجهة';
+      return;
+    }
 
     if (!name) {
       this.errorMessage = 'من فضلك أدخلي اسم الجهة';
@@ -40,6 +47,7 @@ export class AddComponent {
     }
 
     const payload: CreateRequestingEntityRequest = {
+      code,
       name
     };
 
@@ -57,6 +65,7 @@ export class AddComponent {
         this.successMessage = res.message || 'تم إنشاء الجهة بنجاح';
 
         this.formModel = {
+          code: 0,
           name: ''
         };
 

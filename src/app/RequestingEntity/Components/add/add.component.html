@@ -9,6 +9,16 @@
   <div class="form-card">
     <div class="form-grid">
       <div class="field">
+        <label>كود الجهة</label>
+        <input
+          type="number"
+          [(ngModel)]="formModel.code"
+          name="code"
+          placeholder="مثال: 100"
+        />
+      </div>
+
+      <div class="field">
         <label>اسم الجهة</label>
         <input
           type="text"

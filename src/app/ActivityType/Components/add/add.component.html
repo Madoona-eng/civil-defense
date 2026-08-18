@@ -1,61 +1,107 @@
-<div class="add-page" dir="rtl">
-  <button type="button" class="close-btn" (click)="cancel()">
-    ×
-  </button>
+<div class="add-form" dir="rtl">
 
-  <div class="page-header">
-    <div class="header-icon">⚙️</div>
+  <!-- =====================================================
+       FORM FIELDS
+  ====================================================== -->
 
-    <div>
-      <h2>إضافة نوع نشاط</h2>
-      <p>أدخلي كود واسم نوع النشاط لإضافته إلى النظام.</p>
+  <div class="form-grid">
+
+    <!-- CODE -->
+
+    <div class="field">
+
+      <label for="activity-code">
+        كود نوع النشاط
+      </label>
+
+      <input
+        id="activity-code"
+        type="number"
+        [(ngModel)]="formModel.code"
+        name="code"
+        placeholder="مثال: 20"
+      />
+
     </div>
+
+
+    <!-- NAME -->
+
+    <div class="field">
+
+      <label for="activity-name">
+        اسم نوع النشاط
+      </label>
+
+      <input
+        id="activity-name"
+        type="text"
+        [(ngModel)]="formModel.name"
+        name="name"
+        placeholder="مثال: اشغال علاجي"
+      />
+
+    </div>
+
   </div>
 
-  <div class="form-card">
-    <div class="form-grid">
-      <div class="field">
-        <label>كود نوع النشاط</label>
-        <input
-          type="number"
-          [(ngModel)]="formModel.code"
-          name="code"
-          placeholder="مثال: 20"
-        />
-      </div>
 
-      <div class="field">
-        <label>اسم نوع النشاط</label>
-        <input
-          type="text"
-          [(ngModel)]="formModel.name"
-          name="name"
-          placeholder="مثال: اشغال علاجي"
-        />
-      </div>
-    </div>
+  <!-- =====================================================
+       SUCCESS MESSAGE
+  ====================================================== -->
 
-    <div class="message success" *ngIf="successMessage">
-      {{ successMessage }}
-    </div>
-
-    <div class="message error" *ngIf="errorMessage">
-      {{ errorMessage }}
-    </div>
-
-    <div class="actions">
-      <button
-        type="button"
-        class="save-btn"
-        (click)="save()"
-        [disabled]="saving"
-      >
-        {{ saving ? 'جاري الحفظ...' : 'حفظ نوع النشاط' }}
-      </button>
-
-      <button type="button" class="cancel-btn" (click)="cancel()">
-        إلغاء
-      </button>
-    </div>
+  <div
+    class="message success"
+    *ngIf="successMessage"
+  >
+    {{ successMessage }}
   </div>
+
+
+  <!-- =====================================================
+       ERROR MESSAGE
+  ====================================================== -->
+
+  <div
+    class="message error"
+    *ngIf="errorMessage"
+  >
+    {{ errorMessage }}
+  </div>
+
+
+  <!-- =====================================================
+       ACTIONS
+  ====================================================== -->
+
+  <div class="actions">
+
+    <button
+      type="button"
+      class="save-btn"
+      (click)="save()"
+      [disabled]="saving"
+    >
+
+      <span *ngIf="!saving">
+        حفظ نوع النشاط
+      </span>
+
+      <span *ngIf="saving">
+        جاري الحفظ...
+      </span>
+
+    </button>
+
+
+    <button
+      type="button"
+      class="cancel-btn"
+      (click)="cancel()"
+    >
+      إلغاء
+    </button>
+
+  </div>
+
 </div>
