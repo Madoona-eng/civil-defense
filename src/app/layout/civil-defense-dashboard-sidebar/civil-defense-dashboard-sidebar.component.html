@@ -15,22 +15,48 @@
   </div>
 
   <nav class="menu">
+    <!-- لوحة الطلبات (متاحة للجميع) -->
     <button type="button" (click)="onStatusSelect('DASHBOARD')" [class.active]="selectedStatus === 'DASHBOARD'">
       🏠 لوحة الطلبات
     </button>
-    <button type="button" (click)="onStatusSelect('REQUESTS')" [class.active]="selectedStatus === 'REQUESTS'">
+
+    <!-- تراخيص المحال / الطلبات -->
+    <button type="button" 
+            *ngIf="hasRole(['DataEntry'])" 
+            (click)="onStatusSelect('REQUESTS')" 
+            [class.active]="selectedStatus === 'REQUESTS'">
       📄 الطلبات
     </button>
-    <button type="button" (click)="onStatusSelect('INSPECTIONS')" [class.active]="selectedStatus === 'INSPECTIONS'">
+
+    <!-- المعاينات -->
+    <button type="button" 
+            *ngIf="hasRole(['Inspector'])" 
+            (click)="onStatusSelect('INSPECTIONS')" 
+            [class.active]="selectedStatus === 'INSPECTIONS'">
       🔍 المعاينات
     </button>
-    <button type="button" (click)="onStatusSelect('APPROVALS')" [class.active]="selectedStatus === 'APPROVALS'">
+
+    <!-- الموافقة النهائية -->
+    <button type="button" 
+            *ngIf="hasRole(['FinalApprover'])" 
+            (click)="onStatusSelect('APPROVALS')" 
+            [class.active]="selectedStatus === 'APPROVALS'">
       ✅ الموافقات
     </button>
-    <button type="button" (click)="onStatusSelect('ARCHIVE')" [class.active]="selectedStatus === 'ARCHIVE'">
+
+    <!-- الأرشيف -->
+    <button type="button" 
+            *ngIf="hasRole(['Archive'])" 
+            (click)="onStatusSelect('ARCHIVE')" 
+            [class.active]="selectedStatus === 'ARCHIVE'">
       🗂️ الأرشيف
     </button>
-    <button type="button" (click)="manageActivityTypes.emit()" [class.active]="selectedStatus === 'ACTIVITY_TYPES'">
+
+    <!-- أنواع النشاط -->
+    <button type="button" 
+            *ngIf="hasRole(['Admin', 'DataEntry'])" 
+            (click)="manageActivityTypes.emit()" 
+            [class.active]="selectedStatus === 'ACTIVITY_TYPES'">
       ⚙️ أنواع النشاط
     </button>
   </nav>
