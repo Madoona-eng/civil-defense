@@ -72,6 +72,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./FinalApproval/Components/final-approval-management/final-approval-management.component')
             .then(m => m.FinalApprovalManagementComponent)
+      },
+      {
+        path: 'archive',
+        loadComponent: () =>
+          import('./pages/dashboard/dashboard.component') // مؤقتاً لحين تعديل المسار الصحيح لمكون الأرشيف
+            .then(m => m.DashboardComponent)
       }
     ]
   },

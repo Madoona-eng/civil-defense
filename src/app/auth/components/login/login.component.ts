@@ -30,7 +30,9 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
-      this.router.navigateByUrl('/civil-defense');
+      const currentRole = this.authService.getRole();
+      console.log('User already logged in. Current role:', currentRole);
+      this.navigateToUserHome(currentRole);
     }
   }
 
@@ -44,22 +46,69 @@ export class LoginComponent implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.authService.login(this.form.getRawValue()).subscribe(result => {
-      this.isLoading = false;
+    console.log('Login attempt started:', this.form.getRawValue());
 
-      if (!result.success) {
-        this.errorMessage = result.message;
-        return;
+    this.authService.login(this.form.getRawValue()).subscribe({
+      next: (result: any) => {
+        this.isLoading = false;
+        console.log('API Response:', result);
+
+        // التعامل مع استجابة ה-Backend
+        const isSuccess = result.isSuccess ?? result.success;
+        if (!isSuccess) {
+          this.errorMessage = result.message || 'فشل تسجيل الدخول';
+          return;
+        }
+
+        this.successMessage = result.message || 'تم تسجيل الدخول بنجاح';
+
+        // استخراج الـ Role سواء كان في Root أو داخل object اسمه data
+        const userRole = result.data?.role || result.role;
+        console.log('User Role extracted:', userRole);
+
+        // التوجيه الفوري للشاشة المناسبة
+        this.navigateToUserHome(userRole);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = 'حدث خطأ في الاتصال بالخادم';
+        console.error('Login API error:', err);
       }
-
-      this.successMessage = result.message;
-      this.errorMessage = '';
-
-      setTimeout(() => {
-        this.router.navigateByUrl('/civil-defense');
-      }, 1200);
     });
   }
 
- 
+  private navigateToUserHome(role?: string): void {
+    let targetPath = '/civil-defense/dashboard';
+
+    switch (role) {
+      case 'DataEntry':
+        targetPath = '/civil-defense/licensing-processes';
+        break;
+      case 'Inspector':
+        targetPath = '/civil-defense/inspection';
+        break;
+      case 'FinalApprover':
+        targetPath = '/civil-defense/final-approval';
+        break;
+      case 'Archive':
+        targetPath = '/civil-defense/archive';
+        break;
+      case 'SuperAdmin':
+      case 'Admin':
+      default:
+        targetPath = '/civil-defense/dashboard';
+        break;
+    }
+
+    console.log(`Navigating to target route: ${targetPath}`);
+
+    this.router.navigateByUrl(targetPath).then(success => {
+      console.log('Navigation Status:', success);
+      if (!success) {
+        console.error(`خطأ: المسار ${targetPath} غير معرف في app.routes.ts`);
+      }
+    }).catch(err => {
+      console.error('Navigation error caught:', err);
+    });
+  }
 }

@@ -91,13 +91,11 @@
           {{ successMessage }}
         </div>
 
-        <button class="login-btn" type="submit" [disabled]="isLoading">
+        <button class="login-btn" type="submit" (click)="login()" [disabled]="isLoading">
           <span *ngIf="!isLoading">دخول السيستم</span>
           <span *ngIf="isLoading">جاري الدخول...</span>
         </button>
       </form>
-
-      
     </section>
   </div>
 </div>
