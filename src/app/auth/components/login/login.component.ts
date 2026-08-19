@@ -29,11 +29,7 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
-      const currentRole = this.authService.getRole();
-      console.log('User already logged in. Current role:', currentRole);
-      this.navigateToUserHome(currentRole);
-    }
+    // تم تفريغ الكود هنا لإجبار التطبيق على التوقف عند شاشة تسجيل الدخول وعدم التحويل التلقائي
   }
 
   login(): void {
@@ -53,7 +49,7 @@ export class LoginComponent implements OnInit {
         this.isLoading = false;
         console.log('API Response:', result);
 
-        // التعامل مع استجابة ה-Backend
+        // التعامل مع استجابة الخادم
         const isSuccess = result.isSuccess ?? result.success;
         if (!isSuccess) {
           this.errorMessage = result.message || 'فشل تسجيل الدخول';
@@ -66,7 +62,7 @@ export class LoginComponent implements OnInit {
         const userRole = result.data?.role || result.role;
         console.log('User Role extracted:', userRole);
 
-        // التوجيه الفوري للشاشة المناسبة
+        // التوجيه الفوري للشاشة المناسبة عند الضغط المباشر
         this.navigateToUserHome(userRole);
       },
       error: (err) => {
