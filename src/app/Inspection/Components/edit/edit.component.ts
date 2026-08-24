@@ -4,12 +4,19 @@ import { FormsModule } from '@angular/forms';
 
 import {
   ApiResponse,
-  InspectionDetails,
+  InspectionStepDetails,
   InspectionFormModel,
   InspectionItem
 } from '../../Models/inspection';
 
 import { InspectionService } from '../../Services/inspection.service';
+
+type AttachmentType =
+  | 'entityLetters'
+  | 'proofDocuments'
+  | 'engineeringReports'
+  | 'inspectionReports'
+  | 'otherAttachments';
 
 @Component({
   selector: 'app-inspection-edit',
@@ -71,7 +78,7 @@ export class EditComponent implements OnChanges {
     this.loading = true;
 
     this.inspectionService.getById(id).subscribe({
-      next: (response: ApiResponse<InspectionDetails>) => {
+      next: (response: ApiResponse<InspectionStepDetails>) => {
         this.loading = false;
 
         if (!response.isSuccess) {
@@ -94,9 +101,8 @@ export class EditComponent implements OnChanges {
     });
   }
 
-  fillForm(details: InspectionDetails): void {
+  fillForm(details: InspectionStepDetails): void {
     const inspectionNote =
-      details.inspectionNote ||
       details.notes?.find(note => note.processStep === 'Inspection')?.content ||
       details.notes?.[0]?.content ||
       '';
@@ -108,37 +114,26 @@ export class EditComponent implements OnChanges {
     };
   }
 
-  onFilesSelected(
-    event: Event,
-    type:
-      | 'entityLetters'
-      | 'proofDocuments'
-      | 'engineeringReports'
-      | 'inspectionReports'
-      | 'otherAttachments'
-  ): void {
+  onFilesSelected(event: Event, type: AttachmentType): void {
     const input = event.target as HTMLInputElement;
-    const files = Array.from(input.files || []);
+    const newFiles = Array.from(input.files || []);
 
-    if (type === 'entityLetters') {
-      this.entityLetters = files;
-    }
+    this.getFileArray(type).push(...newFiles);
 
-    if (type === 'proofDocuments') {
-      this.proofDocuments = files;
-    }
+    // نصفّر قيمة الـ input عشان لو المستخدم اختار نفس الملف تاني يتسجل صح
+    input.value = '';
+  }
 
-    if (type === 'engineeringReports') {
-      this.engineeringReports = files;
-    }
+  removeFile(type: AttachmentType, index: number): void {
+    this.getFileArray(type).splice(index, 1);
+  }
 
-    if (type === 'inspectionReports') {
-      this.inspectionReports = files;
-    }
-
-    if (type === 'otherAttachments') {
-      this.otherAttachments = files;
-    }
+  private getFileArray(type: AttachmentType): File[] {
+    if (type === 'entityLetters') return this.entityLetters;
+    if (type === 'proofDocuments') return this.proofDocuments;
+    if (type === 'engineeringReports') return this.engineeringReports;
+    if (type === 'inspectionReports') return this.inspectionReports;
+    return this.otherAttachments;
   }
 
   save(): void {

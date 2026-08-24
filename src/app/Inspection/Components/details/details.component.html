@@ -2,15 +2,12 @@
   <div class="details-header">
     <div>
       <h2>تفاصيل المعاينة</h2>
-      <p *ngIf="details">كود المعاملة: {{ details.transactionCode }}</p>
     </div>
 
     <button type="button" class="close-btn" (click)="close()">×</button>
   </div>
 
-  <div class="loading-box" *ngIf="loading">
-    جاري تحميل بيانات المعاينة...
-  </div>
+  <div class="loading-box" *ngIf="loading">جاري تحميل بيانات المعاينة...</div>
 
   <div class="message error" *ngIf="errorMessage">
     {{ errorMessage }}
@@ -30,86 +27,13 @@
         </div>
 
         <div class="info-item">
-          <span>المرحلة الحالية</span>
-          <strong>{{ getStepLabel(d.currentStep) }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span>تاريخ التقديم</span>
+          <span>تاريخ الورود</span>
           <strong>{{ d.submissionDate }}</strong>
         </div>
 
         <div class="info-item">
-          <span>تم الإنشاء بواسطة</span>
-          <strong>{{ d.createdBy || '-' }}</strong>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-card">
-      <div class="section-title">
-        <span>🏢</span>
-        <h3>بيانات المنشأة</h3>
-      </div>
-
-      <div class="info-grid">
-        <div class="info-item">
-          <span>اسم المنشأة</span>
-          <strong>{{ d.establishmentName }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span>عنوان المنشأة</span>
-          <strong>{{ d.establishmentAddress }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span>الجهة</span>
-          <strong>{{ d.requestingEntity }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span>المركز / المنطقة</span>
-          <strong>{{ d.district }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span>نوع النشاط</span>
-          <strong>{{ d.activityType }}</strong>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-card">
-      <div class="section-title">
-        <span>👤</span>
-        <h3>بيانات مقدم الطلب</h3>
-      </div>
-
-      <div class="info-grid">
-        <div class="info-item">
-          <span>اسم مقدم الطلب</span>
-          <strong>{{ d.applicantName }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span>صفة مقدم الطلب</span>
-          <strong>{{ d.applicantRole || '-' }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span>الرقم القومي</span>
-          <strong>{{ d.nationalId || '-' }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span>المدير المسؤول</span>
-          <strong>{{ d.responsibleManager || '-' }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span>رقم الهاتف</span>
-          <strong>{{ d.phone || '-' }}</strong>
+          <span>حالة الإرجاع</span>
+          <strong>{{ d.isReturned ? "مرتجعة" : "غير مرتجعة" }}</strong>
         </div>
       </div>
     </section>
@@ -122,18 +46,13 @@
 
       <div class="info-grid">
         <div class="info-item">
-          <span>اسم المعاين</span>
-          <strong>{{ d.inspectorName || '-' }}</strong>
+          <span>القائم بالمعاينة </span>
+          <strong>{{ d.inspectorName || "-" }}</strong>
         </div>
 
         <div class="info-item">
           <span>الرأي</span>
           <strong>{{ getOpinionLabel(d.opinion) }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span>تمت المعاينة بواسطة</span>
-          <strong>{{ d.inspectedBy || '-' }}</strong>
         </div>
       </div>
     </section>
@@ -149,8 +68,25 @@
       </div>
 
       <div class="note-card" *ngFor="let note of d.notes || []">
-        <strong>{{ note.content }}</strong>
-        <span>{{ note.writtenBy }} - {{ getStepLabel(note.processStep) }}</span>
+        <div class="note-row">
+          <span class="note-label">الخطوة:</span>
+          <span class="note-value">{{ getStepLabel(note.processStep) }}</span>
+        </div>
+
+        <div class="note-row">
+          <span class="note-label">المحتوى:</span>
+          <span class="note-value">{{ note.content }}</span>
+        </div>
+
+        <div class="note-row">
+          <span class="note-label">الوقت:</span>
+          <span class="note-value">{{ formatDate(note.createdAt) }}</span>
+        </div>
+
+        <div class="note-row">
+          <span class="note-label">بواسطة:</span>
+          <span class="note-value">{{ note.createdByUserName }}</span>
+        </div>
       </div>
     </section>
 
@@ -161,7 +97,10 @@
       </div>
 
       <div class="attachments-grid">
-        <div class="attachment-group" *ngFor="let group of getAttachmentGroups(d)">
+        <div
+          class="attachment-group"
+          *ngFor="let group of getAttachmentGroups(d)"
+        >
           <h4>{{ group.title }}</h4>
 
           <div class="empty-attachment" *ngIf="group.files.length === 0">
@@ -171,13 +110,19 @@
           <div class="attachment-item" *ngFor="let file of group.files">
             <a [href]="getFileUrl(file.filePath)" target="_blank">
               <img
-                *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
+                *ngIf="
+                  isImageFile(file.fileName) && !hasImageError(file.filePath)
+                "
                 [src]="getFileUrl(file.filePath)"
                 [alt]="file.fileName"
                 (error)="onImageError(file.filePath)"
               />
 
-              <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
+              <span
+                *ngIf="
+                  !isImageFile(file.fileName) || hasImageError(file.filePath)
+                "
+              >
                 📎 فتح الملف
               </span>
             </a>

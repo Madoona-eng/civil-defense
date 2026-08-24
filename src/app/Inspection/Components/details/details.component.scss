@@ -137,27 +137,52 @@
   border: 1px solid #fecaca;
 }
 
+// .note-card {
+//   background: #ffffff;
+//   border-radius: 16px;
+//   padding: 14px;
+//   margin-bottom: 10px;
+//   border: 1px solid #e2e8f0;
+// }
+
+// .note-card strong {
+//   display: block;
+//   color: #0f2942;
+//   margin-bottom: 8px;
+//   font-weight: 900;
+// }
+
+// .note-card span {
+//   color: #64748b;
+//   font-size: 13px;
+//   font-weight: 700;
+// }
+
 .note-card {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 14px;
-  margin-bottom: 10px;
-  border: 1px solid #e2e8f0;
-}
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
 
-.note-card strong {
-  display: block;
-  color: #0f2942;
-  margin-bottom: 8px;
-  font-weight: 900;
-}
+  .note-row {
+    display: flex;
+    gap: 6px;
+    padding: 4px 0;
+    font-size: 14px;
+  }
 
-.note-card span {
-  color: #64748b;
-  font-size: 13px;
-  font-weight: 700;
-}
+  .note-label {
+    font-weight: 600;
+    color: #6b7280;
+    min-width: 70px;
+  }
 
+  .note-value {
+    color: #111827;
+    flex: 1;
+  }
+}
 .attachments-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

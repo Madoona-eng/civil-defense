@@ -1,10 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 
 import {
   ApiResponse,
   InspectionAttachment,
-  InspectionDetails
+  InspectionStepDetails,
 } from '../../Models/inspection';
 
 import { InspectionService } from '../../Services/inspection.service';
@@ -19,13 +26,13 @@ interface AttachmentGroup {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  styleUrl: './details.component.scss',
 })
 export class DetailsComponent implements OnChanges {
   @Input() processId: string | null = null;
   @Output() closed = new EventEmitter<void>();
 
-  details: InspectionDetails | null = null;
+  details: InspectionStepDetails | null = null;
 
   loading = false;
   errorMessage = '';
@@ -46,7 +53,7 @@ export class DetailsComponent implements OnChanges {
     this.failedImages.clear();
 
     this.inspectionService.getById(id).subscribe({
-      next: (response: ApiResponse<InspectionDetails>) => {
+      next: (response: ApiResponse<InspectionStepDetails>) => {
         this.loading = false;
 
         if (!response.isSuccess) {
@@ -56,7 +63,7 @@ export class DetailsComponent implements OnChanges {
 
         this.details = response.data;
       },
-      error: err => {
+      error: (err) => {
         this.loading = false;
         console.error('Inspection details GET error:', err);
 
@@ -65,7 +72,7 @@ export class DetailsComponent implements OnChanges {
           err?.error?.Message ||
           err?.message ||
           'حدث خطأ أثناء تحميل بيانات المعاينة';
-      }
+      },
     });
   }
 
@@ -95,11 +102,11 @@ export class DetailsComponent implements OnChanges {
 
   getOpinionLabel(opinion: string | null | undefined): string {
     if (opinion === 'Compliant') {
-      return 'مطابق / مستوفي';
+      return 'مستوفي';
     }
 
     if (opinion === 'NonCompliant') {
-      return 'غير مطابق / غير مستوفي';
+      return 'غير مستوفي';
     }
 
     return opinion || '-';
@@ -110,10 +117,10 @@ export class DetailsComponent implements OnChanges {
   }
 
   isImageFile(fileName: string): boolean {
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
     const lowerName = fileName.toLowerCase();
 
-    return imageExtensions.some(extension => lowerName.endsWith(extension));
+    return imageExtensions.some((extension) => lowerName.endsWith(extension));
   }
 
   hasImageError(filePath: string): boolean {
@@ -124,28 +131,43 @@ export class DetailsComponent implements OnChanges {
     this.failedImages.add(filePath);
   }
 
-  getAttachmentGroups(details: InspectionDetails): AttachmentGroup[] {
+  getAttachmentGroups(details: InspectionStepDetails): AttachmentGroup[] {
     return [
       {
         title: 'خطابات الجهة',
-        files: details.entityLetters || []
+        files: details.entityLetters || [],
       },
       {
         title: 'مستندات الإثبات',
-        files: details.proofDocuments || []
+        files: details.proofDocuments || [],
       },
       {
         title: 'التقارير الهندسية',
-        files: details.engineeringReports || []
+        files: details.engineeringReports || [],
       },
       {
         title: 'تقارير المعاينة',
-        files: details.inspectionReports || []
+        files: details.inspectionReports || [],
       },
       {
         title: 'مرفقات أخرى',
-        files: details.otherAttachments || []
-      }
+        files: details.otherAttachments || [],
+      },
     ];
   }
+
+  formatDate(date: string | null | undefined): string {
+  if (!date) {
+    return '-';
+  }
+
+  return new Date(date).toLocaleString('ar-EG', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 }

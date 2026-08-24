@@ -1,17 +1,29 @@
 <section class="filters-card" dir="rtl">
-  <div class="filters-grid">
-    <div class="form-group">
+  <div class="filters-row-primary">
+    <div class="form-group search-group">
       <label>بحث</label>
       <input
         type="text"
         [(ngModel)]="searchTerm"
-        placeholder="ابحث بكود المعاملة أو اسم المنشأة أو مقدم الطلب"
+        placeholder="يمكنك البحث بكود المعاملة، اسم المنشأة، عنوان المنشأة، اسم مقدم الطلب، الرقم القومي، اسم المدير المسؤول، رقم الهاتف."
         (keyup.enter)="search()"
       />
     </div>
 
     <div class="form-group">
-      <label>الجهة</label>
+      <label>التاريخ من</label>
+      <input type="date" [(ngModel)]="submissionDateFrom" />
+    </div>
+
+    <div class="form-group">
+      <label>التاريخ إلى</label>
+      <input type="date" [(ngModel)]="submissionDateTo" />
+    </div>
+  </div>
+
+  <div class="filters-row-secondary">
+    <div class="form-group">
+      <label>الجهة الطالبة</label>
       <select [(ngModel)]="requestingEntityId">
         <option value="">كل الجهات</option>
         <option *ngFor="let entity of requestingEntities" [value]="entity.id">
@@ -21,8 +33,8 @@
     </div>
 
     <div class="form-group">
-      <label>المركز / المنطقة</label>
-      <select [(ngModel)]="districtId">
+      <label>المركز</label>
+      <select [(ngModel)]="districtId" [disabled]="isDistrictLocked">
         <option value="">كل المراكز</option>
         <option *ngFor="let district of districts" [value]="district.id">
           {{ district.name }}
@@ -39,12 +51,19 @@
         </option>
       </select>
     </div>
+
+    <div class="form-group">
+      <label>حالة الإرجاع</label>
+      <select [(ngModel)]="isReturned">
+        <option value="">الكل</option>
+        <option value="true">مرتجعة</option>
+        <option value="false">غير مرتجعة</option>
+      </select>
+    </div>
   </div>
 
   <div class="filter-actions">
-    <button type="button" class="search-btn" (click)="search()">
-      بحث
-    </button>
+    <button type="button" class="search-btn" (click)="search()">بحث</button>
 
     <button type="button" class="reset-btn" (click)="resetFilters()">
       إعادة ضبط
@@ -68,7 +87,10 @@
     {{ errorMessage }}
   </div>
 
-  <div class="empty-box" *ngIf="!isLoading && items.length === 0 && !errorMessage">
+  <div
+    class="empty-box"
+    *ngIf="!isLoading && items.length === 0 && !errorMessage"
+  >
     لا توجد معاملات معاينة.
   </div>
 
@@ -77,21 +99,21 @@
       <thead>
         <tr>
           <th>كود المعاملة</th>
-          <th>تاريخ التقديم</th>
+          <th>تاريخ تقديم الطلب</th>
           <th>اسم المنشأة</th>
           <th>عنوان المنشأة</th>
-          <th>الجهة</th>
-          <th>المركز / المنطقة</th>
+          <th>الجهة الطالبة</th>
+          <th>المركز</th>
           <th>نوع النشاط</th>
           <th>مقدم الطلب</th>
-          <th>المرحلة</th>
+          <th>الحالة</th>
           <th>الإجراءات</th>
         </tr>
       </thead>
 
       <tbody>
         <tr *ngFor="let item of items">
-          <td>{{ item.transactionCode }}</td>
+          <td class="transaction-code">{{ item.transactionCode }}</td>
           <td>{{ item.submissionDate }}</td>
           <td>{{ item.establishmentName }}</td>
           <td>{{ item.establishmentAddress }}</td>
@@ -99,10 +121,9 @@
           <td>{{ item.district }}</td>
           <td>{{ item.activityType }}</td>
           <td>{{ item.applicantName }}</td>
-
           <td>
-            <span class="step-badge">
-              {{ getStepLabel(item.currentStep) }}
+            <span class="status-badge" [class.returned]="item.isReturned">
+              {{ item.isReturned ? "مرتجعة" : "غير مرتجعة" }}
             </span>
           </td>
 
@@ -113,7 +134,7 @@
                 class="details-btn"
                 (click)="requestDetails(item.id)"
               >
-                👁️ عرض
+                 عرض
               </button>
 
               <button
@@ -121,15 +142,7 @@
                 class="edit-btn"
                 (click)="requestEdit(item)"
               >
-                ✏️ تعديل
-              </button>
-
-              <button
-                type="button"
-                class="delete-btn"
-                (click)="requestDelete(item)"
-              >
-                🗑️ حذف
+                اجراء المعاينة
               </button>
             </div>
           </td>
@@ -139,13 +152,15 @@
   </div>
 
   <div class="pagination" *ngIf="!isLoading && totalPages > 0">
-    <button type="button" (click)="previousPage()" [disabled]="!hasPreviousPage">
+    <button
+      type="button"
+      (click)="previousPage()"
+      [disabled]="!hasPreviousPage"
+    >
       السابق
     </button>
 
-    <span>
-      صفحة {{ pageNumber }} من {{ totalPages }}
-    </span>
+    <span> صفحة {{ pageNumber }} من {{ totalPages }} </span>
 
     <button type="button" (click)="nextPage()" [disabled]="!hasNextPage">
       التالي
