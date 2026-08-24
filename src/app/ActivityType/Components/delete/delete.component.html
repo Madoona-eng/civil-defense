@@ -1,11 +1,13 @@
 <div class="delete-popup" dir="rtl">
-  <div class="delete-icon">🗑️</div>
+  <div class="delete-icon">
+    <span>🗑️</span>
+  </div>
 
-  <h2>حذف نوع النشاط</h2>
 
-  <p>
-    هل أنتِ متأكدة من حذف نوع النشاط
-    <strong>{{ activityType?.name }}</strong>؟
+
+  <p class="delete-text">
+    هل أنتِ متأكدة من حذف نوع النشاط 
+    <strong>"{{ activityType?.name }}"</strong>؟
   </p>
 
   <div class="message error" *ngIf="errorMessage">
