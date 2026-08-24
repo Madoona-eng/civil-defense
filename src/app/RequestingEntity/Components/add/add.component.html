@@ -1,22 +1,28 @@
-<div class="add-page" dir="rtl">
-  <div class="page-header">
-    <div>
-      <h2>إضافة جهة</h2>
-      <p>أدخلي اسم الجهة لإضافتها إلى النظام.</p>
+<div class="popup-container" dir="rtl">
+  <div class="popup-header">
+    <div class="header-right">
+      <div class="header-icon">+</div>
+      <div class="header-titles">
+        <span class="sub-title">إدارة الجهات</span>
+        <h2>إضافة جهة</h2>
+      </div>
     </div>
+    <button type="button" class="close-btn" (click)="cancel()">✕</button>
   </div>
 
-  <div class="form-card">
+  <div class="form-body">
     <div class="form-grid">
-      <div class="field">
-        <label>كود الجهة</label>
-        <input
-          type="number"
-          [(ngModel)]="formModel.code"
-          name="code"
-          placeholder="مثال: 100"
-        />
-      </div>
+     <div class="field">
+  <label>كود الجهة</label>
+  <input
+    type="number"
+    min="1"
+    (keydown)="preventNegative($event)"
+    [(ngModel)]="formModel.code"
+    name="code"
+    placeholder="مثال: 100"
+  />
+</div>
 
       <div class="field">
         <label>اسم الجهة</label>

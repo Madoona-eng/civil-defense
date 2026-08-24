@@ -29,15 +29,23 @@ export class AddComponent {
 
   constructor(private readonly requestingEntityService: RequestingEntityService) {}
 
+  // دالة منع كتابة علامة السالب وحرف E من لوحة المفاتيح
+  preventNegative(event: KeyboardEvent): void {
+    if (event.key === '-' || event.key === 'e' || event.key === 'E') {
+      event.preventDefault();
+    }
+  }
+
   save(): void {
     this.errorMessage = '';
     this.successMessage = '';
 
     const code = this.formModel.code;
-    const name = this.formModel.name.trim();
+    const name = this.formModel.name?.trim(); // إضافة ? أمان في حال كان الاسم فارغاً
 
-    if (!code) {
-      this.errorMessage = 'من فضلك أدخلي كود الجهة';
+    // التحقق من أن الكود موجود وأكبر من الصفر (لا يسمح بالصفر أو السالب)
+    if (code === null || code === undefined || code <= 0) {
+      this.errorMessage = 'من فضلك أدخلي كود جهة صحيح (رقم أكبر من الصفر)';
       return;
     }
 

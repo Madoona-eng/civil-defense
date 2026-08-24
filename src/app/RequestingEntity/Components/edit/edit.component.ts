@@ -7,6 +7,8 @@ import {
   UpdateRequestingEntityRequest
 } from '../../Models/requesting-entity';
 import { RequestingEntityService } from '../../Services/requesting-entity.service';
+/* داخل ملف edit.component.scss الخاص بك */
+
 
 @Component({
   selector: 'app-requesting-entity-edit',
