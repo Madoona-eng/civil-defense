@@ -16,6 +16,13 @@ import {
 
 import { InspectionService } from '../../Services/inspection.service';
 
+import {
+  PROCESS_STEP_LABELS,
+  INSPECTION_OPINION_LABELS,
+  ProcessStep,
+  InspectionOpinion,
+} from '../../../Enums/enums';
+
 interface AttachmentGroup {
   title: string;
   files: InspectionAttachment[];
@@ -38,6 +45,15 @@ export class DetailsComponent implements OnChanges {
   errorMessage = '';
   failedImages = new Set<string>();
 
+  getStepLabel(step: string | null | undefined): string {
+    return PROCESS_STEP_LABELS[step as ProcessStep] || step || '-';
+  }
+
+  getOpinionLabel(opinion: string | null | undefined): string {
+    return (
+      INSPECTION_OPINION_LABELS[opinion as InspectionOpinion] || opinion || '-'
+    );
+  }
   constructor(private readonly inspectionService: InspectionService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -80,38 +96,6 @@ export class DetailsComponent implements OnChanges {
     this.closed.emit();
   }
 
-  getStepLabel(step: string | null | undefined): string {
-    if (step === 'Inspection') {
-      return 'المعاينة';
-    }
-
-    if (step === 'FinalApproval') {
-      return 'الموافقة النهائية';
-    }
-
-    if (step === 'Archive') {
-      return 'الأرشيف';
-    }
-
-    if (step === 'NewLicense') {
-      return 'ترخيص جديد';
-    }
-
-    return step || '-';
-  }
-
-  getOpinionLabel(opinion: string | null | undefined): string {
-    if (opinion === 'Compliant') {
-      return 'مستوفي';
-    }
-
-    if (opinion === 'NonCompliant') {
-      return 'غير مستوفي';
-    }
-
-    return opinion || '-';
-  }
-
   getFileUrl(filePath: string): string {
     return this.inspectionService.buildFileUrl(filePath);
   }
@@ -133,41 +117,25 @@ export class DetailsComponent implements OnChanges {
 
   getAttachmentGroups(details: InspectionStepDetails): AttachmentGroup[] {
     return [
-      {
-        title: 'خطابات الجهة',
-        files: details.entityLetters || [],
-      },
-      {
-        title: 'مستندات الإثبات',
-        files: details.proofDocuments || [],
-      },
-      {
-        title: 'التقارير الهندسية',
-        files: details.engineeringReports || [],
-      },
-      {
-        title: 'تقارير المعاينة',
-        files: details.inspectionReports || [],
-      },
-      {
-        title: 'مرفقات أخرى',
-        files: details.otherAttachments || [],
-      },
+      { title: 'خطابات الجهة', files: details.entityLetters || [] },
+      { title: 'مستندات الإثبات', files: details.proofDocuments || [] },
+      { title: 'التقارير الهندسية', files: details.engineeringReports || [] },
+      { title: 'تقارير المعاينة', files: details.inspectionReports || [] },
+      { title: 'مرفقات أخرى', files: details.otherAttachments || [] },
     ];
   }
 
   formatDate(date: string | null | undefined): string {
-  if (!date) {
-    return '-';
+    if (!date) {
+      return '-';
+    }
+
+    return new Date(date).toLocaleString('ar-EG', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
-
-  return new Date(date).toLocaleString('ar-EG', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
 }

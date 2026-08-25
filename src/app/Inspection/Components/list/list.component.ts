@@ -25,9 +25,7 @@ import { ActivityTypeService } from '../../../ActivityType/Services/activity-typ
   styleUrl: './list.component.scss',
 })
 export class ListComponent implements OnInit {
-  @Output() detailsRequested = new EventEmitter<string>();
   @Output() editRequested = new EventEmitter<InspectionItem>();
-  @Output() deleteRequested = new EventEmitter<InspectionItem>();
 
   items: InspectionItem[] = [];
 
@@ -182,14 +180,11 @@ export class ListComponent implements OnInit {
     this.loadInspections();
   }
 
-  requestDetails(id: string): void {
-    this.detailsRequested.emit(id);
-  }
-
   requestEdit(item: InspectionItem): void {
     this.editRequested.emit(item);
   }
 
+  //TODO : Use enum for step values instead of hardcoded strings 
   getStepLabel(step: string): string {
     if (step === 'Inspection') {
       return 'المعاينة';

@@ -1,49 +1,21 @@
 <div class="inspection-page" dir="rtl">
 
   <app-inspection-list
-    (detailsRequested)="openDetailsPopup($event)"
     (editRequested)="openEditPopup($event)"
-    (deleteRequested)="openDeletePopup($event)"
   ></app-inspection-list>
-
-  <div
-    class="popup-backdrop"
-    *ngIf="isDetailsPopupOpen"
-    (click)="closeDetailsPopup()"
-  >
-    <div class="popup-card details-popup-card" (click)="$event.stopPropagation()">
-      <app-inspection-details
-        [processId]="selectedProcessId"
-        (closed)="closeDetailsPopup()"
-      ></app-inspection-details>
-    </div>
-  </div>
 
   <div
     class="popup-backdrop"
     *ngIf="isEditPopupOpen"
     (click)="closeEditPopup()"
   >
-    <div class="popup-card edit-popup-card" (click)="$event.stopPropagation()">
-      <app-inspection-edit
+    <div class="popup-card process-popup-card" (click)="$event.stopPropagation()">
+      <app-inspection-process
         [item]="selectedInspectionItem"
         (saved)="onEditSaved()"
         (cancelled)="closeEditPopup()"
-      ></app-inspection-edit>
+      ></app-inspection-process>
     </div>
   </div>
 
-  <div
-    class="popup-backdrop"
-    *ngIf="isDeletePopupOpen"
-    (click)="closeDeletePopup()"
-  >
-    <div class="popup-card delete-popup-card" (click)="$event.stopPropagation()">
-      <app-inspection-delete
-        [item]="selectedDeleteItem"
-        (deleted)="onDeleteDone()"
-        (cancelled)="closeDeletePopup()"
-      ></app-inspection-delete>
-    </div>
-  </div>
 </div>

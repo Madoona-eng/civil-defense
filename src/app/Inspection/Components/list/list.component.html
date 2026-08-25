@@ -73,10 +73,8 @@
 
 <section class="table-card" dir="rtl">
   <div class="table-header">
-    <div>
-      <h3>قائمة المعاينات</h3>
-      <p>إجمالي النتائج: {{ totalCount }}</p>
-    </div>
+    <h3>قائمة المعاينات</h3>
+    <p>إجمالي النتائج: {{ totalCount }}</p>
   </div>
 
   <div class="loading-box" *ngIf="isLoading">
@@ -131,18 +129,10 @@
             <div class="row-actions">
               <button
                 type="button"
-                class="details-btn"
-                (click)="requestDetails(item.id)"
-              >
-                 عرض
-              </button>
-
-              <button
-                type="button"
                 class="edit-btn"
                 (click)="requestEdit(item)"
               >
-                اجراء المعاينة
+               إجراء المعاينة
               </button>
             </div>
           </td>
