@@ -1,30 +1,47 @@
+<div class="modal-overlay" dir="rtl">
+  <div class="delete-modal">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="alert-icon">!</div>
 
-<div class="delete-popup" dir="rtl">
-  <div class="delete-icon">🗑️</div>
+      <div class="header-title">
+        <span class="subtitle">تأكيد العملية</span>
+        <h2>حذف الجهة</h2>
+      </div>
 
-  <h2>حذف الجهة</h2>
+      <button type="button" class="close-btn" (click)="cancel()">&times;</button>
+    </div>
 
-  <p>
-    هل أنتِ متأكدة من حذف الجهة
-    <strong>{{ requestingEntity?.name }}</strong>؟
-  </p>
+    <!-- Inner Body -->
+    <div class="modal-body">
+      <div class="trash-icon">🗑️</div>
 
-  <div class="message error" *ngIf="errorMessage">
-    {{ errorMessage }}
-  </div>
+      <p class="confirm-text">
+        هل أنتِ متأكدة من حذف الجهة 
+        <span class="highlight">"{{ requestingEntity?.name }}"</span>؟
+      </p>
 
-  <div class="actions">
-    <button
-      type="button"
-      class="delete-btn"
-      (click)="confirmDelete()"
-      [disabled]="deleting"
-    >
-      {{ deleting ? 'جاري الحذف...' : 'نعم، حذف' }}
-    </button>
+      <div class="message error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
 
-    <button type="button" class="cancel-btn" (click)="cancel()">
-      إلغاء
-    </button>
+      <!-- Actions -->
+      <div class="modal-actions">
+        <button 
+          type="button" 
+          class="btn-delete" 
+          (click)="confirmDelete()" 
+          [disabled]="deleting"
+        >
+          {{ deleting ? 'جاري الحذف...' : 'نعم، حذف' }}
+        </button>
+
+        <button type="button" class="btn-cancel" (click)="cancel()">
+          إلغاء
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>

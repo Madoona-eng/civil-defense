@@ -15,48 +15,65 @@
   </div>
 
   <nav class="menu">
-    <!-- لوحة الطلبات (متاحة للجميع) -->
-    <button type="button" (click)="onStatusSelect('DASHBOARD')" [class.active]="selectedStatus === 'DASHBOARD'">
+    <!-- لوحة الطلبات -->
+    <button 
+      type="button" 
+      routerLink="/civil-defense/dashboard" 
+      routerLinkActive="active">
       🏠 لوحة الطلبات
     </button>
 
-    <!-- تراخيص المحال / الطلبات -->
-    <button type="button" 
-            *ngIf="hasRole(['DataEntry'])" 
-            (click)="onStatusSelect('REQUESTS')" 
-            [class.active]="selectedStatus === 'REQUESTS'">
-      📄 الطلبات
+    <!-- ➕ إضافة الصفحة الجديدة هنا -->
+    <button 
+      type="button" 
+      *ngIf="hasRole(['DataEntry', 'Admin'])" 
+      routerLink="/civil-defense/shop-licenses" 
+      routerLinkActive="active">
+      📋 عرض تراخيص المحال
+    </button>
+
+    <!-- إدارة التراخيص / الطلبات القديمة -->
+    <button 
+      type="button" 
+      *ngIf="hasRole(['DataEntry'])" 
+      routerLink="/civil-defense/licensing-processes" 
+      routerLinkActive="active">
+      📄 تراخيص المحال
     </button>
 
     <!-- المعاينات -->
-    <button type="button" 
-            *ngIf="hasRole(['Inspector'])" 
-            (click)="onStatusSelect('INSPECTIONS')" 
-            [class.active]="selectedStatus === 'INSPECTIONS'">
+    <button 
+      type="button" 
+      *ngIf="hasRole(['Inspector'])" 
+      routerLink="/civil-defense/inspection" 
+      routerLinkActive="active">
       🔍 المعاينات
     </button>
 
     <!-- الموافقة النهائية -->
-    <button type="button" 
-            *ngIf="hasRole(['FinalApprover'])" 
-            (click)="onStatusSelect('APPROVALS')" 
-            [class.active]="selectedStatus === 'APPROVALS'">
+    <button 
+      type="button" 
+      *ngIf="hasRole(['FinalApprover'])" 
+      routerLink="/civil-defense/final-approval" 
+      routerLinkActive="active">
       ✅ الموافقات
     </button>
 
     <!-- الأرشيف -->
-    <button type="button" 
-            *ngIf="hasRole(['Archive'])" 
-            (click)="onStatusSelect('ARCHIVE')" 
-            [class.active]="selectedStatus === 'ARCHIVE'">
+    <button 
+      type="button" 
+      *ngIf="hasRole(['Archive'])" 
+      routerLink="/civil-defense/archive" 
+      routerLinkActive="active">
       🗂️ الأرشيف
     </button>
 
     <!-- أنواع النشاط -->
-    <button type="button" 
-            *ngIf="hasRole(['Admin', 'DataEntry'])" 
-            (click)="manageActivityTypes.emit()" 
-            [class.active]="selectedStatus === 'ACTIVITY_TYPES'">
+    <button 
+      type="button" 
+      *ngIf="hasRole(['Admin', 'DataEntry'])" 
+      routerLink="/civil-defense/activity-types" 
+      routerLinkActive="active">
       ⚙️ أنواع النشاط
     </button>
   </nav>

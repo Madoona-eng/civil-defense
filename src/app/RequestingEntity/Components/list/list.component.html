@@ -26,19 +26,17 @@
     <table>
       <thead>
         <tr>
-          <th>الكود</th>
-          <th>اسم الجهة</th>
-         
-          <th>الإجراءات</th>
+          <th class="col-code">الكود</th>
+          <th class="col-name">اسم الجهة</th>
+          <th class="col-actions">الإجراءات</th>
         </tr>
       </thead>
 
       <tbody>
         <tr *ngFor="let item of requestingEntities; let i = index">
-          <td>{{ item.code }}</td>
-          <td>{{ item.name }}</td>
-    
-          <td>
+          <td class="col-code">{{ item.code }}</td>
+          <td class="col-name">{{ item.name }}</td>
+          <td class="col-actions">
             <div class="row-actions">
               <button type="button" class="edit-btn" (click)="requestEdit(item.id)">
                 تعديل

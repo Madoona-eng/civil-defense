@@ -1,29 +1,49 @@
-<div class="delete-popup" dir="rtl">
-  <div class="delete-icon">🗑️</div>
+<div class="delete-card-wrapper" dir="rtl">
+  
+  <!-- Header -->
+  <div class="modal-header">
+    <div class="header-right">
+      <div class="header-icon">!</div>
+      <div class="header-title">
+        <span class="subtitle">تأكيد العملية</span>
+        <h2>حذف المركز / المنطقة</h2>
+      </div>
+    </div>
 
-  <h2>حذف مركز / منطقة</h2>
-
-  <p>
-    هل أنتِ متأكدة من حذف
-    <strong>{{ district?.name }}</strong>؟
-  </p>
-
-  <div class="message error" *ngIf="errorMessage">
-    {{ errorMessage }}
+    <button type="button" class="close-btn" (click)="cancel()">&times;</button>
   </div>
 
-  <div class="actions">
-    <button
-      type="button"
-      class="delete-btn"
-      (click)="confirmDelete()"
-      [disabled]="deleting"
-    >
-      {{ deleting ? 'جاري الحذف...' : 'نعم، حذف' }}
-    </button>
+  <!-- Inner Content Card -->
+  <div class="delete-inner-card">
+    <div class="trash-icon-wrapper">
+      <span class="trash-icon">🗑️</span>
+    </div>
 
-    <button type="button" class="cancel-btn" (click)="cancel()">
-      إلغاء
-    </button>
+    <p class="confirm-text">
+      هل أنتِ متأكدة من حذف المركز / المنطقة
+      <strong class="highlight-name">"{{ district?.name }}"</strong>؟
+    </p>
+
+    <!-- Error Message -->
+    <div class="message error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button
+        type="button"
+        class="delete-btn"
+        (click)="confirmDelete()"
+        [disabled]="deleting"
+      >
+        {{ deleting ? 'جاري الحذف...' : 'نعم، حذف' }}
+      </button>
+
+      <button type="button" class="cancel-btn" (click)="cancel()">
+        إلغاء
+      </button>
+    </div>
   </div>
+
 </div>

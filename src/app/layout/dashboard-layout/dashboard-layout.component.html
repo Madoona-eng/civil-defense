@@ -9,12 +9,6 @@
     </div>
 
     <nav class="sidebar-menu">
-      <!-- الرئيسية (Admin فقط) -->
-      <!-- <a *ngIf="hasRole(['Admin'])" routerLink="/civil-defense/dashboard" routerLinkActive="active">
-        <span>🏠</span>
-        الرئيسية
-      </a> -->
-
       <!-- إعدادات النظام الأساسية (Admin فقط) -->
       <a *ngIf="hasRole(['Admin'])" routerLink="/civil-defense/activity-types" routerLinkActive="active">
         <span>⚙️</span>
@@ -31,10 +25,16 @@
         المراكز / المناطق
       </a>
 
-      <!-- تراخيص المحال (DataEntry فقط) -->
+      <!-- إضافة طلب ترخيص (DataEntry فقط) -->
       <a *ngIf="hasRole(['DataEntry'])" routerLink="/civil-defense/licensing-processes" routerLinkActive="active">
         <span>🏪</span>
         تراخيص المحال
+      </a>
+
+      <!-- ➕ الصفحة الجديدة: عرض تراخيص المحال (DataEntry و Admin) -->
+      <a *ngIf="hasRole(['DataEntry', 'Admin'])" routerLink="/civil-defense/shop-licenses" routerLinkActive="active">
+        <span>📋</span>
+        عرض تراخيص المحال
       </a>
 
       <!-- المعاينات (Inspector فقط) -->

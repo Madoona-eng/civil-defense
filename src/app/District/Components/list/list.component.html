@@ -2,7 +2,7 @@
   <div class="list-header">
     <div>
       <h3>قائمة المراكز / المناطق</h3>
-      <p>عرض جميع المراكز أو المناطق المسجلة في النظام.</p>
+      <p>عرض جميع المراكز والجهات المسجلة في النظام.</p>
     </div>
 
     <button type="button" class="refresh-btn" (click)="loadDistricts()">
@@ -19,26 +19,24 @@
   </div>
 
   <div class="empty-box" *ngIf="!isLoading && districts.length === 0">
-    لا توجد مراكز أو مناطق مسجلة حتى الآن.
+    لا توجد مراكز مسجلة حتى الآن.
   </div>
 
   <div class="table-wrap" *ngIf="!isLoading && districts.length > 0">
     <table>
       <thead>
         <tr>
-        
           <th>الكود</th>
-          <th>اسم المركز / المنطقة</th>
-          <th>الإجراءات</th>
+          <th>اسم المركز</th>
+          <th class="actions-col">الإجراءات</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr *ngFor="let item of districts; let i = index">
-        
-          <td>{{ item.code || '-' }}</td>
+        <tr *ngFor="let item of districts">
+          <td>{{ item.code }}</td>
           <td>{{ item.name }}</td>
-          <td>
+          <td class="actions-col">
             <div class="row-actions">
               <button type="button" class="edit-btn" (click)="requestEdit(item.id)">
                 تعديل

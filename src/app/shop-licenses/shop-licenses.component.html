@@ -1,0 +1,144 @@
+<div class="list-card" dir="rtl">
+  <div class="list-header">
+    <div>
+      <h3>قائمة تراخيص المحال</h3>
+      <p>عرض ومتابعة طلبات تراخيص المحال المسجلة في النظام.</p>
+    </div>
+
+    <button type="button" class="refresh-btn" (click)="loadLicensingProcesses()">
+      تحديث
+    </button>
+  </div>
+
+  <!-- قسم البحث والفلاتر -->
+  <div class="filter-section">
+    <div class="filter-group">
+      <label>بحث</label>
+      <input 
+        type="text" 
+        class="search-input" 
+        [(ngModel)]="searchTerm" 
+        placeholder="ابحث باسم المنشأة أو كود المعاملة"
+        (keyup.enter)="search()"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label>مرحلة الطلب</label>
+      <select class="filter-select" [(ngModel)]="processStep" (change)="search()">
+        <option *ngFor="let step of processSteps" [value]="step.value">
+          {{ step.label }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-buttons">
+      <button type="button" class="search-btn" (click)="search()">بحث</button>
+      <button type="button" class="reset-btn" (click)="resetFilters()">إلغاء الفلتر</button>
+    </div>
+  </div>
+
+  <div class="message error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="loading-box" *ngIf="isLoading">
+    جاري تحميل البيانات...
+  </div>
+
+  <div class="empty-box" *ngIf="!isLoading && items.length === 0">
+    لا توجد تراخيص محال مسجلة حتى الآن.
+  </div>
+
+  <!-- جدول تراخيص المحال -->
+  <div class="table-wrap" *ngIf="!isLoading && items.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>كود المعاملة</th>
+          <th>تاريخ التقديم</th>
+          <th>اسم المنشأة</th>
+          <th>العنوان</th>
+          <th>الجهة</th>
+          <th>المركز / المنطقة</th>
+          <th>نوع النشاط</th>
+          <th>مقدم الطلب</th>
+          <th>المرحلة الحالية</th>
+          <th class="col-actions">الإجراءات</th>
+        </tr>
+      </thead>
+
+      <tbody>
+  <tr *ngFor="let item of items; let i = index">
+    <!-- الرقم التسلسلي -->
+    <td>{{ (pageNumber - 1) * pageSize + i + 1 }}</td>
+
+    <!-- كود المعاملة -->
+    <td>
+      <strong>{{ item.code || item.transactionCode || item.Code || item.TransactionCode || '---' }}</strong>
+    </td>
+
+    <!-- تاريخ التقديم -->
+    <td>
+      {{ (item.createdDate || item.createdAt || item.creationDate || item.CreatedDate || item.CreatedAt || item.requestDate) | date:'yyyy-MM-dd' }}
+    </td>
+
+    <!-- اسم المنشأة -->
+    <td>
+      {{ item.facilityName || item.shopName || item.name || item.FacilityName || item.ShopName || item.facility?.name || item.shop?.name || '---' }}
+    </td>
+
+    <!-- العنوان -->
+    <td>
+      {{ item.address || item.location || item.shopAddress || item.Address || item.Location || '---' }}
+    </td>
+
+    <!-- الجهة -->
+    <td>
+      {{ item.requestingEntityName || item.entityName || item.requestingEntity?.name || item.entity?.name || item.RequestingEntity?.Name || item.EntityName || '---' }}
+    </td>
+
+    <!-- المركز / المنطقة -->
+    <td>
+      {{ item.districtName || item.district?.name || item.centerName || item.DistrictName || item.District?.Name || '---' }}
+    </td>
+
+    <!-- نوع النشاط -->
+    <td>
+      {{ item.activityTypeName || item.activityType?.name || item.activityType || item.ActivityTypeName || item.ActivityType?.Name || '---' }}
+    </td>
+
+    <!-- مقدم الطلب -->
+    <td>
+      {{ item.applicantName || item.createdByName || item.applicant || item.ApplicantName || item.CreatedBy || '---' }}
+    </td>
+
+    <!-- المرحلة الحالية -->
+    <td>
+      <span class="status-badge">
+        {{ getStepLabel(item.processStep ?? item.step ?? item.ProcessStep ?? item.Step ?? item.status ?? item.Status) }}
+      </span>
+    </td>
+
+    <!-- الإجراءات -->
+    <td class="col-actions">
+      <div class="row-actions">
+        <button type="button" class="view-btn" (click)="requestDetails(item.id || item.Id)" title="عرض التفاصيل">
+          👁️
+        </button>
+
+        <button type="button" class="edit-btn" (click)="requestEdit(item.id || item.Id)" title="تعديل">
+          ✏️
+        </button>
+
+        <button type="button" class="delete-btn" (click)="requestDelete(item)" title="حذف">
+          🗑️
+        </button>
+      </div>
+    </td>
+  </tr>
+</tbody>
+    </table>
+  </div>
+</div>

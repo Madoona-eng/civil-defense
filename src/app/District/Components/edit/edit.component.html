@@ -1,68 +1,74 @@
-<div class="popup-form" dir="rtl">
-  <button type="button" class="close-btn" (click)="cancel()">
-    ×
-  </button>
+<div class="modal-overlay" dir="rtl">
+  <div class="edit-page">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-icon">✏️</div>
 
-  <div class="popup-header">
-    <div class="header-icon">📍</div>
+      <div class="header-title">
+        <span class="subtitle">إدارة المراكز / المناطق</span>
+        <h2>تعديل مركز / منطقة</h2>
+      </div>
 
-    <div>
-      <h2>تعديل مركز / منطقة</h2>
-      <p>عدلي كود واسم المركز أو المنطقة ثم اضغطي حفظ.</p>
-    </div>
-  </div>
-
-  <div class="form-card">
-    <div class="loading-box" *ngIf="loading">
-      جاري تحميل البيانات...
+      <button type="button" class="close-btn" (click)="cancel()">&times;</button>
     </div>
 
-    <ng-container *ngIf="!loading">
-      <div class="form-grid">
-        <div class="field">
-          <label>كود المركز / المنطقة</label>
-          <input
-            type="number"
-            [(ngModel)]="formModel.code"
-            name="code"
-            placeholder="مثال: 20"
-            disabled
-          />
+    <!-- Form Container -->
+    <div class="form-card">
+      <div class="loading-box" *ngIf="loading">
+        جاري تحميل البيانات...
+      </div>
+
+      <ng-container *ngIf="!loading">
+        <div class="form-grid">
+          <div class="field">
+            <label>كود المركز / المنطقة</label>
+            <input
+              type="number"
+              [(ngModel)]="formModel.code"
+              name="code"
+              placeholder="0"
+              disabled
+            />
+          </div>
+
+          <div class="field">
+            <label>اسم المركز / المنطقة</label>
+            <input
+              type="text"
+              [(ngModel)]="formModel.name"
+              name="name"
+              placeholder="مثال: مركز المنيا"
+            />
+          </div>
         </div>
 
-        <div class="field">
-          <label>اسم المركز / المنطقة</label>
-          <input
-            type="text"
-            [(ngModel)]="formModel.name"
-            name="name"
-            placeholder="اسم المركز / المنطقة"
-          />
+        <!-- Messages -->
+        <div class="message success" *ngIf="successMessage">
+          {{ successMessage }}
         </div>
-      </div>
 
-      <div class="message success" *ngIf="successMessage">
-        {{ successMessage }}
-      </div>
+        <div class="message error" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
 
-      <div class="message error" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </div>
+        <!-- Actions -->
+        <div class="actions">
+          <button
+            type="button"
+            class="save-btn"
+            (click)="save()"
+            [disabled]="saving"
+          >
+            {{ saving ? 'جاري الحفظ...' : 'حفظ التعديل' }}
+          </button>
 
-      <div class="actions">
-        <button
-          type="button"
-          class="save-btn"
-          (click)="save()"
-          [disabled]="saving"
-        >
-          {{ saving ? 'جاري الحفظ...' : 'حفظ التعديل' }}
-        </button>
+          <button type="button" class="cancel-btn" (click)="cancel()">
+            إلغاء
+          </button>
+        </div>
+      </ng-container>
+    </div>
 
-        <button type="button" class="cancel-btn" (click)="cancel()">
-          إلغاء
-        </button>
-      </div>
-    </ng-container>
   </div>
 </div>

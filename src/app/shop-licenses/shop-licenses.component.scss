@@ -1,0 +1,225 @@
+.list-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-top: 1rem;
+
+  .list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+
+    h3 {
+      margin: 0;
+      color: #1e293b;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0.25rem 0 0;
+      color: #64748b;
+      font-size: 0.875rem;
+    }
+
+    .refresh-btn {
+      background-color: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: #e2e8f0;
+      }
+    }
+  }
+
+  // قسم الفلاتر والبحث
+  .filter-section {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e2e8f0;
+    flex-wrap: wrap;
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex: 1;
+      min-width: 200px;
+
+      label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #475569;
+      }
+
+      .search-input,
+      .filter-select {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        outline: none;
+        font-size: 0.9rem;
+        background-color: #ffffff;
+
+        &:focus {
+          border-color: #2563eb;
+        }
+      }
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 0.5rem;
+
+      .search-btn {
+        background-color: #2563eb;
+        color: white;
+        border: none;
+        padding: 0.55rem 1.2rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+
+        &:hover {
+          background-color: #1d4ed8;
+        }
+      }
+
+      .reset-btn {
+        background-color: transparent;
+        color: #64748b;
+        border: 1px solid #cbd5e1;
+        padding: 0.55rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #f1f5f9;
+        }
+      }
+    }
+  }
+
+  // الجدول
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: right;
+
+      thead {
+        background-color: #f8fafc;
+
+        th {
+          padding: 0.85rem 1rem;
+          color: #334155;
+          font-weight: 700;
+          font-size: 0.875rem;
+          border-bottom: 2px solid #e2e8f0;
+          white-space: nowrap;
+        }
+      }
+
+      tbody {
+        tr {
+          border-bottom: 1px solid #e2e8f0;
+          transition: background 0.15s ease;
+
+          &:hover {
+            background-color: #f1f5f9;
+          }
+
+          td {
+            padding: 0.75rem 1rem;
+            color: #475569;
+            font-size: 0.875rem;
+            white-space: nowrap;
+
+            strong {
+              color: #0f172a;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // شارات المراحل
+  .status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: #e0f2fe;
+    color: #0369a1;
+  }
+
+  // أزرار الإجراءات داخل الصف
+  .col-actions {
+    text-align: center;
+    width: 120px;
+
+    .row-actions {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+
+      button {
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        padding: 0.3rem 0.5rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background-color: #e2e8f0;
+        }
+
+        &.delete-btn:hover {
+          background-color: #fee2e2;
+          border-color: #fca5a5;
+        }
+      }
+    }
+  }
+
+  // حالات الرسائل والتحميل
+  .message.error {
+    background-color: #fef2f2;
+    color: #dc2626;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #fca5a5;
+    margin-bottom: 1rem;
+  }
+
+  .loading-box,
+  .empty-box {
+    text-align: center;
+    padding: 2.5rem;
+    color: #64748b;
+    font-size: 0.95rem;
+  }
+}

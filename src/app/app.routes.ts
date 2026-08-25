@@ -32,6 +32,12 @@ export const routes: Routes = [
             .then(m => m.DashboardComponent)
       },
       {
+        path: 'shop-licenses',
+        loadComponent: () =>
+          import('./shop-licenses/shop-licenses.component')
+            .then(m => m.ShopLicensesComponent)
+      },
+      {
         path: 'activity-types/add',
         loadComponent: () =>
           import('./ActivityType/Components/add/add.component')
@@ -76,7 +82,7 @@ export const routes: Routes = [
       {
         path: 'archive',
         loadComponent: () =>
-          import('./pages/dashboard/dashboard.component') // مؤقتاً لحين تعديل المسار الصحيح لمكون الأرشيف
+          import('./pages/dashboard/dashboard.component')
             .then(m => m.DashboardComponent)
       }
     ]

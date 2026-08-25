@@ -1,61 +1,67 @@
-<div class="add-page" dir="rtl">
-  <button type="button" class="close-btn" (click)="cancel()">
-    ×
-  </button>
+<div class="modal-overlay" dir="rtl">
+  <div class="add-page">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-icon">+</div>
 
-  <div class="page-header">
-    <div class="header-icon">📍</div>
-
-    <div>
-      <h2>إضافة مركز / منطقة</h2>
-      <p>أدخلي كود واسم المركز أو المنطقة لإضافته إلى النظام.</p>
-    </div>
-  </div>
-
-  <div class="form-card">
-    <div class="form-grid">
-      <div class="field">
-        <label>كود المركز / المنطقة</label>
-        <input
-          type="number"
-          [(ngModel)]="formModel.code"
-          name="code"
-          placeholder="مثال: 20"
-        />
+      <div class="header-title">
+        <span class="subtitle">إدارة المراكز / المناطق</span>
+        <h2>إضافة مركز / منطقة</h2>
       </div>
 
-      <div class="field">
-        <label>اسم المركز / المنطقة</label>
-        <input
-          type="text"
-          [(ngModel)]="formModel.name"
-          name="name"
-          placeholder="مثال: مركز المنيا"
-        />
+      <button type="button" class="close-btn" (click)="cancel()">&times;</button>
+    </div>
+
+    <!-- Form Container -->
+    <div class="form-card">
+      <div class="form-grid">
+        <div class="field">
+          <label>كود المركز / المنطقة</label>
+          <input
+            type="number"
+            [(ngModel)]="formModel.code"
+            name="code"
+            placeholder="0"
+          />
+        </div>
+
+        <div class="field">
+          <label>اسم المركز / المنطقة</label>
+          <input
+            type="text"
+            [(ngModel)]="formModel.name"
+            name="name"
+            placeholder="مثال: مركز المنيا"
+          />
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="message success" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <div class="message error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button
+          type="button"
+          class="save-btn"
+          (click)="save()"
+          [disabled]="saving"
+        >
+          {{ saving ? 'جاري الحفظ...' : 'حفظ المركز / المنطقة' }}
+        </button>
+
+        <button type="button" class="cancel-btn" (click)="cancel()">
+          إلغاء
+        </button>
       </div>
     </div>
 
-    <div class="message success" *ngIf="successMessage">
-      {{ successMessage }}
-    </div>
-
-    <div class="message error" *ngIf="errorMessage">
-      {{ errorMessage }}
-    </div>
-
-    <div class="actions">
-      <button
-        type="button"
-        class="save-btn"
-        (click)="save()"
-        [disabled]="saving"
-      >
-        {{ saving ? 'جاري الحفظ...' : 'حفظ المركز / المنطقة' }}
-      </button>
-
-      <button type="button" class="cancel-btn" (click)="cancel()">
-        إلغاء
-      </button>
-    </div>
   </div>
 </div>
