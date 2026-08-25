@@ -1,18 +1,14 @@
 <div class="inspection-edit" dir="rtl">
   <div class="form-header">
     <div>
-      <h2>تعديل / تسجيل المعاينة</h2>
+      <h2>إجراء المعاينة</h2>
       <p *ngIf="item">كود المعاملة: {{ item.transactionCode }}</p>
     </div>
 
-    <button type="button" class="close-btn" (click)="cancel()">
-      ×
-    </button>
+    <button type="button" class="close-btn" (click)="cancel()">×</button>
   </div>
 
-  <div class="loading-box" *ngIf="loading">
-    جاري تحميل بيانات المعاينة...
-  </div>
+  <div class="loading-box" *ngIf="loading">جاري تحميل بيانات المعاينة...</div>
 
   <ng-container *ngIf="!loading">
     <div class="summary-card" *ngIf="item">
@@ -34,32 +30,34 @@
 
     <div class="form-grid">
       <div class="form-group">
-        <label>اسم المعاين</label>
+        <label>القائم بالمعاينة </label>
         <input
           type="text"
           [(ngModel)]="formModel.inspectorName"
-          placeholder="أدخل اسم المعاين"
+          placeholder="أدخل اسم القائم بالمعاينة"
         />
       </div>
 
       <div class="form-group">
         <label>الرأي</label>
         <select [(ngModel)]="formModel.opinion">
-          <option value="Compliant">مطابق / مستوفي</option>
-          <option value="NonCompliant">غير مطابق / غير مستوفي</option>
+          <option value="Compliant">مستوفي</option>
+          <option value="NonCompliant">غير مستوفي</option>
         </select>
       </div>
 
       <div class="form-group full-width">
         <label>
           ملاحظات المعاينة
-          <span *ngIf="formModel.opinion === 'NonCompliant'" class="required">*</span>
+          <span *ngIf="formModel.opinion === 'NonCompliant'" class="required"
+            >*</span
+          >
         </label>
 
         <textarea
           rows="4"
           [(ngModel)]="formModel.inspectionNote"
-          placeholder="اكتبي سبب عدم الاستيفاء أو ملاحظات المعاينة"
+          placeholder="قم بكتابة سبب عدم الاستيفاء أو ملاحظات المعاينة"
         ></textarea>
       </div>
 
@@ -70,15 +68,33 @@
           multiple
           (change)="onFilesSelected($event, 'entityLetters')"
         />
+
+        <ul class="file-list" *ngIf="entityLetters.length > 0">
+          <li *ngFor="let file of entityLetters; let i = index">
+            <span>{{ file.name }}</span>
+            <button type="button" (click)="removeFile('entityLetters', i)">
+              ×
+            </button>
+          </li>
+        </ul>
       </div>
 
       <div class="form-group">
-        <label>مستندات الإثبات</label>
+        <label>أوراق الثبوت</label>
         <input
           type="file"
           multiple
           (change)="onFilesSelected($event, 'proofDocuments')"
         />
+
+        <ul class="file-list" *ngIf="proofDocuments.length > 0">
+          <li *ngFor="let file of proofDocuments; let i = index">
+            <span>{{ file.name }}</span>
+            <button type="button" (click)="removeFile('proofDocuments', i)">
+              ×
+            </button>
+          </li>
+        </ul>
       </div>
 
       <div class="form-group">
@@ -88,6 +104,15 @@
           multiple
           (change)="onFilesSelected($event, 'engineeringReports')"
         />
+
+        <ul class="file-list" *ngIf="engineeringReports.length > 0">
+          <li *ngFor="let file of engineeringReports; let i = index">
+            <span>{{ file.name }}</span>
+            <button type="button" (click)="removeFile('engineeringReports', i)">
+              ×
+            </button>
+          </li>
+        </ul>
       </div>
 
       <div class="form-group">
@@ -97,6 +122,15 @@
           multiple
           (change)="onFilesSelected($event, 'inspectionReports')"
         />
+
+        <ul class="file-list" *ngIf="inspectionReports.length > 0">
+          <li *ngFor="let file of inspectionReports; let i = index">
+            <span>{{ file.name }}</span>
+            <button type="button" (click)="removeFile('inspectionReports', i)">
+              ×
+            </button>
+          </li>
+        </ul>
       </div>
 
       <div class="form-group full-width">
@@ -106,7 +140,17 @@
           multiple
           (change)="onFilesSelected($event, 'otherAttachments')"
         />
+
+        <ul class="file-list" *ngIf="otherAttachments.length > 0">
+          <li *ngFor="let file of otherAttachments; let i = index">
+            <span>{{ file.name }}</span>
+            <button type="button" (click)="removeFile('otherAttachments', i)">
+              ×
+            </button>
+          </li>
+        </ul>
       </div>
+      
     </div>
 
     <div class="message error" *ngIf="errorMessage">
@@ -124,12 +168,10 @@
         (click)="save()"
         [disabled]="saving"
       >
-        {{ saving ? 'جاري الحفظ...' : 'حفظ المعاينة' }}
+        {{ saving ? "جاري الحفظ..." : "حفظ المعاينة" }}
       </button>
 
-      <button type="button" class="cancel-btn" (click)="cancel()">
-        إلغاء
-      </button>
+      <button type="button" class="cancel-btn" (click)="cancel()">إلغاء</button>
     </div>
   </ng-container>
 </div>

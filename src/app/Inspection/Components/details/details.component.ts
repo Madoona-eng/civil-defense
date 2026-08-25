@@ -1,13 +1,27 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 
 import {
   ApiResponse,
   InspectionAttachment,
-  InspectionDetails
+  InspectionStepDetails,
 } from '../../Models/inspection';
 
 import { InspectionService } from '../../Services/inspection.service';
+
+import {
+  PROCESS_STEP_LABELS,
+  INSPECTION_OPINION_LABELS,
+  ProcessStep,
+  InspectionOpinion,
+} from '../../../Enums/enums';
 
 interface AttachmentGroup {
   title: string;
@@ -19,18 +33,27 @@ interface AttachmentGroup {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  styleUrl: './details.component.scss',
 })
 export class DetailsComponent implements OnChanges {
   @Input() processId: string | null = null;
   @Output() closed = new EventEmitter<void>();
 
-  details: InspectionDetails | null = null;
+  details: InspectionStepDetails | null = null;
 
   loading = false;
   errorMessage = '';
   failedImages = new Set<string>();
 
+  getStepLabel(step: string | null | undefined): string {
+    return PROCESS_STEP_LABELS[step as ProcessStep] || step || '-';
+  }
+
+  getOpinionLabel(opinion: string | null | undefined): string {
+    return (
+      INSPECTION_OPINION_LABELS[opinion as InspectionOpinion] || opinion || '-'
+    );
+  }
   constructor(private readonly inspectionService: InspectionService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -46,7 +69,7 @@ export class DetailsComponent implements OnChanges {
     this.failedImages.clear();
 
     this.inspectionService.getById(id).subscribe({
-      next: (response: ApiResponse<InspectionDetails>) => {
+      next: (response: ApiResponse<InspectionStepDetails>) => {
         this.loading = false;
 
         if (!response.isSuccess) {
@@ -56,7 +79,7 @@ export class DetailsComponent implements OnChanges {
 
         this.details = response.data;
       },
-      error: err => {
+      error: (err) => {
         this.loading = false;
         console.error('Inspection details GET error:', err);
 
@@ -65,7 +88,7 @@ export class DetailsComponent implements OnChanges {
           err?.error?.Message ||
           err?.message ||
           'حدث خطأ أثناء تحميل بيانات المعاينة';
-      }
+      },
     });
   }
 
@@ -73,47 +96,15 @@ export class DetailsComponent implements OnChanges {
     this.closed.emit();
   }
 
-  getStepLabel(step: string | null | undefined): string {
-    if (step === 'Inspection') {
-      return 'المعاينة';
-    }
-
-    if (step === 'FinalApproval') {
-      return 'الموافقة النهائية';
-    }
-
-    if (step === 'Archive') {
-      return 'الأرشيف';
-    }
-
-    if (step === 'NewLicense') {
-      return 'ترخيص جديد';
-    }
-
-    return step || '-';
-  }
-
-  getOpinionLabel(opinion: string | null | undefined): string {
-    if (opinion === 'Compliant') {
-      return 'مطابق / مستوفي';
-    }
-
-    if (opinion === 'NonCompliant') {
-      return 'غير مطابق / غير مستوفي';
-    }
-
-    return opinion || '-';
-  }
-
   getFileUrl(filePath: string): string {
     return this.inspectionService.buildFileUrl(filePath);
   }
 
   isImageFile(fileName: string): boolean {
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
     const lowerName = fileName.toLowerCase();
 
-    return imageExtensions.some(extension => lowerName.endsWith(extension));
+    return imageExtensions.some((extension) => lowerName.endsWith(extension));
   }
 
   hasImageError(filePath: string): boolean {
@@ -124,28 +115,27 @@ export class DetailsComponent implements OnChanges {
     this.failedImages.add(filePath);
   }
 
-  getAttachmentGroups(details: InspectionDetails): AttachmentGroup[] {
+  getAttachmentGroups(details: InspectionStepDetails): AttachmentGroup[] {
     return [
-      {
-        title: 'خطابات الجهة',
-        files: details.entityLetters || []
-      },
-      {
-        title: 'مستندات الإثبات',
-        files: details.proofDocuments || []
-      },
-      {
-        title: 'التقارير الهندسية',
-        files: details.engineeringReports || []
-      },
-      {
-        title: 'تقارير المعاينة',
-        files: details.inspectionReports || []
-      },
-      {
-        title: 'مرفقات أخرى',
-        files: details.otherAttachments || []
-      }
+      { title: 'خطابات الجهة', files: details.entityLetters || [] },
+      { title: 'مستندات الإثبات', files: details.proofDocuments || [] },
+      { title: 'التقارير الهندسية', files: details.engineeringReports || [] },
+      { title: 'تقارير المعاينة', files: details.inspectionReports || [] },
+      { title: 'مرفقات أخرى', files: details.otherAttachments || [] },
     ];
+  }
+
+  formatDate(date: string | null | undefined): string {
+    if (!date) {
+      return '-';
+    }
+
+    return new Date(date).toLocaleString('ar-EG', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 }

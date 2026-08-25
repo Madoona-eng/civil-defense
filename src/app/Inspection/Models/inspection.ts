@@ -15,7 +15,7 @@ export interface InspectionItem {
   district: string;
   activityType: string;
   applicantName: string;
-  currentStep: string;
+  isReturned: boolean;
 }
 
 export interface PagedResult<T> {
@@ -28,10 +28,13 @@ export interface PagedResult<T> {
   hasPreviousPage: boolean;
 }
 
-export interface InspectionQuery {
+export interface InspectionList {
   districtId?: string;
   requestingEntityId?: string;
   activityTypeId?: string;
+  isReturned?: boolean;
+  submissionDateFrom?: string;
+  submissionDateTo?: string;
   searchTerm?: string;
   pageNumber: number;
   pageSize: number;
@@ -53,40 +56,18 @@ export interface InspectionAttachment {
 
 export interface InspectionNote {
   content: string;
-  writtenBy: string;
+  createdByUserName: string;
   processStep: string;
-  writtenAt: string;
+  createdAt: string;
 }
 
-export interface InspectionDetails {
-  id: string;
-  transactionCode: string;
-  currentStep: string;
-  createdBy?: string;
-  createdAt?: string;
-  isReturned?: boolean;
-
+export interface InspectionStepDetails {
   submissionDate: string;
-  establishmentName: string;
-  establishmentAddress: string;
-  requestingEntity: string;
-  district: string;
-  activityType: string;
-
-  applicantName: string;
-  applicantRole?: string;
-  nationalId?: string;
-  responsibleManager?: string;
-  phone?: string;
+  transactionCode: string;
 
   inspectorName?: string | null;
   opinion?: string | null;
-  inspectionNote?: string | null;
-  inspectedBy?: string | null;
-
-  finalStatus?: string | null;
-  approvedBy?: string | null;
-  archivedBy?: string | null;
+  isReturned?: boolean;
 
   entityLetters?: InspectionAttachment[];
   proofDocuments?: InspectionAttachment[];
@@ -95,7 +76,6 @@ export interface InspectionDetails {
   otherAttachments?: InspectionAttachment[];
 
   notes?: InspectionNote[];
-  reviews?: any[];
 }
 
 export interface InspectionFormModel {

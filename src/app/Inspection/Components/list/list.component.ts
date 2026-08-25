@@ -6,9 +6,9 @@ import { forkJoin } from 'rxjs';
 import {
   ApiResponse,
   InspectionItem,
-  InspectionQuery,
+  InspectionList,
   LookupItem,
-  PagedResult
+  PagedResult,
 } from '../../Models/inspection';
 
 import { InspectionService } from '../../Services/inspection.service';
@@ -22,12 +22,10 @@ import { ActivityTypeService } from '../../../ActivityType/Services/activity-typ
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  styleUrl: './list.component.scss',
 })
 export class ListComponent implements OnInit {
-  @Output() detailsRequested = new EventEmitter<string>();
   @Output() editRequested = new EventEmitter<InspectionItem>();
-  @Output() deleteRequested = new EventEmitter<InspectionItem>();
 
   items: InspectionItem[] = [];
 
@@ -43,6 +41,13 @@ export class ListComponent implements OnInit {
   requestingEntityId = '';
   activityTypeId = '';
   searchTerm = '';
+  isReturned = ''; 
+  submissionDateFrom = '';
+  submissionDateTo = '';
+
+  // هيتحط قيمته لاحقًا لما الليدر يجهز الـ role logic
+  // Inspector => true (يقفل الفلتر على مركزه) | SuperAdmin => false
+  isDistrictLocked = false;
 
   pageNumber = 1;
   pageSize = 10;
@@ -55,7 +60,7 @@ export class ListComponent implements OnInit {
     private readonly inspectionService: InspectionService,
     private readonly requestingEntityService: RequestingEntityService,
     private readonly districtService: DistrictService,
-    private readonly activityTypeService: ActivityTypeService
+    private readonly activityTypeService: ActivityTypeService,
   ) {}
 
   ngOnInit(): void {
@@ -69,9 +74,9 @@ export class ListComponent implements OnInit {
     forkJoin({
       requestingEntities: this.requestingEntityService.getAll(),
       districts: this.districtService.getAll(),
-      activityTypes: this.activityTypeService.getAll()
+      activityTypes: this.activityTypeService.getAll(),
     }).subscribe({
-      next: result => {
+      next: (result) => {
         this.loadingLookups = false;
 
         if (result.requestingEntities.isSuccess) {
@@ -86,10 +91,10 @@ export class ListComponent implements OnInit {
           this.activityTypes = result.activityTypes.data || [];
         }
       },
-      error: err => {
+      error: (err) => {
         this.loadingLookups = false;
         console.error('Inspection lookups error:', err);
-      }
+      },
     });
   }
 
@@ -97,13 +102,17 @@ export class ListComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    const query: InspectionQuery = {
-      districtId: this.districtId,
-      requestingEntityId: this.requestingEntityId,
-      activityTypeId: this.activityTypeId,
-      searchTerm: this.searchTerm.trim(),
+    const query: InspectionList = {
+      districtId: this.districtId || undefined,
+      requestingEntityId: this.requestingEntityId || undefined,
+      activityTypeId: this.activityTypeId || undefined,
+      isReturned:
+        this.isReturned === '' ? undefined : this.isReturned === 'true',
+      submissionDateFrom: this.submissionDateFrom || undefined,
+      submissionDateTo: this.submissionDateTo || undefined,
+      searchTerm: this.searchTerm.trim() || undefined,
       pageNumber: this.pageNumber,
-      pageSize: this.pageSize
+      pageSize: this.pageSize,
     };
 
     this.inspectionService.getAll(query).subscribe({
@@ -123,7 +132,7 @@ export class ListComponent implements OnInit {
         this.hasNextPage = response.data.hasNextPage;
         this.hasPreviousPage = response.data.hasPreviousPage;
       },
-      error: err => {
+      error: (err) => {
         this.isLoading = false;
         console.error('Inspection GET error:', err);
 
@@ -132,7 +141,7 @@ export class ListComponent implements OnInit {
           err?.error?.Message ||
           err?.message ||
           'حدث خطأ أثناء تحميل معاملات المعاينة';
-      }
+      },
     });
   }
 
@@ -142,10 +151,13 @@ export class ListComponent implements OnInit {
   }
 
   resetFilters(): void {
-    this.districtId = '';
+    this.districtId = this.isDistrictLocked ? this.districtId : '';
     this.requestingEntityId = '';
     this.activityTypeId = '';
     this.searchTerm = '';
+    this.isReturned = '';
+    this.submissionDateFrom = '';
+    this.submissionDateTo = '';
     this.pageNumber = 1;
     this.loadInspections();
   }
@@ -168,18 +180,11 @@ export class ListComponent implements OnInit {
     this.loadInspections();
   }
 
-  requestDetails(id: string): void {
-    this.detailsRequested.emit(id);
-  }
-
   requestEdit(item: InspectionItem): void {
     this.editRequested.emit(item);
   }
 
-  requestDelete(item: InspectionItem): void {
-    this.deleteRequested.emit(item);
-  }
-
+  //TODO : Use enum for step values instead of hardcoded strings 
   getStepLabel(step: string): string {
     if (step === 'Inspection') {
       return 'المعاينة';

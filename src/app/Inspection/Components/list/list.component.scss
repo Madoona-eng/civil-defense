@@ -1,12 +1,36 @@
+// متغيّر واحد للـ radius عشان يتغيّر من مكان واحد بس لو غيّرتي رأيك بعدين
+$radius: 20px;
+$radius-lg: 28px;
+
 .filters-card,
 .table-card {
   background: #ffffff;
-  border-radius: 24px;
+  border-radius: $radius-lg;
   padding: 24px;
   box-shadow: 0 12px 35px rgba(15, 61, 94, 0.08);
 }
 
-.filters-grid {
+.filters-header {
+  margin-bottom: 18px;
+}
+
+.filters-header h3 {
+  margin: 0;
+  color: #0f3d5e;
+  font-weight: 900;
+  font-size: 17px;
+}
+
+// السطر الأول: بحث + تاريخ من + تاريخ إلى
+.filters-row-primary {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+// السطر التاني: 4 dropdowns
+.filters-row-secondary {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
@@ -28,12 +52,14 @@
 .form-group select {
   height: 48px;
   border: 1px solid #dbe4ef;
-  border-radius: 14px;
-  padding: 0 14px;
+  border-radius: $radius;
+  padding: 0 16px;
   font-family: inherit;
+  font-size: 14px;
   color: #0f2942;
   background: #f8fafc;
   outline: none;
+  transition: 0.2s ease;
 }
 
 .form-group input:focus,
@@ -43,21 +69,50 @@
   box-shadow: 0 0 0 4px rgba(13, 126, 128, 0.08);
 }
 
+.form-group select:disabled {
+  background: #eef1f5;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-weight: 900;
+  font-size: 13px;
+  background: #f0fdf4;
+  color: #166534;
+
+}
+
+.status-badge.returned {
+  background: #fef2f2;
+  color: #991b1b;
+
+}
+
 .filter-actions {
-  margin-top: 18px;
+  margin-top: 3em;
   display: flex;
   gap: 12px;
+  justify-content: center;
 }
 
 .search-btn,
 .reset-btn {
   border: none;
-  border-radius: 14px;
-  padding: 12px 22px;
+  border-radius: $radius;
+  padding: 12px 24px;
   font-family: inherit;
   font-weight: 900;
+  font-size: 14px;
   cursor: pointer;
   transition: 0.25s ease;
+  width: 10em;
+  height: 3em;
 }
 
 .search-btn {
@@ -80,25 +135,34 @@
 }
 
 .table-header {
-  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 1em 0 2em 0;
 }
 
 .table-header h3 {
-  margin: 0;
   color: #0f3d5e;
   font-weight: 900;
+  font-size: 22px;
 }
-
 .table-header p {
-  margin: 8px 0 0;
+  margin: 0;
   color: #64748b;
+  font-size: 14px;
+  padding: 6px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  white-space: nowrap;
 }
 
 .loading-box,
 .empty-box,
 .message {
   padding: 16px;
-  border-radius: 16px;
+  border-radius: $radius;
   font-weight: 800;
   text-align: center;
 }
@@ -159,11 +223,11 @@ tbody td {
 }
 
 tbody td:first-child {
-  border-radius: 0 16px 16px 0;
+  border-radius: 0 $radius $radius 0;
 }
 
 tbody td:last-child {
-  border-radius: 16px 0 0 16px;
+  border-radius: $radius 0 0 $radius;
 }
 
 .step-badge {
@@ -187,8 +251,7 @@ tbody td:last-child {
 }
 
 .details-btn,
-.edit-btn,
-.delete-btn {
+.edit-btn {
   border: none;
   border-radius: 999px;
   padding: 9px 14px;
@@ -209,27 +272,14 @@ tbody td:last-child {
   color: #166534;
 }
 
-.delete-btn {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.details-btn:hover,
-.edit-btn:hover,
-.delete-btn:hover {
-  transform: translateY(-2px);
-}
-
 .details-btn:hover {
   background: #bae6fd;
+  transform: translateY(-2px);
 }
 
 .edit-btn:hover {
   background: #bbf7d0;
-}
-
-.delete-btn:hover {
-  background: #fecaca;
+  transform: translateY(-2px);
 }
 
 .pagination {
@@ -242,7 +292,7 @@ tbody td:last-child {
 
 .pagination button {
   border: none;
-  border-radius: 12px;
+  border-radius: $radius;
   padding: 10px 18px;
   background: #0f3d5e;
   color: #ffffff;
@@ -262,13 +312,17 @@ tbody td:last-child {
 }
 
 @media (max-width: 1100px) {
-  .filters-grid {
+  .filters-row-primary {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-row-secondary {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 700px) {
-  .filters-grid {
+  .filters-row-secondary {
     grid-template-columns: 1fr;
   }
 
