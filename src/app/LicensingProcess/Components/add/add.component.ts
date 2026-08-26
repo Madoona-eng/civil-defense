@@ -119,19 +119,47 @@ export class AddComponent implements OnInit {
     const files = Array.from(input.files || []);
 
     if (type === 'entityLetters') {
-      this.entityLetters = files;
+      this.entityLetters = [...this.entityLetters, ...files];
     }
 
     if (type === 'proofDocuments') {
-      this.proofDocuments = files;
+      this.proofDocuments = [...this.proofDocuments, ...files];
     }
 
     if (type === 'engineeringReports') {
-      this.engineeringReports = files;
+      this.engineeringReports = [...this.engineeringReports, ...files];
     }
 
     if (type === 'otherAttachments') {
-      this.otherAttachments = files;
+      this.otherAttachments = [...this.otherAttachments, ...files];
+    }
+
+    // إعادة تعيين قيمة input
+    input.value = '';
+  }
+
+  removeFile(
+    type: 'entityLetters' | 'proofDocuments' | 'engineeringReports' | 'otherAttachments',
+    index: number
+  ): void {
+    if (type === 'entityLetters') {
+      this.entityLetters.splice(index, 1);
+      this.entityLetters = [...this.entityLetters];
+    }
+
+    if (type === 'proofDocuments') {
+      this.proofDocuments.splice(index, 1);
+      this.proofDocuments = [...this.proofDocuments];
+    }
+
+    if (type === 'engineeringReports') {
+      this.engineeringReports.splice(index, 1);
+      this.engineeringReports = [...this.engineeringReports];
+    }
+
+    if (type === 'otherAttachments') {
+      this.otherAttachments.splice(index, 1);
+      this.otherAttachments = [...this.otherAttachments];
     }
   }
 

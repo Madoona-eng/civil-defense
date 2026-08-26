@@ -85,21 +85,45 @@
       <div class="field">
         <label>خطابات الجهة</label>
         <input type="file" multiple (change)="onFilesSelected($event, 'entityLetters')" />
+        <div class="file-list" *ngIf="entityLetters.length > 0">
+          <div class="file-item" *ngFor="let file of entityLetters; let i = index">
+            <span class="file-name">📄 {{ file.name }}</span>
+            <button type="button" class="remove-btn" (click)="removeFile('entityLetters', i)">×</button>
+          </div>
+        </div>
       </div>
 
       <div class="field">
         <label>مستندات الإثبات</label>
         <input type="file" multiple (change)="onFilesSelected($event, 'proofDocuments')" />
+        <div class="file-list" *ngIf="proofDocuments.length > 0">
+          <div class="file-item" *ngFor="let file of proofDocuments; let i = index">
+            <span class="file-name">📄 {{ file.name }}</span>
+            <button type="button" class="remove-btn" (click)="removeFile('proofDocuments', i)">×</button>
+          </div>
+        </div>
       </div>
 
       <div class="field">
         <label>التقارير الهندسية</label>
         <input type="file" multiple (change)="onFilesSelected($event, 'engineeringReports')" />
+        <div class="file-list" *ngIf="engineeringReports.length > 0">
+          <div class="file-item" *ngFor="let file of engineeringReports; let i = index">
+            <span class="file-name">📄 {{ file.name }}</span>
+            <button type="button" class="remove-btn" (click)="removeFile('engineeringReports', i)">×</button>
+          </div>
+        </div>
       </div>
 
       <div class="field">
         <label>مرفقات أخرى</label>
         <input type="file" multiple (change)="onFilesSelected($event, 'otherAttachments')" />
+        <div class="file-list" *ngIf="otherAttachments.length > 0">
+          <div class="file-item" *ngFor="let file of otherAttachments; let i = index">
+            <span class="file-name">📄 {{ file.name }}</span>
+            <button type="button" class="remove-btn" (click)="removeFile('otherAttachments', i)">×</button>
+          </div>
+        </div>
       </div>
     </div>
 

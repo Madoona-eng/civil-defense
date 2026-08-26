@@ -1,191 +1,279 @@
 .details-page {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.details-header,
-.section-card {
-  background: #ffffff;
-  border-radius: 24px;
+  direction: rtl;
   padding: 24px;
-  box-shadow: 0 12px 35px rgba(15, 61, 94, 0.08);
-}
-
-.details-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-}
-
-.details-header h2,
-.section-card h3 {
-  margin: 0;
-  color: #0f3d5e;
-  font-weight: 900;
-}
-
-.details-header p {
-  margin: 8px 0 0;
-  color: #64748b;
-}
-
-.close-btn {
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 50%;
-  background: #fee2e2;
-  color: #991b1b;
-  font-size: 24px;
-  font-weight: 900;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.info-grid {
-  margin-top: 16px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-}
-
-.info-grid div {
-  background: #f8fafc;
+  background-color: #ffffff;
   border-radius: 16px;
-  padding: 14px;
-}
+  box-sizing: border-box;
+  font-family: inherit;
 
-.info-grid span {
-  display: block;
-  color: #64748b;
-  font-size: 13px;
-  margin-bottom: 6px;
-}
+  // التحكم في التمرير ومنع شريط التمرير الخارجي
+  height: 100%;
+  max-height: 82vh;
+  overflow-y: auto !important;
 
-.info-grid strong {
-  color: #0f2942;
-}
+  // تخصيص شريط التمرير الداخلي الرفيع
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
 
-.loading-box,
-.empty-box {
-  padding: 20px;
-  border-radius: 18px;
-  background: #f8fafc;
-  color: #64748b;
-  text-align: center;
-  font-weight: 900;
-}
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+  }
 
-.message {
-  padding: 13px 16px;
-  border-radius: 16px;
-  font-weight: 800;
-}
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
 
-.error {
-  background: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
-}
+    &:hover {
+      background: #94a3b8;
+    }
+  }
 
-.note-card {
-  margin-top: 12px;
-  background: #f8fafc;
-  border-radius: 16px;
-  padding: 14px;
-}
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
 
-.note-card strong {
-  display: block;
-  color: #0f2942;
-  margin-bottom: 6px;
-}
-
-.note-card span {
-  color: #64748b;
-  font-size: 13px;
-}
-
-.attachments-grid {
-  margin-top: 16px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-}
-
-.attachment-group {
-  background: #f8fafc;
-  border-radius: 18px;
-  padding: 14px;
-}
-
-.attachment-group h4 {
-  margin: 0 0 12px;
-  color: #0f2942;
-  font-weight: 900;
-}
-
-.attachment-item {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.attachment-item a {
-  display: block;
-  text-decoration: none;
-  color: #0d7e80;
-  font-weight: 900;
-}
-
-.attachment-item img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 14px;
-  display: block;
-  border: 1px solid #e2e8f0;
-  background: #f1f5f9;
-}
-
-.attachment-item small {
-  display: block;
-  margin-top: 8px;
-  color: #64748b;
-  font-size: 12px;
-  direction: ltr;
-  text-align: left;
-  word-break: break-all;
-}
-
-.empty-attachment {
-  padding: 14px;
-  border-radius: 14px;
-  background: #ffffff;
-  color: #94a3b8;
-  text-align: center;
-  font-weight: 800;
-}
-
-.attachment-group a:hover {
-  text-decoration: underline;
-}
-
-@media (max-width: 800px) {
+  // الهيدر الرئيسي وزر الإغلاق
   .details-header {
+    display: flex;
+    justify-content: space-between;
     align-items: flex-start;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #f1f5f9;
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 4px 0;
+    }
+
+    p {
+      color: #64748b;
+      font-size: 0.85rem;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .close-btn {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      color: #64748b;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: #ef4444;
+        color: #ffffff;
+        border-color: #ef4444;
+      }
+    }
   }
 
-  .info-grid,
+  // حالة التحميل والخطأ
+  .loading-box {
+    text-align: center;
+    padding: 30px;
+    color: #2563eb;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .message.error {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  // كروت الأقسام
+  .section-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #1e293b;
+      margin: 0 0 16px 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f1f5f9;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        right: 0;
+        width: 32px;
+        height: 2px;
+        background-color: #2563eb;
+        border-radius: 2px;
+      }
+    }
+  }
+
+  // شبكة عرض البيانات (4 أعمدة)
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px 20px;
+
+    @media (max-width: 992px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 576px) {
+      grid-template-columns: 1fr;
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      span {
+        font-size: 0.78rem;
+        color: #64748b;
+        font-weight: 600;
+      }
+
+      strong {
+        font-size: 0.88rem;
+        color: #0f172a;
+        font-weight: 700;
+        word-break: break-word;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  // قسم الملاحظات
+  .empty-box {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
+  .note-card {
+    background-color: #f8fafc;
+    border-right: 4px solid #2563eb;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    strong {
+      color: #334155;
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+
+    span {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+  }
+
+  // شبكة المرفقات والمستندات
   .attachments-grid {
-    grid-template-columns: 1fr;
-  }
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
 
-  .attachment-item img {
-    height: 130px;
+    .attachment-group {
+      background: #f8fafc;
+      border: 1px solid #f1f5f9;
+      border-radius: 10px;
+      padding: 14px;
+
+      h4 {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #475569;
+        margin: 0 0 12px 0;
+      }
+
+      .empty-attachment {
+        font-size: 0.78rem;
+        color: #94a3b8;
+      }
+
+      .attachment-item {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 10px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        a {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #ffffff;
+          border: 1px dashed #cbd5e1;
+          border-radius: 8px;
+          padding: 8px;
+          text-decoration: none;
+          color: #2563eb;
+          transition: all 0.2s ease;
+          overflow: hidden;
+
+          &:hover {
+            border-color: #2563eb;
+            background-color: #f0f9ff;
+          }
+
+          img {
+            max-width: 100%;
+            max-height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+          }
+
+          span {
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+          }
+        }
+
+        small {
+          font-size: 0.72rem;
+          color: #64748b;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
   }
 }

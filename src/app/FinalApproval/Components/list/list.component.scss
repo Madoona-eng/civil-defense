@@ -1,489 +1,414 @@
-:host {
-  display: block;
-  width: 100%;
-}
+/* ==========================================
+   لوحة التحكم - قائمة الموافقات النهائية
+   ========================================== */
 
-.filters-card,
-.table-card {
-  background: #ffffff;
-  border-radius: 28px;
-  padding: 26px;
-  box-shadow: 0 16px 38px rgba(15, 61, 94, 0.08);
-}
+// متغيرات الألوان الرئيسية
+$primary-gradient: linear-gradient(135deg, #154c59 0%, #00717e 100%);
+$primary-hover: linear-gradient(135deg, #103c46 0%, #005c67 100%);
+$bg-light: #f8fafc;
+$border-color: #e2e8f0;
+$text-dark: #0f172a;
+$text-muted: #64748b;
 
+// ------------------------------------------
+// 1. كارت الفلاتر (Filters Section)
+// ------------------------------------------
 .filters-card {
-  margin-bottom: 24px;
-}
-
-.filters-header,
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 18px;
-  margin-bottom: 22px;
-}
-
-.filters-header h3,
-.table-header h3 {
-  margin: 0;
-  color: #0f2942;
-  font-size: 24px;
-  font-weight: 900;
-}
-
-.filters-header p,
-.table-header p {
-  margin: 8px 0 0;
-  color: #64748b;
-  font-weight: 700;
-  line-height: 1.8;
-}
-
-.results-chip,
-.table-count {
-  min-width: 120px;
-  background: linear-gradient(135deg, #0f3d5e, #0d7e80);
-  color: #ffffff;
-  border-radius: 22px;
-  padding: 14px 18px;
-  text-align: center;
-  font-weight: 900;
-}
-
-.results-chip strong,
-.table-count span {
-  display: block;
-  margin-top: 6px;
-  font-size: 26px;
-  line-height: 1;
-}
-
-.table-count small {
-  display: block;
-  margin-top: 5px;
-  opacity: 0.85;
-}
-
-.filters-grid {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
-  gap: 22px;
-  align-items: end;
-}
-
-.search-group {
-  padding-inline-end: 8px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-}
-
-.form-group label {
-  color: #0f2942;
-  font-weight: 900;
-  font-size: 14px;
-}
-
-.form-group input,
-.form-group select {
-  width: 100%;
-  height: 50px;
-  border: 1px solid #dbe4ef;
-  border-radius: 16px;
-  padding: 0 16px;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  color: #0f2942;
-  background: #f8fafc;
-  outline: none;
-  box-sizing: border-box;
-  transition: 0.25s ease;
-}
-
-.form-group input::placeholder {
-  color: #94a3b8;
-  font-weight: 600;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-  border-color: #0d7e80;
   background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(13, 126, 128, 0.08);
-}
-
-.filter-actions {
-  margin-top: 20px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-.search-btn,
-.reset-btn {
-  border: none;
   border-radius: 16px;
-  padding: 13px 26px;
-  min-width: 120px;
-  font-family: inherit;
-  font-weight: 900;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid $border-color;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 
-.search-btn {
-  background: linear-gradient(135deg, #0f3d5e, #0d7e80);
-  color: #ffffff;
-}
-
-.reset-btn {
-  background: #e2e8f0;
-  color: #0f2942;
-}
-
-.search-btn:hover,
-.reset-btn:hover {
-  transform: translateY(-2px);
-}
-
-.loading-box,
-.empty-box,
-.message {
-  padding: 18px;
-  border-radius: 18px;
-  font-weight: 900;
-  text-align: center;
-}
-
-.loading-box {
-  background: #eff6ff;
-  color: #1d4ed8;
-}
-
-.message.error {
-  background: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
-}
-
-.empty-box {
-  background: #f8fafc;
-  color: #64748b;
-  border: 1px dashed #cbd5e1;
-}
-
-.empty-icon {
-  font-size: 36px;
-  margin-bottom: 8px;
-}
-
-.empty-box h4 {
-  margin: 0;
-  color: #0f2942;
-  font-size: 20px;
-  font-weight: 900;
-}
-
-.empty-box p {
-  margin: 8px 0 0;
-  color: #64748b;
-}
-
-.table-scroll {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-table {
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: separate;
-  border-spacing: 0 12px;
-}
-
-thead th {
-  color: #64748b;
-  font-size: 12px;
-  font-weight: 900;
-  text-align: right;
-  padding: 0 7px 8px;
-  white-space: normal;
-  line-height: 1.5;
-}
-
-tbody tr {
-  background: #f8fafc;
-  transition: 0.25s ease;
-}
-
-tbody tr:hover {
-  background: #eef7f7;
-  transform: translateY(-2px);
-}
-
-tbody td {
-  padding: 15px 7px;
-  color: #0f2942;
-  font-weight: 800;
-  font-size: 13px;
-  white-space: normal;
-  word-break: break-word;
-  line-height: 1.6;
-  vertical-align: middle;
-}
-
-tbody td:first-child {
-  border-radius: 0 18px 18px 0;
-}
-
-tbody td:last-child {
-  border-radius: 18px 0 0 18px;
-}
-
-.transaction-code {
-  color: #0f3d5e;
-  font-weight: 900;
-}
-
-.activity-text {
-  display: block;
-  line-height: 1.7;
-}
-
-th:nth-child(1),
-td:nth-child(1) {
-  width: 10%;
-}
-
-th:nth-child(2),
-td:nth-child(2) {
-  width: 8%;
-}
-
-th:nth-child(3),
-td:nth-child(3) {
-  width: 8%;
-}
-
-th:nth-child(4),
-td:nth-child(4) {
-  width: 9%;
-}
-
-th:nth-child(5),
-td:nth-child(5) {
-  width: 11%;
-}
-
-th:nth-child(6),
-td:nth-child(6) {
-  width: 9%;
-}
-
-th:nth-child(7),
-td:nth-child(7) {
-  width: 11%;
-}
-
-th:nth-child(8),
-td:nth-child(8) {
-  width: 7%;
-}
-
-th:nth-child(9),
-td:nth-child(9) {
-  width: 8%;
-}
-
-th:nth-child(10),
-td:nth-child(10) {
-  width: 19%;
-}
-
-.step-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  padding: 7px 10px;
-  background: #fef3c7;
-  color: #92400e;
-  font-weight: 900;
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-.actions-cell {
-  overflow: visible;
-}
-
-.row-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 7px;
-  flex-wrap: wrap;
-}
-
-.action-btn {
-  border: none;
-  border-radius: 999px;
-  padding: 9px 12px;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 900;
-  cursor: pointer;
-  transition: 0.25s ease;
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  min-width: 68px;
-}
-
-.action-btn span {
-  font-size: 14px;
-  line-height: 1;
-}
-
-.details-btn {
-  background: #e0f2fe;
-  color: #0f3d5e;
-}
-
-.edit-btn {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.return-btn {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.delete-btn {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.action-btn:hover {
-  transform: translateY(-2px);
-}
-
-.details-btn:hover {
-  background: #bae6fd;
-}
-
-.edit-btn:hover {
-  background: #bbf7d0;
-}
-
-.return-btn:hover {
-  background: #fde68a;
-}
-
-.delete-btn:hover {
-  background: #fecaca;
-}
-
-.pagination {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 14px;
-}
-
-.pagination button {
-  border: none;
-  border-radius: 14px;
-  padding: 11px 20px;
-  background: #0f3d5e;
-  color: #ffffff;
-  font-family: inherit;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.pagination button:disabled {
-  background: #cbd5e1;
-  cursor: not-allowed;
-}
-
-.pagination span {
-  color: #0f2942;
-  font-weight: 900;
-}
-
-@media (max-width: 1300px) {
   .filters-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+
+    /* جعل حقل البحث يأخذ مساحة أكبر */
+    .search-group {
+      grid-column: span 2;
+
+      @media (max-width: 992px) {
+        grid-column: span 1;
+      }
+    }
   }
 
-  tbody td {
-    font-size: 12px;
-    padding: 12px 5px;
-  }
-
-  thead th {
-    font-size: 11px;
-    padding: 0 5px 8px;
-  }
-
-  .action-btn {
-    padding: 8px 10px;
-    font-size: 11px;
-    min-width: 60px;
-  }
-
-  th:nth-child(10),
-  td:nth-child(10) {
-    width: 22%;
-  }
-}
-
-@media (max-width: 900px) {
-  .filters-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .table-scroll {
-    overflow-x: auto;
-  }
-
-  table {
-    min-width: 1050px;
-  }
-}
-
-@media (max-width: 700px) {
-  .filters-header,
-  .table-header {
+  .form-group {
+    display: flex;
     flex-direction: column;
-  }
+    gap: 6px;
 
-  .filters-grid {
-    grid-template-columns: 1fr;
+    label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    input[type='text'],
+    select {
+      height: 42px;
+      padding: 0 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      background-color: #ffffff;
+      font-size: 0.85rem;
+      color: $text-dark;
+      outline: none;
+      transition: all 0.2s ease;
+
+      &:focus {
+        border-color: #00717e;
+        box-shadow: 0 0 0 3px rgba(0, 113, 126, 0.12);
+      }
+    }
+
+    select {
+      cursor: pointer;
+    }
   }
 
   .filter-actions {
-    flex-direction: column;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+
+    button {
+      height: 40px;
+      padding: 0 24px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+
+      &.search-btn {
+        background: $primary-gradient;
+        color: #ffffff;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0, 113, 126, 0.2);
+
+        &:hover {
+          background: $primary-hover;
+          transform: translateY(-1px);
+        }
+      }
+
+      &.reset-btn {
+        background-color: #ffffff;
+        color: $text-muted;
+        border: 1px solid #cbd5e1;
+
+        &:hover {
+          background-color: $bg-light;
+          color: $text-dark;
+        }
+      }
+    }
+  }
+}
+
+// ------------------------------------------
+// 2. كارت الجدول (Table Section)
+// ------------------------------------------
+.table-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid $border-color;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: $text-dark;
+      margin: 0;
+    }
+
+    /* عداد المعاملات باللون التدرجي المطلوب */
+    .table-count {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: $primary-gradient;
+      color: #ffffff;
+      padding: 6px 18px;
+      border-radius: 12px;
+      min-width: 80px;
+      box-shadow: 0 4px 10px rgba(21, 76, 89, 0.25);
+
+      span {
+        font-size: 1.15rem;
+        font-weight: 800;
+        line-height: 1;
+      }
+
+      small {
+        font-size: 0.72rem;
+        margin-top: 3px;
+        opacity: 0.9;
+      }
+    }
   }
 
-  .search-btn,
-  .reset-btn {
-    width: 100%;
+  /* رسائل التحميل والخطأ والفارغة */
+  .loading-box,
+  .message,
+  .empty-box {
+    text-align: center;
+    padding: 40px 20px;
+    color: $text-muted;
+    border-radius: 12px;
+    background-color: $bg-light;
+    margin: 10px 0;
   }
 
-  .results-chip,
-  .table-count {
-    width: 100%;
+  .empty-box {
+    .empty-icon {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+    h4 {
+      margin: 0 0 6px 0;
+      color: $text-dark;
+    }
+    p {
+      margin: 0;
+      font-size: 0.85rem;
+    }
+  }
+
+  /* حاوية التمرير وحماية محاذاة الجدول */
+  .table-scroll {
+    width: 100% !important;
+    overflow-x: auto !important;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+
+    table {
+      display: table !important;
+      width: 100% !important;
+      min-width: 1100px !important; // يمنع انكماش الأعمدة وتداخل العناوين
+      border-collapse: collapse !important;
+      text-align: right !important;
+
+      thead {
+        display: table-header-group !important;
+        background-color: #f1f5f9 !important;
+
+        tr {
+          display: table-row !important;
+        }
+
+        th {
+          display: table-cell !important;
+          padding: 14px 12px !important;
+          font-size: 0.83rem !important;
+          font-weight: 700 !important;
+          color: #475569 !important;
+          white-space: nowrap !important;
+          border-bottom: 2px solid $border-color !important;
+        }
+      }
+
+      tbody {
+        display: table-row-group !important;
+
+        tr {
+          display: table-row !important;
+          border-bottom: 1px solid #f1f5f9;
+          transition: background-color 0.15s ease;
+
+          &:hover {
+            background-color: #f8fafc !important;
+          }
+
+          td {
+            display: table-cell !important;
+            padding: 12px !important;
+            font-size: 0.83rem !important;
+            color: #334155 !important;
+            white-space: nowrap !important;
+            vertical-align: middle !important;
+
+            .transaction-code {
+              color: #1d4ed8;
+              font-weight: 800;
+              direction: ltr;
+              display: inline-block;
+            }
+
+            .step-badge {
+              background-color: #fef9c3;
+              color: #854d0e;
+              padding: 4px 10px;
+              border-radius: 20px;
+              font-size: 0.75rem;
+              font-weight: 700;
+              display: inline-block;
+            }
+          }
+
+          /* عمود الأزرار والإجراءات */
+          td.actions-cell {
+            width: 1% !important;
+
+            .row-actions {
+              display: flex !important;
+              align-items: center !important;
+              flex-wrap: nowrap !important; // منع انكسار الأزرار
+              gap: 6px !important;
+
+              .action-btn {
+                height: 32px;
+                padding: 0 10px;
+                border-radius: 6px;
+                font-size: 0.76rem;
+                font-weight: 700;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center;
+                gap: 4px;
+                white-space: nowrap !important;
+                border: none;
+                cursor: pointer;
+                transition: opacity 0.2s ease;
+
+                &:hover {
+                  opacity: 0.85;
+                }
+
+                &.details-btn {
+                  background-color: #e0f2fe;
+                  color: #0369a1;
+                }
+
+                &.edit-btn {
+                  background-color: #dcfce7;
+                  color: #15803d;
+                }
+
+                &.return-btn {
+                  background-color: #fef9c3;
+                  color: #a16207;
+                }
+
+                &.delete-btn {
+                  background-color: #fee2e2;
+                  color: #b91c1c;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // ------------------------------------------
+  // 3. الترقيم (Pagination)
+  // ------------------------------------------
+  .pagination {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px;
+    margin-top: 20px;
+
+    span {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: $text-muted;
+      background: $bg-light;
+      padding: 6px 16px;
+      border-radius: 8px;
+      border: 1px solid $border-color;
+    }
+
+    button {
+      height: 36px;
+      padding: 0 18px;
+      background-color: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover:not(:disabled) {
+        background-color: $bg-light;
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+/* استبدلي الجزء الخاص بالأزرار بهذا الكود */
+td.actions-cell {
+  .row-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+
+    .action-btn {
+      height: 32px;
+      padding: 0 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 4px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      /* زر عرض */
+      &.details-btn {
+        background-color: #e0f2fe !important;
+        color: #0284c7 !important;
+      }
+
+      /* زر قرار */
+      &.edit-btn {
+        background-color: #dcfce7 !important;
+        color: #16a34a !important;
+      }
+
+      /* زر إرجاع */
+      &.return-btn {
+        background-color: #fef9c3 !important;
+        color: #ca8a04 !important;
+      }
+
+      /* زر حذف */
+      &.delete-btn {
+        background-color: #fee2e2 !important;
+        color: #dc2626 !important;
+      }
+
+      &:hover {
+        opacity: 0.85;
+        transform: translateY(-1px);
+      }
+    }
   }
 }

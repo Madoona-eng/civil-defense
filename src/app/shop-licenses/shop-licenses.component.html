@@ -10,31 +10,34 @@
     </button>
   </div>
 
-  <!-- قسم البحث والفلاتر -->
-  <div class="filter-section">
-    <div class="filter-group">
+  <div class="filters">
+    <div class="field">
       <label>بحث</label>
-      <input 
-        type="text" 
-        class="search-input" 
-        [(ngModel)]="searchTerm" 
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        name="searchTerm"
         placeholder="ابحث باسم المنشأة أو كود المعاملة"
-        (keyup.enter)="search()"
       />
     </div>
 
-    <div class="filter-group">
+    <div class="field">
       <label>مرحلة الطلب</label>
-      <select class="filter-select" [(ngModel)]="processStep" (change)="search()">
+      <select [(ngModel)]="processStep" name="processStep">
         <option *ngFor="let step of processSteps" [value]="step.value">
           {{ step.label }}
         </option>
       </select>
     </div>
 
-    <div class="filter-buttons">
-      <button type="button" class="search-btn" (click)="search()">بحث</button>
-      <button type="button" class="reset-btn" (click)="resetFilters()">إلغاء الفلتر</button>
+    <div class="filter-actions">
+      <button type="button" class="search-btn" (click)="search()">
+        بحث
+      </button>
+
+      <button type="button" class="reset-btn" (click)="resetFilters()">
+        إلغاء الفلتر
+      </button>
     </div>
   </div>
 
@@ -50,12 +53,11 @@
     لا توجد تراخيص محال مسجلة حتى الآن.
   </div>
 
-  <!-- جدول تراخيص المحال -->
   <div class="table-wrap" *ngIf="!isLoading && items.length > 0">
     <table>
       <thead>
         <tr>
-          <th>#</th>
+          <th style="width: 40px;">#</th>
           <th>كود المعاملة</th>
           <th>تاريخ التقديم</th>
           <th>اسم المنشأة</th>
@@ -65,80 +67,110 @@
           <th>نوع النشاط</th>
           <th>مقدم الطلب</th>
           <th>المرحلة الحالية</th>
-          <th class="col-actions">الإجراءات</th>
+          <th style="width: 70px;">الإجراءات</th>
         </tr>
       </thead>
 
       <tbody>
-  <tr *ngFor="let item of items; let i = index">
-    <!-- الرقم التسلسلي -->
-    <td>{{ (pageNumber - 1) * pageSize + i + 1 }}</td>
+        <tr *ngFor="let item of items; let i = index">
+          <td>{{ (pageNumber - 1) * pageSize + i + 1 }}</td>
+          <td class="code-cell">{{ item.transactionCode }}</td>
+          <td>{{ item.submissionDate }}</td>
+          <td>{{ item.establishmentName }}</td>
+          <td>{{ item.establishmentAddress }}</td>
+          <td>{{ item.requestingEntity }}</td>
+          <td>{{ item.district }}</td>
+          <td>{{ item.activityType }}</td>
+          <td>{{ item.applicantName }}</td>
 
-    <!-- كود المعاملة -->
-    <td>
-      <strong>{{ item.code || item.transactionCode || item.Code || item.TransactionCode || '---' }}</strong>
-    </td>
+          <td>
+            <span class="status-badge">
+              {{ getStepLabel(item.currentStep) }}
+            </span>
+          </td>
 
-    <!-- تاريخ التقديم -->
-    <td>
-      {{ (item.createdDate || item.createdAt || item.creationDate || item.CreatedDate || item.CreatedAt || item.requestDate) | date:'yyyy-MM-dd' }}
-    </td>
+         <td class="actions-cell">
+  <div class="menu-container">
+    <!-- زر النقاط الثلاث -->
+    <button 
+      type="button" 
+      class="dots-btn" 
+      (click)="toggleDropdown(item.id, $event)" 
+      title="خيارات الإجراءات">
+      ⋮
+    </button>
 
-    <!-- اسم المنشأة -->
-    <td>
-      {{ item.facilityName || item.shopName || item.name || item.FacilityName || item.ShopName || item.facility?.name || item.shop?.name || '---' }}
-    </td>
+    <!-- القائمة المنسدلة -->
+    <div class="dropdown-menu" *ngIf="activeDropdownId === item.id" (click)="$event.stopPropagation()">
+      <button type="button" class="menu-item view" (click)="requestDetails(item.id)">
+        <span class="icon">👁️</span>
+        <span>عرض التفاصيل</span>
+      </button>
 
-    <!-- العنوان -->
-    <td>
-      {{ item.address || item.location || item.shopAddress || item.Address || item.Location || '---' }}
-    </td>
+      <button type="button" class="menu-item edit" (click)="requestEdit(item.id)">
+        <span class="icon">✏️</span>
+        <span>تعديل</span>
+      </button>
 
-    <!-- الجهة -->
-    <td>
-      {{ item.requestingEntityName || item.entityName || item.requestingEntity?.name || item.entity?.name || item.RequestingEntity?.Name || item.EntityName || '---' }}
-    </td>
-
-    <!-- المركز / المنطقة -->
-    <td>
-      {{ item.districtName || item.district?.name || item.centerName || item.DistrictName || item.District?.Name || '---' }}
-    </td>
-
-    <!-- نوع النشاط -->
-    <td>
-      {{ item.activityTypeName || item.activityType?.name || item.activityType || item.ActivityTypeName || item.ActivityType?.Name || '---' }}
-    </td>
-
-    <!-- مقدم الطلب -->
-    <td>
-      {{ item.applicantName || item.createdByName || item.applicant || item.ApplicantName || item.CreatedBy || '---' }}
-    </td>
-
-    <!-- المرحلة الحالية -->
-    <td>
-      <span class="status-badge">
-        {{ getStepLabel(item.processStep ?? item.step ?? item.ProcessStep ?? item.Step ?? item.status ?? item.Status) }}
-      </span>
-    </td>
-
-    <!-- الإجراءات -->
-    <td class="col-actions">
-      <div class="row-actions">
-        <button type="button" class="view-btn" (click)="requestDetails(item.id || item.Id)" title="عرض التفاصيل">
-          👁️
-        </button>
-
-        <button type="button" class="edit-btn" (click)="requestEdit(item.id || item.Id)" title="تعديل">
-          ✏️
-        </button>
-
-        <button type="button" class="delete-btn" (click)="requestDelete(item)" title="حذف">
-          🗑️
-        </button>
-      </div>
-    </td>
-  </tr>
-</tbody>
+      <button type="button" class="menu-item delete" (click)="requestDelete(item)">
+        <span class="icon">🗑️</span>
+        <span>حذف</span>
+      </button>
+    </div>
+  </div>
+</td>
+        </tr>
+      </tbody>
     </table>
+  </div>
+
+  <div class="pagination" *ngIf="!isLoading && totalCount > 0">
+    <button type="button" (click)="previousPage()" [disabled]="!hasPreviousPage">
+      السابق
+    </button>
+
+    <span>
+      صفحة {{ pageNumber }} من {{ totalPages }} - إجمالي {{ totalCount }}
+    </span>
+
+    <button type="button" (click)="nextPage()" [disabled]="!hasNextPage">
+      التالي
+    </button>
+  </div>
+
+  <!-- Popup for Details -->
+  <div class="popup-backdrop" *ngIf="isDetailsPopupOpen" (click)="closeDetailsPopup()">
+    <div class="popup-card details-card" (click)="$event.stopPropagation()">
+      <app-licensing-process-details
+        [processId]="selectedProcessId"
+        (closed)="closeDetailsPopup()"
+      ></app-licensing-process-details>
+    </div>
+  </div>
+
+  <!-- Popup for Edit -->
+  <div class="popup-backdrop" *ngIf="isEditPopupOpen" (click)="closeEditPopup()">
+    <div class="popup-card edit-card" (click)="$event.stopPropagation()">
+      <button type="button" class="popup-close" (click)="closeEditPopup()">×</button>
+
+      <app-licensing-process-edit
+        [processId]="selectedProcessId"
+        (saved)="onEditSaved()"
+        (cancelled)="closeEditPopup()"
+      ></app-licensing-process-edit>
+    </div>
+  </div>
+
+  <!-- Popup for Delete -->
+  <div class="popup-backdrop" *ngIf="isDeletePopupOpen" (click)="closeDeletePopup()">
+    <div class="popup-card delete-card" (click)="$event.stopPropagation()">
+      <button type="button" class="popup-close" (click)="closeDeletePopup()">×</button>
+
+      <app-licensing-process-delete
+        [item]="selectedProcessItem"
+        (deleted)="onDeleteDone()"
+        (cancelled)="closeDeletePopup()"
+      ></app-licensing-process-delete>
+    </div>
   </div>
 </div>

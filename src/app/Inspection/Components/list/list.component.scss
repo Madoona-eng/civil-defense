@@ -1,337 +1,313 @@
-// متغيّر واحد للـ radius عشان يتغيّر من مكان واحد بس لو غيّرتي رأيك بعدين
-$radius: 20px;
-$radius-lg: 28px;
+// المتغيرات الرئيسية للطابع البصري
+$primary-color: #2563eb;
+$primary-hover: #1d4ed8;
+$bg-body: #f8fafc;
+$bg-card: #ffffff;
+$text-main: #0f172a;
+$text-muted: #64748b;
+$border-color: #e2e8f0;
 
-.filters-card,
-.table-card {
-  background: #ffffff;
-  border-radius: $radius-lg;
+.inspections-page {
+  direction: rtl;
+  font-family: inherit;
+  background-color: $bg-body;
   padding: 24px;
-  box-shadow: 0 12px 35px rgba(15, 61, 94, 0.08);
-}
+  box-sizing: border-box;
 
-.filters-header {
-  margin-bottom: 18px;
-}
+  // التحكم بالارتفاع الداخلي والسكرول لمنع التمرير المزدوج
+  max-height: 100vh;
+  overflow-y: auto;
 
-.filters-header h3 {
-  margin: 0;
-  color: #0f3d5e;
-  font-weight: 900;
-  font-size: 17px;
-}
-
-// السطر الأول: بحث + تاريخ من + تاريخ إلى
-.filters-row-primary {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-// السطر التاني: 4 dropdowns
-.filters-row-secondary {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-group label {
-  color: #0f2942;
-  font-weight: 900;
-  font-size: 14px;
-}
-
-.form-group input,
-.form-group select {
-  height: 48px;
-  border: 1px solid #dbe4ef;
-  border-radius: $radius;
-  padding: 0 16px;
-  font-family: inherit;
-  font-size: 14px;
-  color: #0f2942;
-  background: #f8fafc;
-  outline: none;
-  transition: 0.2s ease;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-  border-color: #0d7e80;
-  background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(13, 126, 128, 0.08);
-}
-
-.form-group select:disabled {
-  background: #eef1f5;
-  color: #94a3b8;
-  cursor: not-allowed;
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 999px;
-  padding: 7px 14px;
-  font-weight: 900;
-  font-size: 13px;
-  background: #f0fdf4;
-  color: #166534;
-
-}
-
-.status-badge.returned {
-  background: #fef2f2;
-  color: #991b1b;
-
-}
-
-.filter-actions {
-  margin-top: 3em;
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-}
-
-.search-btn,
-.reset-btn {
-  border: none;
-  border-radius: $radius;
-  padding: 12px 24px;
-  font-family: inherit;
-  font-weight: 900;
-  font-size: 14px;
-  cursor: pointer;
-  transition: 0.25s ease;
-  width: 10em;
-  height: 3em;
-}
-
-.search-btn {
-  background: linear-gradient(135deg, #0f3d5e, #0d7e80);
-  color: #ffffff;
-}
-
-.reset-btn {
-  background: #e2e8f0;
-  color: #0f2942;
-}
-
-.search-btn:hover,
-.reset-btn:hover {
-  transform: translateY(-2px);
-}
-
-.table-card {
-  margin-top: 22px;
-}
-
-.table-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  margin: 1em 0 2em 0;
-}
-
-.table-header h3 {
-  color: #0f3d5e;
-  font-weight: 900;
-  font-size: 22px;
-}
-.table-header p {
-  margin: 0;
-  color: #64748b;
-  font-size: 14px;
-  padding: 6px 14px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background: #f8fafc;
-  white-space: nowrap;
-}
-
-.loading-box,
-.empty-box,
-.message {
-  padding: 16px;
-  border-radius: $radius;
-  font-weight: 800;
-  text-align: center;
-}
-
-.loading-box {
-  background: #eff6ff;
-  color: #1d4ed8;
-}
-
-.empty-box {
-  background: #f8fafc;
-  color: #64748b;
-}
-
-.message.error {
-  background: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
-}
-
-.table-scroll {
-  width: 100%;
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  min-width: 1350px;
-  border-collapse: separate;
-  border-spacing: 0 10px;
-}
-
-thead th {
-  color: #64748b;
-  font-size: 13px;
-  font-weight: 900;
-  text-align: right;
-  padding: 0 12px 8px;
-  white-space: nowrap;
-}
-
-tbody tr {
-  background: #f8fafc;
-  transition: 0.25s ease;
-}
-
-tbody tr:hover {
-  background: #eef7f7;
-  transform: translateY(-2px);
-}
-
-tbody td {
-  padding: 16px 12px;
-  color: #0f2942;
-  font-weight: 700;
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-tbody td:first-child {
-  border-radius: 0 $radius $radius 0;
-}
-
-tbody td:last-child {
-  border-radius: $radius 0 0 $radius;
-}
-
-.step-badge {
-  display: inline-flex;
-  border-radius: 999px;
-  padding: 7px 14px;
-  background: #e0f2fe;
-  color: #075985;
-  font-weight: 900;
-  font-size: 13px;
-}
-
-.actions-cell {
-  width: 280px;
-}
-
-.row-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.details-btn,
-.edit-btn {
-  border: none;
-  border-radius: 999px;
-  padding: 9px 14px;
-  font-family: inherit;
-  font-weight: 900;
-  cursor: pointer;
-  transition: 0.25s ease;
-  white-space: nowrap;
-}
-
-.details-btn {
-  background: #e0f2fe;
-  color: #0f3d5e;
-}
-
-.edit-btn {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.details-btn:hover {
-  background: #bae6fd;
-  transform: translateY(-2px);
-}
-
-.edit-btn:hover {
-  background: #bbf7d0;
-  transform: translateY(-2px);
-}
-
-.pagination {
-  margin-top: 18px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 14px;
-}
-
-.pagination button {
-  border: none;
-  border-radius: $radius;
-  padding: 10px 18px;
-  background: #0f3d5e;
-  color: #ffffff;
-  font-family: inherit;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.pagination button:disabled {
-  background: #cbd5e1;
-  cursor: not-allowed;
-}
-
-.pagination span {
-  color: #0f2942;
-  font-weight: 900;
-}
-
-@media (max-width: 1100px) {
-  .filters-row-primary {
-    grid-template-columns: 1fr;
+  // تخصيص شريط التمرير
+  &::-webkit-scrollbar {
+    width: 6px;
   }
-
-  .filters-row-secondary {
-    grid-template-columns: repeat(2, 1fr);
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
   }
 }
 
-@media (max-width: 700px) {
-  .filters-row-secondary {
-    grid-template-columns: 1fr;
-  }
+// ==========================================
+// 1. كارت الفلاتر والبحث (Filters Card)
+// ==========================================
+.filters-card {
+  background: $bg-card;
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid $border-color;
 
-  .filter-actions {
+  .form-group {
+    display: flex;
     flex-direction: column;
+    gap: 8px;
+
+    label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    input[type='text'],
+    input[type='date'],
+    select {
+      height: 42px;
+      padding: 0 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background-color: #ffffff;
+      font-size: 0.85rem;
+      color: $text-main;
+      outline: none;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+
+      &::placeholder {
+        color: #94a3b8;
+        font-size: 0.8rem;
+      }
+
+      &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+    }
+
+    &.search-group {
+      input {
+        width: 100%;
+      }
+    }
   }
 
-  .search-btn,
-  .reset-btn {
+  // الصف الأول: بحث (عريض) + تاريخ من + تاريخ إلى
+  .filters-row-primary {
+    display: grid;
+    grid-template-columns: 2.2fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // الصف الثاني: القوائم المنسدلة (الجهة، المركز، النشاط، حالة الإرجاع)
+  .filters-row-secondary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+
+    @media (max-width: 992px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 576px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // الأزرار: بحث (أزرق) وإعادة ضبط (شفاف/أبيض)
+  .filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    button {
+      height: 38px;
+      padding: 0 22px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &.search-btn {
+        background-color: $primary-color;
+        color: #ffffff;
+        border: none;
+
+        &:hover {
+          background-color: $primary-hover;
+          box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+        }
+      }
+
+      &.reset-btn {
+        background-color: #ffffff;
+        color: $text-muted;
+        border: 1px solid #cbd5e1;
+
+        &:hover {
+          background-color: #f1f5f9;
+          color: $text-main;
+        }
+      }
+    }
+  }
+}
+
+// ==========================================
+// 2. كارت الجدول والنتائج (Table Card)
+// ==========================================
+.table-card {
+  background: $bg-card;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid $border-color;
+
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: $text-main;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: $text-muted;
+      font-weight: 600;
+    }
+  }
+
+  // التمرير الأفقي للشاشات الصغيرة
+  .table-scroll {
     width: 100%;
+    overflow-x: auto;
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      text-align: right;
+
+      th,
+      td {
+        padding: 14px 12px;
+        font-size: 0.83rem;
+        white-space: nowrap;
+        vertical-align: middle;
+      }
+
+      th {
+        background-color: #ffffff;
+        color: #475569;
+        font-weight: 700;
+        border-bottom: 2px solid #f1f5f9;
+      }
+
+      tbody tr {
+        transition: background-color 0.15s ease;
+
+        td {
+          border-bottom: 1px solid #f1f5f9;
+          color: #334155;
+        }
+
+        &:hover td {
+          background-color: #f8fafc;
+        }
+
+        // كود المعاملة باللون الأزرق المشرق
+        .transaction-code {
+          font-weight: 700;
+          color: $primary-color;
+          direction: ltr;
+          text-align: right;
+        }
+
+        // شارات حالة الإرجاع (مرتجعة / غير مرتجعة)
+        .status-badge {
+          display: inline-block;
+          padding: 4px 12px;
+          border-radius: 6px;
+          font-size: 0.78rem;
+          font-weight: 700;
+          background-color: #f1f5f9;
+          color: #475569;
+
+          &.returned {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+          }
+        }
+
+        // زر إجراء المعاينة (أزرق فاتح مفرغ)
+        .actions-cell {
+          .edit-btn {
+            background-color: #ffffff;
+            color: $primary-color;
+            border: 1px solid #bfdbfe;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+              background-color: $primary-color;
+              color: #ffffff;
+              border-color: $primary-color;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // الترقيم (Pagination)
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+
+    span {
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    button {
+      height: 36px;
+      padding: 0 16px;
+      background-color: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover:not(:disabled) {
+        background-color: #f1f5f9;
+        border-color: #94a3b8;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
   }
 }

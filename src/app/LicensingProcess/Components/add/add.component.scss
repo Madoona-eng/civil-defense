@@ -1,137 +1,265 @@
 .licensing-add {
+  direction: rtl;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-sizing: border-box;
+  font-family: inherit;
+
+  // التحكم في الارتفاع والتمرير الداخلي لمنع التمرير المزدوج
+  height: 100%;
+  max-height: 82vh;
+  overflow-y: auto !important;
+
+  // تخصيص شريط التمرير الرفيع
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+
+    &:hover {
+      background: #94a3b8;
+    }
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+
+  // الهيدر الرئيسي
+  .page-header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #f1f5f9;
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 6px 0;
+    }
+
+    p {
+      color: #64748b;
+      font-size: 0.88rem;
+      margin: 0;
+    }
+  }
+
+  // جسم النموذج
+  .form-card {
+    .loading-box {
+      text-align: center;
+      padding: 40px;
+      color: #2563eb;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    // شبكة الحقول المتجاوبة
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px 20px;
+      margin-bottom: 24px;
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        label {
+          font-size: 0.82rem;
+          font-weight: 700;
+          color: #334155;
+        }
+
+        // مدخلات النصوص والقوائم والتاريخ
+        input[type='text'],
+        input[type='date'],
+        select {
+          width: 100%;
+          height: 42px;
+          padding: 0 14px;
+          border: 1px solid #cbd5e1;
+          border-radius: 8px;
+          background-color: #f8fafc;
+          color: #0f172a;
+          font-size: 0.88rem;
+          outline: none;
+          box-sizing: border-box;
+          transition: all 0.2s ease-in-out;
+
+          &::placeholder {
+            color: #94a3b8;
+          }
+
+          &:focus {
+            border-color: #2563eb;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+          }
+        }
+
+        // مدخلات رفع الملفات والمرفقات
+        input[type='file'] {
+          font-size: 0.8rem;
+          color: #64748b;
+          background: #f8fafc;
+          border: 1px dashed #cbd5e1;
+          border-radius: 8px;
+          padding: 8px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            border-color: #2563eb;
+            background-color: #f0f9ff;
+          }
+
+          &::file-selector-button {
+            background-color: #e2e8f0;
+            color: #334155;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-left: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.78rem;
+            transition: background 0.2s ease;
+
+            &:hover {
+              background-color: #cbd5e1;
+            }
+          }
+        }
+      }
+    }
+
+    // تنبيهات النجاح والخطأ
+    .message {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+
+      &.success {
+        background-color: #f0fdf4;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+      }
+
+      &.error {
+        background-color: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+      }
+    }
+
+    // شريط الأزرار والتأكيد
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid #f1f5f9;
+
+      button {
+        height: 42px;
+        padding: 0 24px;
+        border-radius: 8px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        // زر الحفظ الرئيسي
+        &.save-btn {
+          background-color: #2563eb;
+          color: #ffffff;
+          border: none;
+
+          &:hover:not(:disabled) {
+            background-color: #1d4ed8;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+          }
+
+          &:disabled {
+            background-color: #93c5fd;
+            cursor: not-allowed;
+          }
+        }
+
+        // زر الإلغاء
+        &.cancel-btn {
+          background-color: #ffffff;
+          color: #64748b;
+          border: 1px solid #cbd5e1;
+
+          &:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* قائمة الملفات المرفوعة */
+.file-list {
+  margin-top: 8px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-}
+  gap: 6px;
 
-.page-header,
-.form-card {
-  background: #ffffff;
-  border-radius: 24px;
-  padding: 24px;
-  box-shadow: 0 12px 35px rgba(15, 61, 94, 0.08);
-}
+  .file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.82rem;
 
-.page-header h2 {
-  margin: 0;
-  color: #0f2942;
-  font-size: 26px;
-  font-weight: 900;
-}
+    .file-name {
+      color: #0284c7;
+      font-weight: 500;
+      word-break: break-word;
+      flex: 1;
+      min-width: 0;
+    }
 
-.page-header p {
-  margin: 8px 0 0;
-  color: #64748b;
-}
+    .remove-btn {
+      background: transparent;
+      border: none;
+      color: #dc2626;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 0 6px;
+      margin-left: 8px;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
 
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
-}
-
-.field label {
-  display: block;
-  margin-bottom: 8px;
-  color: #0f2942;
-  font-weight: 900;
-}
-
-.field input,
-.field select {
-  width: 100%;
-  height: 54px;
-  border: 1px solid #dbe5ee;
-  border-radius: 16px;
-  background: #f8fbfe;
-  padding: 0 14px;
-  font-family: inherit;
-  font-size: 15px;
-  outline: none;
-}
-
-.field input[type="file"] {
-  padding: 14px;
-  height: auto;
-}
-
-.field input:focus,
-.field select:focus {
-  border-color: #0d7e80;
-  background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(13, 126, 128, 0.12);
-}
-
-.loading-box {
-  padding: 20px;
-  border-radius: 18px;
-  background: #f8fafc;
-  color: #64748b;
-  text-align: center;
-  font-weight: 900;
-}
-
-.message {
-  margin-top: 18px;
-  padding: 13px 16px;
-  border-radius: 16px;
-  font-weight: 800;
-}
-
-.success {
-  background: #ecfdf5;
-  color: #047857;
-  border: 1px solid #bbf7d0;
-}
-
-.error {
-  background: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
-}
-
-.actions {
-  margin-top: 22px;
-  display: flex;
-  gap: 12px;
-}
-
-.save-btn,
-.cancel-btn {
-  border: none;
-  border-radius: 16px;
-  padding: 13px 24px;
-  font-family: inherit;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.save-btn {
-  background: linear-gradient(135deg, #0f3d5e, #0d7e80);
-  color: #ffffff;
-}
-
-.save-btn:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
-.cancel-btn {
-  background: #e2e8f0;
-  color: #0f2942;
-}
-
-@media (max-width: 900px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .actions {
-    flex-direction: column;
-  }
-
-  .save-btn,
-  .cancel-btn {
-    width: 100%;
+      &:hover {
+        background: #fee2e2;
+        border-radius: 4px;
+      }
+    }
   }
 }
