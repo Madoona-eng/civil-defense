@@ -9,13 +9,14 @@ import {
   InspectionList,
   PagedResult,
 } from '../Models/inspection';
+import { BaseAPI } from '../../Shared/Env/env';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InspectionService {
-  private readonly apiUrl = '/api/LicensingProcess/inspection';
-  private readonly processUrl = '/api/LicensingProcess';
+  private readonly apiUrl = `${BaseAPI}/api/InspectionStep/`;
+  private readonly processUrl = `${BaseAPI}/api/LicensingProcess`;
 
   constructor(private readonly http: HttpClient) {}
 
@@ -55,10 +56,8 @@ export class InspectionService {
     }
 
     return this.http.get<ApiResponse<PagedResult<InspectionItem>>>(
-      this.apiUrl,
-      {
-        params,
-      },
+      `${this.apiUrl}inspection`,
+      { params },
     );
   }
 

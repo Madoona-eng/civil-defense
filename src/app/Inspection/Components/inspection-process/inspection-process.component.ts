@@ -24,7 +24,7 @@ import {
   INSPECTION_OPINION_LABELS,
   ProcessStep,
   InspectionOpinion,
-} from '../../../Enums/enums';
+} from '../../../Shared/Enums/enums';
 
 interface AttachmentGroup {
   title: string;

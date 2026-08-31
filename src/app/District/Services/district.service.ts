@@ -5,14 +5,15 @@ import {
   ApiResponse,
   District,
   CreateDistrictRequest,
-  UpdateDistrictRequest
+  UpdateDistrictRequest,
 } from '../Models/district';
+import { BaseAPI } from '../../Shared/Env/env';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DistrictService {
-  private readonly apiUrl = '/api/District';
+  private readonly apiUrl = `${BaseAPI}/api/District`;
 
   constructor(private readonly http: HttpClient) {}
 
@@ -28,7 +29,10 @@ export class DistrictService {
     return this.http.post<ApiResponse<boolean>>(this.apiUrl, model);
   }
 
-  update(id: string, model: UpdateDistrictRequest): Observable<ApiResponse<boolean>> {
+  update(
+    id: string,
+    model: UpdateDistrictRequest,
+  ): Observable<ApiResponse<boolean>> {
     return this.http.put<ApiResponse<boolean>>(`${this.apiUrl}/${id}`, model);
   }
 

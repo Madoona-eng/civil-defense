@@ -20,18 +20,11 @@
             "outputPath": "dist/civil-defense-angular-mock",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -58,21 +51,18 @@
           },
           "defaultConfiguration": "development"
         },
-      "serve": {
-  "builder": "@angular-devkit/build-angular:dev-server",
-  "options": {
-    "proxyConfig": "proxy.conf.json"
-  },
-  "configurations": {
-    "production": {
-      "buildTarget": "civil-defense-angular-mock:build:production"
-    },
-    "development": {
-      "buildTarget": "civil-defense-angular-mock:build:development"
-    }
-  },
-  "defaultConfiguration": "development"
-}
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "civil-defense-angular-mock:build:production"
+            },
+            "development": {
+              "buildTarget": "civil-defense-angular-mock:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        }
       }
     }
   },

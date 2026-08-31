@@ -7,19 +7,22 @@ import {
   FinalApprovalDetails,
   FinalApprovalItem,
   FinalApprovalQuery,
-  PagedResult
+  PagedResult,
 } from '../Models/final-approval';
+import { BaseAPI } from '../../Shared/Env/env';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FinalApprovalService {
-  private readonly apiUrl = '/api/LicensingProcess/final-approval';
-  private readonly processUrl = '/api/LicensingProcess';
+  private readonly apiUrl = `${BaseAPI}/api/FinalApprovalStep/`;
+  private readonly processUrl = `${BaseAPI}/api/LicensingProcess`;
 
   constructor(private readonly http: HttpClient) {}
 
-  getAll(query: FinalApprovalQuery): Observable<ApiResponse<PagedResult<FinalApprovalItem>>> {
+  getAll(
+    query: FinalApprovalQuery,
+  ): Observable<ApiResponse<PagedResult<FinalApprovalItem>>> {
     let params = new HttpParams()
       .set('pageNumber', query.pageNumber.toString())
       .set('pageSize', query.pageSize.toString());
@@ -44,30 +47,37 @@ export class FinalApprovalService {
       params = params.set('searchTerm', query.searchTerm);
     }
 
-    return this.http.get<ApiResponse<PagedResult<FinalApprovalItem>>>(this.apiUrl, {
-      params
-    });
+    return this.http.get<ApiResponse<PagedResult<FinalApprovalItem>>>(
+      `${this.apiUrl}final-approval`,
+      { params },
+    );
   }
 
   getById(id: string): Observable<ApiResponse<FinalApprovalDetails>> {
     return this.http.get<ApiResponse<FinalApprovalDetails>>(
-      `${this.processUrl}/${id}`
+      `${this.processUrl}/${id}`,
     );
   }
 
-  saveFinalApproval(id: string, formData: FormData): Observable<ApiResponse<boolean>> {
+  saveFinalApproval(
+    id: string,
+    formData: FormData,
+  ): Observable<ApiResponse<boolean>> {
     return this.http.put<ApiResponse<boolean>>(
       `${this.processUrl}/${id}/final-approval`,
-      formData
+      formData,
     );
   }
 
-  returnToInspection(id: string, noteContent: string): Observable<ApiResponse<boolean>> {
+  returnToInspection(
+    id: string,
+    noteContent: string,
+  ): Observable<ApiResponse<boolean>> {
     return this.http.put<ApiResponse<boolean>>(
       `${this.processUrl}/${id}/return-to-inspection`,
       {
-        noteContent: noteContent
-      }
+        noteContent: noteContent,
+      },
     );
   }
 
@@ -76,9 +86,7 @@ export class FinalApprovalService {
   }
 
   buildFileUrl(filePath: string): string {
-    const cleanPath = filePath
-      .replace(/^\/+/, '')
-      .replace(/\\/g, '/');
+    const cleanPath = filePath.replace(/^\/+/, '').replace(/\\/g, '/');
 
     return encodeURI(`/${cleanPath}`);
   }

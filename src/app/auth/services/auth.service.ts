@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, catchError, map, of } from 'rxjs';
+import { BaseAPI } from '../../Shared/Env/env';
 
 export interface LoginRequest {
   username: string;
@@ -32,7 +33,7 @@ interface ApiLoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-private readonly apiUrl = '/api/Account/login';
+  private readonly apiUrl = `${BaseAPI}/api/Account/login`;
 
   private readonly tokenKey = 'token';
   private readonly usernameKey = 'username';
@@ -43,38 +44,38 @@ private readonly apiUrl = '/api/Account/login';
     private readonly router: Router
   ) {}
 
- login(data: LoginRequest): Observable<LoginResult> {
-  return this.http.post<ApiLoginResponse>(this.apiUrl, data).pipe(
-    map(response => {
-      if (!response.isSuccess) {
+  login(data: LoginRequest): Observable<LoginResult> {
+    return this.http.post<ApiLoginResponse>(this.apiUrl, data).pipe(
+      map(response => {
+        if (!response.isSuccess) {
+          return {
+            success: false,
+            message: response.message || 'فشل تسجيل الدخول'
+          };
+        }
+
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('username', response.data.userName);
+        localStorage.setItem('role', response.data.role);
+
         return {
-          success: false,
-          message: response.message || 'فشل تسجيل الدخول'
+          success: true,
+          message: response.message,
+          token: response.data.token,
+          username: response.data.userName,
+          role: response.data.role
         };
-      }
+      }),
+      catchError(error => {
+        console.log('LOGIN ERROR:', error);
 
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('username', response.data.userName);
-      localStorage.setItem('role', response.data.role);
-
-      return {
-        success: true,
-        message: response.message,
-        token: response.data.token,
-        username: response.data.userName,
-        role: response.data.role
-      };
-    }),
-    catchError(error => {
-      console.log('LOGIN ERROR:', error);
-
-      return of({
-        success: false,
-        message: error?.error?.message || 'حدث خطأ أثناء الاتصال بالسيرفر'
-      });
-    })
-  );
-}
+        return of({
+          success: false,
+          message: error?.error?.message || 'حدث خطأ أثناء الاتصال بالسيرفر'
+        });
+      })
+    );
+  }
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);

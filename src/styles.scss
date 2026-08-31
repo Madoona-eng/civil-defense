@@ -1,1 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  /* ===== 1. الألوان الأساسية (Primary Colors) ===== */
+  --color-sidebar-bg: #E8DFF5;        /* خلفية السايدبار */
+  --color-primary: #5d3a99;           /* الزر النشط / الرئيسي */
+  --color-primary-light: #8B5CF6;     /* درجة أفتح للـ hover مثلاً */
+  --color-sidebar-text: #4A4A68;      /* نص السايدبار */
+
+  /* ===== 2. الخلفيات والبطاقات (Backgrounds & Cards) ===== */
+  --color-bg-page: #FFFDF9;           /* خلفية الموقع العامة */
+  --color-bg-card: #FFFFFF;           /* خلفية الكروت والجداول */
+  --color-bg-filters: #F7F4F9;        /* خلفية الفلاتر */
+
+  /* ===== 3. ألوان الحالة (Status & Badge Colors) ===== */
+  --color-status-tasks: #D8B4FE;       /* موف - المهام */
+  --color-status-in-progress: #FBCFE8; /* وردي - قيد التنفيذ */
+  --color-status-completed: #A7F3D0;   /* أخضر - مكتمل */
+  --color-status-focus: #FEF08A;       /* أصفر - وقت التركيز */
+
+  /* ===== 4. النصوص والحدود (Text & Borders) ===== */
+  --color-text-primary: #2D2D3F;       /* النصوص الرئيسية */
+  --color-text-secondary: #8E8EA9;     /* النصوص الفرعية والتواريخ */
+  --color-border: #F3E8FF;             /* الحدود والفواصل */
+
+ --color-bg-page: #FFFDF9; 
+
+}
+
+
+/* مثال بسيط للاستخدام العام لو حبيتي */
+body {
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
+  margin: 0;
+  font-family: 'Cairo', 'Segoe UI', sans-serif; /* عدّلي الخط لو مختلف */
+}

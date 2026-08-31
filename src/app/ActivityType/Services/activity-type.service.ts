@@ -7,12 +7,14 @@ import {
   CreateActivityTypeRequest,
   UpdateActivityTypeRequest
 } from '../Models/activity-type';
+import { BaseAPI } from '../../Shared/Env/env';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActivityTypeService {
-private readonly apiUrl = '/api/ActivityType';
+private readonly apiUrl = `${BaseAPI}/api/ActivityType`;
+
 
   constructor(private readonly http: HttpClient) {}
 

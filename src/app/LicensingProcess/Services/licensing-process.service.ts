@@ -8,12 +8,13 @@ import {
   LicensingProcessQuery,
   PagedResult
 } from '../Models/licensing-process';
+import { BaseAPI } from '../../Shared/Env/env';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LicensingProcessService {
-  private readonly apiUrl = '/api/LicensingProcess';
+  private readonly apiUrl = `${BaseAPI}/api/LicensingProcess`;
 
   constructor(private readonly http: HttpClient) {}
 

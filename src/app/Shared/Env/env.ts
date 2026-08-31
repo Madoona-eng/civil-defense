@@ -1,0 +1,1 @@
+export const BaseAPI = 'https://civil-defense.runasp.net';

@@ -1,67 +1,106 @@
 <section class="dashboard-layout" dir="rtl">
-  <aside class="sidebar">
+  <aside class="sidebar" [class.collapsed]="isCollapsed">
     <div class="sidebar-brand">
       <div class="logo">🛡️</div>
-      <div>
+      <div class="brand-text">
         <h3>الحماية المدنية</h3>
         <span>لوحة التحكم</span>
       </div>
+      <button class="collapse-btn" type="button" (click)="toggleSidebar()">
+        <lucide-angular
+          [img]="isCollapsed ? PanelRightOpen : PanelLeftOpen"
+          [size]="18"
+        ></lucide-angular>
+      </button>
     </div>
 
     <nav class="sidebar-menu">
       <!-- إعدادات النظام الأساسية (Admin فقط) -->
-      <a *ngIf="hasRole(['Admin'])" routerLink="/civil-defense/activity-types" routerLinkActive="active">
-        <span>⚙️</span>
-        أنواع النشاط
+      <a
+        *ngIf="hasRole(['Admin'])"
+        routerLink="/civil-defense/activity-types"
+        routerLinkActive="active"
+      >
+        <span class="icon">⚙️</span>
+        <span class="label">أنواع النشاط</span>
       </a>
 
-      <a *ngIf="hasRole(['Admin'])" routerLink="/civil-defense/requesting-entities" routerLinkActive="active">
-        <span>🏢</span>
-        الجهات
+      <a
+        *ngIf="hasRole(['Admin'])"
+        routerLink="/civil-defense/requesting-entities"
+        routerLinkActive="active"
+      >
+        <span class="icon">🏢</span>
+        <span class="label">الجهات الطالبة</span>
       </a>
 
-      <a *ngIf="hasRole(['Admin'])" routerLink="/civil-defense/districts" routerLinkActive="active">
-        <span>📍</span>
-        المراكز / المناطق
+      <a
+        *ngIf="hasRole(['Admin'])"
+        routerLink="/civil-defense/districts"
+        routerLinkActive="active"
+      >
+        <span class="icon">📍</span>
+        <span class="label">المراكز</span>
       </a>
 
       <!-- إضافة طلب ترخيص (DataEntry فقط) -->
-      <a *ngIf="hasRole(['DataEntry'])" routerLink="/civil-defense/licensing-processes" routerLinkActive="active">
-        <span>🏪</span>
-        تراخيص المحال
+      <a
+        *ngIf="hasRole(['DataEntry'])"
+        routerLink="/civil-defense/licensing-processes"
+        routerLinkActive="active"
+      >
+        <span class="icon">🏪</span>
+        <span class="label">تراخيص المحال</span>
       </a>
 
       <!-- ➕ الصفحة الجديدة: عرض تراخيص المحال (DataEntry و Admin) -->
-      <a *ngIf="hasRole(['DataEntry', 'Admin'])" routerLink="/civil-defense/shop-licenses" routerLinkActive="active">
-        <span>📋</span>
-        عرض تراخيص المحال
+      <a
+        *ngIf="hasRole(['DataEntry', 'Admin'])"
+        routerLink="/civil-defense/shop-licenses"
+        routerLinkActive="active"
+      >
+        <span class="icon">📋</span>
+        <span class="label">عرض تراخيص المحال</span>
       </a>
 
       <!-- المعاينات (Inspector فقط) -->
-      <a *ngIf="hasRole(['Inspector'])" routerLink="/civil-defense/inspection" routerLinkActive="active">
-        <span>📝</span>
-        المعاينات
+      <a
+        *ngIf="hasRole(['Inspector'])"
+        routerLink="/civil-defense/inspection"
+        routerLinkActive="active"
+      >
+        <span class="icon">📝</span>
+        <span class="label">المعاينات</span>
       </a>
 
       <!-- الموافقة النهائية (FinalApprover فقط) -->
-      <a *ngIf="hasRole(['FinalApprover'])" routerLink="/civil-defense/final-approval" routerLinkActive="active">
-        <span>📊</span>
-        الموافقة النهائية
+      <a
+        *ngIf="hasRole(['FinalApprover'])"
+        routerLink="/civil-defense/final-approval"
+        routerLinkActive="active"
+      >
+        <span class="icon">📊</span>
+        <span class="label">الموافقة النهائية</span>
       </a>
 
       <!-- الأرشيف (Archive فقط) -->
-      <a *ngIf="hasRole(['Archive'])" routerLink="/civil-defense/archive" routerLinkActive="active">
-        <span>🗂️</span>
-        الأرشيف
+      <a
+        *ngIf="hasRole(['Archive'])"
+        routerLink="/civil-defense/archive"
+        routerLinkActive="active"
+      >
+        <span class="icon">🗂️</span>
+        <span class="label">الأرشيف</span>
       </a>
     </nav>
 
-    <button class="logout-mobile" type="button" (click)="logout()">
-      تسجيل الخروج
-    </button>
+    <button class="logout-btn" type="button" (click)="logout()">
+          تسجيل الخروج
+        </button>
+        
   </aside>
 
-  <main class="dashboard-main">
+  <main class="dashboard-main" [class.collapsed]="isCollapsed">
     <header class="dashboard-header">
       <div>
         <h2>{{ title }}</h2>
@@ -77,9 +116,7 @@
           </div>
         </div>
 
-        <button class="logout-btn" type="button" (click)="logout()">
-          تسجيل الخروج
-        </button>
+      
       </div>
     </header>
 
