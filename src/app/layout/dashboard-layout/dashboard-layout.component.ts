@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 import {
   Router,
   RouterLink,
@@ -11,6 +12,7 @@ import {
   LucideAngularModule,
   PanelRightOpen,
   PanelLeftOpen,
+  LogOut,
 } from 'lucide-angular';
 
 @Component({
@@ -22,6 +24,7 @@ import {
     RouterLink,
     RouterLinkActive,
     LucideAngularModule,
+    MatButtonModule,
   ],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',
@@ -29,6 +32,7 @@ import {
 export class DashboardLayoutComponent implements OnInit {
   readonly PanelRightOpen = PanelRightOpen;
   readonly PanelLeftOpen = PanelLeftOpen;
+  readonly LogOut = LogOut;
   title = 'لوحة التحكم';
   username = '';
   userRole = '';

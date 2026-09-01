@@ -117,6 +117,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex: 1;
 }
 
 .sidebar-menu a {
@@ -232,7 +233,6 @@
   font-size: 15px;
 }
 
-.logout-btn,
 .logout-mobile {
   border: none;
   background: #ef4444;
@@ -243,17 +243,13 @@
   cursor: pointer;
   transition: 0.25s ease;
   font-family: inherit;
+  margin-top: auto;
+  display: none;
 }
 
-.logout-btn:hover,
 .logout-mobile:hover {
   background: #dc2626;
   transform: translateY(-2px);
-}
-
-.logout-mobile {
-  margin-top: auto;
-  display: none;
 }
 
 .sidebar.collapsed .logout-mobile {
@@ -302,12 +298,21 @@ body {
     flex-direction: column;
     align-items: flex-start;
   }
-
-  .logout-btn {
-    display: none;
-  }
-
+ 
   .logout-mobile {
     display: block;
   }
+}
+
+.logout-btn,
+.logout-btn-collapsed {
+  margin-top: auto;
+}
+
+.logout-btn {
+  width: 100%;
+}
+
+.logout-btn-collapsed {
+  align-self: center;
 }

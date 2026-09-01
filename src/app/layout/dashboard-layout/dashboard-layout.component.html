@@ -94,10 +94,29 @@
       </a>
     </nav>
 
-    <button class="logout-btn" type="button" (click)="logout()">
-          تسجيل الخروج
-        </button>
-        
+    <button
+      *ngIf="!isCollapsed"
+      mat-fab
+      extended
+      color="warn"
+      class="logout-btn"
+      type="button"
+      (click)="logout()"
+    >
+      <lucide-angular [img]="LogOut" [size]="18"></lucide-angular>
+      تسجيل الخروج
+    </button>
+
+    <button
+      *ngIf="isCollapsed"
+      mat-mini-fab
+      color="warn"
+      class="logout-btn-collapsed"
+      type="button"
+      (click)="logout()"
+    >
+      <lucide-angular [img]="LogOut" [size]="18"></lucide-angular>
+    </button>
   </aside>
 
   <main class="dashboard-main" [class.collapsed]="isCollapsed">
@@ -115,8 +134,6 @@
             <strong>{{ username }}</strong>
           </div>
         </div>
-
-      
       </div>
     </header>
 
