@@ -1,4 +1,4 @@
-<div class="list-card" dir="rtl">
+<div class="table-card" dir="rtl">
   <div class="list-header">
     <div>
       <h3>قائمة أنواع النشاط</h3>
@@ -6,46 +6,59 @@
     </div>
 
     <button type="button" class="refresh-btn" (click)="loadActivityTypes()">
-      تحديث
+      <mat-icon>refresh</mat-icon>
+      <span>تحديث</span>
     </button>
   </div>
 
   <div class="message error" *ngIf="errorMessage">
-    {{ errorMessage }}
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ errorMessage }}</span>
   </div>
 
   <div class="loading-box" *ngIf="isLoading">
-    جاري تحميل البيانات...
+    <mat-icon class="spin-icon">sync</mat-icon>
+    <span>جاري تحميل البيانات...</span>
   </div>
 
   <div class="empty-box" *ngIf="!isLoading && activityTypes.length === 0">
-    لا توجد أنواع نشاط مسجلة حتى الآن.
+    <mat-icon>inbox</mat-icon>
+    <span>لا توجد أنواع نشاط مسجلة حتى الآن.</span>
   </div>
 
-  <div class="table-wrap" *ngIf="!isLoading && activityTypes.length > 0">
-    <table>
+  <div class="mat-table-container" *ngIf="!isLoading && activityTypes.length > 0">
+    <table class="mat-mdc-table">
       <thead>
-        <tr>
-          <th>الكود</th>
-          <th>اسم نوع النشاط</th>
-        
-          <th>الإجراءات</th>
+        <tr class="mat-mdc-header-row">
+          <th class="mat-mdc-header-cell">الكود</th>
+          <th class="mat-mdc-header-cell">اسم نوع النشاط</th>
+          <th class="mat-mdc-header-cell actions-cell">الإجراءات</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr *ngFor="let item of activityTypes; let i = index">
-          <td>{{ item.code }}</td>
-          <td>{{ item.name }}</td>
-          
-          <td>
-            <div class="row-actions">
-              <button type="button" class="edit-btn" (click)="requestEdit(item.id)">
-                تعديل
+        <tr class="mat-mdc-row" *ngFor="let item of activityTypes; let i = index">
+          <td class="mat-mdc-cell">
+            <span class="code-badge">{{ item.code }}</span>
+          </td>
+          <td class="mat-mdc-cell font-medium">{{ item.name }}</td>
+          <td class="mat-mdc-cell actions-cell">
+            <div class="table-actions">
+              <button
+                type="button"
+                class="table-btn"
+                (click)="requestEdit(item.id)"
+                aria-label="تعديل"
+              >
+                <mat-icon>edit</mat-icon>
               </button>
-
-              <button type="button" class="delete-btn" (click)="requestDelete(item)">
-                حذف
+              <button
+                type="button"
+                class="table-btn delete-btn"
+                (click)="requestDelete(item)"
+                aria-label="حذف"
+              >
+                <mat-icon>delete_outline</mat-icon>
               </button>
             </div>
           </td>
