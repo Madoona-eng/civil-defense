@@ -141,9 +141,11 @@
   transform: translateX(-5px);
 }
 
-.sidebar-menu a .icon {
-  font-size: 18px;
+.sidebar-menu a lucide-angular.icon {
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
+  color: inherit;
 }
 
 .sidebar.collapsed .sidebar-menu a {
@@ -233,31 +235,14 @@
   font-size: 15px;
 }
 
-.logout-mobile {
-  border: none;
-  background: #ef4444;
-  color: #ffffff;
-  padding: 12px 18px;
-  border-radius: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.25s ease;
-  font-family: inherit;
+.logout-btn {
   margin-top: auto;
-  display: none;
+  width: 100%;
 }
 
-.logout-mobile:hover {
-  background: #dc2626;
-  transform: translateY(-2px);
-}
-
-.sidebar.collapsed .logout-mobile {
-  justify-content: center;
-}
-
-.sidebar.collapsed .logout-mobile .label {
-  display: none;
+.logout-btn-collapsed {
+  margin-top: auto;
+  align-self: center;
 }
 
 .dashboard-content {
@@ -268,6 +253,13 @@
 
 body {
   overflow-x: hidden;
+}
+
+::ng-deep .mat-mdc-tooltip {
+  --mdc-plain-tooltip-container-color: var(--color-sidebar-bg);
+  --mdc-plain-tooltip-supporting-text-color: var(--color-sidebar-text);
+  font-family: inherit;
+  font-size: 13px !important;
 }
 
 @media (max-width: 800px) {
@@ -298,21 +290,8 @@ body {
     flex-direction: column;
     align-items: flex-start;
   }
- 
-  .logout-mobile {
-    display: block;
+
+  .logout-btn {
+    display: none;
   }
-}
-
-.logout-btn,
-.logout-btn-collapsed {
-  margin-top: auto;
-}
-
-.logout-btn {
-  width: 100%;
-}
-
-.logout-btn-collapsed {
-  align-self: center;
 }

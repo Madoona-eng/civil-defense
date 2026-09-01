@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   Router,
   RouterLink,
@@ -13,6 +14,14 @@ import {
   PanelRightOpen,
   PanelLeftOpen,
   LogOut,
+  Tags,
+  Building2,
+  MapPin,
+  Store,
+  FileCheck,
+  ClipboardCheck,
+  ShieldCheck,
+  Archive,
 } from 'lucide-angular';
 
 @Component({
@@ -25,6 +34,7 @@ import {
     RouterLinkActive,
     LucideAngularModule,
     MatButtonModule,
+    MatTooltipModule,
   ],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',
@@ -33,6 +43,15 @@ export class DashboardLayoutComponent implements OnInit {
   readonly PanelRightOpen = PanelRightOpen;
   readonly PanelLeftOpen = PanelLeftOpen;
   readonly LogOut = LogOut;
+  readonly Tags = Tags;
+  readonly Building2 = Building2;
+  readonly MapPin = MapPin;
+  readonly Store = Store;
+  readonly FileCheck = FileCheck;
+  readonly ClipboardCheck = ClipboardCheck;
+  readonly ShieldCheck = ShieldCheck;
+  readonly Archive = Archive;
+
   title = 'لوحة التحكم';
   username = '';
   userRole = '';
@@ -60,15 +79,12 @@ export class DashboardLayoutComponent implements OnInit {
     this.isCollapsed = !this.isCollapsed;
   }
 
-  // دالة للتحقق من الصلاحيات في الـ Template
-  // دالة التحقق من الصلاحيات في dashboard-layout.component.ts
   hasRole(allowedRoles: string[]): boolean {
     if (!this.userRole) return false;
     // إعطاء صلاحية رؤية الكل لـ SuperAdmin و Admin
     return (
       allowedRoles.includes(this.userRole) ||
-      this.userRole === 'SuperAdmin' ||
-      this.userRole === 'Admin'
+      this.userRole === 'SuperAdmin' 
     );
   }
 
