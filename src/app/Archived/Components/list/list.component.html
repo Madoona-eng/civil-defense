@@ -1,0 +1,61 @@
+<div class="list-card" dir="rtl">
+  <div class="list-header">
+    <div>
+      <h3>قائمة الأرشيف</h3>
+      <p>إجمالي السجلات: {{ totalCount }}</p>
+    </div>
+    <button type="button" class="refresh-btn" (click)="loadData()">تحديث</button>
+  </div>
+
+  @if (errorMessage) {
+    <div class="message error">{{ errorMessage }}</div>
+  }
+
+  @if (isLoading) {
+    <div class="loading-box">جاري تحميل البيانات...</div>
+  } @else if (items.length === 0) {
+    <div class="empty-box">لا توجد سجلات مؤرشفة.</div>
+  } @else {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>كود المعاملة</th>
+            <th>اسم المنشأة</th>
+            <th>الجهة الطالبة</th>
+            <th>المركز</th>
+            <th>النشاط</th>
+            <th>تاريخ التقديم</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of items; track item.id; let i = $index) {
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td class="id-cell">{{ item.transactionCode }}</td>
+              <td>{{ item.establishmentName }}</td>
+              <td>{{ item.requestingEntity }}</td>
+              <td>{{ item.district }}</td>
+              <td>{{ item.activityType }}</td>
+              <td>{{ item.submissionDate }}</td>
+              <td>
+                <div class="row-actions">
+                  <button type="button" class="edit-btn" (click)="requestView(item.id)">تفاصيل</button>
+                  <button type="button" class="delete-btn" (click)="requestDelete(item)">حذف</button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <button type="button" class="refresh-btn" (click)="prevPage()" [disabled]="!hasPreviousPage">السابق</button>
+      <span>{{ filter.pageNumber }} / {{ totalPages }}</span>
+      <button type="button" class="refresh-btn" (click)="nextPage()" [disabled]="!hasNextPage">التالي</button>
+    </div>
+  }
+</div>

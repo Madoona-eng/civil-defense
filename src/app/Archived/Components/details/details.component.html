@@ -1,0 +1,182 @@
+<div class="details-wrap" dir="rtl">
+  @if (isLoading) {
+    <div class="loading-box">جاري تحميل التفاصيل...</div>
+  } @else if (errorMessage) {
+    <div class="message error">{{ errorMessage }}</div>
+  } @else if (details) {
+    <h3 class="section-title">بيانات المعاملة</h3>
+
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="label">مقدم الطلب</span>
+        <span class="value">{{ details.applicantName }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">صفة مقدم الطلب</span>
+        <span class="value">{{
+          getApplicantRoleLabel(details.applicantRole)
+        }}</span>
+      </div>
+
+      <div class="info-item">
+        <span class="label">الرقم القومي</span>
+        <span class="value ltr">{{ details.nationalId }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">المدير المسؤول</span>
+        <span class="value">{{ details.responsibleManager }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">رقم الهاتف</span>
+        <span class="value ltr">{{ details.phone }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">القائم بالمعاينه</span>
+        <span class="value">{{ details.inspectorName }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">الرأي</span>
+        <span class="value">{{ getOpinionLabel(details.opinion) }}</span>
+      </div>
+
+      <div class="info-item">
+        <span class="label">الحالة النهائية</span>
+        <span class="value">{{
+          getFinalStatusLabel(details.finalStatus)
+        }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">تاريخ الإنشاء</span>
+        <span class="value ltr">{{
+          details.createdAt | date: "yyyy-MM-dd"
+        }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">أنشئ بواسطة</span>
+        <span class="value">{{ details.createdBy }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">تمت المعاينة بواسطة</span>
+        <span class="value">{{ details.inspectedBy }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">تمت الموافقة بواسطة</span>
+        <span class="value">{{ details.approvedBy }}</span>
+      </div>
+      @if (details.archivedBy) {
+        <div class="info-item">
+          <span class="label">تمت الأرشفة بواسطة</span>
+          <span class="value">{{ details.archivedBy }}</span>
+        </div>
+      }
+    </div>
+
+    @if (details.notes.length > 0) {
+      <h3 class="section-title">الملاحظات</h3>
+      <div class="notes-list">
+        @for (note of details.notes; track $index) {
+          <div class="note-card">
+            <div class="note-meta">
+              <span>{{ note.writtenBy }}</span>
+              <span class="step-badge">{{ note.processStep }}</span>
+              <span class="ltr">{{ note.writtenAt | date: "yyyy-MM-dd" }}</span>
+            </div>
+            <p>{{ note.content }}</p>
+          </div>
+        }
+      </div>
+    }
+
+    @if (details.reviews.length > 0) {
+      <h3 class="section-title">المراجعات</h3>
+      <div class="reviews-list">
+        @for (review of details.reviews; track $index) {
+          <div class="review-card">
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="label">الحالة</span>
+                <span class="value">{{
+                  getReviewStatusLabel(review.reviewStatus)
+                }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">تم الدفع</span>
+                <span class="value">{{ review.isPaid ? "نعم" : "لا" }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">راجع بواسطة</span>
+                <span class="value">{{ review.reviewedBy }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">تاريخ المراجعة</span>
+                <span class="value ltr">{{
+                  review.reviewedAt | date: "yyyy-MM-dd"
+                }}</span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (details.entityLetters.length > 0) {
+      <h3 class="section-title">خطابات الجهة</h3>
+      <div class="attachments-list">
+        @for (file of details.entityLetters; track file.id) {
+          <div class="attachment-item">
+            <span class="file-name">{{ file.fileName }}</span>
+            <span class="step-badge">{{ file.uploadedAtStep }}</span>
+          </div>
+        }
+      </div>
+    }
+
+    @if (details.proofDocuments.length > 0) {
+      <h3 class="section-title">مستندات الإثبات</h3>
+      <div class="attachments-list">
+        @for (file of details.proofDocuments; track file.id) {
+          <div class="attachment-item">
+            <span class="file-name">{{ file.fileName }}</span>
+            <span class="step-badge">{{ file.uploadedAtStep }}</span>
+          </div>
+        }
+      </div>
+    }
+
+    @if (details.engineeringReports.length > 0) {
+      <h3 class="section-title">التقارير الهندسية</h3>
+      <div class="attachments-list">
+        @for (file of details.engineeringReports; track file.id) {
+          <div class="attachment-item">
+            <span class="file-name">{{ file.fileName }}</span>
+            <span class="step-badge">{{ file.uploadedAtStep }}</span>
+          </div>
+        }
+      </div>
+    }
+
+    @if (details.inspectionReports.length > 0) {
+      <h3 class="section-title">تقارير المعاينة</h3>
+      <div class="attachments-list">
+        @for (file of details.inspectionReports; track file.id) {
+          <div class="attachment-item">
+            <span class="file-name">{{ file.fileName }}</span>
+            <span class="step-badge">{{ file.uploadedAtStep }}</span>
+          </div>
+        }
+      </div>
+    }
+
+    @if (details.otherAttachments.length > 0) {
+      <h3 class="section-title">مرفقات أخرى</h3>
+      <div class="attachments-list">
+        @for (file of details.otherAttachments; track file.id) {
+          <div class="attachment-item">
+            <span class="file-name">{{ file.fileName }}</span>
+            <span class="step-badge">{{ file.uploadedAtStep }}</span>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>
