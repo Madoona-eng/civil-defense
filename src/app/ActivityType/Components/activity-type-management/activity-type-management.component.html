@@ -3,146 +3,74 @@
   <!-- =====================================================
        PAGE HEADER
   ====================================================== -->
-
   <header class="page-header">
-
     <div class="header-content">
-
       <div class="header-icon">
-        <span>📋</span>
+        <mat-icon>assignment</mat-icon>
       </div>
-
       <div class="header-text">
-
-        <span class="eyebrow">
-          إدارة النظام
-        </span>
-
-        <h1>
-          أنواع النشاط
-        </h1>
-
-        <p>
-          إدارة وتنظيم أنواع النشاط المسجلة داخل النظام
-        </p>
-
+        <span class="eyebrow">إدارة النظام</span>
+        <h1>أنواع النشاط</h1>
+        <p>إدارة وتنظيم أنواع النشاط المسجلة داخل النظام</p>
       </div>
-
     </div>
 
-
-    <button
-      type="button"
-      class="add-btn"
-      (click)="openAddPopup()"
-    >
-
-      <span class="add-symbol">
-        +
-      </span>
-
-      <span>
-        إضافة نوع نشاط
-      </span>
-
+    <button type="button" class="add-btn" (click)="openAddPopup()">
+      <mat-icon class="add-symbol">add</mat-icon>
+      <span>إضافة نوع نشاط</span>
     </button>
-
   </header>
 
-
-
   <!-- =====================================================
-       MAIN CONTENT
+       MAIN CONTENT (Table Container Wrapper)
   ====================================================== -->
-
   <main class="page-content">
-
-    <section class="list-card">
+    <section class="mat-table-container">
 
       <!-- LIST HEADER -->
-
       <div class="list-card-header">
-
         <div class="section-title">
-
           <div class="section-icon">
-            <span>📝</span>
+            <mat-icon>list_alt</mat-icon>
           </div>
-
           <div>
-
-            <h2>
-              قائمة أنواع النشاط
-            </h2>
-
-            <p>
-              عرض وإدارة جميع أنواع النشاط المسجلة
-            </p>
-
+            <h2>قائمة أنواع النشاط</h2>
+            <p>عرض وإدارة جميع أنواع النشاط المسجلة</p>
           </div>
-
         </div>
-
       </div>
 
-
-      <!-- LIST -->
-
+      <!-- LIST / MAT-TABLE COMPONENT -->
       <div class="list-card-body">
-
         <app-list
           (editRequested)="openEditPopup($event)"
           (deleteRequested)="openDeletePopup($event)"
         >
         </app-list>
-
       </div>
 
     </section>
-
   </main>
-
-
 
   <!-- =====================================================
        ADD MODAL
   ====================================================== -->
-
   <div
     class="popup-backdrop"
     *ngIf="isAddPopupOpen"
     (click)="closeAddPopup()"
   >
-
-    <div
-      class="popup-card"
-      (click)="$event.stopPropagation()"
-    >
-
-      <!-- MODAL HEADER -->
-
+    <div class="popup-card" (click)="$event.stopPropagation()">
       <div class="popup-header">
-
         <div class="popup-title">
-
           <div class="popup-icon add-icon">
-            <span>+</span>
+            <mat-icon>add</mat-icon>
           </div>
-
           <div class="popup-title-text">
-
-            <span>
-              إدارة النشاط
-            </span>
-
-            <h2>
-              إضافة نوع نشاط
-            </h2>
-
+            <span>إدارة النشاط</span>
+            <h2>إضافة نوع نشاط</h2>
           </div>
-
         </div>
-
 
         <button
           type="button"
@@ -150,69 +78,39 @@
           (click)="closeAddPopup()"
           aria-label="إغلاق"
         >
-          ×
+          <mat-icon>close</mat-icon>
         </button>
-
       </div>
 
-
-      <!-- MODAL CONTENT -->
-
       <div class="popup-body">
-
         <app-add
           (saved)="onAddSaved()"
           (cancelled)="closeAddPopup()"
         >
         </app-add>
-
       </div>
-
     </div>
-
   </div>
-
-
 
   <!-- =====================================================
        EDIT MODAL
   ====================================================== -->
-
   <div
     class="popup-backdrop"
     *ngIf="isEditPopupOpen"
     (click)="closeEditPopup()"
   >
-
-    <div
-      class="popup-card"
-      (click)="$event.stopPropagation()"
-    >
-
-      <!-- MODAL HEADER -->
-
+    <div class="popup-card" (click)="$event.stopPropagation()">
       <div class="popup-header">
-
         <div class="popup-title">
-
           <div class="popup-icon edit-icon">
-            <span>✎</span>
+            <mat-icon>edit</mat-icon>
           </div>
-
           <div class="popup-title-text">
-
-            <span>
-              إدارة النشاط
-            </span>
-
-            <h2>
-              تعديل نوع النشاط
-            </h2>
-
+            <span>إدارة النشاط</span>
+            <h2>تعديل نوع النشاط</h2>
           </div>
-
         </div>
-
 
         <button
           type="button"
@@ -220,70 +118,40 @@
           (click)="closeEditPopup()"
           aria-label="إغلاق"
         >
-          ×
+          <mat-icon>close</mat-icon>
         </button>
-
       </div>
 
-
-      <!-- MODAL CONTENT -->
-
       <div class="popup-body">
-
         <app-edit
           [activityTypeId]="selectedActivityTypeId"
           (saved)="onEditSaved()"
           (cancelled)="closeEditPopup()"
         >
         </app-edit>
-
       </div>
-
     </div>
-
   </div>
-
-
 
   <!-- =====================================================
        DELETE MODAL
   ====================================================== -->
-
   <div
     class="popup-backdrop"
     *ngIf="isDeletePopupOpen"
     (click)="closeDeletePopup()"
   >
-
-    <div
-      class="popup-card delete-card"
-      (click)="$event.stopPropagation()"
-    >
-
-      <!-- MODAL HEADER -->
-
+    <div class="popup-card delete-card" (click)="$event.stopPropagation()">
       <div class="popup-header delete-header">
-
         <div class="popup-title">
-
           <div class="popup-icon delete-icon">
-            <span>!</span>
+            <mat-icon>priority_high</mat-icon>
           </div>
-
           <div class="popup-title-text">
-
-            <span>
-              تأكيد العملية
-            </span>
-
-            <h2>
-              حذف نوع النشاط
-            </h2>
-
+            <span>تأكيد العملية</span>
+            <h2>حذف نوع النشاط</h2>
           </div>
-
         </div>
-
 
         <button
           type="button"
@@ -291,27 +159,19 @@
           (click)="closeDeletePopup()"
           aria-label="إغلاق"
         >
-          ×
+          <mat-icon>close</mat-icon>
         </button>
-
       </div>
 
-
-      <!-- MODAL CONTENT -->
-
       <div class="popup-body">
-
         <app-delete
           [activityType]="selectedActivityType"
           (deleted)="onDeleteDone()"
           (cancelled)="closeDeletePopup()"
         >
         </app-delete>
-
       </div>
-
     </div>
-
   </div>
 
 </div>

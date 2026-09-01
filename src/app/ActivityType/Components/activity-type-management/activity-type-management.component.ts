@@ -5,8 +5,10 @@ import { AddComponent } from '../add/add.component';
 import { ListComponent } from '../list/list.component';
 import { EditComponent } from '../edit/edit.component';
 import { DeleteComponent } from '../delete/delete.component';
+import { MatIconModule } from '@angular/material/icon';
 
 import { ActivityType } from '../../Models/activity-type';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-activity-type-management',
@@ -14,7 +16,8 @@ import { ActivityType } from '../../Models/activity-type';
 
   imports: [
     CommonModule,
-
+    MatButtonModule,
+      MatIconModule,
     AddComponent,
     ListComponent,
     EditComponent,

@@ -1,0 +1,213 @@
+/* ============================================================
+   TABLESTYLE.SCSS - Lavender & Purple Clay Pill Mat-Table Design
+   ============================================================ */
+
+/* 1. الحاوية العامة للجدول */
+.mat-table-container {
+  direction: rtl;
+  text-align: right;
+  background: #FFFFFF;
+  border-radius: 28px;
+  padding: 28px 32px;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    0 16px 40px rgba(93, 58, 153, 0.05),
+    0 2px 8px rgba(93, 58, 153, 0.02),
+    inset 0 2px 4px #FFFFFF;
+  overflow-x: auto;
+  display: block;
+}
+
+/* 2. تخصيص جدول Angular Material */
+.mat-mdc-table {
+  width: 100%;
+  background: transparent !important;
+  border-collapse: separate;
+  border-spacing: 0 14px; /* مسافة واضحة بين الصفوف المنفصلة */
+}
+
+/* عناوين الأعمدة (Header) */
+.mat-mdc-header-row {
+  background: transparent !important;
+  height: 40px;
+}
+
+.mat-mdc-header-cell {
+  color: #7D7D99 !important; /* رمادي مائل للبنفسجي متناسق مع نصوص السايدبار */
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  border-bottom: none !important;
+  padding: 0 14px !important;
+  letter-spacing: 0.2px;
+
+  &:first-child {
+    width: 60px;
+  }
+}
+
+/* صفوف البيانات (الكبسولات العائمة بدرجات اللافندر) */
+.mat-mdc-row {
+  background: #F6F2FC !important; /* لافندر ناعم مشتق من خلفية السايدبار #E8DFF5 */
+  border-radius: 18px;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 12px rgba(93, 58, 153, 0.04),
+    inset 0 1px 2px #FFFFFF;
+
+  &:hover {
+    background: #EDE4F8 !important; /* درجة أعمق متناسقة عند الـ hover */
+    transform: translateY(-2px);
+    box-shadow: 
+      0 8px 20px rgba(93, 58, 153, 0.09),
+      inset 0 1px 2px #FFFFFF;
+  }
+}
+
+/* خلايا البيانات */
+.mat-mdc-cell {
+  color: #2D2D3F !important; /* لون النص الأساسي الداكن */
+  font-size: 14.5px !important;
+  font-weight: 600;
+  text-align: center !important;
+  border-bottom: none !important;
+  padding: 14px 12px !important;
+
+  /* تقويس الحواف الخارجية للصف */
+  &:first-child {
+    border-top-right-radius: 18px;
+    border-bottom-right-radius: 18px;
+    font-weight: 800;
+    color: #5D3A99 !important; /* البنفسجي الأساسي */
+    width: 60px;
+  }
+
+  &:last-child {
+    border-top-left-radius: 18px;
+    border-bottom-left-radius: 18px;
+  }
+}
+
+/* 3. شارة الاسم والمستخدم (User Badge) */
+.user-name-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #E8DFF5; /* لون خلفية السايدبار */
+  color: #5D3A99;      /* البنفسجي الرئيسي */
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 
+    0 2px 6px rgba(93, 58, 153, 0.08),
+    inset 0 1px 1px #FFFFFF;
+
+  .mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* 4. كبسولة الأرقام والقيم (National ID / Codes) */
+.code-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  background: #FFFFFF;
+  color: #5D3A99;
+  font-size: 13.5px;
+  font-weight: 700;
+  border-radius: 10px;
+  box-shadow: 
+    0 2px 6px rgba(93, 58, 153, 0.05),
+    inset 0 1px 1px #FFFFFF;
+}
+
+/* 5. أزرار العمليات (Action Buttons) */
+.table-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  .table-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    border: none;
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: #FFFFFF;
+    color: #5D3A99;
+    box-shadow: 
+      0 2px 6px rgba(93, 58, 153, 0.06),
+      inset 0 1px 1px #FFFFFF;
+    transition: all 0.2s ease;
+
+    .mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover {
+      background: #5D3A99;
+      color: #FFFFFF;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(93, 58, 153, 0.25);
+    }
+
+    /* زر الحذف */
+    &.delete-btn {
+      color: #E11D48;
+      background: #FFF1F2;
+
+      &:hover {
+        background: #FDA4AF;
+        color: #9F1239;
+        box-shadow: 0 4px 10px rgba(253, 164, 175, 0.35);
+      }
+    }
+
+    /* زر التعديل */
+    &.edit-btn:hover {
+      background: #8B5CF6;
+      color: #FFFFFF;
+    }
+
+    /* زر العرض */
+    &.view-btn:hover {
+      background: #A7F3D0;
+      color: #065F46;
+    }
+  }
+}
+
+/* 6. ترقيم الصفحات السفلي (Pagination) */
+.mat-mdc-paginator {
+  background: transparent !important;
+  color: #7D7D99 !important;
+  font-size: 13.5px !important;
+  font-weight: 700;
+  margin-top: 18px;
+  direction: rtl;
+
+  .mat-mdc-paginator-range-actions {
+    direction: ltr;
+
+    button {
+      color: #5D3A99;
+
+      &:hover {
+        background-color: #E8DFF5;
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+/* =========================================================
+   SCROLLABLE ROUTER OUTLET CONTAINER
+========================================================= */
+
+.main-content-scroll {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100vh;           /* Constrains container to viewport height */
+  overflow-y: auto;        /* Enables vertical scroll when content overflows */
+  overflow-x: hidden;      /* Prevents unnecessary horizontal scroll */
+  box-sizing: border-box;
+  background-color: var(--color-bg-page, #FFFDF9);
+  
+  /* Smooth momentum scrolling for iOS/Safari */
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+
+  /* Pastel Claymorphic Scrollbar */
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-status-tasks, #D8B4FE);
+    border-radius: 20px;
+    border: 2px solid var(--color-bg-page, #FFFDF9);
+
+    &:hover {
+      background: var(--color-primary-light, #8B5CF6);
+    }
+  }
+
+  /* Firefox Scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-status-tasks, #D8B4FE) transparent;
+}

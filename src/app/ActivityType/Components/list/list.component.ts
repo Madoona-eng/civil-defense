@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivityType } from '../../Models/activity-type';
 import { ActivityTypeService } from '../../Services/activity-type.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,   MatIconModule,],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
