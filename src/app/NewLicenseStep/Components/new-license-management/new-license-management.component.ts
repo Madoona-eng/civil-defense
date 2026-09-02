@@ -4,12 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { forkJoin } from 'rxjs';
 
+import { ConfirmDialogComponent } from '../../../Shared/Components/confirm-dialog/confirm-dialog.component';
 import { NewLicenseFilter, NewLicenseListItem } from '../../Models/new-license';
 import { NewLicenseService } from '../../Services/new-license.service';
 import { ListComponent } from '../list/list.component';
@@ -36,6 +39,8 @@ import { PagedResult } from '../../../Shared/Models/PagedResult';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatDialogModule,
+    MatSnackBarModule,
   ],
   templateUrl: './new-license-management.component.html',
   styleUrl: './new-license-management.component.scss',
@@ -72,6 +77,8 @@ export class NewLicenseManagementComponent implements OnInit {
     private readonly requestingEntityService: RequestingEntityService,
     private readonly districtService: DistrictService,
     private readonly activityTypeService: ActivityTypeService,
+    private readonly dialog: MatDialog,
+    private readonly snackBar: MatSnackBar,
   ) {}
 
   ngOnInit(): void {
@@ -179,9 +186,38 @@ export class NewLicenseManagementComponent implements OnInit {
   onMoveToNextStep(item: NewLicenseListItem): void {
     // TODO: نداء endpoint الانتقال لخطوة 2
   }
-
+  
   onDelete(item: NewLicenseListItem): void {
-    // TODO: نداء endpoint المسح
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '360px',
+      data: {
+        title: 'تأكيد المسح',
+        message: `هل أنت متأكد من مسح المعاملة الخاصة بـ "${item.establishmentName}"؟ لا يمكن التراجع عن هذا الإجراء.`,
+        confirmText: 'مسح',
+        cancelText: 'إلغاء',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+
+      this.newLicenseService.delete(item.id).subscribe({
+        next: (res: ApiResponse<boolean>) => {
+          if (!res.isSuccess) {
+            this.snackBar.open(res.message || 'تعذر مسح المعاملة', 'إغلاق', { duration: 3000 });
+            return;
+          }
+
+          this.snackBar.open('تم مسح المعاملة بنجاح', 'إغلاق', { duration: 2500 });
+          this.loadData();
+        },
+        error: (err) => {
+          const message = err?.error?.message || err?.message || 'حدث خطأ أثناء مسح المعاملة';
+          this.snackBar.open(message, 'إغلاق', { duration: 3000 });
+          console.error('NewLicense DELETE error:', err);
+        },
+      });
+    });
   }
 
   private formatDateForApi(date: Date | null): string | undefined {

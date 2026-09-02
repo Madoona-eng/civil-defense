@@ -28,4 +28,8 @@ export class NewLicenseService {
 
     return this.http.get<ApiResponse<PagedResult<NewLicenseListItem>>>(`${this.baseUrl}/new-license`, { params });
   }
+
+  delete(id: string): Observable<ApiResponse<boolean>> {
+    return this.http.delete<ApiResponse<boolean>>(`${this.baseUrl}/${id}/delete-new-license`);
+  }
 }

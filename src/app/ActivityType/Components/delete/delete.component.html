@@ -3,10 +3,8 @@
     <span>🗑️</span>
   </div>
 
-
-
   <p class="delete-text">
-    هل أنتِ متأكدة من حذف نوع النشاط 
+    هل أنتِ متأكدة من حذف نوع النشاط
     <strong>"{{ activityType?.name }}"</strong>؟
   </p>
 
@@ -15,17 +13,10 @@
   </div>
 
   <div class="actions">
-    <button
-      type="button"
-      class="delete-btn"
-      (click)="confirmDelete()"
-      [disabled]="deleting"
-    >
+    <button type="button" class="delete-btn" (click)="confirmDelete()" [disabled]="deleting">
       {{ deleting ? 'جاري الحذف...' : 'نعم، حذف' }}
     </button>
 
-    <button type="button" class="cancel-btn" (click)="cancel()">
-      إلغاء
-    </button>
+    <button type="button" class="cancel-btn" (click)="cancel()">إلغاء</button>
   </div>
 </div>
