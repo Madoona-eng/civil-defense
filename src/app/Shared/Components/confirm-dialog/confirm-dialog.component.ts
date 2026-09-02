@@ -5,10 +5,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { LucideAngularModule, TriangleAlert } from 'lucide-angular';
 
 export interface ConfirmDialogData {
-  title: string;
   message: string;
   confirmText?: string;
   cancelText?: string;
+  confirmClass?: string;
 }
 
 @Component({

@@ -32,4 +32,8 @@ export class NewLicenseService {
   delete(id: string): Observable<ApiResponse<boolean>> {
     return this.http.delete<ApiResponse<boolean>>(`${this.baseUrl}/${id}/delete-new-license`);
   }
+
+  moveToInspection(id: string): Observable<ApiResponse<boolean>> {
+    return this.http.put<ApiResponse<boolean>>(`${this.baseUrl}/${id}/move-to-inspection`, {});
+  }
 }

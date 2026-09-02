@@ -184,17 +184,47 @@ export class NewLicenseManagementComponent implements OnInit {
   }
 
   onMoveToNextStep(item: NewLicenseListItem): void {
-    // TODO: نداء endpoint الانتقال لخطوة 2
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '360px',
+      data: {
+        message: `هل أنت متأكد من نقل المعاملة الخاصة بـ "${item.establishmentName}" إلى خطوة إجراء المعاينة؟`,
+        confirmText: 'نقل',
+        cancelText: 'إلغاء',
+        confirmClass: 'btn-save',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+
+      this.newLicenseService.moveToInspection(item.id).subscribe({
+        next: (res: ApiResponse<boolean>) => {
+          if (!res.isSuccess) {
+            this.snackBar.open(res.message || 'تعذر نقل المعاملة للخطوة التالية', 'إغلاق', {
+              duration: 3000,
+            });
+            return;
+          }
+
+          this.snackBar.open('تم نقل المعاملة للخطوة التالية بنجاح', 'إغلاق', { duration: 2500 });
+          this.loadData();
+        },
+        error: (err) => {
+          const message = err?.error?.message || err?.message || 'حدث خطأ أثناء نقل المعاملة';
+          this.snackBar.open(message, 'إغلاق', { duration: 3000 });
+          console.error('NewLicense MOVE-TO-INSPECTION error:', err);
+        },
+      });
+    });
   }
-  
   onDelete(item: NewLicenseListItem): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '360px',
       data: {
-        title: 'تأكيد المسح',
         message: `هل أنت متأكد من مسح المعاملة الخاصة بـ "${item.establishmentName}"؟ لا يمكن التراجع عن هذا الإجراء.`,
         confirmText: 'مسح',
         cancelText: 'إلغاء',
+        confirmClass: 'btn-danger',
       },
     });
 

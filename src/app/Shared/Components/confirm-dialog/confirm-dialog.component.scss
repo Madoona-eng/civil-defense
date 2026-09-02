@@ -13,6 +13,11 @@
   background: #FFF1F2;
   color: #E11D48;
   margin: 0 auto 16px;
+
+  &.icon-move {
+    background: var(--color-sidebar-bg);
+    color: var(--color-primary);
+  }
 }
 
 mat-dialog-content {
