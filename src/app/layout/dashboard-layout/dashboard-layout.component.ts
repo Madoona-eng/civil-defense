@@ -18,6 +18,7 @@ import {
   Building2,
   MapPin,
   Store,
+  ClipboardList,
   FileCheck,
   ClipboardCheck,
   ShieldCheck,
@@ -49,6 +50,7 @@ export class DashboardLayoutComponent implements OnInit {
   readonly Store = Store;
   readonly FileCheck = FileCheck;
   readonly ClipboardCheck = ClipboardCheck;
+  readonly ClipboardList = ClipboardList;
   readonly ShieldCheck = ShieldCheck;
   readonly Archive = Archive;
 
