@@ -17,6 +17,24 @@
   overflow-x: auto;
   display: block;
 }
+.table-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+
+  h3 {
+    color: var(--color-text-primary);
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0;
+  }
+}
+
+.table-scroll {
+  position: relative;
+  overflow-x: auto;
+}
 
 /* 2. تخصيص جدول Angular Material */
 .mat-mdc-table {
@@ -33,7 +51,7 @@
 }
 
 .mat-mdc-header-cell {
-  color: #7D7D99 !important; /* رمادي مائل للبنفسجي متناسق مع نصوص السايدبار */
+  color: #7D7D99 !important;
   font-size: 13.5px !important;
   font-weight: 700 !important;
   text-align: center !important;
@@ -46,22 +64,14 @@
   }
 }
 
-/* صفوف البيانات (الكبسولات العائمة بدرجات اللافندر) */
-.mat-mdc-row {
-  background: #F6F2FC !important; /* لافندر ناعم مشتق من خلفية السايدبار #E8DFF5 */
-  border-radius: 18px;
-  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
-    0 4px 12px rgba(93, 58, 153, 0.04),
-    inset 0 1px 2px #FFFFFF;
+/* 2.1 ضمان عرض الجدول وعدم انضغاط الأعمدة فوق بعض */
+.mat-mdc-table {
+  min-width: max-content;
+}
 
-  &:hover {
-    background: #EDE4F8 !important; /* درجة أعمق متناسقة عند الـ hover */
-    transform: translateY(-2px);
-    box-shadow: 
-      0 8px 20px rgba(93, 58, 153, 0.09),
-      inset 0 1px 2px #FFFFFF;
-  }
+.mat-mdc-header-cell,
+.mat-mdc-cell {
+  white-space: nowrap;
 }
 
 /* خلايا البيانات */

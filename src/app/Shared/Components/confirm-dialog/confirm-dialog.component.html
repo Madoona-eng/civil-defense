@@ -1,0 +1,18 @@
+<div class="confirm-dialog" dir="rtl">
+  <div class="dialog-icon" [class.icon-move]="data.confirmClass === 'btn-save'">
+    <lucide-angular [img]="TriangleAlert" [size]="28"></lucide-angular>
+  </div>
+
+  <mat-dialog-content>
+    <p>{{ data.message }}</p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-stroked-button (click)="onCancel()">
+      {{ data.cancelText || 'إلغاء' }}
+    </button>
+    <button mat-flat-button [class]="data.confirmClass || 'btn-danger'" (click)="onConfirm()">
+      {{ data.confirmText || 'مسح' }}
+    </button>
+  </mat-dialog-actions>
+</div>

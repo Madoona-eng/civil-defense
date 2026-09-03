@@ -1,0 +1,82 @@
+.filters-card {
+  background: var(--color-bg-filters);
+  border-radius: 24px;
+  padding: 22px 26px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filters-row-primary,
+.filters-row-secondary {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+// ====== كل الفلاتر بقت mat-form-field دلوقتي ======
+.form-group {
+  flex: 1;
+  min-width: 180px;
+
+  &.search-field {
+    flex: 2;
+    min-width: 280px;
+  }
+}
+
+// ====== ستايل موحد لكل الـ mat-form-field ======
+::ng-deep .filters-card .form-group {
+  width: 100%;
+
+  .mdc-text-field--outlined {
+    --mdc-outlined-text-field-container-color: var(--color-bg-card);
+    --mdc-outlined-text-field-container-shape: 12px;
+  }
+
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: var(--color-border) !important;
+  }
+
+  &.mat-focused {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--color-primary-light) !important;
+    }
+  }
+
+  mat-label {
+    color: var(--color-text-secondary) !important;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  input.mat-mdc-input-element,
+  .mat-mdc-select-value {
+    color: var(--color-text-primary) !important;
+    font-size: 13.5px;
+  }
+
+  .mat-mdc-form-field-icon-suffix,
+  .mat-mdc-form-field-icon-prefix {
+    color: var(--color-text-secondary);
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+}
+
+.field-prefix-icon {
+  margin-inline-end: 6px;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 10px;
+}

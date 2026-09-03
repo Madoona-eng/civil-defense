@@ -1,0 +1,114 @@
+<div class="mat-table-container">
+  <div class="table-header-row">
+    <h3>معاملات الترخيص الجديد</h3>
+  </div>
+
+  <div class="loading-shade" *ngIf="isLoading">
+    <mat-spinner diameter="45"></mat-spinner>
+  </div>
+
+  <div class="message error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="table-scroll" *ngIf="!errorMessage">
+    <table mat-table [dataSource]="items" class="mat-mdc-table">
+
+      <ng-container matColumnDef="transactionCode">
+        <th mat-header-cell *matHeaderCellDef>كود المعاملة</th>
+        <td mat-cell *matCellDef="let item">
+          <span class="code-pill" dir="ltr">{{ item.transactionCode }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="submissionDate">
+        <th mat-header-cell *matHeaderCellDef>تاريخ التقديم</th>
+        <td mat-cell *matCellDef="let item">{{ item.submissionDate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="establishmentName">
+        <th mat-header-cell *matHeaderCellDef>اسم المنشأة</th>
+        <td mat-cell *matCellDef="let item">{{ item.establishmentName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="establishmentAddress">
+        <th mat-header-cell *matHeaderCellDef>عنوان المنشأة</th>
+        <td mat-cell *matCellDef="let item">{{ item.establishmentAddress }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="requestingEntity">
+        <th mat-header-cell *matHeaderCellDef>الجهة الطالبة</th>
+        <td mat-cell *matCellDef="let item">{{ item.requestingEntity }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="district">
+        <th mat-header-cell *matHeaderCellDef>المركز</th>
+        <td mat-cell *matCellDef="let item">{{ item.district }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="activityType">
+        <th mat-header-cell *matHeaderCellDef>نوع النشاط</th>
+        <td mat-cell *matCellDef="let item">{{ item.activityType }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="applicantName">
+        <th mat-header-cell *matHeaderCellDef>مقدم الطلب</th>
+        <td mat-cell *matCellDef="let item">{{ item.applicantName }}</td>
+      </ng-container>
+
+   
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>الإجراءات</th>
+        <td mat-cell *matCellDef="let item">
+          <button
+            mat-icon-button
+            class="table-btn menu-btn"
+            [matMenuTriggerFor]="actionsMenu"
+          >
+            <lucide-angular [img]="EllipsisVertical" [size]="18"></lucide-angular>
+          </button>
+
+          <mat-menu #actionsMenu="matMenu" xPosition="before">
+            <button mat-menu-item (click)="onDetails(item)">
+              <lucide-angular [img]="Eye" [size]="16"></lucide-angular>
+              <span>تفاصيل</span>
+            </button>
+            <button mat-menu-item (click)="onEdit(item)">
+              <lucide-angular [img]="Pencil" [size]="16"></lucide-angular>
+              <span>تعديل</span>
+            </button>
+            <button mat-menu-item (click)="onMoveToNextStep(item)">
+              <lucide-angular [img]="CircleArrowLeft" [size]="16"></lucide-angular>
+              <span>انتقال لخطوة 2</span>
+            </button>
+            <button mat-menu-item class="danger" (click)="onDelete(item)">
+              <lucide-angular [img]="Trash2" [size]="16"></lucide-angular>
+              <span>مسح</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row-hover"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          <div class="empty-state" *ngIf="!isLoading">
+            <p>لا توجد معاملات</p>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <mat-paginator
+    [length]="totalCount"
+    [pageSize]="pageSize"
+    [pageIndex]="pageNumber - 1"
+    [pageSizeOptions]="[10, 25, 50, 100]"
+    (page)="onPageChange($event)"
+    showFirstLastButtons
+  >
+  </mat-paginator>
+</div>
