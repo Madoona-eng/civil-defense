@@ -1,13 +1,17 @@
+<!-- كارت الفلاتر والبحث -->
 <section class="filters-card" dir="rtl">
   <div class="filters-row-primary">
     <div class="form-group search-group">
       <label>بحث</label>
-      <input
-        type="text"
-        [(ngModel)]="searchTerm"
-        placeholder="يمكنك البحث بكود المعاملة، اسم المنشأة، عنوان المنشأة، اسم مقدم الطلب، الرقم القومي، اسم المدير المسؤول، رقم الهاتف."
-        (keyup.enter)="search()"
-      />
+      <div class="search-input-wrapper">
+        <mat-icon>search</mat-icon>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="ابحث بكود المعاملة، اسم المنشأة، عنوان المنشأة، اسم مقدم الطلب..."
+          (keyup.enter)="search()"
+        />
+      </div>
     </div>
 
     <div class="form-group">
@@ -60,100 +64,143 @@
         <option value="false">غير مرتجعة</option>
       </select>
     </div>
+
+    <!-- الفلتر المضاف: الرأي الفني للمعاينة -->
+    <div class="form-group">
+      <label>الرأي الفني للمعاينة</label>
+      <select [(ngModel)]="opinion">
+        <option value="">كل الحالات</option>
+        <option value="Compliant">مطابق للمواصفات</option>
+        <option value="NonCompliant">غير مطابق للمواصفات</option>
+      </select>
+    </div>
   </div>
 
   <div class="filter-actions">
-    <button type="button" class="search-btn" (click)="search()">بحث</button>
+    <button type="button" class="btn-search" (click)="search()">
+      <mat-icon>search</mat-icon>
+      <span>بحث</span>
+    </button>
 
-    <button type="button" class="reset-btn" (click)="resetFilters()">
-      إعادة ضبط
+    <button type="button" class="btn-reset" (click)="resetFilters()">
+      <mat-icon>refresh</mat-icon>
+      <span>إعادة ضبط</span>
     </button>
   </div>
 </section>
 
-<section class="table-card" dir="rtl">
-  <div class="table-header">
-    <h3>قائمة المعاينات</h3>
-    <p>إجمالي النتائج: {{ totalCount }}</p>
+<!-- كارت الجدول المطور -->
+<section class="mat-table-container" dir="rtl">
+  
+  <div class="table-header-row">
+    <div>
+      <h3>معاملات المعاينة</h3>
+      <span class="results-count">إجمالي النتائج: {{ totalCount }}</span>
+    </div>
   </div>
 
   <div class="loading-box" *ngIf="isLoading">
-    جاري تحميل معاملات المعاينة...
+    <mat-icon class="spin-icon">sync</mat-icon>
+    <span>جاري تحميل معاملات المعاينة...</span>
   </div>
 
-  <div class="message error" *ngIf="errorMessage">
-    {{ errorMessage }}
+  <div class="message-banner error" *ngIf="errorMessage">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ errorMessage }}</span>
   </div>
 
-  <div
-    class="empty-box"
-    *ngIf="!isLoading && items.length === 0 && !errorMessage"
-  >
-    لا توجد معاملات معاينة.
+  <div class="empty-box" *ngIf="!isLoading && items.length === 0 && !errorMessage">
+    <mat-icon>inbox</mat-icon>
+    <span>لا توجد معاملات معاينة مطابقة.</span>
   </div>
 
   <div class="table-scroll" *ngIf="!isLoading && items.length > 0">
-    <table>
+    <table class="mat-mdc-table">
       <thead>
-        <tr>
-          <th>كود المعاملة</th>
-          <th>تاريخ تقديم الطلب</th>
-          <th>اسم المنشأة</th>
-          <th>عنوان المنشأة</th>
-          <th>الجهة الطالبة</th>
-          <th>المركز</th>
-          <th>نوع النشاط</th>
-          <th>مقدم الطلب</th>
-          <th>الحالة</th>
-          <th>الإجراءات</th>
+        <tr class="mat-mdc-header-row">
+          <th class="mat-mdc-header-cell">كود المعاملة</th>
+          <th class="mat-mdc-header-cell">تاريخ التقديم</th>
+          <th class="mat-mdc-header-cell">اسم المنشأة</th>
+          <th class="mat-mdc-header-cell">عنوان المنشأة</th>
+          <th class="mat-mdc-header-cell">الجهة الطالبة</th>
+          <th class="mat-mdc-header-cell">المركز</th>
+          <th class="mat-mdc-header-cell">نوع النشاط</th>
+          <th class="mat-mdc-header-cell">مقدم الطلب</th>
+          <th class="mat-mdc-header-cell">الحالة</th>
+          <th class="mat-mdc-header-cell">الإجراءات</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr *ngFor="let item of items">
-          <td class="transaction-code">{{ item.transactionCode }}</td>
-          <td>{{ item.submissionDate }}</td>
-          <td>{{ item.establishmentName }}</td>
-          <td>{{ item.establishmentAddress }}</td>
-          <td>{{ item.requestingEntity }}</td>
-          <td>{{ item.district }}</td>
-          <td>{{ item.activityType }}</td>
-          <td>{{ item.applicantName }}</td>
-          <td>
-            <span class="status-badge" [class.returned]="item.isReturned">
-              {{ item.isReturned ? "مرتجعة" : "غير مرتجعة" }}
+        <tr class="mat-mdc-row" *ngFor="let item of items">
+          <td class="mat-mdc-cell">
+            <span class="transaction-code-pill">{{ item.transactionCode }}</span>
+          </td>
+          <td class="mat-mdc-cell date-cell">{{ item.submissionDate }}</td>
+          <td class="mat-mdc-cell font-medium">{{ item.establishmentName }}</td>
+          <td class="mat-mdc-cell">{{ item.establishmentAddress }}</td>
+          <td class="mat-mdc-cell">{{ item.requestingEntity }}</td>
+          <td class="mat-mdc-cell">{{ item.district }}</td>
+          <td class="mat-mdc-cell">{{ item.activityType }}</td>
+          <td class="mat-mdc-cell">{{ item.applicantName }}</td>
+          <td class="mat-mdc-cell">
+            <span class="status-pill" [class.returned]="item.isReturned">
+              {{ item.isReturned ? 'مرتجعة' : 'سارية' }}
             </span>
           </td>
 
-          <td class="actions-cell">
-            <div class="row-actions">
-              <button
-                type="button"
-                class="edit-btn"
-                (click)="requestEdit(item)"
-              >
-               إجراء المعاينة
+          <!-- عمود الإجراءات بنقاط الخيارات -->
+          <td class="mat-mdc-cell action-cell">
+            <button
+              type="button"
+              class="btn-action-more"
+              [matMenuTriggerFor]="actionMenu"
+              aria-label="خيارات">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <mat-menu #actionMenu="matMenu" xPosition="before" class="custom-action-menu">
+              <button mat-menu-item (click)="requestEdit(item)">
+                <mat-icon class="menu-icon edit-icon">assignment_turned_in</mat-icon>
+                <span>إجراء المعاينة</span>
               </button>
-            </div>
+            </mat-menu>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="pagination" *ngIf="!isLoading && totalPages > 0">
-    <button
-      type="button"
-      (click)="previousPage()"
-      [disabled]="!hasPreviousPage"
-    >
-      السابق
-    </button>
+  <!-- الترقيم السفلي -->
+  <div class="pagination-footer" *ngIf="!isLoading && totalPages > 0">
+    <div class="page-size-selector">
+      <label>عناصر لكل صفحة:</label>
+      <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+        <option [value]="10">10</option>
+        <option [value]="25">25</option>
+        <option [value]="50">50</option>
+      </select>
+    </div>
 
-    <span> صفحة {{ pageNumber }} من {{ totalPages }} </span>
-
-    <button type="button" (click)="nextPage()" [disabled]="!hasNextPage">
-      التالي
-    </button>
+    <div class="pagination-controls">
+      <span>صفحة {{ pageNumber }} من {{ totalPages }}</span>
+      <div class="nav-buttons">
+        <button
+          type="button"
+          class="nav-btn"
+          (click)="previousPage()"
+          [disabled]="!hasPreviousPage">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+        <button
+          type="button"
+          class="nav-btn"
+          (click)="nextPage()"
+          [disabled]="!hasNextPage">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+      </div>
+    </div>
   </div>
+
 </section>

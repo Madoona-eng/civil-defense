@@ -1,91 +1,88 @@
-// المتغيرات الرئيسية للطابع البصري
-$primary-color: #2563eb;
-$primary-hover: #1d4ed8;
-$bg-body: #f8fafc;
-$bg-card: #ffffff;
-$text-main: #0f172a;
-$text-muted: #64748b;
-$border-color: #e2e8f0;
+/* =========================================================
+   IMPORT SHARED TABLE & DASHBOARD STYLES
+========================================================= */
+@import '../../../Shared/Styles/tablesstyle.scss';
 
-.inspections-page {
-  direction: rtl;
-  font-family: inherit;
-  background-color: $bg-body;
-  padding: 24px;
-  box-sizing: border-box;
-
-  // التحكم بالارتفاع الداخلي والسكرول لمنع التمرير المزدوج
-  max-height: 100vh;
-  overflow-y: auto;
-
-  // تخصيص شريط التمرير
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-  &::-webkit-scrollbar-track {
-    background: #f1f5f9;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
-  }
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
 }
 
-// ==========================================
-// 1. كارت الفلاتر والبحث (Filters Card)
-// ==========================================
+/* =========================================================
+   1. كارت الفلاتر (Filters Card)
+========================================================= */
 .filters-card {
-  background: $bg-card;
-  border-radius: 16px;
-  padding: 20px 24px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  border: 1px solid $border-color;
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 24px 32px;
+  border: 1px solid rgba(240, 238, 245, 0.9);
+  box-shadow: 0 10px 30px rgba(93, 58, 153, 0.03);
+  direction: rtl;
 
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 
     label {
-      font-size: 0.82rem;
+      font-size: 12.5px;
       font-weight: 700;
-      color: #334155;
+      color: #6C6C80;
     }
 
     input[type='text'],
     input[type='date'],
     select {
-      height: 42px;
+      height: 44px;
       padding: 0 14px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      background-color: #ffffff;
-      font-size: 0.85rem;
-      color: $text-main;
+      border: 1px solid #EBE6F5;
+      border-radius: 12px;
+      background-color: #FAF8FD;
+      font-size: 13px;
+      font-weight: 600;
+      color: #2D2D3F;
+      font-family: inherit;
       outline: none;
       box-sizing: border-box;
       transition: all 0.2s ease;
 
       &::placeholder {
-        color: #94a3b8;
-        font-size: 0.8rem;
+        color: #A8A8BF;
+        font-weight: 500;
       }
 
       &:focus {
-        border-color: $primary-color;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        border-color: #8B5CF6;
+        background-color: #FFFFFF;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
       }
     }
 
     &.search-group {
-      input {
-        width: 100%;
+      .search-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+
+        mat-icon {
+          position: absolute;
+          right: 12px;
+          color: #8E8EA9;
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+
+        input {
+          width: 100%;
+          padding-right: 40px;
+        }
       }
     }
   }
 
-  // الصف الأول: بحث (عريض) + تاريخ من + تاريخ إلى
   .filters-row-primary {
     display: grid;
     grid-template-columns: 2.2fr 1fr 1fr;
@@ -97,217 +94,253 @@ $border-color: #e2e8f0;
     }
   }
 
-  // الصف الثاني: القوائم المنسدلة (الجهة، المركز، النشاط، حالة الإرجاع)
   .filters-row-secondary {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 16px;
     margin-bottom: 20px;
 
-    @media (max-width: 992px) {
-      grid-template-columns: repeat(2, 1fr);
+    @media (max-width: 1200px) {
+      grid-template-columns: repeat(3, 1fr);
     }
 
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
       grid-template-columns: 1fr;
     }
   }
 
-  // الأزرار: بحث (أزرق) وإعادة ضبط (شفاف/أبيض)
   .filter-actions {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: flex-end;
+    gap: 12px;
 
     button {
-      height: 38px;
+      height: 42px;
       padding: 0 22px;
-      border-radius: 8px;
-      font-size: 0.85rem;
+      border-radius: 12px;
+      font-size: 13.5px;
       font-weight: 700;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       transition: all 0.2s ease;
 
-      &.search-btn {
-        background-color: $primary-color;
-        color: #ffffff;
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &.btn-search {
+        background-color: #5D3A99;
+        color: #FFFFFF;
         border: none;
+        box-shadow: 0 4px 14px rgba(93, 58, 153, 0.2);
 
         &:hover {
-          background-color: $primary-hover;
-          box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+          background-color: #4C2D80;
+          transform: translateY(-1px);
+          box-shadow: 0 6px 18px rgba(93, 58, 153, 0.3);
         }
       }
 
-      &.reset-btn {
-        background-color: #ffffff;
-        color: $text-muted;
-        border: 1px solid #cbd5e1;
+      &.btn-reset {
+        background-color: #FFFFFF;
+        color: #6C6C80;
+        border: 1px solid #EBE6F5;
 
         &:hover {
-          background-color: #f1f5f9;
-          color: $text-main;
+          background-color: #FAF8FD;
+          color: #5D3A99;
         }
       }
     }
   }
 }
 
-// ==========================================
-// 2. كارت الجدول والنتائج (Table Card)
-// ==========================================
-.table-card {
-  background: $bg-card;
+/* =========================================================
+   2. كارت الجدول (Table Container Adjustments)
+========================================================= */
+.results-count {
+  font-size: 12px;
+  color: #8E8EA9;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  background-color: #F0FDF4;
+  color: #166534;
+
+  &.returned {
+    background-color: #FFF1F2;
+    color: #9F1239;
+    border: 1px solid #FECDD3;
+  }
+}
+
+.loading-box,
+.empty-box {
+  padding: 40px 20px;
+  border-radius: 20px;
+  background: #FAF8FD;
+  color: #8E8EA9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  border: 2px dashed rgba(216, 180, 254, 0.6);
+
+  mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    color: #8B5CF6;
+  }
+}
+
+.spin-icon {
+  animation: spin 1.2s linear infinite;
+}
+
+.message-banner.error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
   border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  border: 1px solid $border-color;
+  background: #FFF1F2;
+  border: 1px solid #FECDD3;
+  color: #9F1239;
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-bottom: 16px;
 
-  .table-header {
+  mat-icon {
+    color: #E11D48;
+  }
+}
+
+/* الترقيم */
+.pagination-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(240, 238, 245, 0.9);
+  direction: ltr;
+
+  .page-size-selector {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    gap: 8px;
 
-    h3 {
-      margin: 0;
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: $text-main;
-    }
-
-    p {
-      margin: 0;
-      font-size: 0.85rem;
-      color: $text-muted;
+    label {
+      font-size: 12.5px;
       font-weight: 600;
+      color: #6C6C80;
+    }
+
+    select {
+      height: 32px;
+      border: 1px solid #D9D2E9;
+      border-radius: 8px;
+      padding: 0 8px;
+      background: #FFFFFF;
+      color: #2D2D3F;
+      font-weight: 700;
+      outline: none;
     }
   }
 
-  // التمرير الأفقي للشاشات الصغيرة
-  .table-scroll {
-    width: 100%;
-    overflow-x: auto;
-
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      text-align: right;
-
-      th,
-      td {
-        padding: 14px 12px;
-        font-size: 0.83rem;
-        white-space: nowrap;
-        vertical-align: middle;
-      }
-
-      th {
-        background-color: #ffffff;
-        color: #475569;
-        font-weight: 700;
-        border-bottom: 2px solid #f1f5f9;
-      }
-
-      tbody tr {
-        transition: background-color 0.15s ease;
-
-        td {
-          border-bottom: 1px solid #f1f5f9;
-          color: #334155;
-        }
-
-        &:hover td {
-          background-color: #f8fafc;
-        }
-
-        // كود المعاملة باللون الأزرق المشرق
-        .transaction-code {
-          font-weight: 700;
-          color: $primary-color;
-          direction: ltr;
-          text-align: right;
-        }
-
-        // شارات حالة الإرجاع (مرتجعة / غير مرتجعة)
-        .status-badge {
-          display: inline-block;
-          padding: 4px 12px;
-          border-radius: 6px;
-          font-size: 0.78rem;
-          font-weight: 700;
-          background-color: #f1f5f9;
-          color: #475569;
-
-          &.returned {
-            background-color: #fef2f2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-          }
-        }
-
-        // زر إجراء المعاينة (أزرق فاتح مفرغ)
-        .actions-cell {
-          .edit-btn {
-            background-color: #ffffff;
-            color: $primary-color;
-            border: 1px solid #bfdbfe;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-
-            &:hover {
-              background-color: $primary-color;
-              color: #ffffff;
-              border-color: $primary-color;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // الترقيم (Pagination)
-  .pagination {
+  .pagination-controls {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 24px;
-    padding-top: 16px;
-    border-top: 1px solid #f1f5f9;
+    gap: 14px;
 
     span {
-      font-size: 0.83rem;
-      font-weight: 600;
-      color: #475569;
+      font-size: 13px;
+      font-weight: 700;
+      color: #2D2D3F;
     }
 
-    button {
-      height: 36px;
-      padding: 0 16px;
-      background-color: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #334155;
-      cursor: pointer;
-      transition: all 0.2s ease;
+    .nav-buttons {
+      display: flex;
+      gap: 6px;
 
-      &:hover:not(:disabled) {
-        background-color: #f1f5f9;
-        border-color: #94a3b8;
-      }
+      .nav-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid #EBE6F5;
+        background: #FFFFFF;
+        color: #5D3A99;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
 
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
+        &:hover:not(:disabled) {
+          background-color: #F4EFFC;
+        }
+
+        &:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
       }
     }
+  }
+}
+
+/* قائمة الخيارات */
+::ng-deep .custom-action-menu.mat-mdc-menu-panel {
+  border-radius: 16px !important;
+  background: #FFFFFF !important;
+  border: 1px solid rgba(240, 238, 245, 0.9) !important;
+  box-shadow: 0 10px 25px rgba(93, 58, 153, 0.1) !important;
+  padding: 6px !important;
+  min-width: 150px !important;
+  direction: rtl;
+
+  .mat-mdc-menu-item {
+    min-height: 40px !important;
+    border-radius: 10px !important;
+    font-family: inherit !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #2D2D3F !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 0 12px !important;
+
+    .menu-icon.edit-icon {
+      color: #5D3A99;
+    }
+
+    &:hover {
+      background-color: #FAF8FD !important;
+    }
+  }
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
   }
 }

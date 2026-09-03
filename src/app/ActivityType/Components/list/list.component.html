@@ -32,35 +32,39 @@
         <tr class="mat-mdc-header-row">
           <th class="mat-mdc-header-cell">الكود</th>
           <th class="mat-mdc-header-cell">اسم نوع النشاط</th>
-          <th class="mat-mdc-header-cell actions-cell">الإجراءات</th>
+          <th class="mat-mdc-header-cell action-header-cell">الإجراءات</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr class="mat-mdc-row" *ngFor="let item of activityTypes; let i = index">
+        <tr class="mat-mdc-row" *ngFor="let item of activityTypes">
           <td class="mat-mdc-cell">
             <span class="code-badge">{{ item.code }}</span>
           </td>
           <td class="mat-mdc-cell font-medium">{{ item.name }}</td>
-          <td class="mat-mdc-cell actions-cell">
-            <div class="table-actions">
-              <button
-                type="button"
-                class="table-btn"
-                (click)="requestEdit(item.id)"
-                aria-label="تعديل"
-              >
-                <mat-icon>edit</mat-icon>
+          <td class="mat-mdc-cell action-cell">
+            
+            <!-- زر النقاط الثلاث -->
+            <button
+              type="button"
+              class="btn-action-more"
+              [matMenuTriggerFor]="actionMenu"
+              aria-label="خيارات">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <!-- القائمة المنسدلة للخيارات -->
+            <mat-menu #actionMenu="matMenu" xPosition="before" class="custom-action-menu">
+              <button mat-menu-item (click)="requestEdit(item.id)">
+                <mat-icon class="menu-icon edit-icon">edit</mat-icon>
+                <span>تعديل</span>
               </button>
-              <button
-                type="button"
-                class="table-btn delete-btn"
-                (click)="requestDelete(item)"
-                aria-label="حذف"
-              >
-                <mat-icon>delete_outline</mat-icon>
+              <button mat-menu-item (click)="requestDelete(item)">
+                <mat-icon class="menu-icon delete-icon">delete_outline</mat-icon>
+                <span>حذف</span>
               </button>
-            </div>
+            </mat-menu>
+
           </td>
         </tr>
       </tbody>

@@ -1,4 +1,6 @@
-<div class="list-card" dir="rtl">
+<div class="table-card" dir="rtl">
+  
+  <!-- رأس القائمة وزر التحديث -->
   <div class="list-header">
     <div>
       <h3>قائمة المراكز / المناطق</h3>
@@ -6,49 +8,75 @@
     </div>
 
     <button type="button" class="refresh-btn" (click)="loadDistricts()">
-      تحديث
+      <mat-icon>refresh</mat-icon>
+      <span>تحديث</span>
     </button>
   </div>
 
+  <!-- رسالة الخطأ -->
   <div class="message error" *ngIf="errorMessage">
-    {{ errorMessage }}
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ errorMessage }}</span>
   </div>
 
+  <!-- حالة التحميل -->
   <div class="loading-box" *ngIf="isLoading">
-    جاري تحميل البيانات...
+    <mat-icon class="spin-icon">sync</mat-icon>
+    <span>جاري تحميل البيانات...</span>
   </div>
 
+  <!-- حالة عدم وجود بيانات -->
   <div class="empty-box" *ngIf="!isLoading && districts.length === 0">
-    لا توجد مراكز مسجلة حتى الآن.
+    <mat-icon>inbox</mat-icon>
+    <span>لا توجد مراكز مسجلة حتى الآن.</span>
   </div>
 
-  <div class="table-wrap" *ngIf="!isLoading && districts.length > 0">
-    <table>
+  <!-- جدول البيانات -->
+  <div class="mat-table-container" *ngIf="!isLoading && districts.length > 0">
+    <table class="mat-mdc-table">
       <thead>
-        <tr>
-          <th>الكود</th>
-          <th>اسم المركز</th>
-          <th class="actions-col">الإجراءات</th>
+        <tr class="mat-mdc-header-row">
+          <th class="mat-mdc-header-cell">الكود</th>
+          <th class="mat-mdc-header-cell">اسم المركز / المنطقة</th>
+          <th class="mat-mdc-header-cell action-header-cell">الإجراءات</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr *ngFor="let item of districts">
-          <td>{{ item.code }}</td>
-          <td>{{ item.name }}</td>
-          <td class="actions-col">
-            <div class="row-actions">
-              <button type="button" class="edit-btn" (click)="requestEdit(item.id)">
-                تعديل
-              </button>
+        <tr class="mat-mdc-row" *ngFor="let item of districts">
+          <!-- كود المركز ككبسولة بنفسجية -->
+          <td class="mat-mdc-cell">
+            <span class="code-badge">{{ item.code }}</span>
+          </td>
 
-              <button type="button" class="delete-btn" (click)="requestDelete(item)">
-                حذف
+          <!-- اسم المركز -->
+          <td class="mat-mdc-cell font-medium">{{ item.name }}</td>
+
+          <!-- الإجراءات (زر النقاط الثلاث وقائمة الخيارات) -->
+          <td class="mat-mdc-cell action-cell">
+            <button
+              type="button"
+              class="btn-action-more"
+              [matMenuTriggerFor]="actionMenu"
+              aria-label="خيارات">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <!-- القائمة المنسدلة -->
+            <mat-menu #actionMenu="matMenu" xPosition="before" class="custom-action-menu">
+              <button mat-menu-item (click)="requestEdit(item.id)">
+                <mat-icon class="menu-icon edit-icon">edit</mat-icon>
+                <span>تعديل</span>
               </button>
-            </div>
+              <button mat-menu-item (click)="requestDelete(item)">
+                <mat-icon class="menu-icon delete-icon">delete_outline</mat-icon>
+                <span>حذف</span>
+              </button>
+            </mat-menu>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+
 </div>

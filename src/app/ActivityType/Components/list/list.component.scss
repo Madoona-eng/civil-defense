@@ -6,7 +6,7 @@
   font-family: inherit;
 
   /* Header & Refresh Section */
-.list-header {
+  .list-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -17,7 +17,7 @@
     h3 {
       margin: 0;
       color: var(--color-text-primary, #2D2D3F);
-      font-size: 15px; /* تصغير حجم العنوان */
+      font-size: 15px;
       font-weight: 800;
       line-height: 1.2;
     }
@@ -25,7 +25,7 @@
     p {
       margin: 2px 0 0;
       color: var(--color-text-secondary, #8E8EA9);
-      font-size: 11.5px; /* تصغير حجم الوصف */
+      font-size: 11.5px;
       line-height: 1.3;
     }
 
@@ -34,13 +34,13 @@
       align-items: center;
       gap: 5px;
       border: 1px solid rgba(255, 255, 255, 0.95);
-      border-radius: 10px; /* تقويس أصغر ومناسب */
-      padding: 6px 12px;   /* تصغير الحواف الداخلية للزر */
-      height: 32px;        /* تثبيت ارتفاع مدمج للزر */
+      border-radius: 10px;
+      padding: 6px 12px;
+      height: 32px;
       background: #FFFFFF;
       color: var(--color-primary, #5D3A99);
       font-family: inherit;
-      font-size: 12px;     /* خط أصغر */
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       box-shadow: 
@@ -66,13 +66,40 @@
       }
     }
   }
-  /* Table Customizations */
-  .actions-cell {
-    text-align: center !important;
-    width: 130px;
 
-    .table-actions {
+  /* تنسيق عمود وزر الإجراءات */
+  .action-header-cell,
+  .action-cell {
+    text-align: center !important;
+    width: 70px;
+  }
+
+  .action-cell {
+    .btn-action-more {
+      background: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      color: var(--color-primary, #5D3A99);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
       justify-content: center;
+      transition: background-color 0.2s ease, transform 0.15s ease;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: inherit;
+      }
+
+      &:hover {
+        background-color: #F0EAF8;
+        transform: scale(1.08);
+      }
     }
   }
 
@@ -147,6 +174,49 @@
 
   .spin-icon {
     animation: spin 1.2s linear infinite;
+  }
+}
+
+/* تنسيق القائمة المنسدلة للـ Mat-Menu */
+::ng-deep .custom-action-menu.mat-mdc-menu-panel {
+  border-radius: 16px !important;
+  background: #FFFFFF !important;
+  border: 1px solid rgba(240, 238, 245, 0.9) !important;
+  box-shadow: 0 10px 25px rgba(93, 58, 153, 0.1) !important;
+  padding: 6px !important;
+  min-width: 130px !important;
+  direction: rtl;
+
+  .mat-mdc-menu-item {
+    min-height: 38px !important;
+    border-radius: 10px !important;
+    font-family: inherit !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #2D2D3F !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 0 12px !important;
+
+    .menu-icon {
+      margin: 0 !important;
+      font-size: 18px !important;
+      width: 18px !important;
+      height: 18px !important;
+
+      &.edit-icon {
+        color: #7C3AED;
+      }
+
+      &.delete-icon {
+        color: #E11D48;
+      }
+    }
+
+    &:hover {
+      background-color: #FAF8FD !important;
+    }
   }
 }
 

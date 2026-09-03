@@ -1,73 +1,87 @@
 <div class="modal-overlay" dir="rtl">
-  <div class="edit-page">
-    
-    <!-- Header -->
-    <div class="modal-header">
-      <div class="header-icon">✏️</div>
+  <div class="dialog-card">
 
-      <div class="header-title">
-        <span class="subtitle">إدارة المراكز / المناطق</span>
-        <h2>تعديل مركز / منطقة</h2>
+    <!-- Header -->
+    <div class="dialog-header">
+      <div class="header-content-group">
+        <div class="dialog-icon primary">
+          <mat-icon>edit_location_alt</mat-icon>
+        </div>
+
+        <div class="header-text">
+          <span class="eyebrow">إدارة المراكز / المناطق</span>
+          <h2>تعديل مركز / منطقة</h2>
+        </div>
       </div>
 
-      <button type="button" class="close-btn" (click)="cancel()">&times;</button>
+      <button type="button" class="btn-dialog-close" (click)="cancel()" aria-label="إغلاق">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
 
-    <!-- Form Container -->
-    <div class="form-card">
+    <!-- Body Content -->
+    <div class="dialog-body">
       <div class="loading-box" *ngIf="loading">
-        جاري تحميل البيانات...
+        <mat-icon class="spin-icon">sync</mat-icon>
+        <span>جاري تحميل البيانات...</span>
       </div>
 
       <ng-container *ngIf="!loading">
         <div class="form-grid">
-          <div class="field">
+          <div class="form-group">
             <label>كود المركز / المنطقة</label>
             <input
               type="number"
               [(ngModel)]="formModel.code"
               name="code"
+              class="dialog-input"
               placeholder="0"
               disabled
             />
           </div>
 
-          <div class="field">
+          <div class="form-group">
             <label>اسم المركز / المنطقة</label>
             <input
               type="text"
               [(ngModel)]="formModel.name"
               name="name"
+              class="dialog-input"
               placeholder="مثال: مركز المنيا"
             />
           </div>
         </div>
 
-        <!-- Messages -->
-        <div class="message success" *ngIf="successMessage">
-          {{ successMessage }}
+        <!-- Alerts -->
+        <div class="message-banner success" *ngIf="successMessage">
+          <mat-icon>check_circle</mat-icon>
+          <span>{{ successMessage }}</span>
         </div>
 
-        <div class="message error" *ngIf="errorMessage">
-          {{ errorMessage }}
-        </div>
-
-        <!-- Actions -->
-        <div class="actions">
-          <button
-            type="button"
-            class="save-btn"
-            (click)="save()"
-            [disabled]="saving"
-          >
-            {{ saving ? 'جاري الحفظ...' : 'حفظ التعديل' }}
-          </button>
-
-          <button type="button" class="cancel-btn" (click)="cancel()">
-            إلغاء
-          </button>
+        <div class="message-banner error" *ngIf="errorMessage">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage }}</span>
         </div>
       </ng-container>
+    </div>
+
+    <!-- Actions Footer -->
+    <!-- Actions Footer -->
+    <div class="dialog-actions" *ngIf="!loading">
+      <button 
+        type="button" 
+        class="btn-reset" 
+        (click)="cancel()">
+        إلغاء
+      </button>
+
+      <button
+        type="button"
+        class="btn-save"
+        (click)="save()"
+        [disabled]="saving">
+        {{ saving ? 'جاري الحفظ...' : 'حفظ التعديل' }}
+      </button>
     </div>
 
   </div>

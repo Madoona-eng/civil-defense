@@ -3,11 +3,14 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivityType } from '../../Models/activity-type';
 import { ActivityTypeService } from '../../Services/activity-type.service';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [CommonModule,   MatIconModule,],
+  imports: [CommonModule,   MatIconModule, MatMenuModule, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })

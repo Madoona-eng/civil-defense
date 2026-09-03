@@ -1,49 +1,136 @@
 <div class="requesting-page" dir="rtl">
-  <div class="page-header">
-    <div>
-      <h2>إدارة الجهات</h2>
-      <p>من هنا يمكنك إضافة وتعديل وحذف الجهات المسجلة في النظام.</p>
+
+  <!-- =====================================================
+        PAGE HEADER
+  ====================================================== -->
+  <header class="page-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <mat-icon>account_balance</mat-icon>
+      </div>
+      <div class="header-text">
+        <span class="eyebrow">إدارة النظام</span>
+        <h1>إدارة الجهات</h1>
+        <p>من هنا يمكنك إضافة وتعديل وحذف الجهات المسجلة في النظام</p>
+      </div>
     </div>
 
     <button type="button" class="add-btn" (click)="openAddPopup()">
-      + إضافة جهة
+      <mat-icon class="add-symbol">add</mat-icon>
+      <span>إضافة جهة</span>
     </button>
-  </div>
+  </header>
 
-  <app-requesting-entity-list
-    (editRequested)="openEditPopup($event)"
-    (deleteRequested)="openDeletePopup($event)"
-  ></app-requesting-entity-list>
+  <!-- =====================================================
+        MAIN CONTENT (Mat-Table Container)
+  ====================================================== -->
+  <main class="page-content">
+    <section class="mat-table-container">
 
-  <!-- نافذة الإضافة -->
+      <div class="table-header-row">
+        <h3>قائمة الجهات المسجلة</h3>
+      </div>
+
+      <div class="table-scroll">
+        <app-requesting-entity-list
+          (editRequested)="openEditPopup($event)"
+          (deleteRequested)="openDeletePopup($event)">
+        </app-requesting-entity-list>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- =====================================================
+        ADD MODAL
+  ====================================================== -->
   <div class="popup-backdrop" *ngIf="isAddPopupOpen" (click)="closeAddPopup()">
-    <div (click)="$event.stopPropagation()">
-      <app-requesting-entity-add
-        (saved)="onAddSaved()"
-        (cancelled)="closeAddPopup()"
-      ></app-requesting-entity-add>
+    <div class="popup-card" (click)="$event.stopPropagation()">
+      <div class="popup-header">
+        <div class="popup-title">
+          <div class="popup-icon add-icon">
+            <mat-icon>add</mat-icon>
+          </div>
+          <div class="popup-title-text">
+            <span>إدارة الجهات</span>
+            <h2>إضافة جهة جديدة</h2>
+          </div>
+        </div>
+
+        <button type="button" class="popup-close" (click)="closeAddPopup()" aria-label="إغلاق">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="popup-body">
+        <app-requesting-entity-add
+          (saved)="onAddSaved()"
+          (cancelled)="closeAddPopup()">
+        </app-requesting-entity-add>
+      </div>
     </div>
   </div>
 
-  <!-- نافذة التعديل -->
+  <!-- =====================================================
+        EDIT MODAL
+  ====================================================== -->
   <div class="popup-backdrop" *ngIf="isEditPopupOpen" (click)="closeEditPopup()">
-    <div (click)="$event.stopPropagation()">
-      <app-requesting-entity-edit
-        [requestingEntityId]="selectedRequestingEntityId"
-        (saved)="onEditSaved()"
-        (cancelled)="closeEditPopup()"
-      ></app-requesting-entity-edit>
+    <div class="popup-card" (click)="$event.stopPropagation()">
+      <div class="popup-header">
+        <div class="popup-title">
+          <div class="popup-icon edit-icon">
+            <mat-icon>edit</mat-icon>
+          </div>
+          <div class="popup-title-text">
+            <span>إدارة الجهات</span>
+            <h2>تعديل بيانات الجهة</h2>
+          </div>
+        </div>
+
+        <button type="button" class="popup-close" (click)="closeEditPopup()" aria-label="إغلاق">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="popup-body">
+        <app-requesting-entity-edit
+          [requestingEntityId]="selectedRequestingEntityId"
+          (saved)="onEditSaved()"
+          (cancelled)="closeEditPopup()">
+        </app-requesting-entity-edit>
+      </div>
     </div>
   </div>
 
-  <!-- نافذة الحذف -->
+  <!-- =====================================================
+        DELETE MODAL
+  ====================================================== -->
   <div class="popup-backdrop" *ngIf="isDeletePopupOpen" (click)="closeDeletePopup()">
-    <div (click)="$event.stopPropagation()">
-      <app-requesting-entity-delete
-        [requestingEntity]="selectedRequestingEntity"
-        (deleted)="onDeleteDone()"
-        (cancelled)="closeDeletePopup()"
-      ></app-requesting-entity-delete>
+    <div class="popup-card delete-card" (click)="$event.stopPropagation()">
+      <div class="popup-header delete-header">
+        <div class="popup-title">
+          <div class="popup-icon delete-icon">
+            <mat-icon>priority_high</mat-icon>
+          </div>
+          <div class="popup-title-text">
+            <span>تأكيد العملية</span>
+            <h2>حذف الجهة</h2>
+          </div>
+        </div>
+
+        <button type="button" class="popup-close" (click)="closeDeletePopup()" aria-label="إغلاق">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="popup-body">
+        <app-requesting-entity-delete
+          [requestingEntity]="selectedRequestingEntity"
+          (deleted)="onDeleteDone()"
+          (cancelled)="closeDeletePopup()">
+        </app-requesting-entity-delete>
+      </div>
     </div>
   </div>
+
 </div>

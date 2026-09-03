@@ -3,11 +3,15 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiResponse, CreateDistrictRequest } from '../../Models/district';
 import { DistrictService } from '../../Services/district.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-district-add',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule],
   templateUrl: './add.component.html',
   styleUrl: './add.component.scss'
 })

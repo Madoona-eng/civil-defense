@@ -16,11 +16,16 @@ import { InspectionService } from '../../Services/inspection.service';
 import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
 import { DistrictService } from '../../../District/Services/district.service';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @Component({
   selector: 'app-inspection-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatMenuModule, MatButtonModule, MatTooltipModule],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
 })
@@ -41,10 +46,10 @@ export class ListComponent implements OnInit {
   requestingEntityId = '';
   activityTypeId = '';
   searchTerm = '';
-  isReturned = ''; 
+  isReturned = '';
   submissionDateFrom = '';
   submissionDateTo = '';
-
+  opinion: string = '';
   // هيتحط قيمته لاحقًا لما الليدر يجهز الـ role logic
   // Inspector => true (يقفل الفلتر على مركزه) | SuperAdmin => false
   isDistrictLocked = false;
@@ -61,7 +66,7 @@ export class ListComponent implements OnInit {
     private readonly requestingEntityService: RequestingEntityService,
     private readonly districtService: DistrictService,
     private readonly activityTypeService: ActivityTypeService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadLookups();
@@ -108,6 +113,7 @@ export class ListComponent implements OnInit {
       activityTypeId: this.activityTypeId || undefined,
       isReturned:
         this.isReturned === '' ? undefined : this.isReturned === 'true',
+        opinion: this.opinion || undefined,
       submissionDateFrom: this.submissionDateFrom || undefined,
       submissionDateTo: this.submissionDateTo || undefined,
       searchTerm: this.searchTerm.trim() || undefined,
@@ -203,5 +209,13 @@ export class ListComponent implements OnInit {
     }
 
     return step || '-';
+  }
+
+
+
+  onPageSizeChange(): void {
+    this.pageSize = Number(this.pageSize);
+    this.pageNumber = 1;
+    this.loadInspections();
   }
 }

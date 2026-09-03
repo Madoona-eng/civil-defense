@@ -33,6 +33,7 @@ export interface InspectionList {
   requestingEntityId?: string;
   activityTypeId?: string;
   isReturned?: boolean;
+  opinion?: string;
   submissionDateFrom?: string;
   submissionDateTo?: string;
   searchTerm?: string;
@@ -82,4 +83,18 @@ export interface InspectionFormModel {
   inspectorName: string;
   opinion: 'Compliant' | 'NonCompliant';
   inspectionNote: string;
+}
+
+
+export type AttachmentType =
+  | 'entityLetters'
+  | 'proofDocuments'
+  | 'engineeringReports'
+  | 'inspectionReports'
+  | 'otherAttachments';
+
+
+  export interface AttachmentGroup {
+  title: string;
+  files: InspectionAttachment[];
 }

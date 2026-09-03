@@ -1,7 +1,7 @@
 <div class="activity-page" dir="rtl">
 
   <!-- =====================================================
-       PAGE HEADER
+        PAGE HEADER
   ====================================================== -->
   <header class="page-header">
     <div class="header-content">
@@ -22,30 +22,21 @@
   </header>
 
   <!-- =====================================================
-       MAIN CONTENT (Table Container Wrapper)
+        MAIN CONTENT (Mat-Table Container)
   ====================================================== -->
   <main class="page-content">
     <section class="mat-table-container">
 
-      <!-- LIST HEADER -->
-      <div class="list-card-header">
-        <div class="section-title">
-          <div class="section-icon">
-            <mat-icon>list_alt</mat-icon>
-          </div>
-          <div>
-            <h2>قائمة أنواع النشاط</h2>
-            <p>عرض وإدارة جميع أنواع النشاط المسجلة</p>
-          </div>
-        </div>
+      <!-- تم استبدال الكلاس القديم بـ table-header-row من TABLESTYLE.SCSS -->
+      <div class="table-header-row">
+        <h3>قائمة أنواع النشاط</h3>
       </div>
 
-      <!-- LIST / MAT-TABLE COMPONENT -->
-      <div class="list-card-body">
+      <!-- غلاف التمرير السلس لحماية الجدول من الانضغاط -->
+      <div class="table-scroll">
         <app-list
           (editRequested)="openEditPopup($event)"
-          (deleteRequested)="openDeletePopup($event)"
-        >
+          (deleteRequested)="openDeletePopup($event)">
         </app-list>
       </div>
 
@@ -53,13 +44,9 @@
   </main>
 
   <!-- =====================================================
-       ADD MODAL
+        ADD MODAL
   ====================================================== -->
-  <div
-    class="popup-backdrop"
-    *ngIf="isAddPopupOpen"
-    (click)="closeAddPopup()"
-  >
+  <div class="popup-backdrop" *ngIf="isAddPopupOpen" (click)="closeAddPopup()">
     <div class="popup-card" (click)="$event.stopPropagation()">
       <div class="popup-header">
         <div class="popup-title">
@@ -72,34 +59,21 @@
           </div>
         </div>
 
-        <button
-          type="button"
-          class="popup-close"
-          (click)="closeAddPopup()"
-          aria-label="إغلاق"
-        >
+        <button type="button" class="popup-close" (click)="closeAddPopup()" aria-label="إغلاق">
           <mat-icon>close</mat-icon>
         </button>
       </div>
 
       <div class="popup-body">
-        <app-add
-          (saved)="onAddSaved()"
-          (cancelled)="closeAddPopup()"
-        >
-        </app-add>
+        <app-add (saved)="onAddSaved()" (cancelled)="closeAddPopup()"></app-add>
       </div>
     </div>
   </div>
 
   <!-- =====================================================
-       EDIT MODAL
+        EDIT MODAL
   ====================================================== -->
-  <div
-    class="popup-backdrop"
-    *ngIf="isEditPopupOpen"
-    (click)="closeEditPopup()"
-  >
+  <div class="popup-backdrop" *ngIf="isEditPopupOpen" (click)="closeEditPopup()">
     <div class="popup-card" (click)="$event.stopPropagation()">
       <div class="popup-header">
         <div class="popup-title">
@@ -112,12 +86,7 @@
           </div>
         </div>
 
-        <button
-          type="button"
-          class="popup-close"
-          (click)="closeEditPopup()"
-          aria-label="إغلاق"
-        >
+        <button type="button" class="popup-close" (click)="closeEditPopup()" aria-label="إغلاق">
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -126,21 +95,16 @@
         <app-edit
           [activityTypeId]="selectedActivityTypeId"
           (saved)="onEditSaved()"
-          (cancelled)="closeEditPopup()"
-        >
+          (cancelled)="closeEditPopup()">
         </app-edit>
       </div>
     </div>
   </div>
 
   <!-- =====================================================
-       DELETE MODAL
+        DELETE MODAL
   ====================================================== -->
-  <div
-    class="popup-backdrop"
-    *ngIf="isDeletePopupOpen"
-    (click)="closeDeletePopup()"
-  >
+  <div class="popup-backdrop" *ngIf="isDeletePopupOpen" (click)="closeDeletePopup()">
     <div class="popup-card delete-card" (click)="$event.stopPropagation()">
       <div class="popup-header delete-header">
         <div class="popup-title">
@@ -153,12 +117,7 @@
           </div>
         </div>
 
-        <button
-          type="button"
-          class="popup-close"
-          (click)="closeDeletePopup()"
-          aria-label="إغلاق"
-        >
+        <button type="button" class="popup-close" (click)="closeDeletePopup()" aria-label="إغلاق">
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -167,8 +126,7 @@
         <app-delete
           [activityType]="selectedActivityType"
           (deleted)="onDeleteDone()"
-          (cancelled)="closeDeletePopup()"
-        >
+          (cancelled)="closeDeletePopup()">
         </app-delete>
       </div>
     </div>

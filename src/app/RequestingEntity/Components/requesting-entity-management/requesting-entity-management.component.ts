@@ -5,6 +5,10 @@ import { ListComponent } from '../list/list.component';
 import { EditComponent } from '../edit/edit.component';
 import { DeleteComponent } from '../delete/delete.component';
 import { RequestingEntity } from '../../Models/requesting-entity';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-requesting-entity-management',
@@ -14,7 +18,7 @@ import { RequestingEntity } from '../../Models/requesting-entity';
     AddComponent,
     ListComponent,
     EditComponent,
-    DeleteComponent
+    DeleteComponent , MatIconModule, MatMenuModule, MatButtonModule, MatProgressSpinnerModule
   ],
   templateUrl: './requesting-entity-management.component.html',
   styleUrl: './requesting-entity-management.component.scss'

@@ -11,10 +11,11 @@ import { FormsModule } from '@angular/forms';
 
 import {
   ApiResponse,
-  InspectionAttachment,
   InspectionStepDetails,
   InspectionFormModel,
   InspectionItem,
+  AttachmentType,
+  AttachmentGroup,
 } from '../../Models/inspection';
 
 import { InspectionService } from '../../Services/inspection.service';
@@ -26,17 +27,9 @@ import {
   InspectionOpinion,
 } from '../../../Shared/Enums/enums';
 
-interface AttachmentGroup {
-  title: string;
-  files: InspectionAttachment[];
-}
 
-type AttachmentType =
-  | 'entityLetters'
-  | 'proofDocuments'
-  | 'engineeringReports'
-  | 'inspectionReports'
-  | 'otherAttachments';
+
+
 
 @Component({
   selector: 'app-inspection-process',
@@ -75,7 +68,7 @@ export class InspectionProcessComponent implements OnChanges {
   inspectionReports: File[] = [];
   otherAttachments: File[] = [];
 
-  constructor(private readonly inspectionService: InspectionService) {}
+  constructor(private readonly inspectionService: InspectionService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['item'] && this.item?.id) {

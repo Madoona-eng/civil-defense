@@ -1,49 +1,136 @@
 <div class="district-page" dir="rtl">
-  <div class="page-header">
-    <div>
-      <h2>إدارة المراكز / المناطق</h2>
-      <p>من هنا يمكنك إضافة وتعديل وحذف المراكز أو المناطق المسجلة في النظام.</p>
+
+  <!-- =====================================================
+        PAGE HEADER
+  ====================================================== -->
+  <header class="page-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <mat-icon>location_city</mat-icon>
+      </div>
+      <div class="header-text">
+        <span class="eyebrow">إدارة النظام</span>
+        <h1>إدارة المراكز / المناطق</h1>
+        <p>من هنا يمكنك إضافة وتعديل وحذف المراكز أو المناطق المسجلة في النظام</p>
+      </div>
     </div>
 
     <button type="button" class="add-btn" (click)="openAddPopup()">
-      + إضافة مركز / منطقة
+      <mat-icon class="add-symbol">add</mat-icon>
+      <span>إضافة مركز / منطقة</span>
     </button>
-  </div>
+  </header>
 
-  <app-district-list
-    (editRequested)="openEditPopup($event)"
-    (deleteRequested)="openDeletePopup($event)"
-  ></app-district-list>
+  <!-- =====================================================
+        MAIN CONTENT (Mat-Table Container)
+  ====================================================== -->
+  <main class="page-content">
+    <section class="mat-table-container">
 
-  <!-- Popup Add -->
+      <div class="table-header-row">
+        <h3>قائمة المراكز والمناطق المسجلة</h3>
+      </div>
+
+      <div class="table-scroll">
+        <app-district-list
+          (editRequested)="openEditPopup($event)"
+          (deleteRequested)="openDeletePopup($event)">
+        </app-district-list>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- =====================================================
+        ADD MODAL
+  ====================================================== -->
   <div class="popup-backdrop" *ngIf="isAddPopupOpen" (click)="closeAddPopup()">
-    <div (click)="$event.stopPropagation()">
-      <app-district-add
-        (saved)="onAddSaved()"
-        (cancelled)="closeAddPopup()"
-      ></app-district-add>
+    <div class="popup-card" (click)="$event.stopPropagation()">
+      <div class="popup-header">
+        <div class="popup-title">
+          <div class="popup-icon add-icon">
+            <mat-icon>add_location_alt</mat-icon>
+          </div>
+          <div class="popup-title-text">
+            <span>إدارة المناطق</span>
+            <h2>إضافة مركز / منطقة جديدة</h2>
+          </div>
+        </div>
+
+        <button type="button" class="popup-close" (click)="closeAddPopup()" aria-label="إغلاق">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="popup-body">
+        <app-district-add
+          (saved)="onAddSaved()"
+          (cancelled)="closeAddPopup()">
+        </app-district-add>
+      </div>
     </div>
   </div>
 
-  <!-- Popup Edit -->
+  <!-- =====================================================
+        EDIT MODAL
+  ====================================================== -->
   <div class="popup-backdrop" *ngIf="isEditPopupOpen" (click)="closeEditPopup()">
-    <div (click)="$event.stopPropagation()">
-      <app-district-edit
-        [districtId]="selectedDistrictId"
-        (saved)="onEditSaved()"
-        (cancelled)="closeEditPopup()"
-      ></app-district-edit>
+    <div class="popup-card" (click)="$event.stopPropagation()">
+      <div class="popup-header">
+        <div class="popup-title">
+          <div class="popup-icon edit-icon">
+            <mat-icon>edit_location_alt</mat-icon>
+          </div>
+          <div class="popup-title-text">
+            <span>إدارة المناطق</span>
+            <h2>تعديل المركز / المنطقة</h2>
+          </div>
+        </div>
+
+        <button type="button" class="popup-close" (click)="closeEditPopup()" aria-label="إغلاق">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="popup-body">
+        <app-district-edit
+          [districtId]="selectedDistrictId"
+          (saved)="onEditSaved()"
+          (cancelled)="closeEditPopup()">
+        </app-district-edit>
+      </div>
     </div>
   </div>
 
-  <!-- Popup Delete -->
+  <!-- =====================================================
+        DELETE MODAL
+  ====================================================== -->
   <div class="popup-backdrop" *ngIf="isDeletePopupOpen" (click)="closeDeletePopup()">
-    <div (click)="$event.stopPropagation()">
-      <app-district-delete
-        [district]="selectedDistrict"
-        (deleted)="onDeleteDone()"
-        (cancelled)="closeDeletePopup()"
-      ></app-district-delete>
+    <div class="popup-card delete-card" (click)="$event.stopPropagation()">
+      <div class="popup-header delete-header">
+        <div class="popup-title">
+          <div class="popup-icon delete-icon">
+            <mat-icon>priority_high</mat-icon>
+          </div>
+          <div class="popup-title-text">
+            <span>تأكيد العملية</span>
+            <h2>حذف المركز / المنطقة</h2>
+          </div>
+        </div>
+
+        <button type="button" class="popup-close" (click)="closeDeletePopup()" aria-label="إغلاق">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="popup-body">
+        <app-district-delete
+          [district]="selectedDistrict"
+          (deleted)="onDeleteDone()"
+          (cancelled)="closeDeletePopup()">
+        </app-district-delete>
+      </div>
     </div>
   </div>
+
 </div>

@@ -5,6 +5,16 @@ import { ListComponent } from '../list/list.component';
 import { EditComponent } from '../edit/edit.component';
 import { DeleteComponent } from '../delete/delete.component';
 import { District } from '../../Models/district';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-district-management',
@@ -14,7 +24,8 @@ import { District } from '../../Models/district';
     AddComponent,
     ListComponent,
     EditComponent,
-    DeleteComponent
+    DeleteComponent , MatIconModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatSelectModule, 
+    MatTableModule, MatPaginatorModule, MatSortModule, FormsModule, ReactiveFormsModule
   ],
   templateUrl: './district-management.component.html',
   styleUrl: './district-management.component.scss'
