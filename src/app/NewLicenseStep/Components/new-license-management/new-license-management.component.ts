@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { LucideAngularModule, Plus, RotateCcw, Search } from 'lucide-angular';
 import { forkJoin } from 'rxjs';
 
 import { ConfirmDialogComponent } from '../../../Shared/Components/confirm-dialog/confirm-dialog.component';
@@ -17,13 +18,15 @@ import { NewLicenseFilter, NewLicenseListItem } from '../../Models/new-license';
 import { NewLicenseService } from '../../Services/new-license.service';
 import { ListComponent } from '../list/list.component';
 
-import { LucideAngularModule, RotateCcw, Search } from 'lucide-angular';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
 import { DistrictService } from '../../../District/Services/district.service';
 import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
+import { formatDateForApi } from '../../../Shared/Helpers/date.helper';
 import { ApiResponse } from '../../../Shared/Models/ApiResponse';
 import { LookupItem } from '../../../Shared/Models/LookupItem';
 import { PagedResult } from '../../../Shared/Models/PagedResult';
+import { CreateComponent, CreateDialogData } from '../create/create.component';
+import { DetailsComponent, DetailsDialogData } from '../details/details.component';
 
 @Component({
   selector: 'app-new-license-management',
@@ -71,6 +74,7 @@ export class NewLicenseManagementComponent implements OnInit {
 
   readonly Search = Search;
   readonly RotateCcw = RotateCcw;
+  readonly Plus = Plus;
 
   constructor(
     private readonly newLicenseService: NewLicenseService,
@@ -122,8 +126,8 @@ export class NewLicenseManagementComponent implements OnInit {
       districtId: this.districtId || undefined,
       requestingEntityId: this.requestingEntityId || undefined,
       activityTypeId: this.activityTypeId || undefined,
-      submissionDateFrom: this.formatDateForApi(this.submissionDateFrom),
-      submissionDateTo: this.formatDateForApi(this.submissionDateTo),
+      submissionDateFrom: formatDateForApi(this.submissionDateFrom),
+      submissionDateTo: formatDateForApi(this.submissionDateTo),
       searchTerm: this.searchTerm.trim() || undefined,
       pageNumber: this.pageNumber,
       pageSize: this.pageSize,
@@ -174,9 +178,34 @@ export class NewLicenseManagementComponent implements OnInit {
     this.pageSize = event.pageSize;
     this.loadData();
   }
+  onAddNew(): void {
+    (document.activeElement as HTMLElement)?.blur();
 
-  onDetails(item: NewLicenseListItem): void {
-    // TODO: فتح تفاصيل الطلب
+    const dialogRef = this.dialog.open<CreateComponent, CreateDialogData, boolean>(
+      CreateComponent,
+      {
+        width: '900px',
+        maxWidth: '95vw',
+        data: {
+          requestingEntities: this.requestingEntities,
+          districts: this.districts,
+          activityTypes: this.activityTypes,
+        },
+      },
+    );
+
+    dialogRef.afterClosed().subscribe((created) => {
+      if (created) {
+        this.loadData();
+      }
+    });
+  }
+   onDetails(item: NewLicenseListItem): void {
+    this.dialog.open<DetailsComponent, DetailsDialogData>(DetailsComponent, {
+      width: '800px',
+      maxWidth: '95vw',
+      data: { id: item.id },
+    });
   }
 
   onEdit(item: NewLicenseListItem): void {
@@ -248,15 +277,5 @@ export class NewLicenseManagementComponent implements OnInit {
         },
       });
     });
-  }
-
-  private formatDateForApi(date: Date | null): string | undefined {
-    if (!date) return undefined;
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
   }
 }

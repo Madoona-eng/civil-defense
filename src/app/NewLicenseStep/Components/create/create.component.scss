@@ -1,0 +1,104 @@
+@import '../../../Shared/Styles/dialog.scss';
+
+.dialog-card {
+  max-width: 720px;
+}
+
+/* ============================================================
+   BODY (المنطقة الوحيدة اللي بتتسكرول)
+   ============================================================ */
+
+.dialog-body .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group-wide {
+  grid-column: 1 / -1;
+}
+
+.form-row-triple {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+/* ============================================================
+   ATTACHMENTS
+   ============================================================ */
+.attachments-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--color-border);
+}
+
+.section-title {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.attachments-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.attachment-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--color-bg-filters, #f7f4f9);
+}
+
+.attachment-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.file-input {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.file-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: #ffffff;
+  font-size: 13px;
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      color: #e11d48;
+    }
+  }
+}
+.form-invalid-hint {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #e11d48;
+  margin-inline-end: auto;
+}

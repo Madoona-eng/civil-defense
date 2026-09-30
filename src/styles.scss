@@ -1,33 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'app/Shared/Styles/buttonsstyle';
- 
+
 :root {
   /* ===== 1. الألوان الأساسية (Primary Colors) ===== */
-  --color-sidebar-bg: #E8DFF5;        /* خلفية السايدبار */
-  --color-primary: #5d3a99;           /* الزر النشط / الرئيسي */
-  --color-primary-light: #8B5CF6;     /* درجة أفتح للـ hover مثلاً */
-  --color-sidebar-text: #4A4A68;      /* نص السايدبار */
+  --color-sidebar-bg: #e8dff5; /* خلفية السايدبار */
+  --color-primary: #5d3a99; /* الزر النشط / الرئيسي */
+  --color-primary-light: #8b5cf6; /* درجة أفتح للـ hover مثلاً */
+  --color-sidebar-text: #4a4a68; /* نص السايدبار */
 
   /* ===== 2. الخلفيات والبطاقات (Backgrounds & Cards) ===== */
-  --color-bg-page: #FFFDF9;           /* خلفية الموقع العامة */
-  --color-bg-card: #FFFFFF;           /* خلفية الكروت والجداول */
-  --color-bg-filters: #F7F4F9;        /* خلفية الفلاتر */
+  --color-bg-page: #fffdf9; /* خلفية الموقع العامة */
+  --color-bg-card: #ffffff; /* خلفية الكروت والجداول */
+  --color-bg-filters: #f7f4f9; /* خلفية الفلاتر */
 
   /* ===== 3. ألوان الحالة (Status & Badge Colors) ===== */
-  --color-status-tasks: #D8B4FE;       /* موف - المهام */
-  --color-status-in-progress: #FBCFE8; /* وردي - قيد التنفيذ */
-  --color-status-completed: #A7F3D0;   /* أخضر - مكتمل */
-  --color-status-focus: #FEF08A;       /* أصفر - وقت التركيز */
+  --color-status-tasks: #d8b4fe; /* موف - المهام */
+  --color-status-in-progress: #fbcfe8; /* وردي - قيد التنفيذ */
+  --color-status-completed: #a7f3d0; /* أخضر - مكتمل */
+  --color-status-focus: #fef08a; /* أصفر - وقت التركيز */
 
   /* ===== 4. النصوص والحدود (Text & Borders) ===== */
-  --color-text-primary: #2D2D3F;       /* النصوص الرئيسية */
-  --color-text-secondary: #8E8EA9;     /* النصوص الفرعية والتواريخ */
-  --color-border: #F3E8FF;             /* الحدود والفواصل */
+  --color-text-primary: #2d2d3f; /* النصوص الرئيسية */
+  --color-text-secondary: #8e8ea9; /* النصوص الفرعية والتواريخ */
+  --color-border: #f3e8ff; /* الحدود والفواصل */
 
- --color-bg-page: #FFFDF9; 
-
+  --color-bg-page: #fffdf9;
+  
 }
-
 
 /* مثال بسيط للاستخدام العام لو حبيتي */
 body {
@@ -36,5 +35,11 @@ body {
   margin: 0;
   font-family: 'Cairo', 'Segoe UI', sans-serif; /* عدّلي الخط لو مختلف */
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}

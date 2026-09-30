@@ -1,13 +1,18 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseAPI } from '../../Shared/Env/env';
-import { NewLicenseFilter, NewLicenseListItem } from '../Models/new-license';
 import { ApiResponse } from '../../Shared/Models/ApiResponse';
 import { PagedResult } from '../../Shared/Models/PagedResult';
+import {
+  CreateProcessDto,
+  NewLicenseDetails,
+  NewLicenseFilter,
+  NewLicenseListItem,
+} from '../Models/new-license';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NewLicenseService {
   private readonly baseUrl = `${BaseAPI}/api/NewLicenseStep`;
@@ -20,13 +25,18 @@ export class NewLicenseService {
       .set('pageSize', filter.pageSize);
 
     if (filter.districtId) params = params.set('districtId', filter.districtId);
-    if (filter.requestingEntityId) params = params.set('requestingEntityId', filter.requestingEntityId);
+    if (filter.requestingEntityId)
+      params = params.set('requestingEntityId', filter.requestingEntityId);
     if (filter.activityTypeId) params = params.set('activityTypeId', filter.activityTypeId);
-    if (filter.submissionDateFrom) params = params.set('submissionDateFrom', filter.submissionDateFrom);
+    if (filter.submissionDateFrom)
+      params = params.set('submissionDateFrom', filter.submissionDateFrom);
     if (filter.submissionDateTo) params = params.set('submissionDateTo', filter.submissionDateTo);
     if (filter.searchTerm) params = params.set('searchTerm', filter.searchTerm);
 
-    return this.http.get<ApiResponse<PagedResult<NewLicenseListItem>>>(`${this.baseUrl}/new-license`, { params });
+    return this.http.get<ApiResponse<PagedResult<NewLicenseListItem>>>(
+      `${this.baseUrl}/new-license`,
+      { params },
+    );
   }
 
   delete(id: string): Observable<ApiResponse<boolean>> {
@@ -35,5 +45,38 @@ export class NewLicenseService {
 
   moveToInspection(id: string): Observable<ApiResponse<boolean>> {
     return this.http.put<ApiResponse<boolean>>(`${this.baseUrl}/${id}/move-to-inspection`, {});
+  }
+
+  create(dto: CreateProcessDto): Observable<ApiResponse<string>> {
+    const formData = new FormData();
+
+    formData.append('SubmissionDate', dto.submissionDate);
+    formData.append('RequestingEntityId', dto.requestingEntityId);
+    formData.append('EstablishmentName', dto.establishmentName);
+    formData.append('EstablishmentAddress', dto.establishmentAddress);
+    formData.append('DistrictId', dto.districtId);
+    formData.append('ActivityTypeId', dto.activityTypeId);
+    formData.append('ApplicantName', dto.applicantName);
+    formData.append('ApplicantRole', dto.applicantRole);
+    formData.append('NationalId', dto.nationalId);
+    formData.append('ResponsibleManager', dto.responsibleManager);
+    formData.append('Phone', dto.phone);
+
+    dto.entityLetters.forEach((file) => formData.append('EntityLetters', file, file.name));
+    dto.proofDocuments.forEach((file) => formData.append('ProofDocuments', file, file.name));
+    dto.engineeringReports.forEach((file) =>
+      formData.append('EngineeringReports', file, file.name),
+    );
+    dto.otherAttachments.forEach((file) => formData.append('OtherAttachments', file, file.name));
+
+    return this.http.post<ApiResponse<string>>(this.baseUrl, formData);
+  }
+
+  getById(id: string): Observable<ApiResponse<NewLicenseDetails>> {
+    return this.http.get<ApiResponse<NewLicenseDetails>>(`${this.baseUrl}/new-license/${id}`);
+  }
+
+  buildFileUrl(filePath: string): string {
+    return `${BaseAPI}/${filePath}`;
   }
 }

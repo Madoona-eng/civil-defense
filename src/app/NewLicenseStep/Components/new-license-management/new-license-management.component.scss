@@ -1,3 +1,9 @@
+.page-actions-row {
+  display: flex;
+  justify-content: flex-end; 
+  margin-bottom: 16px;
+}
+
 .filters-card {
   background: var(--color-bg-filters);
   border-radius: 24px;

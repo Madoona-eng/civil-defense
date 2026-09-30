@@ -1,4 +1,11 @@
 <!-- //TODO: inhence styles for filters card and table -->
+<div class="page-actions-row" dir="rtl">
+  <button class="btn-custom btn-add" (click)="onAddNew()">
+    <lucide-angular [img]="Plus" [size]="18"></lucide-angular>
+    <span>إضافة ترخيص جديد</span>
+  </button>
+</div>
+
 <section class="filters-card" dir="rtl">
   <div class="filters-row-primary">
     <mat-form-field appearance="outline" class="form-group search-field">
@@ -10,7 +17,12 @@
         placeholder="ابحث بكود المعاملة، اسم المنشأة، اسم مقدم الطلب..."
         (keyup.enter)="search()"
       />
-      <lucide-angular matPrefix [img]="Search" [size]="16" class="field-prefix-icon"></lucide-angular>
+      <lucide-angular
+        matPrefix
+        [img]="Search"
+        [size]="16"
+        class="field-prefix-icon"
+      ></lucide-angular>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="form-group date-field">

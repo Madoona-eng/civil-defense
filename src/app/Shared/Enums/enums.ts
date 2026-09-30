@@ -55,3 +55,16 @@ export const REVIEW_STATUS_LABELS: Record<ReviewStatus, string> = {
   [ReviewStatus.Accepted]: 'مقبول',
   [ReviewStatus.Rejected]: 'مرفوض',
 };
+
+// ============================
+// Applicant Role
+// ============================
+export enum ApplicantRole {
+  Owner = 'Owner',
+  Proxy = 'Proxy',
+}
+
+export const APPLICANT_ROLE_LABELS: Record<ApplicantRole, string> = {
+  [ApplicantRole.Owner]: 'مالك',
+  [ApplicantRole.Proxy]: 'توكيل',
+};
