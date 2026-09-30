@@ -3,7 +3,7 @@
     <h3>معاملات الترخيص الجديد</h3>
   </div>
 
-  <div class="loading-shade" *ngIf="isLoading">
+  <div class="loading-shade" *ngIf="isLoading || isMovingAll">
     <mat-spinner diameter="45"></mat-spinner>
   </div>
 
@@ -94,6 +94,17 @@
         </td>
       </tr>
     </table>
+  </div>
+
+  <div class="bulk-actions" *ngIf="!errorMessage">
+    <button 
+      class="btn-custom move-all-to-next"
+      [disabled]="isLoading || isMovingAll || items.length === 0"
+      (click)="onMoveAllToNextStep()"
+    >
+      <span>نقل الكل لخطوة 2</span>
+      <lucide-angular [img]="ChevronsLeft" [size]="18"></lucide-angular>
+    </button>
   </div>
 
   <mat-paginator

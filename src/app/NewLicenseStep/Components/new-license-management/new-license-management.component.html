@@ -91,6 +91,7 @@
 <app-list
   [items]="items"
   [isLoading]="isLoading"
+  [isMovingAll]="isMovingAll"
   [errorMessage]="errorMessage"
   [pageNumber]="pageNumber"
   [pageSize]="pageSize"
@@ -99,6 +100,7 @@
   (detailsRequested)="onDetails($event)"
   (editRequested)="onEdit($event)"
   (moveToNextStepRequested)="onMoveToNextStep($event)"
+  (moveAllToNextStepRequested)="onMoveAllToNextStep()"
   (deleteRequested)="onDelete($event)"
 >
 </app-list>

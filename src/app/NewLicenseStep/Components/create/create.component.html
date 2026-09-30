@@ -1,5 +1,5 @@
 <div class="modal-overlay" dir="rtl">
-  <div class="dialog-card">
+  <div class="dialog-card form-dialog">
     <!-- Header -->
     <div class="dialog-header">
       <div class="header-content-group">
@@ -156,74 +156,61 @@
         <h3 class="section-title">المرفقات</h3>
 
         <div class="attachments-grid">
-          <div class="attachment-field">
-            <label class="attachment-label">خطابات الجهة</label>
-            <input
-              type="file"
-              multiple
-              (change)="onFilesSelected($event, 'entityLetters')"
-              class="file-input"
-            />
-            <div class="file-chip" *ngFor="let file of attachments.entityLetters; let i = index">
-              <span>{{ file.name }}</span>
-              <button type="button" (click)="removeFile('entityLetters', i)" aria-label="إزالة">
-                <mat-icon>close</mat-icon>
-              </button>
-            </div>
-          </div>
+          <div class="attachment-field" *ngFor="let group of attachmentGroups">
+            <label class="attachment-label">{{ group.label }}</label>
 
-          <div class="attachment-field">
-            <label class="attachment-label">مستندات الإثبات</label>
             <input
               type="file"
               multiple
-              (change)="onFilesSelected($event, 'proofDocuments')"
+              [accept]="fileAccept"
               class="file-input"
+              [disabled]="saving"
+              (change)="onFilesSelected($event, group.field)"
             />
-            <div class="file-chip" *ngFor="let file of attachments.proofDocuments; let i = index">
-              <span>{{ file.name }}</span>
-              <button type="button" (click)="removeFile('proofDocuments', i)" aria-label="إزالة">
-                <mat-icon>close</mat-icon>
-              </button>
-            </div>
-          </div>
 
-          <div class="attachment-field">
-            <label class="attachment-label">التقارير الهندسية</label>
-            <input
-              type="file"
-              multiple
-              (change)="onFilesSelected($event, 'engineeringReports')"
-              class="file-input"
-            />
-            <div
-              class="file-chip"
-              *ngFor="let file of attachments.engineeringReports; let i = index"
+            <!-- الملفات المرفوضة: تحت خانتها على طول -->
+            <div class="file-errors" *ngIf="fileErrors[group.field].length">
+              <span class="file-error" *ngFor="let msg of fileErrors[group.field]">
+                <mat-icon>error_outline</mat-icon>
+                {{ msg }}
+              </span>
+            </div>
+
+            <span
+              class="empty-files"
+              *ngIf="!attachments[group.field].length && !fileErrors[group.field].length"
             >
-              <span>{{ file.name }}</span>
-              <button
-                type="button"
-                (click)="removeFile('engineeringReports', i)"
-                aria-label="إزالة"
-              >
-                <mat-icon>close</mat-icon>
-              </button>
-            </div>
-          </div>
+              لا توجد مرفقات
+            </span>
 
-          <div class="attachment-field">
-            <label class="attachment-label">مرفقات أخرى</label>
-            <input
-              type="file"
-              multiple
-              (change)="onFilesSelected($event, 'otherAttachments')"
-              class="file-input"
-            />
-            <div class="file-chip" *ngFor="let file of attachments.otherAttachments; let i = index">
-              <span>{{ file.name }}</span>
-              <button type="button" (click)="removeFile('otherAttachments', i)" aria-label="إزالة">
-                <mat-icon>close</mat-icon>
-              </button>
+            <div class="file-list" *ngIf="attachments[group.field].length">
+              <div class="file-item" *ngFor="let file of attachments[group.field]; let i = index">
+                <div class="file-thumb static">
+                  <img
+                    *ngIf="previewOf(file) as url; else fileIcon"
+                    [src]="url"
+                    [alt]="file.name"
+                  />
+                  <ng-template #fileIcon>
+                    <mat-icon>{{ iconByName(file.name) }}</mat-icon>
+                  </ng-template>
+                </div>
+
+                <div class="file-meta">
+                  <span class="file-name" [title]="file.name">{{ file.name }}</span>
+                  <span class="file-size">{{ formatSize(file.size) }}</span>
+                </div>
+
+                <button
+                  type="button"
+                  class="file-remove"
+                  (click)="removeFile(group.field, i)"
+                  [disabled]="saving"
+                  aria-label="إزالة"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -242,7 +229,7 @@
         لا يمكن الحفظ، يرجى مراجعة البيانات
       </span>
 
-      <button type="button" class="btn-reset" (click)="cancel()">إلغاء</button>
+      <button type="button" class="btn-reset" (click)="cancel()" [disabled]="saving">إلغاء</button>
 
       <button type="button" class="btn-save" (click)="save(false)" [disabled]="saving">
         {{ saving ? 'جاري الحفظ...' : 'حفظ' }}

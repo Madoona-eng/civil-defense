@@ -9,6 +9,7 @@ import {
   NewLicenseDetails,
   NewLicenseFilter,
   NewLicenseListItem,
+  UpdateProcessDto,
 } from '../Models/new-license';
 
 @Injectable({
@@ -16,6 +17,7 @@ import {
 })
 export class NewLicenseService {
   private readonly baseUrl = `${BaseAPI}/api/NewLicenseStep`;
+  private readonly attachmentsUrl = `${BaseAPI}/api/LicensingProcess`;
 
   constructor(private http: HttpClient) {}
 
@@ -78,5 +80,29 @@ export class NewLicenseService {
 
   buildFileUrl(filePath: string): string {
     return `${BaseAPI}/${filePath}`;
+  }
+
+  update(id: string, dto: UpdateProcessDto): Observable<ApiResponse<boolean>> {
+    return this.http.put<ApiResponse<boolean>>(`${this.baseUrl}/${id}/edit-new-license`, dto);
+  }
+
+  addAttachments(processId: string, type: string, files: File[]): Observable<ApiResponse<unknown>> {
+    const formData = new FormData();
+    formData.append('type', type);
+    files.forEach((file) => formData.append('files', file, file.name));
+
+    return this.http.post<ApiResponse<unknown>>(
+      `${this.attachmentsUrl}/${processId}/attachments`,
+      formData,
+    );
+  }
+
+  deleteAttachment(attachmentId: string, type: string): Observable<ApiResponse<boolean>> {
+    const params = new HttpParams().set('type', type);
+
+    return this.http.delete<ApiResponse<boolean>>(
+      `${this.attachmentsUrl}/attachments/${attachmentId}`,
+      { params },
+    );
   }
 }

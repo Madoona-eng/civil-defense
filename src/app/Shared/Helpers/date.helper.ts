@@ -7,3 +7,13 @@ export function formatDateForApi(date: Date | null): string | undefined {
 
   return `${year}-${month}-${day}`;
 }
+
+// "2026-09-30" -> Date محلي (من غير مشاكل الـ timezone)
+export function parseDateFromApi(value: string | null | undefined): Date | null {
+  if (!value) return null;
+
+  const [year, month, day] = value.substring(0, 10).split('-').map(Number);
+  if (!year || !month || !day) return null;
+
+  return new Date(year, month - 1, day);
+}

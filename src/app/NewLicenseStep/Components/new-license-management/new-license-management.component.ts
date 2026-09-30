@@ -11,10 +11,11 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { LucideAngularModule, Plus, RotateCcw, Search } from 'lucide-angular';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { ConfirmDialogComponent } from '../../../Shared/Components/confirm-dialog/confirm-dialog.component';
-import { NewLicenseFilter, NewLicenseListItem } from '../../Models/new-license';
+import { NewLicenseFilter, NewLicenseListItem, pickAttachments } from '../../Models/new-license';
 import { NewLicenseService } from '../../Services/new-license.service';
 import { ListComponent } from '../list/list.component';
 
@@ -27,6 +28,7 @@ import { LookupItem } from '../../../Shared/Models/LookupItem';
 import { PagedResult } from '../../../Shared/Models/PagedResult';
 import { CreateComponent, CreateDialogData } from '../create/create.component';
 import { DetailsComponent, DetailsDialogData } from '../details/details.component';
+import { EditComponent, EditDialogData } from '../edit/edit.component';
 
 @Component({
   selector: 'app-new-license-management',
@@ -56,6 +58,7 @@ export class NewLicenseManagementComponent implements OnInit {
   activityTypes: LookupItem[] = [];
 
   isLoading = false;
+  isMovingAll = false;
   loadingLookups = false;
   errorMessage = '';
 
@@ -178,6 +181,7 @@ export class NewLicenseManagementComponent implements OnInit {
     this.pageSize = event.pageSize;
     this.loadData();
   }
+
   onAddNew(): void {
     (document.activeElement as HTMLElement)?.blur();
 
@@ -200,7 +204,8 @@ export class NewLicenseManagementComponent implements OnInit {
       }
     });
   }
-   onDetails(item: NewLicenseListItem): void {
+
+  onDetails(item: NewLicenseListItem): void {
     this.dialog.open<DetailsComponent, DetailsDialogData>(DetailsComponent, {
       width: '800px',
       maxWidth: '95vw',
@@ -209,7 +214,54 @@ export class NewLicenseManagementComponent implements OnInit {
   }
 
   onEdit(item: NewLicenseListItem): void {
-    // TODO: فتح تعديل الطلب
+    (document.activeElement as HTMLElement)?.blur();
+
+    this.newLicenseService.getById(item.id).subscribe({
+      next: (res) => {
+        if (!res.isSuccess || !res.data) {
+          this.snackBar.open(res.message || 'تعذر تحميل بيانات المعاملة', 'إغلاق', {
+            duration: 4000,
+          });
+          return;
+        }
+
+        const d = res.data;
+
+        const data: EditDialogData = {
+          process: {
+            id: d.id,
+            submissionDate: d.submissionDate,
+            establishmentName: d.establishmentName,
+            establishmentAddress: d.establishmentAddress,
+            requestingEntityId: d.requestingEntityId,
+            districtId: d.districtId,
+            activityTypeId: d.activityTypeId,
+            applicantName: d.applicantName,
+            applicantRole: d.applicantRole,
+            nationalId: d.nationalId,
+            responsibleManager: d.responsibleManager,
+            phone: d.phone,
+          },
+          attachments: pickAttachments(d),
+          requestingEntities: this.requestingEntities,
+          districts: this.districts,
+          activityTypes: this.activityTypes,
+        };
+
+        this.dialog
+          .open<EditComponent, EditDialogData, boolean>(EditComponent, {
+            width: '900px',
+            maxWidth: '95vw',
+            data,
+          })
+          .afterClosed()
+          .subscribe((saved) => {
+            if (saved) this.loadData();
+          });
+      },
+      error: () =>
+        this.snackBar.open('حدث خطأ أثناء تحميل بيانات المعاملة', 'إغلاق', { duration: 4000 }),
+    });
   }
 
   onMoveToNextStep(item: NewLicenseListItem): void {
@@ -246,6 +298,53 @@ export class NewLicenseManagementComponent implements OnInit {
       });
     });
   }
+
+  onMoveAllToNextStep(): void {
+    const ids = this.items.map((i) => i.id);
+    if (!ids.length) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '360px',
+      data: {
+        message: `هل أنت متأكد من نقل ${ids.length} من المعاملات إلى خطوة إجراء المعاينة؟`,
+        confirmText: 'نقل الكل',
+        cancelText: 'إلغاء',
+        confirmClass: 'btn-save',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+
+      this.isMovingAll = true;
+
+      forkJoin(
+        ids.map((id) =>
+          this.newLicenseService.moveToInspection(id).pipe(
+            map((res: ApiResponse<boolean>) => ({ id, ok: res.isSuccess })),
+            catchError((err) => {
+              console.error('NewLicense MOVE-TO-INSPECTION (bulk) error:', id, err);
+              return of({ id, ok: false });
+            }),
+          ),
+        ),
+      ).subscribe((results) => {
+        this.isMovingAll = false;
+
+        const failed = results.filter((r) => !r.ok).length;
+        const succeeded = results.length - failed;
+
+        const message =
+          failed === 0
+            ? `تم نقل ${succeeded} معاملة للخطوة التالية بنجاح`
+            : `تم نقل ${succeeded} معاملة، وتعذر نقل ${failed} معاملة`;
+
+        this.snackBar.open(message, 'إغلاق', { duration: 4000 });
+        this.loadData();
+      });
+    });
+  }
+
   onDelete(item: NewLicenseListItem): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '360px',

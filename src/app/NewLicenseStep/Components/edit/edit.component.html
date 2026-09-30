@@ -1,1 +1,291 @@
-<p>edit works!</p>
+<div class="modal-overlay" dir="rtl">
+  <div class="dialog-card form-dialog">
+    <!-- Header -->
+    <div class="dialog-header">
+      <div class="header-content-group">
+        <div class="dialog-icon primary">
+          <mat-icon>edit_document</mat-icon>
+        </div>
+
+        <div class="header-text">
+          <span class="eyebrow">إدارة التراخيص</span>
+          <h2>تعديل بيانات الترخيص</h2>
+        </div>
+      </div>
+
+      <button type="button" class="btn-dialog-close" (click)="cancel()" aria-label="إغلاق">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <form [formGroup]="form" class="dialog-body">
+      <div class="form-grid">
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>تاريخ تقديم الطلب</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="submissionDate" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="form.get('submissionDate')?.hasError('required')">
+            تاريخ التقديم مطلوب
+          </mat-error>
+          <mat-error *ngIf="form.get('submissionDate')?.hasError('futureDate')">
+            تاريخ التقديم لا يمكن أن يكون في المستقبل
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>اسم المنشأة</mat-label>
+          <input matInput formControlName="establishmentName" />
+          <mat-error *ngIf="form.get('establishmentName')?.hasError('required')">
+            اسم المنشأة مطلوب
+          </mat-error>
+          <mat-error *ngIf="form.get('establishmentName')?.hasError('maxlength')">
+            اسم المنشأة طويل جدًا (200 حرف كحد أقصى)
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-row-triple">
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>الجهة الطالبة</mat-label>
+            <mat-select formControlName="requestingEntityId">
+              <mat-option *ngFor="let entity of requestingEntities" [value]="entity.id">
+                {{ entity.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('requestingEntityId')?.hasError('required')">
+              الجهة الطالبة مطلوبة
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>المركز</mat-label>
+            <mat-select formControlName="districtId">
+              <mat-option *ngFor="let district of districts" [value]="district.id">
+                {{ district.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('districtId')?.hasError('required')">
+              المركز مطلوب
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>نوع النشاط</mat-label>
+            <mat-select formControlName="activityTypeId">
+              <mat-option *ngFor="let activity of activityTypes" [value]="activity.id">
+                {{ activity.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('activityTypeId')?.hasError('required')">
+              نوع النشاط مطلوب
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>عنوان المنشأة</mat-label>
+          <input matInput formControlName="establishmentAddress" />
+          <mat-error *ngIf="form.get('establishmentAddress')?.hasError('required')">
+            عنوان المنشأة مطلوب
+          </mat-error>
+          <mat-error *ngIf="form.get('establishmentAddress')?.hasError('maxlength')">
+            العنوان طويل جدًا (500 حرف كحد أقصى)
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>رقم الموبايل</mat-label>
+          <input matInput formControlName="phone" maxlength="11" placeholder="01xxxxxxxxx" />
+          <mat-error *ngIf="form.get('phone')?.hasError('required')">
+            رقم الموبايل مطلوب
+          </mat-error>
+          <mat-error *ngIf="form.get('phone')?.hasError('pattern')">
+            رقم الموبايل غير صحيح
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>اسم مقدم الطلب</mat-label>
+          <input matInput formControlName="applicantName" />
+          <mat-error *ngIf="form.get('applicantName')?.hasError('required')">
+            اسم مقدم الطلب مطلوب
+          </mat-error>
+          <mat-error *ngIf="form.get('applicantName')?.hasError('maxlength')">
+            الاسم طويل جدًا (200 حرف كحد أقصى)
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>صفة مقدم الطلب</mat-label>
+          <mat-select formControlName="applicantRole">
+            <mat-option *ngFor="let role of applicantRoles" [value]="role">
+              {{ applicantRoleLabels[role] }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('applicantRole')?.hasError('required')">
+            صفة مقدم الطلب مطلوبة
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>الرقم القومي</mat-label>
+          <input matInput formControlName="nationalId" maxlength="14" placeholder="14 رقم" />
+          <mat-error *ngIf="form.get('nationalId')?.hasError('required')">
+            الرقم القومي مطلوب
+          </mat-error>
+          <mat-error *ngIf="form.get('nationalId')?.hasError('pattern')">
+            الرقم القومي يجب أن يتكون من 14 رقم
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>المسؤول</mat-label>
+          <input matInput formControlName="responsibleManager" />
+          <mat-error *ngIf="form.get('responsibleManager')?.hasError('required')">
+            اسم المسؤول مطلوب
+          </mat-error>
+          <mat-error *ngIf="form.get('responsibleManager')?.hasError('maxlength')">
+            الاسم طويل جدًا (200 حرف كحد أقصى)
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Attachments -->
+      <div class="attachments-section">
+        <h3 class="section-title">المرفقات</h3>
+
+        <div class="attachments-grid">
+          <div class="attachment-field" *ngFor="let group of attachmentGroups">
+            <label class="attachment-label">{{ group.label }}</label>
+
+            <input
+              type="file"
+              multiple
+              [accept]="fileAccept"
+              class="file-input"
+              [disabled]="saving"
+              (change)="onFilesSelected($event, group.field)"
+            />
+
+            <!-- الملفات المرفوضة: تحت خانتها على طول -->
+            <div class="file-errors" *ngIf="fileErrors[group.field].length">
+              <span class="file-error" *ngFor="let msg of fileErrors[group.field]">
+                <mat-icon>error_outline</mat-icon>
+                {{ msg }}
+              </span>
+            </div>
+
+            <span
+              class="empty-files"
+              *ngIf="
+                !attachments[group.field].length &&
+                !pendingUploads[group.field].length &&
+                !fileErrors[group.field].length
+              "
+            >
+              لا توجد مرفقات
+            </span>
+
+            <div
+              class="file-list"
+              *ngIf="attachments[group.field].length || pendingUploads[group.field].length"
+            >
+              <!-- مرفقات موجودة على السيرفر -->
+              <div
+                class="file-item"
+                *ngFor="let file of attachments[group.field]"
+                [class.marked-delete]="pendingDeleteIds.has(file.id)"
+              >
+                <button
+                  type="button"
+                  class="file-thumb"
+                  (click)="openFile(file)"
+                  [attr.aria-label]="'معاينة ' + file.fileName"
+                >
+                  <img
+                    *ngIf="isImage(file); else iconTpl"
+                    [src]="fileUrl(file)"
+                    [alt]="file.fileName"
+                  />
+                  <ng-template #iconTpl>
+                    <mat-icon>{{ iconByName(file.fileName) }}</mat-icon>
+                  </ng-template>
+                </button>
+
+                <div class="file-meta">
+                  <span class="file-name" [title]="file.fileName">{{ file.fileName }}</span>
+                  <span class="file-badge danger" *ngIf="pendingDeleteIds.has(file.id)">
+                    سيتم الحذف عند الحفظ
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  class="file-remove"
+                  (click)="toggleDelete(file)"
+                  [disabled]="saving"
+                  [attr.aria-label]="pendingDeleteIds.has(file.id) ? 'تراجع' : 'حذف'"
+                >
+                  <mat-icon>{{ pendingDeleteIds.has(file.id) ? 'undo' : 'delete' }}</mat-icon>
+                </button>
+              </div>
+
+              <!-- ملفات جديدة لسه ما اترفعتش -->
+              <div class="file-item" *ngFor="let p of pendingUploads[group.field]; let i = index">
+                <div class="file-thumb static">
+                  <img
+                    *ngIf="p.previewUrl; else pendingIcon"
+                    [src]="p.previewUrl"
+                    [alt]="p.file.name"
+                  />
+                  <ng-template #pendingIcon>
+                    <mat-icon>{{ iconByName(p.file.name) }}</mat-icon>
+                  </ng-template>
+                </div>
+
+                <div class="file-meta">
+                  <span class="file-name" [title]="p.file.name">{{ p.file.name }}</span>
+                  <span class="file-size">
+                    {{ formatSize(p.file.size) }}
+                    <span class="file-badge">جديد</span>
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  class="file-remove"
+                  (click)="removePending(group.field, i)"
+                  [disabled]="saving"
+                  aria-label="إزالة"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div class="message-banner error" *ngIf="errorMessage">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+    </form>
+
+    <!-- Actions -->
+    <div class="dialog-actions">
+      <span class="form-invalid-hint" *ngIf="attemptedSave && form.invalid && !saving">
+        لا يمكن الحفظ، يرجى مراجعة البيانات
+      </span>
+
+
+      <button type="button" class="btn-reset" (click)="cancel()" [disabled]="saving">إلغاء</button>
+
+      <button type="button" class="btn-save" (click)="save()" [disabled]="saving">
+        {{ saving ? 'جاري الحفظ...' : 'حفظ التعديلات' }}
+      </button>
+    </div>
+  </div>
+</div>

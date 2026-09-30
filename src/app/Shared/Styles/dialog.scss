@@ -321,3 +321,56 @@
 @keyframes dialogSpin {
   100% { transform: rotate(360deg); }
 }
+
+
+/* ============================================================
+                          form-dialog-
+   ============================================================ */
+.dialog-card.form-dialog {
+  max-width: 720px;
+}
+
+.dialog-body .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group-wide {
+  grid-column: 1 / -1;
+}
+
+.form-row-triple {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .dialog-body .form-grid,
+  .form-row-triple {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-invalid-hint {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #e11d48;
+  margin-inline-end: auto;
+}
+
+/* Rounded inputs */
+.dialog-body .mat-mdc-form-field {
+  --mdc-outlined-text-field-container-shape: 28px;
+  --mdc-outlined-text-field-outline-color: #e3dde8;
+  --mdc-outlined-text-field-hover-outline-color: #b9a3e3;
+  --mdc-outlined-text-field-focus-outline-color: var(--color-primary, #5d3a99);
+  --mdc-outlined-text-field-outline-width: 1px;
+  --mdc-outlined-text-field-focus-outline-width: 2px;
+}
+
+.dialog-body .mat-mdc-form-field .mat-mdc-form-field-subscript-wrapper {
+  padding-inline: 16px;
+}

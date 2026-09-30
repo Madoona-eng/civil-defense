@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -20,9 +20,21 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { APPLICANT_ROLE_LABELS, ApplicantRole } from '../../../Shared/Enums/enums';
 import { formatDateForApi } from '../../../Shared/Helpers/date.helper';
+import {
+  FILE_ACCEPT,
+  formatSize,
+  iconByName,
+  validateFile,
+} from '../../../Shared/Helpers/file.helper';
 import { ApiResponse } from '../../../Shared/Models/ApiResponse';
 import { LookupItem } from '../../../Shared/Models/LookupItem';
-import { CreateProcessDto } from '../../Models/new-license';
+import {
+  ATTACHMENT_FIELDS,
+  ATTACHMENT_TYPES,
+  AttachmentField,
+  CreateProcessDto,
+  emptyRecord,
+} from '../../Models/new-license';
 import { NewLicenseService } from '../../Services/new-license.service';
 
 export interface CreateDialogData {
@@ -30,12 +42,6 @@ export interface CreateDialogData {
   districts: LookupItem[];
   activityTypes: LookupItem[];
 }
-
-type AttachmentField =
-  | 'entityLetters'
-  | 'proofDocuments'
-  | 'engineeringReports'
-  | 'otherAttachments';
 
 @Component({
   selector: 'app-create',
@@ -56,7 +62,7 @@ type AttachmentField =
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
 })
-export class CreateComponent {
+export class CreateComponent implements OnDestroy {
   form: FormGroup;
   saving = false;
   errorMessage = '';
@@ -72,12 +78,22 @@ export class CreateComponent {
   readonly districts: LookupItem[];
   readonly activityTypes: LookupItem[];
 
-  attachments: Record<AttachmentField, File[]> = {
-    entityLetters: [],
-    proofDocuments: [],
-    engineeringReports: [],
-    otherAttachments: [],
-  };
+  readonly fileAccept = FILE_ACCEPT;
+
+  readonly attachmentGroups = ATTACHMENT_FIELDS.map((field) => ({
+    field,
+    label: ATTACHMENT_TYPES[field].label,
+  }));
+
+  attachments = emptyRecord<File>();
+
+  // رسائل الملفات المرفوضة، لكل خانة رفع على حدة
+  fileErrors = emptyRecord<string>();
+
+  readonly formatSize = formatSize;
+  readonly iconByName = iconByName;
+
+  private previews = new Map<File, string>();
 
   constructor(
     private readonly fb: FormBuilder,
@@ -115,15 +131,38 @@ export class CreateComponent {
     return selected > today ? { futureDate: true } : null;
   }
 
+  // الملف الغلط ما بيتضافش، وسبب رفضه بيظهر تحت خانته
   onFilesSelected(event: Event, field: AttachmentField): void {
     const input = event.target as HTMLInputElement;
-    if (!input.files) return;
-
-    this.attachments[field] = [...this.attachments[field], ...Array.from(input.files)];
+    const files = input.files ? Array.from(input.files) : [];
     input.value = '';
+
+    const accepted: File[] = [];
+    const errors: string[] = [];
+
+    for (const file of files) {
+      const reason = validateFile(file);
+      if (reason) errors.push(`"${file.name}": ${reason}`);
+      else accepted.push(file);
+    }
+
+    this.fileErrors[field] = errors;
+    this.attachments[field] = [...this.attachments[field], ...accepted];
+  }
+
+  previewOf(file: File): string | null {
+    if (!file.type.startsWith('image/')) return null;
+    if (!this.previews.has(file)) this.previews.set(file, URL.createObjectURL(file));
+    return this.previews.get(file)!;
   }
 
   removeFile(field: AttachmentField, index: number): void {
+    const file = this.attachments[field][index];
+    const url = this.previews.get(file);
+    if (url) {
+      URL.revokeObjectURL(url);
+      this.previews.delete(file);
+    }
     this.attachments[field] = this.attachments[field].filter((_, i) => i !== index);
   }
 
@@ -182,7 +221,6 @@ export class CreateComponent {
             this.saving = false;
 
             if (!moveRes.isSuccess) {
-              // المعاملة اتحفظت لكن النقل فشل - الديالوج يفضل فاتح ويوضح الخطأ
               this.errorMessage = moveRes.message || this.moveToInspectionFallbackError;
               return;
             }
@@ -212,5 +250,9 @@ export class CreateComponent {
   cancel(): void {
     (document.activeElement as HTMLElement)?.blur();
     this.dialogRef.close(false);
+  }
+
+  ngOnDestroy(): void {
+    this.previews.forEach((url) => URL.revokeObjectURL(url));
   }
 }

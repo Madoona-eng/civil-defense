@@ -1,6 +1,5 @@
 <div class="modal-overlay" (click)="close()">
-  <div class="dialog-card" (click)="$event.stopPropagation()" style="max-width: 800px;">
-
+  <div class="dialog-card" (click)="$event.stopPropagation()" style="max-width: 800px">
     <div class="dialog-header">
       <div class="header-content-group">
         <div class="dialog-icon primary">
@@ -18,7 +17,6 @@
     </div>
 
     <div class="dialog-body">
-
       <div class="loading-box" *ngIf="loading">
         <mat-icon class="spin-icon">progress_activity</mat-icon>
         جاري تحميل البيانات...
@@ -29,13 +27,14 @@
       </div>
 
       <ng-container *ngIf="!loading && !errorMessage && details">
-
         <section class="info-section">
           <h3>البيانات الأساسية</h3>
           <div class="form-grid info-grid">
             <div class="form-group">
               <label>كود المعاملة</label>
-              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate;">{{ details.transactionCode }}</span>
+              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate">{{
+                details.transactionCode
+              }}</span>
             </div>
             <div class="form-group">
               <label>تاريخ التقديم</label>
@@ -73,11 +72,15 @@
             </div>
             <div class="form-group">
               <label>صفة مقدم الطلب</label>
-              <span class="dialog-input readonly-value">{{ details.applicantRole }}</span>
+              <span class="dialog-input readonly-value">{{
+                getApplicantRoleLabel(details.applicantRole)
+              }}</span>
             </div>
             <div class="form-group">
               <label>الرقم القومي</label>
-              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate;">{{ details.nationalId }}</span>
+              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate">{{
+                details.nationalId
+              }}</span>
             </div>
             <div class="form-group">
               <label>المسؤول</label>
@@ -85,7 +88,9 @@
             </div>
             <div class="form-group">
               <label>رقم الهاتف</label>
-              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate;">{{ details.phone }}</span>
+              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate">{{
+                details.phone
+              }}</span>
             </div>
           </div>
         </section>
@@ -95,7 +100,9 @@
             <h3>{{ group.title }}</h3>
             <div class="attachments-grid">
               <div class="attachment-card" *ngFor="let file of group.files">
-                <ng-container *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath); else fileIcon">
+                <ng-container
+                  *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath); else fileIcon"
+                >
                   <img
                     [src]="getFileUrl(file.filePath)"
                     [alt]="file.fileName"
@@ -114,13 +121,11 @@
             </div>
           </ng-container>
         </section>
-
       </ng-container>
     </div>
 
     <div class="dialog-actions">
       <button class="btn-reset" (click)="close()">إغلاق</button>
     </div>
-
   </div>
 </div>

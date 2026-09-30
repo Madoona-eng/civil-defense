@@ -6,7 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { LucideAngularModule, EllipsisVertical, Eye, Pencil, CircleArrowLeft, Trash2 } from 'lucide-angular';
+import { LucideAngularModule, EllipsisVertical, Eye, Pencil, CircleArrowLeft, Trash2, ChevronsLeft } from 'lucide-angular';
 import { NewLicenseListItem } from '../../Models/new-license';
 
 @Component({
@@ -31,9 +31,11 @@ export class ListComponent {
   readonly Pencil = Pencil;
   readonly CircleArrowLeft = CircleArrowLeft;
   readonly Trash2 = Trash2;
+  readonly ChevronsLeft = ChevronsLeft;
 
   @Input() items: NewLicenseListItem[] = [];
   @Input() isLoading = false;
+  @Input() isMovingAll = false;
   @Input() errorMessage = '';
 
   @Input() pageNumber = 1;
@@ -44,6 +46,7 @@ export class ListComponent {
   @Output() detailsRequested = new EventEmitter<NewLicenseListItem>();
   @Output() editRequested = new EventEmitter<NewLicenseListItem>();
   @Output() moveToNextStepRequested = new EventEmitter<NewLicenseListItem>();
+  @Output() moveAllToNextStepRequested = new EventEmitter<void>();
   @Output() deleteRequested = new EventEmitter<NewLicenseListItem>();
 
   displayedColumns: string[] = [
@@ -72,6 +75,10 @@ export class ListComponent {
 
   onMoveToNextStep(item: NewLicenseListItem): void {
     this.moveToNextStepRequested.emit(item);
+  }
+
+  onMoveAllToNextStep(): void {
+    this.moveAllToNextStepRequested.emit();
   }
 
   onDelete(item: NewLicenseListItem): void {

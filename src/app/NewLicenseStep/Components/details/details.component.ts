@@ -3,11 +3,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 
+import { APPLICANT_ROLE_LABELS, ApplicantRole } from '../../../Shared/Enums/enums';
 import { ApiResponse } from '../../../Shared/Models/ApiResponse';
-import {
-  AttachmentGroup,
-  NewLicenseDetails,
-} from '../../Models/new-license';
+import { AttachmentGroup, NewLicenseDetails } from '../../Models/new-license';
 import { NewLicenseService } from '../../Services/new-license.service';
 
 export interface DetailsDialogData {
@@ -116,5 +114,9 @@ export class DetailsComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit',
     });
+  }
+
+  getApplicantRoleLabel(role: string): string {
+    return APPLICANT_ROLE_LABELS[role as ApplicantRole] ?? role;
   }
 }
