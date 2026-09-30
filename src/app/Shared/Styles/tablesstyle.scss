@@ -146,10 +146,10 @@
   font-weight: 600;
   margin-top: 24px;
   border-top: none !important;
-  direction: ltr; /* الترقيم وأزرار التنقل تظهر جهة اليسار كما في الصورة */
+  direction: rtl; // كان ltr
 
   .mat-mdc-paginator-container {
-    justify-content: flex-start !important;
+    justify-content: flex-start !important; // في RTL بقت يمين
     padding: 0 !important;
   }
 
@@ -197,4 +197,51 @@
       }
     }
   }
+}
+/* ============================================================
+   TABLE STATES
+   ============================================================ */
+.loading-shade {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.message.error {
+  text-align: center;
+  padding: 24px 0;
+  color: #e11d48;
+  font-weight: 600;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px 0;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+/* ============================================================
+   PILLS & ACTION BUTTON
+   ============================================================ */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 12px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  background: var(--color-status-completed);
+  color: #065f46;
+
+  &.returned {
+    background: var(--color-status-in-progress);
+    color: #9f1239;
+  }
+}
+
+.menu-btn {
+  color: var(--color-primary);
 }

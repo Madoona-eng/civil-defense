@@ -13,7 +13,6 @@
 
   <div class="table-scroll" *ngIf="!errorMessage">
     <table mat-table [dataSource]="items" class="mat-mdc-table">
-
       <ng-container matColumnDef="transactionCode">
         <th mat-header-cell *matHeaderCellDef>كود المعاملة</th>
         <td mat-cell *matCellDef="let item">
@@ -56,15 +55,10 @@
         <td mat-cell *matCellDef="let item">{{ item.applicantName }}</td>
       </ng-container>
 
-   
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>الإجراءات</th>
         <td mat-cell *matCellDef="let item">
-          <button
-            mat-icon-button
-            class="table-btn menu-btn"
-            [matMenuTriggerFor]="actionsMenu"
-          >
+          <button mat-icon-button class="table-btn menu-btn" [matMenuTriggerFor]="actionsMenu">
             <lucide-angular [img]="EllipsisVertical" [size]="18"></lucide-angular>
           </button>
 
@@ -90,7 +84,7 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row-hover"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="table-row-hover"></tr>
 
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" [attr.colspan]="displayedColumns.length">
@@ -103,6 +97,7 @@
   </div>
 
   <mat-paginator
+    dir="rtl"
     [length]="totalCount"
     [pageSize]="pageSize"
     [pageIndex]="pageNumber - 1"
