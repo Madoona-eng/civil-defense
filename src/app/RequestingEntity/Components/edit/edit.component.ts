@@ -7,13 +7,14 @@ import {
   UpdateRequestingEntityRequest
 } from '../../Models/requesting-entity';
 import { RequestingEntityService } from '../../Services/requesting-entity.service';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 /* داخل ملف edit.component.scss الخاص بك */
 
 
 @Component({
   selector: 'app-requesting-entity-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SiteTranslationPipe],
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.scss'
 })
@@ -51,7 +52,7 @@ export class EditComponent implements OnChanges {
         this.loading = false;
 
         if (!res.isSuccess || !res.data) {
-          this.errorMessage = res.message || 'تعذر تحميل بيانات الجهة';
+          this.errorMessage = res.message || SITE_TRANSLATIONS['entity.loadFailed'];
           return;
         }
 
@@ -68,14 +69,14 @@ export class EditComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تحميل بيانات الجهة';
+          SITE_TRANSLATIONS['entity.loadError'];
       }
     });
   }
 
   save(): void {
     if (!this.requestingEntityId) {
-      this.errorMessage = 'لم يتم تحديد الجهة';
+      this.errorMessage = SITE_TRANSLATIONS['entity.notSelected'];
       return;
     }
 
@@ -86,7 +87,7 @@ export class EditComponent implements OnChanges {
     const name = this.formModel.name.trim();
 
     if (!name) {
-      this.errorMessage = 'من فضلك أدخلي اسم الجهة';
+      this.errorMessage = SITE_TRANSLATIONS['entity.nameRequired'];
       return;
     }
 
@@ -102,11 +103,11 @@ export class EditComponent implements OnChanges {
         this.saving = false;
 
         if (!res.isSuccess) {
-          this.errorMessage = res.message || 'لم يتم تعديل الجهة';
+          this.errorMessage = res.message || SITE_TRANSLATIONS['entity.updateFailed'];
           return;
         }
 
-        this.successMessage = res.message || 'تم تعديل الجهة بنجاح';
+        this.successMessage = res.message || SITE_TRANSLATIONS['entity.updateSucceeded'];
 
         setTimeout(() => {
           this.saved.emit();
@@ -120,7 +121,7 @@ export class EditComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تعديل الجهة';
+          SITE_TRANSLATIONS['entity.updateError'];
       }
     });
   }

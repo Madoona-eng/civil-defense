@@ -5,32 +5,31 @@
   <div class="login-shell">
     <section class="welcome-panel">
       <div class="panel-content">
-        <span class="badge">الحماية المدنية</span>
+        <span class="badge">{{ 'app.civilDefense' | t }}</span>
 
-        <h1>نظام طلبات ومعاينات الحماية المدنية</h1>
+        <h1>{{ 'login.title' | t }}</h1>
 
         <p>
-          سجلي دخولك لإدارة طلبات المنشآت، المرفقات، المعاينات، تقارير المطابقة،
-          الموافقات النهائية والأرشيف.
+          {{ 'login.description' | t }}
         </p>
 
         <div class="feature-list">
           <div class="feature-card">
             <span class="feature-icon">📄</span>
-            <strong>طلبات</strong>
-            <small>تسجيل ومتابعة</small>
+            <strong>{{ 'login.requests' | t }}</strong>
+            <small>{{ 'login.registrationTracking' | t }}</small>
           </div>
 
           <div class="feature-card">
             <span class="feature-icon">🔍</span>
-            <strong>معاينات</strong>
-            <small>تقارير وملاحظات</small>
+            <strong>{{ 'login.inspections' | t }}</strong>
+            <small>{{ 'login.reportsNotes' | t }}</small>
           </div>
 
           <div class="feature-card">
             <span class="feature-icon">🗂️</span>
-            <strong>أرشيف</strong>
-            <small>حفظ ورجوع سريع</small>
+            <strong>{{ 'login.archive' | t }}</strong>
+            <small>{{ 'login.quickReturn' | t }}</small>
           </div>
         </div>
       </div>
@@ -38,48 +37,48 @@
 
     <section class="login-card">
       <div class="card-header">
-        <span class="login-label">تسجيل الدخول</span>
-        <h2>أهلاً بيكي</h2>
-        <p>ادخلي بيانات المستخدم للانتقال للسيستم.</p>
+        <span class="login-label">{{ 'login.loginLabel' | t }}</span>
+        <h2>{{ 'login.heading' | t }}</h2>
+        <p>{{ 'login.prompt' | t }}</p>
       </div>
 
       <form [formGroup]="form" (ngSubmit)="login()" class="login-form">
         <div class="field">
-          <label>اسم المستخدم</label>
+          <label>{{ 'login.username' | t }}</label>
 
           <div class="input-wrap">
             <input
               type="text"
               formControlName="username"
               autocomplete="username"
-              placeholder="ادخلي اسم المستخدم"
+              [placeholder]="'login.usernamePlaceholder' | t"
             />
             <span class="input-icon">👤</span>
           </div>
 
           <small *ngIf="form.controls.username.invalid && form.controls.username.touched">
-            اسم المستخدم مطلوب
+            {{ 'login.usernameRequired' | t }}
           </small>
         </div>
 
         <div class="field">
-          <label>كلمة المرور</label>
+          <label>{{ 'login.password' | t }}</label>
 
           <div class="password-wrap">
             <input
               [type]="showPassword ? 'text' : 'password'"
               formControlName="password"
               autocomplete="current-password"
-              placeholder="ادخلي كلمة المرور"
+              [placeholder]="'login.passwordPlaceholder' | t"
             />
 
             <button type="button" (click)="showPassword = !showPassword">
-              {{ showPassword ? 'إخفاء' : 'إظهار' }}
+              {{ showPassword ? ('login.hidePassword' | t) : ('login.showPassword' | t) }}
             </button>
           </div>
 
           <small *ngIf="form.controls.password.invalid && form.controls.password.touched">
-            كلمة المرور مطلوبة
+            {{ 'login.passwordRequired' | t }}
           </small>
         </div>
 
@@ -92,8 +91,8 @@
         </div>
 
         <button class="login-btn" type="submit" (click)="login()" [disabled]="isLoading">
-          <span *ngIf="!isLoading">دخول السيستم</span>
-          <span *ngIf="isLoading">جاري الدخول...</span>
+          <span *ngIf="!isLoading">{{ 'login.submit' | t }}</span>
+          <span *ngIf="isLoading">{{ 'login.submitting' | t }}</span>
         </button>
       </form>
     </section>

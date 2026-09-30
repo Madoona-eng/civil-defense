@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { SITE_TRANSLATIONS } from './Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +11,7 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'civil-defense';
+  constructor(title: Title) {
+    title.setTitle(SITE_TRANSLATIONS['app.civilDefense']);
+  }
 }

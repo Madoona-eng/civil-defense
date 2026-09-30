@@ -1,7 +1,7 @@
 <div class="welcome-card">
-  <h3>لوحة التحكم الرئيسية</h3>
+  <h3>{{ 'dashboard.mainTitle' | t }}</h3>
   <p>
-    من هنا يمكنك متابعة طلبات المنشآت، المرفقات، المعاينات، التقارير، والموافقات النهائية.
+    {{ 'dashboard.description' | t }}
   </p>
 </div>
 
@@ -9,24 +9,24 @@
   <div class="stat-card">
     <span>📄</span>
     <h4>120</h4>
-    <p>إجمالي الطلبات</p>
+    <p>{{ 'dashboard.totalRequests' | t }}</p>
   </div>
 
   <div class="stat-card">
     <span>⏳</span>
     <h4>34</h4>
-    <p>قيد المراجعة</p>
+    <p>{{ 'dashboard.underReview' | t }}</p>
   </div>
 
   <div class="stat-card">
     <span>✅</span>
     <h4>76</h4>
-    <p>معاينات مكتملة</p>
+    <p>{{ 'dashboard.completedInspections' | t }}</p>
   </div>
 
   <div class="stat-card">
     <span>❌</span>
     <h4>10</h4>
-    <p>طلبات مرفوضة</p>
+    <p>{{ 'dashboard.rejectedRequests' | t }}</p>
   </div>
 </div>

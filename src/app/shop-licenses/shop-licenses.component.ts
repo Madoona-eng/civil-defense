@@ -5,11 +5,17 @@ import { LicensingProcessService } from '../LicensingProcess/Services/licensing-
 import { DetailsComponent } from '../LicensingProcess/Components/details/details.component';
 import { EditComponent } from '../LicensingProcess/Components/edit/edit.component';
 import { DeleteComponent } from '../LicensingProcess/Components/delete/delete.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ConfirmDialogComponent } from '../Shared/Components/confirm-dialog/confirm-dialog.component';
+import { SITE_TRANSLATIONS, SiteTranslationPipe, translateSiteText } from '../Shared/Enums/site-translations';
+import { AuthService } from '../auth/services/auth.service';
+import { NewLicenseService } from '../NewLicenseStep/Services/new-license.service';
 
 @Component({
   selector: 'app-shop-licenses',
   standalone: true,
-  imports: [CommonModule, FormsModule, DetailsComponent, EditComponent, DeleteComponent],
+  imports: [CommonModule, FormsModule, DetailsComponent, EditComponent, DeleteComponent, SiteTranslationPipe, MatDialogModule, MatSnackBarModule],
   templateUrl: './shop-licenses.component.html',
   styleUrl: './shop-licenses.component.scss'
 })
@@ -34,11 +40,11 @@ export class ShopLicensesComponent implements OnInit {
   searchTerm = '';
   processStep = '';
   processSteps = [
-    { label: 'كل المراحل', value: '' },
-    { label: 'تقديم الطلب', value: 'APPLICATION' },
-    { label: 'المعاينة', value: 'INSPECTION' },
-    { label: 'الموافقة النهائية', value: 'FINAL_APPROVAL' },
-    { label: 'الأرشيف', value: 'ARCHIVE' }
+    { label: SITE_TRANSLATIONS['shop.allStages'], value: '' },
+    { label: SITE_TRANSLATIONS['shop.application'], value: 'APPLICATION' },
+    { label: SITE_TRANSLATIONS['shop.inspection'], value: 'INSPECTION' },
+    { label: SITE_TRANSLATIONS['shop.finalApproval'], value: 'FINAL_APPROVAL' },
+    { label: SITE_TRANSLATIONS['shop.archive'], value: 'ARCHIVE' }
   ];
 
   pageNumber = 1;
@@ -47,8 +53,15 @@ export class ShopLicensesComponent implements OnInit {
   totalPages = 1;
   hasPreviousPage = false;
   hasNextPage = false;
+  movingToInspectionId: string | null = null;
 
-  constructor(private readonly licensingProcessService: LicensingProcessService) {}
+  constructor(
+    private readonly licensingProcessService: LicensingProcessService,
+    private readonly newLicenseService: NewLicenseService,
+    private readonly authService: AuthService,
+    private readonly dialog: MatDialog,
+    private readonly snackBar: MatSnackBar,
+  ) {}
 
   ngOnInit(): void {
     this.loadLicensingProcesses();
@@ -70,7 +83,7 @@ export class ShopLicensesComponent implements OnInit {
         this.isLoading = false;
 
         if (response && response.isSuccess === false) {
-          this.errorMessage = response.message || 'تعذر تحميل تراخيص المحال';
+          this.errorMessage = response.message || SITE_TRANSLATIONS['shop.loadFailed'];
           return;
         }
 
@@ -142,7 +155,7 @@ export class ShopLicensesComponent implements OnInit {
       error: err => {
         this.isLoading = false;
         console.error('LicensingProcess GET error:', err);
-        this.errorMessage = err?.error?.message || err?.message || 'حدث خطأ أثناء تحميل تراخيص المحال';
+        this.errorMessage = err?.error?.message || err?.message || SITE_TRANSLATIONS['shop.loadError'];
       }
     });
   }
@@ -234,19 +247,19 @@ export class ShopLicensesComponent implements OnInit {
 
   getStepLabel(step: any): string {
     if (step === null || step === undefined || step === '') {
-      return 'غير محدد';
+      return SITE_TRANSLATIONS['common.unavailable'];
     }
 
     const stepMap: { [key: string]: string } = {
-      '0': 'تقديم الطلب',
-      '1': 'المعاينة',
-      '2': 'الموافقة النهائية',
-      '3': 'الأرشيف',
-      '4': 'مكتمل',
-      'APPLICATION': 'تقديم الطلب',
-      'INSPECTION': 'المعاينة',
-      'FINAL_APPROVAL': 'الموافقة النهائية',
-      'ARCHIVE': 'الأرشيف'
+      '0': SITE_TRANSLATIONS['shop.application'],
+      '1': SITE_TRANSLATIONS['step.inspection'],
+      '2': SITE_TRANSLATIONS['step.finalApproval'],
+      '3': SITE_TRANSLATIONS['step.archive'],
+      '4': SITE_TRANSLATIONS['shop.complete'],
+      'APPLICATION': SITE_TRANSLATIONS['shop.application'],
+      'INSPECTION': SITE_TRANSLATIONS['step.inspection'],
+      'FINAL_APPROVAL': SITE_TRANSLATIONS['step.finalApproval'],
+      'ARCHIVE': SITE_TRANSLATIONS['step.archive']
     };
 
     const stepKey = String(step).trim();
@@ -266,6 +279,77 @@ export class ShopLicensesComponent implements OnInit {
   requestDelete(item: any): void {
     this.activeDropdownId = null;
     this.openDeletePopup(item);
+  }
+
+  get canMoveToInspection(): boolean {
+    const role = this.authService.getRole();
+    return role === 'DataEntry' || role === 'SuperAdmin';
+  }
+
+  isNewLicenseStep(step: unknown): boolean {
+    if (step === null || step === undefined || String(step).trim() === '') return false;
+
+    const normalizedStep = String(step).trim().toLowerCase().replace(/[\s_-]/g, '');
+    return normalizedStep === '0' || normalizedStep === 'newlicense' || normalizedStep === 'application';
+  }
+
+  moveToInspection(item: any): void {
+    this.activeDropdownId = null;
+    if (
+      !this.canMoveToInspection ||
+      !item?.id ||
+      !this.isNewLicenseStep(item.currentStep) ||
+      this.movingToInspectionId === item.id
+    ) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '360px',
+      data: {
+        message: translateSiteText('newLicense.movePrompt', {
+          establishmentName: item.establishmentName,
+        }),
+        confirmText: SITE_TRANSLATIONS['newLicense.confirmMove'],
+        cancelText: SITE_TRANSLATIONS['common.cancel'],
+        confirmClass: 'btn-save',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+
+      this.movingToInspectionId = item.id;
+      this.newLicenseService.moveToInspection(item.id).subscribe({
+        next: response => {
+          this.movingToInspectionId = null;
+
+          if (!response.isSuccess) {
+            this.snackBar.open(
+              response.message || SITE_TRANSLATIONS['newLicense.moveFailed'],
+              SITE_TRANSLATIONS['common.close'],
+              { duration: 3000 },
+            );
+            return;
+          }
+
+          this.snackBar.open(
+            SITE_TRANSLATIONS['newLicense.moved'],
+            SITE_TRANSLATIONS['common.close'],
+            { duration: 2500 },
+          );
+          this.loadLicensingProcesses();
+        },
+        error: error => {
+          this.movingToInspectionId = null;
+          this.snackBar.open(
+            error?.error?.message || error?.message || SITE_TRANSLATIONS['newLicense.moveError'],
+            SITE_TRANSLATIONS['common.close'],
+            { duration: 3000 },
+          );
+        },
+      });
+    });
   }
 
   previousPage(): void {

@@ -8,6 +8,7 @@ import {
   PagedResult
 } from '../../Models/licensing-process';
 import { LicensingProcessService } from '../../Services/licensing-process.service';
+import { SITE_TRANSLATIONS } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-licensing-process-list',
@@ -37,10 +38,10 @@ export class ListComponent implements OnInit {
   hasPreviousPage = false;
 
   processSteps = [
-    { value: '', label: 'كل المراحل' },
-    { value: 'Inspection', label: 'المعاينة' },
-    { value: 'FinalApproval', label: 'الموافقة النهائية' },
-    { value: 'Archive', label: 'الأرشيف' }
+    { value: '', label: SITE_TRANSLATIONS['shop.allStages'] },
+    { value: 'Inspection', label: SITE_TRANSLATIONS['step.inspection'] },
+    { value: 'FinalApproval', label: SITE_TRANSLATIONS['step.finalApproval'] },
+    { value: 'Archive', label: SITE_TRANSLATIONS['step.archive'] }
   ];
 
   constructor(private readonly licensingProcessService: LicensingProcessService) {}
@@ -65,7 +66,7 @@ export class ListComponent implements OnInit {
         this.isLoading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || 'تعذر تحميل تراخيص المحال';
+          this.errorMessage = response.message || SITE_TRANSLATIONS['licensing.listLoadFailed'];
           return;
         }
 
@@ -85,7 +86,7 @@ export class ListComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تحميل تراخيص المحال';
+          SITE_TRANSLATIONS['licensing.listLoadError'];
       }
     });
   }
@@ -134,15 +135,15 @@ export class ListComponent implements OnInit {
 
   getStepLabel(step: string): string {
     if (step === 'Inspection') {
-      return 'المعاينة';
+      return SITE_TRANSLATIONS['step.inspection'];
     }
 
     if (step === 'FinalApproval') {
-      return 'الموافقة النهائية';
+      return SITE_TRANSLATIONS['step.finalApproval'];
     }
 
     if (step === 'Archive') {
-      return 'الأرشيف';
+      return SITE_TRANSLATIONS['step.archive'];
     }
 
     return step || '-';

@@ -7,11 +7,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-district-add',
   standalone: true,
-  imports: [CommonModule, FormsModule,MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule, SiteTranslationPipe],
   templateUrl: './add.component.html',
   styleUrl: './add.component.scss'
 })
@@ -38,12 +39,12 @@ export class AddComponent {
     const name = this.formModel.name.trim();
 
     if (!Number.isFinite(code) || code <= 0) {
-      this.errorMessage = 'من فضلك أدخلي رقم كود صحيح';
+      this.errorMessage = SITE_TRANSLATIONS['district.invalidCode'];
       return;
     }
 
     if (!name) {
-      this.errorMessage = 'من فضلك أدخلي اسم المركز / المنطقة';
+      this.errorMessage = SITE_TRANSLATIONS['district.nameRequired'];
       return;
     }
 
@@ -59,11 +60,11 @@ export class AddComponent {
         this.saving = false;
 
         if (!res.isSuccess) {
-          this.errorMessage = res.message || 'لم يتم إنشاء المركز / المنطقة';
+          this.errorMessage = res.message || SITE_TRANSLATIONS['district.createFailed'];
           return;
         }
 
-        this.successMessage = res.message || 'تم إنشاء المركز / المنطقة بنجاح';
+        this.successMessage = res.message || SITE_TRANSLATIONS['district.createSucceeded'];
 
         this.formModel = {
           code: null,
@@ -82,7 +83,7 @@ export class AddComponent {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء إضافة المركز / المنطقة';
+          SITE_TRANSLATIONS['district.createError'];
       }
     });
   }

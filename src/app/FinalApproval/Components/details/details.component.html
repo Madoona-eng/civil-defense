@@ -2,15 +2,15 @@
 <div class="details-page" dir="rtl">
   <div class="details-header">
     <div>
-      <h2>تفاصيل الموافقة النهائية</h2>
-      <p *ngIf="details">كود المعاملة: {{ details.transactionCode }}</p>
+      <h2>{{ 'final.title' | t }}</h2>
+      <p *ngIf="details">{{ 'common.requestCode' | t }}: {{ details.transactionCode }}</p>
     </div>
 
     <button type="button" class="close-btn" (click)="close()">×</button>
   </div>
 
   <div class="loading-box" *ngIf="loading">
-    جاري تحميل تفاصيل الموافقة النهائية...
+    {{ 'final.loading' | t }}
   </div>
 
   <div class="message error" *ngIf="errorMessage">
@@ -21,27 +21,27 @@
     <section class="section-card">
       <div class="section-title">
         <span>📄</span>
-        <h3>بيانات المعاملة</h3>
+        <h3>{{ 'archive.transactionData' | t }}</h3>
       </div>
 
       <div class="info-grid">
         <div class="info-item">
-          <span>كود المعاملة</span>
+          <span>{{ 'common.requestCode' | t }}</span>
           <strong>{{ d.transactionCode }}</strong>
         </div>
 
         <div class="info-item">
-          <span>المرحلة الحالية</span>
+          <span>{{ 'common.currentStep' | t }}</span>
           <strong>{{ getStepLabel(d.currentStep) }}</strong>
         </div>
 
         <div class="info-item">
-          <span>تاريخ التقديم</span>
+          <span>{{ 'common.submissionDate' | t }}</span>
           <strong>{{ d.submissionDate }}</strong>
         </div>
 
         <div class="info-item">
-          <span>تم الإنشاء بواسطة</span>
+          <span>{{ 'common.createdBy' | t }}</span>
           <strong>{{ d.createdBy || '-' }}</strong>
         </div>
       </div>
@@ -50,32 +50,32 @@
     <section class="section-card">
       <div class="section-title">
         <span>🏢</span>
-        <h3>بيانات المنشأة</h3>
+        <h3>{{ 'common.establishmentData' | t }}</h3>
       </div>
 
       <div class="info-grid">
         <div class="info-item">
-          <span>اسم المنشأة</span>
+          <span>{{ 'common.establishment' | t }}</span>
           <strong>{{ d.establishmentName }}</strong>
         </div>
 
         <div class="info-item">
-          <span>عنوان المنشأة</span>
+          <span>{{ 'common.address' | t }}</span>
           <strong>{{ d.establishmentAddress }}</strong>
         </div>
 
         <div class="info-item">
-          <span>الجهة</span>
+          <span>{{ 'common.requestingEntity' | t }}</span>
           <strong>{{ d.requestingEntity }}</strong>
         </div>
 
         <div class="info-item">
-          <span>المركز / المنطقة</span>
+          <span>{{ 'district.name' | t }}</span>
           <strong>{{ d.district }}</strong>
         </div>
 
         <div class="info-item">
-          <span>نوع النشاط</span>
+          <span>{{ 'common.activity' | t }}</span>
           <strong>{{ d.activityType }}</strong>
         </div>
       </div>
@@ -84,32 +84,32 @@
     <section class="section-card">
       <div class="section-title">
         <span>👤</span>
-        <h3>بيانات مقدم الطلب</h3>
+        <h3>{{ 'common.applicantData' | t }}</h3>
       </div>
 
       <div class="info-grid">
         <div class="info-item">
-          <span>اسم مقدم الطلب</span>
+          <span>{{ 'common.applicant' | t }}</span>
           <strong>{{ d.applicantName }}</strong>
         </div>
 
         <div class="info-item">
-          <span>صفة مقدم الطلب</span>
+          <span>{{ 'common.applicantRole' | t }}</span>
           <strong>{{ d.applicantRole || '-' }}</strong>
         </div>
 
         <div class="info-item">
-          <span>الرقم القومي</span>
+          <span>{{ 'common.nationalId' | t }}</span>
           <strong>{{ d.nationalId || '-' }}</strong>
         </div>
 
         <div class="info-item">
-          <span>المدير المسؤول</span>
+          <span>{{ 'common.responsibleManager' | t }}</span>
           <strong>{{ d.responsibleManager || '-' }}</strong>
         </div>
 
         <div class="info-item">
-          <span>رقم الهاتف</span>
+          <span>{{ 'common.phone' | t }}</span>
           <strong>{{ d.phone || '-' }}</strong>
         </div>
       </div>
@@ -118,22 +118,22 @@
     <section class="section-card">
       <div class="section-title">
         <span>📝</span>
-        <h3>بيانات المعاينة</h3>
+        <h3>{{ 'common.inspectionData' | t }}</h3>
       </div>
 
       <div class="info-grid">
         <div class="info-item">
-          <span>اسم المعاين</span>
+          <span>{{ 'common.inspectorName' | t }}</span>
           <strong>{{ d.inspectorName || '-' }}</strong>
         </div>
 
         <div class="info-item">
-          <span>رأي المعاينة</span>
+          <span>{{ 'common.opinion' | t }}</span>
           <strong>{{ getOpinionLabel(d.opinion) }}</strong>
         </div>
 
         <div class="info-item">
-          <span>تمت المعاينة بواسطة</span>
+          <span>{{ 'archive.inspectedBy' | t }}</span>
           <strong>{{ d.inspectedBy || '-' }}</strong>
         </div>
       </div>
@@ -142,22 +142,22 @@
     <section class="section-card">
       <div class="section-title">
         <span>✅</span>
-        <h3>بيانات الموافقة النهائية</h3>
+        <h3>{{ 'common.finalApprovalData' | t }}</h3>
       </div>
 
       <div class="info-grid">
         <div class="info-item">
-          <span>حالة القرار النهائي</span>
+          <span>{{ 'common.finalDecisionState' | t }}</span>
           <strong>{{ getFinalStatusLabel(d.finalStatus) }}</strong>
         </div>
 
         <div class="info-item">
-          <span>تم الاعتماد بواسطة</span>
+          <span>{{ 'common.approvedBy' | t }}</span>
           <strong>{{ d.approvedBy || '-' }}</strong>
         </div>
 
         <div class="info-item">
-          <span>تم الأرشفة بواسطة</span>
+          <span>{{ 'common.archivedBy' | t }}</span>
           <strong>{{ d.archivedBy || '-' }}</strong>
         </div>
       </div>
@@ -166,11 +166,11 @@
     <section class="section-card">
       <div class="section-title">
         <span>💬</span>
-        <h3>الملاحظات</h3>
+        <h3>{{ 'common.notes' | t }}</h3>
       </div>
 
       <div class="empty-box" *ngIf="!d.notes || d.notes.length === 0">
-        لا توجد ملاحظات.
+        {{ 'common.noNotes' | t }}
       </div>
 
       <div class="note-card" *ngFor="let note of d.notes || []">
@@ -182,7 +182,7 @@
     <section class="section-card">
       <div class="section-title">
         <span>📎</span>
-        <h3>المرفقات</h3>
+        <h3>{{ 'common.attachments' | t }}</h3>
       </div>
 
       <div class="attachments-grid">
@@ -190,7 +190,7 @@
           <h4>{{ group.title }}</h4>
 
           <div class="empty-attachment" *ngIf="group.files.length === 0">
-            لا توجد ملفات.
+            {{ 'common.noFiles' | t }}
           </div>
 
           <div class="attachment-item" *ngFor="let file of group.files">
@@ -203,7 +203,7 @@
               />
 
               <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
-                📎 فتح الملف
+                📎 {{ 'common.openFile' | t }}
               </span>
             </a>
 

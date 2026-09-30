@@ -1,36 +1,36 @@
 <div class="popup-form" dir="rtl">
   <div class="popup-header">
     <div>
-      <h2>تعديل نوع النشاط</h2>
+      <h2>{{ 'activity.edit' | t }}</h2>
  
     </div>
   </div>
 
   <div class="form-card">
     <div class="loading-box" *ngIf="loading">
-      جاري تحميل البيانات...
+      {{ 'common.loadingDataWithEllipsis' | t }}
     </div>
 
     <ng-container *ngIf="!loading">
       <div class="form-grid">
         <div class="field">
-          <label>كود نوع النشاط</label>
+          <label>{{ 'activity.code' | t }}</label>
           <input
             type="number"
             [(ngModel)]="formModel.code"
             name="code"
-            placeholder="مثال: 20"
+            [placeholder]="'common.exampleCode' | t"
             disabled
           />
         </div>
 
         <div class="field">
-          <label>اسم نوع النشاط</label>
+          <label>{{ 'activity.name' | t }}</label>
           <input
             type="text"
             [(ngModel)]="formModel.name"
             name="name"
-            placeholder="مثال: اشغال علاجي"
+            [placeholder]="'common.exampleActivity' | t"
           />
         </div>
       </div>
@@ -45,11 +45,11 @@
 
       <div class="actions">
         <button type="button" class="save-btn" (click)="save()" [disabled]="saving">
-          {{ saving ? 'جاري الحفظ...' : 'حفظ التعديل' }}
+          {{ saving ? ('common.saving' | t) : ('common.saveEdit' | t) }}
         </button>
 
         <button type="button" class="cancel-btn" (click)="cancel()">
-          إلغاء
+          {{ 'common.cancel' | t }}
         </button>
       </div>
     </ng-container>

@@ -1,13 +1,13 @@
 <div class="table-card" dir="rtl">
   <div class="list-header">
     <div>
-      <h3>قائمة أنواع النشاط</h3>
-      <p>عرض جميع أنواع النشاط المسجلة في النظام.</p>
+      <h3>{{ 'activity.list' | t }}</h3>
+      <p>{{ 'activity.listDescription' | t }}</p>
     </div>
 
     <button type="button" class="refresh-btn" (click)="loadActivityTypes()">
       <mat-icon>refresh</mat-icon>
-      <span>تحديث</span>
+      <span>{{ 'common.refresh' | t }}</span>
     </button>
   </div>
 
@@ -18,21 +18,21 @@
 
   <div class="loading-box" *ngIf="isLoading">
     <mat-icon class="spin-icon">sync</mat-icon>
-    <span>جاري تحميل البيانات...</span>
+    <span>{{ 'common.loadingDataWithEllipsis' | t }}</span>
   </div>
 
   <div class="empty-box" *ngIf="!isLoading && activityTypes.length === 0">
     <mat-icon>inbox</mat-icon>
-    <span>لا توجد أنواع نشاط مسجلة حتى الآن.</span>
+    <span>{{ 'activity.empty' | t }}</span>
   </div>
 
   <div class="mat-table-container" *ngIf="!isLoading && activityTypes.length > 0">
     <table class="mat-mdc-table">
       <thead>
         <tr class="mat-mdc-header-row">
-          <th class="mat-mdc-header-cell">الكود</th>
-          <th class="mat-mdc-header-cell">اسم نوع النشاط</th>
-          <th class="mat-mdc-header-cell action-header-cell">الإجراءات</th>
+          <th class="mat-mdc-header-cell">{{ 'common.code' | t }}</th>
+          <th class="mat-mdc-header-cell">{{ 'activity.name' | t }}</th>
+          <th class="mat-mdc-header-cell action-header-cell">{{ 'common.actions' | t }}</th>
         </tr>
       </thead>
 
@@ -49,7 +49,7 @@
               type="button"
               class="btn-action-more"
               [matMenuTriggerFor]="actionMenu"
-              aria-label="خيارات">
+              [attr.aria-label]="'common.options' | t">
               <mat-icon>more_vert</mat-icon>
             </button>
 
@@ -57,11 +57,11 @@
             <mat-menu #actionMenu="matMenu" xPosition="before" class="custom-action-menu">
               <button mat-menu-item (click)="requestEdit(item.id)">
                 <mat-icon class="menu-icon edit-icon">edit</mat-icon>
-                <span>تعديل</span>
+                <span>{{ 'common.edit' | t }}</span>
               </button>
               <button mat-menu-item (click)="requestDelete(item)">
                 <mat-icon class="menu-icon delete-icon">delete_outline</mat-icon>
-                <span>حذف</span>
+                <span>{{ 'common.delete' | t }}</span>
               </button>
             </mat-menu>
 

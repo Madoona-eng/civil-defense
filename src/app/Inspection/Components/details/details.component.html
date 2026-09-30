@@ -1,13 +1,13 @@
 <div class="details-page" dir="rtl">
   <div class="details-header">
     <div>
-      <h2>تفاصيل المعاينة</h2>
+      <h2>{{ 'inspection.details' | t }}</h2>
     </div>
 
     <button type="button" class="close-btn" (click)="close()">×</button>
   </div>
 
-  <div class="loading-box" *ngIf="loading">جاري تحميل بيانات المعاينة...</div>
+  <div class="loading-box" *ngIf="loading">{{ 'inspection.loading' | t }}</div>
 
   <div class="message error" *ngIf="errorMessage">
     {{ errorMessage }}
@@ -17,23 +17,23 @@
     <section class="section-card">
       <div class="section-title">
         <span>📄</span>
-        <h3>بيانات المعاملة</h3>
+        <h3>{{ 'archive.transactionData' | t }}</h3>
       </div>
 
       <div class="info-grid">
         <div class="info-item">
-          <span>كود المعاملة</span>
+          <span>{{ 'common.requestCode' | t }}</span>
           <strong>{{ d.transactionCode }}</strong>
         </div>
 
         <div class="info-item">
-          <span>تاريخ الورود</span>
+          <span>{{ 'common.receivedDate' | t }}</span>
           <strong>{{ d.submissionDate }}</strong>
         </div>
 
         <div class="info-item">
-          <span>حالة الإرجاع</span>
-          <strong>{{ d.isReturned ? "مرتجعة" : "غير مرتجعة" }}</strong>
+          <span>{{ 'common.returnState' | t }}</span>
+          <strong>{{ d.isReturned ? ('inspection.returned' | t) : ('inspection.notReturned' | t) }}</strong>
         </div>
       </div>
     </section>
@@ -41,17 +41,17 @@
     <section class="section-card">
       <div class="section-title">
         <span>📝</span>
-        <h3>بيانات المعاينة</h3>
+        <h3>{{ 'common.inspectionData' | t }}</h3>
       </div>
 
       <div class="info-grid">
         <div class="info-item">
-          <span>القائم بالمعاينة </span>
+          <span>{{ 'common.inspector' | t }}</span>
           <strong>{{ d.inspectorName || "-" }}</strong>
         </div>
 
         <div class="info-item">
-          <span>الرأي</span>
+          <span>{{ 'common.opinion' | t }}</span>
           <strong>{{ getOpinionLabel(d.opinion) }}</strong>
         </div>
       </div>
@@ -60,31 +60,31 @@
     <section class="section-card">
       <div class="section-title">
         <span>💬</span>
-        <h3>الملاحظات</h3>
+        <h3>{{ 'common.notes' | t }}</h3>
       </div>
 
       <div class="empty-box" *ngIf="!d.notes || d.notes.length === 0">
-        لا توجد ملاحظات.
+        {{ 'common.noNotes' | t }}
       </div>
 
       <div class="note-card" *ngFor="let note of d.notes || []">
         <div class="note-row">
-          <span class="note-label">الخطوة:</span>
+          <span class="note-label">{{ 'common.stepLabel' | t }}</span>
           <span class="note-value">{{ getStepLabel(note.processStep) }}</span>
         </div>
 
         <div class="note-row">
-          <span class="note-label">المحتوى:</span>
+          <span class="note-label">{{ 'common.contentLabel' | t }}</span>
           <span class="note-value">{{ note.content }}</span>
         </div>
 
         <div class="note-row">
-          <span class="note-label">الوقت:</span>
+          <span class="note-label">{{ 'common.timeLabel' | t }}</span>
           <span class="note-value">{{ formatDate(note.createdAt) }}</span>
         </div>
 
         <div class="note-row">
-          <span class="note-label">بواسطة:</span>
+          <span class="note-label">{{ 'common.byLabel' | t }}</span>
           <span class="note-value">{{ note.createdByUserName }}</span>
         </div>
       </div>
@@ -93,7 +93,7 @@
     <section class="section-card">
       <div class="section-title">
         <span>📎</span>
-        <h3>المرفقات</h3>
+        <h3>{{ 'common.attachments' | t }}</h3>
       </div>
 
       <div class="attachments-grid">
@@ -104,7 +104,7 @@
           <h4>{{ group.title }}</h4>
 
           <div class="empty-attachment" *ngIf="group.files.length === 0">
-            لا توجد ملفات.
+            {{ 'common.noFiles' | t }}
           </div>
 
           <div class="attachment-item" *ngFor="let file of group.files">
@@ -123,7 +123,7 @@
                   !isImageFile(file.fileName) || hasImageError(file.filePath)
                 "
               >
-                📎 فتح الملف
+                📎 {{ 'common.openFile' | t }}
               </span>
             </a>
 

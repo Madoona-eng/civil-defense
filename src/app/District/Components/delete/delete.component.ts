@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ApiResponse, District } from '../../Models/district';
 import { DistrictService } from '../../Services/district.service';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-district-delete',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SiteTranslationPipe],
   templateUrl: './delete.component.html',
   styleUrl: './delete.component.scss'
 })
@@ -23,7 +24,7 @@ export class DeleteComponent {
 
   confirmDelete(): void {
     if (!this.district?.id) {
-      this.errorMessage = 'لم يتم تحديد المركز / المنطقة';
+      this.errorMessage = SITE_TRANSLATIONS['district.notSelected'];
       return;
     }
 
@@ -35,7 +36,7 @@ export class DeleteComponent {
         this.deleting = false;
 
         if (!res.isSuccess) {
-          this.errorMessage = res.message || 'تعذر حذف المركز / المنطقة';
+          this.errorMessage = res.message || SITE_TRANSLATIONS['district.deleteFailed'];
           return;
         }
 
@@ -49,7 +50,7 @@ export class DeleteComponent {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء حذف المركز / المنطقة';
+          SITE_TRANSLATIONS['district.deleteError'];
       }
     });
   }

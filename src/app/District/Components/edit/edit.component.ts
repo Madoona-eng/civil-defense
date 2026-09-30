@@ -12,11 +12,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-district-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule,MatIconModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, SiteTranslationPipe],
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.scss'
 })
@@ -54,7 +55,7 @@ export class EditComponent implements OnChanges {
         this.loading = false;
 
         if (!res.isSuccess || !res.data) {
-          this.errorMessage = res.message || 'تعذر تحميل بيانات المركز / المنطقة';
+          this.errorMessage = res.message || SITE_TRANSLATIONS['district.loadFailed'];
           return;
         }
 
@@ -71,14 +72,14 @@ export class EditComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تحميل بيانات المركز / المنطقة';
+          SITE_TRANSLATIONS['district.loadError'];
       }
     });
   }
 
   save(): void {
     if (!this.districtId) {
-      this.errorMessage = 'لم يتم تحديد المركز / المنطقة';
+      this.errorMessage = SITE_TRANSLATIONS['district.notSelected'];
       return;
     }
 
@@ -89,12 +90,12 @@ export class EditComponent implements OnChanges {
     const name = this.formModel.name.trim();
 
     if (!Number.isFinite(code) || code <= 0) {
-      this.errorMessage = 'من فضلك أدخلي رقم كود صحيح';
+      this.errorMessage = SITE_TRANSLATIONS['district.invalidCode'];
       return;
     }
 
     if (!name) {
-      this.errorMessage = 'من فضلك أدخلي اسم المركز / المنطقة';
+      this.errorMessage = SITE_TRANSLATIONS['district.nameRequired'];
       return;
     }
 
@@ -110,11 +111,11 @@ export class EditComponent implements OnChanges {
         this.saving = false;
 
         if (!res.isSuccess) {
-          this.errorMessage = res.message || 'لم يتم تعديل المركز / المنطقة';
+          this.errorMessage = res.message || SITE_TRANSLATIONS['district.updateNotCompleted'];
           return;
         }
 
-        this.successMessage = res.message || 'تم تعديل المركز / المنطقة بنجاح';
+        this.successMessage = res.message || SITE_TRANSLATIONS['district.updated'];
 
         setTimeout(() => {
           this.saved.emit();
@@ -128,7 +129,7 @@ export class EditComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تعديل المركز / المنطقة';
+          SITE_TRANSLATIONS['district.updateError'];
       }
     });
   }

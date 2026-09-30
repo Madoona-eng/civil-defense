@@ -6,8 +6,8 @@
       <div class="alert-icon">!</div>
 
       <div class="header-title">
-        <span class="subtitle">تأكيد العملية</span>
-        <h2>حذف الجهة</h2>
+        <span class="subtitle">{{ 'common.actionConfirmation' | t }}</span>
+        <h2>{{ 'entity.delete' | t }}</h2>
       </div>
 
       <button type="button" class="close-btn" (click)="cancel()">&times;</button>
@@ -18,7 +18,7 @@
       <div class="trash-icon">🗑️</div>
 
       <p class="confirm-text">
-        هل أنتِ متأكدة من حذف الجهة 
+        {{ 'entity.deletePrompt' | t }}
         <span class="highlight">"{{ requestingEntity?.name }}"</span>؟
       </p>
 
@@ -34,11 +34,11 @@
           (click)="confirmDelete()" 
           [disabled]="deleting"
         >
-          {{ deleting ? 'جاري الحذف...' : 'نعم، حذف' }}
+          {{ deleting ? ('common.deleting' | t) : ('common.confirmDelete' | t) }}
         </button>
 
         <button type="button" class="btn-cancel" (click)="cancel()">
-          إلغاء
+          {{ 'common.cancel' | t }}
         </button>
       </div>
     </div>

@@ -9,11 +9,12 @@ import {
 } from '../../Models/final-approval';
 
 import { FinalApprovalService } from '../../Services/final-approval.service';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-final-approval-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SiteTranslationPipe],
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.scss'
 })
@@ -102,7 +103,7 @@ export class EditComponent implements OnChanges {
     this.successMessage = '';
 
     if (!this.item?.id) {
-      this.errorMessage = 'لم يتم تحديد معاملة الموافقة النهائية';
+      this.errorMessage = SITE_TRANSLATIONS['final.notSelected'];
       return;
     }
 
@@ -143,11 +144,11 @@ export class EditComponent implements OnChanges {
         this.saving = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || 'تعذر حفظ قرار الموافقة النهائية';
+          this.errorMessage = response.message || SITE_TRANSLATIONS['final.decisionSaveFailed'];
           return;
         }
 
-        this.successMessage = response.message || 'تم إرسال خطوة الموافقة النهائية بنجاح';
+        this.successMessage = response.message || SITE_TRANSLATIONS['final.decisionSaved'];
 
         setTimeout(() => {
           this.saved.emit();
@@ -161,14 +162,14 @@ export class EditComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء حفظ قرار الموافقة النهائية';
+          SITE_TRANSLATIONS['final.decisionSaveError'];
       }
     });
   }
 
   validateForm(): boolean {
     if (!this.formModel.reviewStatus) {
-      this.errorMessage = 'من فضلك اختاري حالة القرار';
+      this.errorMessage = SITE_TRANSLATIONS['final.decisionRequired'];
       return false;
     }
 
@@ -176,7 +177,7 @@ export class EditComponent implements OnChanges {
       this.formModel.reviewStatus === 'Rejected' &&
       !this.formModel.rejectionNote.trim()
     ) {
-      this.errorMessage = 'يجب إدخال سبب الرفض';
+      this.errorMessage = SITE_TRANSLATIONS['final.rejectionNoteRequired'];
       return false;
     }
 

@@ -1,27 +1,27 @@
 <div class="licensing-edit" dir="rtl">
   <div class="page-header">
     <div>
-      <h2>تعديل ترخيص محل</h2>
-      <p>تعديل بيانات المنشأة، الجهة، نوع النشاط، والمرفقات المطلوبة.</p>
+      <h2>{{ 'licensing.editTitle' | t }}</h2>
+      <p>{{ 'licensing.editDescription' | t }}</p>
     </div>
   </div>
 
   <div class="form-card">
     <div class="loading-box" *ngIf="loading">
-      جاري تحميل البيانات...
+      {{ 'common.loadingDataWithEllipsis' | t }}
     </div>
 
     <ng-container *ngIf="!loading">
       <div class="form-grid">
         <div class="field">
-          <label>تاريخ التقديم</label>
+          <label>{{ 'common.submissionDate' | t }}</label>
           <input type="date" [(ngModel)]="formModel.submissionDate" name="submissionDate" />
         </div>
 
         <div class="field">
-          <label>الجهة</label>
+          <label>{{ 'common.entity' | t }}</label>
           <select [(ngModel)]="formModel.requestingEntityId" name="requestingEntityId">
-            <option value="">اختاري الجهة</option>
+            <option value="">{{ 'common.chooseEntity' | t }}</option>
             <option *ngFor="let item of requestingEntities" [value]="item.id">
               {{ item.name }}
             </option>
@@ -29,19 +29,19 @@
         </div>
 
         <div class="field">
-          <label>اسم المنشأة</label>
+          <label>{{ 'common.establishmentName' | t }}</label>
           <input type="text" [(ngModel)]="formModel.establishmentName" name="establishmentName" />
         </div>
 
         <div class="field">
-          <label>عنوان المنشأة</label>
+          <label>{{ 'common.establishmentAddress' | t }}</label>
           <input type="text" [(ngModel)]="formModel.establishmentAddress" name="establishmentAddress" />
         </div>
 
         <div class="field">
-          <label>المركز / المنطقة</label>
+          <label>{{ 'common.district' | t }}</label>
           <select [(ngModel)]="formModel.districtId" name="districtId">
-            <option value="">اختاري المركز / المنطقة</option>
+            <option value="">{{ 'common.chooseDistrict' | t }}</option>
             <option *ngFor="let item of districts" [value]="item.id">
               {{ item.name }}
             </option>
@@ -49,9 +49,9 @@
         </div>
 
         <div class="field">
-          <label>نوع النشاط</label>
+          <label>{{ 'common.activity' | t }}</label>
           <select [(ngModel)]="formModel.activityTypeId" name="activityTypeId">
-            <option value="">اختاري نوع النشاط</option>
+            <option value="">{{ 'common.chooseActivity' | t }}</option>
             <option *ngFor="let item of activityTypes" [value]="item.id">
               {{ item.name }}
             </option>
@@ -59,47 +59,47 @@
         </div>
 
         <div class="field">
-          <label>اسم مقدم الطلب</label>
+          <label>{{ 'common.applicantName' | t }}</label>
           <input type="text" [(ngModel)]="formModel.applicantName" name="applicantName" />
         </div>
 
         <div class="field">
-          <label>صفة مقدم الطلب</label>
+          <label>{{ 'common.applicantRole' | t }}</label>
           <input type="text" [(ngModel)]="formModel.applicantRole" name="applicantRole" />
         </div>
 
         <div class="field">
-          <label>الرقم القومي</label>
+          <label>{{ 'common.nationalId' | t }}</label>
           <input type="text" [(ngModel)]="formModel.nationalId" name="nationalId" />
         </div>
 
         <div class="field">
-          <label>المدير المسؤول</label>
+          <label>{{ 'common.responsibleManager' | t }}</label>
           <input type="text" [(ngModel)]="formModel.responsibleManager" name="responsibleManager" />
         </div>
 
         <div class="field">
-          <label>رقم الهاتف</label>
+          <label>{{ 'common.phone' | t }}</label>
           <input type="text" [(ngModel)]="formModel.phone" name="phone" />
         </div>
 
         <div class="field">
-          <label>خطابات الجهة</label>
+          <label>{{ 'common.entityLetters' | t }}</label>
           <input type="file" multiple (change)="onFilesSelected($event, 'entityLetters')" />
         </div>
 
         <div class="field">
-          <label>مستندات الإثبات</label>
+          <label>{{ 'common.proofDocuments' | t }}</label>
           <input type="file" multiple (change)="onFilesSelected($event, 'proofDocuments')" />
         </div>
 
         <div class="field">
-          <label>التقارير الهندسية</label>
+          <label>{{ 'common.engineeringReports' | t }}</label>
           <input type="file" multiple (change)="onFilesSelected($event, 'engineeringReports')" />
         </div>
 
         <div class="field">
-          <label>مرفقات أخرى</label>
+          <label>{{ 'common.otherAttachments' | t }}</label>
           <input type="file" multiple (change)="onFilesSelected($event, 'otherAttachments')" />
         </div>
       </div>
@@ -114,11 +114,11 @@
 
       <div class="actions">
         <button type="button" class="save-btn" (click)="save()" [disabled]="saving">
-          {{ saving ? 'جاري الحفظ...' : 'حفظ التعديل' }}
+          {{ saving ? ('common.saving' | t) : ('common.saveEdit' | t) }}
         </button>
 
         <button type="button" class="cancel-btn" (click)="cancel()">
-          إلغاء
+          {{ 'common.cancel' | t }}
         </button>
       </div>
     </ng-container>

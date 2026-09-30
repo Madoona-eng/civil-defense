@@ -12,11 +12,12 @@ import { LicensingProcessService } from '../../Services/licensing-process.servic
 import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
 import { DistrictService } from '../../../District/Services/district.service';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
+import { SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-licensing-process-add',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SiteTranslationPipe],
   templateUrl: './add.component.html',
   styleUrl: './add.component.scss'
 })
@@ -167,9 +168,7 @@ export class AddComponent implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (!this.validateForm()) {
-      return;
-    }
+    
 
     const formData = new FormData();
 
@@ -231,64 +230,7 @@ export class AddComponent implements OnInit {
     });
   }
 
-  validateForm(): boolean {
-    if (!this.formModel.submissionDate) {
-      this.errorMessage = 'من فضلك أدخلي تاريخ التقديم';
-      return false;
-    }
-
-    if (!this.formModel.requestingEntityId) {
-      this.errorMessage = 'من فضلك اختاري الجهة';
-      return false;
-    }
-
-    if (!this.formModel.establishmentName.trim()) {
-      this.errorMessage = 'من فضلك أدخلي اسم المنشأة';
-      return false;
-    }
-
-    if (!this.formModel.establishmentAddress.trim()) {
-      this.errorMessage = 'من فضلك أدخلي عنوان المنشأة';
-      return false;
-    }
-
-    if (!this.formModel.districtId) {
-      this.errorMessage = 'من فضلك اختاري المركز / المنطقة';
-      return false;
-    }
-
-    if (!this.formModel.activityTypeId) {
-      this.errorMessage = 'من فضلك اختاري نوع النشاط';
-      return false;
-    }
-
-    if (!this.formModel.applicantName.trim()) {
-      this.errorMessage = 'من فضلك أدخلي اسم مقدم الطلب';
-      return false;
-    }
-
-    if (!this.formModel.applicantRole.trim()) {
-      this.errorMessage = 'من فضلك أدخلي صفة مقدم الطلب';
-      return false;
-    }
-
-    if (!this.formModel.nationalId.trim()) {
-      this.errorMessage = 'من فضلك أدخلي الرقم القومي';
-      return false;
-    }
-
-    if (!this.formModel.responsibleManager.trim()) {
-      this.errorMessage = 'من فضلك أدخلي اسم المدير المسؤول';
-      return false;
-    }
-
-    if (!this.formModel.phone.trim()) {
-      this.errorMessage = 'من فضلك أدخلي رقم الهاتف';
-      return false;
-    }
-
-    return true;
-  }
+ 
 
   cancel(): void {
     this.cancelled.emit();

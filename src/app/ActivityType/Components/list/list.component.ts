@@ -6,11 +6,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [CommonModule,   MatIconModule, MatMenuModule, MatButtonModule, MatProgressSpinnerModule],
+  imports: [CommonModule, MatIconModule, MatMenuModule, MatButtonModule, MatProgressSpinnerModule, SiteTranslationPipe],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
@@ -37,7 +38,7 @@ export class ListComponent implements OnInit {
         this.isLoading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || 'تعذر تحميل أنواع النشاط';
+          this.errorMessage = response.message || SITE_TRANSLATIONS['activity.listLoadFailed'];
           return;
         }
 
@@ -51,7 +52,7 @@ export class ListComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تحميل أنواع النشاط';
+          SITE_TRANSLATIONS['activity.listLoadError'];
       }
     });
   }

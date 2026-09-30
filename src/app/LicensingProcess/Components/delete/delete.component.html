@@ -1,15 +1,15 @@
 <div class="delete-popup" dir="rtl">
   <div class="delete-icon">🗑️</div>
 
-  <h2>حذف ترخيص محل</h2>
+  <h2>{{ 'licensing.deleteTitle' | t }}</h2>
 
   <p>
-    هل أنتِ متأكدة من حذف طلب ترخيص
+    {{ 'licensing.deletePrompt' | t }}
     <strong>{{ item?.establishmentName }}</strong>؟
   </p>
 
   <div class="transaction-card" *ngIf="item">
-    <span>كود المعاملة</span>
+    <span>{{ 'common.requestCode' | t }}</span>
     <strong>{{ item.transactionCode }}</strong>
   </div>
 
@@ -24,11 +24,11 @@
       (click)="confirmDelete()"
       [disabled]="deleting"
     >
-      {{ deleting ? 'جاري الحذف...' : 'نعم، حذف' }}
+      {{ deleting ? ('common.deleting' | t) : ('common.confirmDelete' | t) }}
     </button>
 
     <button type="button" class="cancel-btn" (click)="cancel()">
-      إلغاء
+      {{ 'common.cancel' | t }}
     </button>
   </div>
 </div>

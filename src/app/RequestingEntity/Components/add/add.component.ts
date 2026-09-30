@@ -6,11 +6,12 @@ import {
   CreateRequestingEntityRequest
 } from '../../Models/requesting-entity';
 import { RequestingEntityService } from '../../Services/requesting-entity.service';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-requesting-entity-add',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SiteTranslationPipe],
   templateUrl: './add.component.html',
   styleUrl: './add.component.scss'
 })
@@ -45,12 +46,12 @@ export class AddComponent {
 
     // التحقق من أن الكود موجود وأكبر من الصفر (لا يسمح بالصفر أو السالب)
     if (code === null || code === undefined || code <= 0) {
-      this.errorMessage = 'من فضلك أدخلي كود جهة صحيح (رقم أكبر من الصفر)';
+      this.errorMessage = SITE_TRANSLATIONS['entity.invalidCode'];
       return;
     }
 
     if (!name) {
-      this.errorMessage = 'من فضلك أدخلي اسم الجهة';
+      this.errorMessage = SITE_TRANSLATIONS['entity.nameRequired'];
       return;
     }
 
@@ -66,11 +67,11 @@ export class AddComponent {
         this.saving = false;
 
         if (!res.isSuccess) {
-          this.errorMessage = res.message || 'لم يتم إنشاء الجهة';
+          this.errorMessage = res.message || SITE_TRANSLATIONS['entity.createFailed'];
           return;
         }
 
-        this.successMessage = res.message || 'تم إنشاء الجهة بنجاح';
+        this.successMessage = res.message || SITE_TRANSLATIONS['entity.createSucceeded'];
 
         this.formModel = {
           code: 0,
@@ -89,7 +90,7 @@ export class AddComponent {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء إضافة الجهة';
+          SITE_TRANSLATIONS['entity.createError'];
       }
     });
   }

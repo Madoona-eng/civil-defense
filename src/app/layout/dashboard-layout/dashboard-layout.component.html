@@ -3,8 +3,8 @@
     <div class="sidebar-brand">
       <div class="logo">🛡️</div>
       <div class="brand-text">
-        <h3>الحماية المدنية</h3>
-        <span>لوحة التحكم</span>
+        <h3>{{ 'app.civilDefense' | t }}</h3>
+        <span>{{ 'app.dashboard' | t }}</span>
       </div>
       <button class="collapse-btn" type="button" (click)="toggleSidebar()">
         <lucide-angular
@@ -19,89 +19,90 @@
         *ngIf="hasRole(['Admin'])"
         routerLink="/civil-defense/activity-types"
         routerLinkActive="active"
-        [matTooltip]="isCollapsed ? 'أنواع النشاط' : ''"
+        [matTooltip]="isCollapsed ? ('app.activityTypes' | t) : ''"
         matTooltipPosition="left"
       >
         <lucide-angular class="icon" [img]="Tags" [size]="18"></lucide-angular>
-        <span class="label">أنواع النشاط</span>
+        <span class="label">{{ 'app.activityTypes' | t }}</span>
       </a>
 
       <a
         *ngIf="hasRole(['Admin'])"
         routerLink="/civil-defense/requesting-entities"
         routerLinkActive="active"
-        [matTooltip]="isCollapsed ? 'الجهات الطالبة' : ''"
+        [matTooltip]="isCollapsed ? ('app.requestingEntities' | t) : ''"
         matTooltipPosition="left"
       >
         <lucide-angular class="icon" [img]="Building2" [size]="18"></lucide-angular>
-        <span class="label">الجهات الطالبة</span>
+        <span class="label">{{ 'app.requestingEntities' | t }}</span>
       </a>
 
       <a
         *ngIf="hasRole(['Admin'])"
         routerLink="/civil-defense/districts"
         routerLinkActive="active"
-        [matTooltip]="isCollapsed ? 'المراكز' : ''"
+        [matTooltip]="isCollapsed ? ('app.districts' | t) : ''"
         matTooltipPosition="left"
       >
         <lucide-angular class="icon" [img]="MapPin" [size]="18"></lucide-angular>
-        <span class="label">المراكز</span>
+        <span class="label">{{ 'app.districts' | t }}</span>
       </a>
 
       <a
         *ngIf="hasRole(['DataEntry'])"
         routerLink="/civil-defense/licensing-processes"
         routerLinkActive="active"
-        [matTooltip]="isCollapsed ? 'تراخيص المحال' : ''"
+        [matTooltip]="isCollapsed ? ('app.shopLicenses' | t) : ''"
         matTooltipPosition="left"
       >
         <lucide-angular class="icon" [img]="ClipboardList" [size]="18"></lucide-angular>
-        <span class="label">تراخيص المحال</span>
+        <span class="label">{{ 'app.shopLicenses' | t }}</span>
       </a>
 
-      <a
-        *ngIf="hasRole(['Admin'])"
-        routerLink="/civil-defense/shop-licenses"
-        routerLinkActive="active"
-        [matTooltip]="isCollapsed ? 'التراخيص' : ''"
-        matTooltipPosition="left"
-      >
-        <lucide-angular class="icon" [img]="FileCheck" [size]="18"></lucide-angular>
-        <span class="label">التراخيص</span>
-      </a>
-
+    
       <a
         *ngIf="hasRole(['Inspector'])"
         routerLink="/civil-defense/inspection"
         routerLinkActive="active"
-        [matTooltip]="isCollapsed ? 'المعاينات' : ''"
+        [matTooltip]="isCollapsed ? ('app.inspections' | t) : ''"
         matTooltipPosition="left"
       >
         <lucide-angular class="icon" [img]="ClipboardCheck" [size]="18"></lucide-angular>
-        <span class="label">المعاينات</span>
+        <span class="label">{{ 'app.inspections' | t }}</span>
       </a>
 
       <a
         *ngIf="hasRole(['FinalApprover'])"
         routerLink="/civil-defense/final-approval"
         routerLinkActive="active"
-        [matTooltip]="isCollapsed ? 'الموافقة النهائية' : ''"
+        [matTooltip]="isCollapsed ? ('app.finalApproval' | t) : ''"
         matTooltipPosition="left"
       >
         <lucide-angular class="icon" [img]="ShieldCheck" [size]="18"></lucide-angular>
-        <span class="label">الموافقة النهائية</span>
+        <span class="label">{{ 'app.finalApproval' | t }}</span>
       </a>
 
       <a
         *ngIf="hasRole(['Archive'])"
         routerLink="/civil-defense/archive"
         routerLinkActive="active"
-        [matTooltip]="isCollapsed ? 'الأرشيف العام' : ''"
+        [matTooltip]="isCollapsed ? ('app.archive' | t) : ''"
         matTooltipPosition="left"
       >
         <lucide-angular class="icon" [img]="Archive" [size]="18"></lucide-angular>
-        <span class="label">الأرشيف العام</span>
+        <span class="label">{{ 'app.archive' | t }}</span>
       </a>
+        <a
+        *ngIf="hasRole(['Admin'])"
+        routerLink="/civil-defense/shop-licenses"
+        routerLinkActive="active"
+        [matTooltip]="isCollapsed ? ('app.licenses' | t) : ''"
+        matTooltipPosition="left"
+      >
+        <lucide-angular class="icon" [img]="FileCheck" [size]="18"></lucide-angular>
+        <span class="label">{{ 'app.licenses' | t }}</span>
+      </a>
+
     </nav>
 
     <button
@@ -114,7 +115,7 @@
       (click)="logout()"
     >
       <lucide-angular [img]="LogOut" [size]="18"></lucide-angular>
-      تسجيل الخروج
+      {{ 'app.logout' | t }}
     </button>
 
     <button
@@ -124,7 +125,7 @@
       class="logout-btn-collapsed"
       type="button"
       (click)="logout()"
-      matTooltip="تسجيل الخروج"
+      [matTooltip]="'app.logout' | t"
       matTooltipPosition="left"
     >
       <lucide-angular [img]="LogOut" [size]="18"></lucide-angular>
@@ -135,14 +136,14 @@
     <header class="dashboard-header">
       <div>
         <h2>{{ title }}</h2>
-        <p>مرحبًا {{ username }}، يمكنك إدارة الطلبات والمعاينات من هنا</p>
+        <p>{{ 'dashboard.welcome' | t: { username: username } }}</p>
       </div>
 
       <div class="header-actions">
         <div class="user-card">
           <div class="user-avatar">👤</div>
           <div>
-            <span>مرحبًا</span>
+            <span>{{ 'app.greeting' | t }}</span>
             <strong>{{ username }}</strong>
           </div>
         </div>

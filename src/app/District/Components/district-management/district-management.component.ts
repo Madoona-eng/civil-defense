@@ -15,12 +15,14 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-district-management',
   standalone: true,
   imports: [
     CommonModule,
+    SiteTranslationPipe,
     AddComponent,
     ListComponent,
     EditComponent,

@@ -9,15 +9,15 @@
         <mat-icon>location_city</mat-icon>
       </div>
       <div class="header-text">
-        <span class="eyebrow">إدارة النظام</span>
-        <h1>إدارة المراكز / المناطق</h1>
-        <p>من هنا يمكنك إضافة وتعديل وحذف المراكز أو المناطق المسجلة في النظام</p>
+        <span class="eyebrow">{{ 'common.systemManagement' | t }}</span>
+        <h1>{{ 'district.manage' | t }}</h1>
+        <p>{{ 'district.description' | t }}</p>
       </div>
     </div>
 
     <button type="button" class="add-btn" (click)="openAddPopup()">
       <mat-icon class="add-symbol">add</mat-icon>
-      <span>إضافة مركز / منطقة</span>
+      <span>{{ 'district.add' | t }}</span>
     </button>
   </header>
 
@@ -28,7 +28,7 @@
     <section class="mat-table-container">
 
       <div class="table-header-row">
-        <h3>قائمة المراكز والمناطق المسجلة</h3>
+        <h3>{{ 'district.listRegistered' | t }}</h3>
       </div>
 
       <div class="table-scroll">
@@ -52,12 +52,12 @@
             <mat-icon>add_location_alt</mat-icon>
           </div>
           <div class="popup-title-text">
-            <span>إدارة المناطق</span>
-            <h2>إضافة مركز / منطقة جديدة</h2>
+            <span>{{ 'district.manageLabel' | t }}</span>
+            <h2>{{ 'district.addNew' | t }}</h2>
           </div>
         </div>
 
-        <button type="button" class="popup-close" (click)="closeAddPopup()" aria-label="إغلاق">
+        <button type="button" class="popup-close" (click)="closeAddPopup()" [attr.aria-label]="'common.close' | t">
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -82,12 +82,12 @@
             <mat-icon>edit_location_alt</mat-icon>
           </div>
           <div class="popup-title-text">
-            <span>إدارة المناطق</span>
-            <h2>تعديل المركز / المنطقة</h2>
+            <span>{{ 'district.manageLabel' | t }}</span>
+            <h2>{{ 'district.editName' | t }}</h2>
           </div>
         </div>
 
-        <button type="button" class="popup-close" (click)="closeEditPopup()" aria-label="إغلاق">
+        <button type="button" class="popup-close" (click)="closeEditPopup()" [attr.aria-label]="'common.close' | t">
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -113,12 +113,12 @@
             <mat-icon>priority_high</mat-icon>
           </div>
           <div class="popup-title-text">
-            <span>تأكيد العملية</span>
-            <h2>حذف المركز / المنطقة</h2>
+            <span>{{ 'common.actionConfirmation' | t }}</span>
+            <h2>{{ 'district.delete' | t }}</h2>
           </div>
         </div>
 
-        <button type="button" class="popup-close" (click)="closeDeletePopup()" aria-label="إغلاق">
+        <button type="button" class="popup-close" (click)="closeDeletePopup()" [attr.aria-label]="'common.close' | t">
           <mat-icon>close</mat-icon>
         </button>
       </div>

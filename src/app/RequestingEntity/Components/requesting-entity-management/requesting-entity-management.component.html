@@ -9,15 +9,15 @@
         <mat-icon>account_balance</mat-icon>
       </div>
       <div class="header-text">
-        <span class="eyebrow">إدارة النظام</span>
-        <h1>إدارة الجهات</h1>
-        <p>من هنا يمكنك إضافة وتعديل وحذف الجهات المسجلة في النظام</p>
+        <span class="eyebrow">{{ 'common.systemManagement' | t }}</span>
+        <h1>{{ 'entity.manage' | t }}</h1>
+        <p>{{ 'entity.description' | t }}</p>
       </div>
     </div>
 
     <button type="button" class="add-btn" (click)="openAddPopup()">
       <mat-icon class="add-symbol">add</mat-icon>
-      <span>إضافة جهة</span>
+      <span>{{ 'entity.add' | t }}</span>
     </button>
   </header>
 
@@ -28,7 +28,7 @@
     <section class="mat-table-container">
 
       <div class="table-header-row">
-        <h3>قائمة الجهات المسجلة</h3>
+        <h3>{{ 'entity.listRegistered' | t }}</h3>
       </div>
 
       <div class="table-scroll">
@@ -52,12 +52,12 @@
             <mat-icon>add</mat-icon>
           </div>
           <div class="popup-title-text">
-            <span>إدارة الجهات</span>
-            <h2>إضافة جهة جديدة</h2>
+            <span>{{ 'entity.manage' | t }}</span>
+            <h2>{{ 'entity.addNew' | t }}</h2>
           </div>
         </div>
 
-        <button type="button" class="popup-close" (click)="closeAddPopup()" aria-label="إغلاق">
+        <button type="button" class="popup-close" (click)="closeAddPopup()" [attr.aria-label]="'common.close' | t">
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -82,12 +82,12 @@
             <mat-icon>edit</mat-icon>
           </div>
           <div class="popup-title-text">
-            <span>إدارة الجهات</span>
-            <h2>تعديل بيانات الجهة</h2>
+            <span>{{ 'entity.manage' | t }}</span>
+            <h2>{{ 'entity.editDetails' | t }}</h2>
           </div>
         </div>
 
-        <button type="button" class="popup-close" (click)="closeEditPopup()" aria-label="إغلاق">
+        <button type="button" class="popup-close" (click)="closeEditPopup()" [attr.aria-label]="'common.close' | t">
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -113,12 +113,12 @@
             <mat-icon>priority_high</mat-icon>
           </div>
           <div class="popup-title-text">
-            <span>تأكيد العملية</span>
-            <h2>حذف الجهة</h2>
+            <span>{{ 'common.actionConfirmation' | t }}</span>
+            <h2>{{ 'entity.delete' | t }}</h2>
           </div>
         </div>
 
-        <button type="button" class="popup-close" (click)="closeDeletePopup()" aria-label="إغلاق">
+        <button type="button" class="popup-close" (click)="closeDeletePopup()" [attr.aria-label]="'common.close' | t">
           <mat-icon>close</mat-icon>
         </button>
       </div>

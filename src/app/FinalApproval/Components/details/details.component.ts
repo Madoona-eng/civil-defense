@@ -8,6 +8,7 @@ import {
 } from '../../Models/final-approval';
 
 import { FinalApprovalService } from '../../Services/final-approval.service';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 interface AttachmentGroup {
   title: string;
@@ -17,7 +18,7 @@ interface AttachmentGroup {
 @Component({
   selector: 'app-final-approval-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SiteTranslationPipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss'
 })
@@ -50,7 +51,7 @@ export class DetailsComponent implements OnChanges {
         this.loading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || 'تعذر تحميل تفاصيل الموافقة النهائية';
+          this.errorMessage = response.message || SITE_TRANSLATIONS['final.loadFailed'];
           return;
         }
 
@@ -64,7 +65,7 @@ export class DetailsComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تحميل تفاصيل الموافقة النهائية';
+          SITE_TRANSLATIONS['final.loadError'];
       }
     });
   }
@@ -75,19 +76,19 @@ export class DetailsComponent implements OnChanges {
 
   getStepLabel(step: string | null | undefined): string {
     if (step === 'Inspection') {
-      return 'المعاينة';
+      return SITE_TRANSLATIONS['step.inspection'];
     }
 
     if (step === 'FinalApproval') {
-      return 'الموافقة النهائية';
+      return SITE_TRANSLATIONS['step.finalApproval'];
     }
 
     if (step === 'Archive') {
-      return 'الأرشيف';
+      return SITE_TRANSLATIONS['step.archive'];
     }
 
     if (step === 'NewLicense') {
-      return 'ترخيص جديد';
+      return SITE_TRANSLATIONS['step.newLicense'];
     }
 
     return step || '-';
@@ -95,11 +96,11 @@ export class DetailsComponent implements OnChanges {
 
   getOpinionLabel(opinion: string | null | undefined): string {
     if (opinion === 'Compliant') {
-      return 'مطابق / مستوفي';
+      return SITE_TRANSLATIONS['final.opinionCompliant'];
     }
 
     if (opinion === 'NonCompliant') {
-      return 'غير مطابق / غير مستوفي';
+      return SITE_TRANSLATIONS['final.opinionNonCompliant'];
     }
 
     return opinion || '-';
@@ -107,11 +108,11 @@ export class DetailsComponent implements OnChanges {
 
   getFinalStatusLabel(status: string | null | undefined): string {
     if (status === 'Accepted') {
-      return 'مقبول';
+      return SITE_TRANSLATIONS['review.accepted'];
     }
 
     if (status === 'Rejected') {
-      return 'مرفوض';
+      return SITE_TRANSLATIONS['review.rejected'];
     }
 
     return status || '-';
@@ -139,23 +140,23 @@ export class DetailsComponent implements OnChanges {
   getAttachmentGroups(details: FinalApprovalDetails): AttachmentGroup[] {
     return [
       {
-        title: 'خطابات الجهة',
+        title: SITE_TRANSLATIONS['common.entityLetters'],
         files: details.entityLetters || []
       },
       {
-        title: 'مستندات الإثبات',
+        title: SITE_TRANSLATIONS['common.proofDocuments'],
         files: details.proofDocuments || []
       },
       {
-        title: 'التقارير الهندسية',
+        title: SITE_TRANSLATIONS['common.engineeringReports'],
         files: details.engineeringReports || []
       },
       {
-        title: 'تقارير المعاينة',
+        title: SITE_TRANSLATIONS['common.inspectionReports'],
         files: details.inspectionReports || []
       },
       {
-        title: 'مرفقات أخرى',
+        title: SITE_TRANSLATIONS['common.otherAttachments'],
         files: details.otherAttachments || []
       }
     ];

@@ -1,15 +1,15 @@
 <div class="details-page" dir="rtl">
   <div class="details-header">
     <div>
-      <h2>تفاصيل ترخيص المحل</h2>
-      <p *ngIf="details">كود المعاملة: {{ details.transactionCode }}</p>
+      <h2>{{ 'licensing.detailsTitle' | t }}</h2>
+      <p *ngIf="details">{{ 'common.requestCode' | t }}: {{ details.transactionCode }}</p>
     </div>
 
     <button type="button" class="close-btn" (click)="close()">×</button>
   </div>
 
   <div class="loading-box" *ngIf="loading">
-    جاري تحميل بيانات المعاملة...
+    {{ 'common.loadingDataWithEllipsis' | t }}
   </div>
 
   <div class="message error" *ngIf="errorMessage">
@@ -18,119 +18,119 @@
 
   <ng-container *ngIf="!loading && details as d">
     <section class="section-card">
-      <h3>بيانات المعاملة</h3>
+      <h3>{{ 'archive.transactionData' | t }}</h3>
 
       <div class="info-grid">
         <div>
-          <span>كود المعاملة</span>
+          <span>{{ 'common.requestCode' | t }}</span>
           <strong>{{ d.transactionCode }}</strong>
         </div>
 
         <div>
-          <span>المرحلة الحالية</span>
+          <span>{{ 'common.currentStep' | t }}</span>
           <strong>{{ getStepLabel(d.currentStep) }}</strong>
         </div>
 
         <div>
-          <span>تاريخ التقديم</span>
+          <span>{{ 'common.submissionDate' | t }}</span>
           <strong>{{ d.submissionDate }}</strong>
         </div>
 
         <div>
-          <span>تم الإنشاء بواسطة</span>
+          <span>{{ 'common.createdBy' | t }}</span>
           <strong>{{ d.createdBy }}</strong>
         </div>
       </div>
     </section>
 
     <section class="section-card">
-      <h3>بيانات المنشأة</h3>
+      <h3>{{ 'common.establishmentData' | t }}</h3>
 
       <div class="info-grid">
         <div>
-          <span>اسم المنشأة</span>
+          <span>{{ 'common.establishment' | t }}</span>
           <strong>{{ d.establishmentName }}</strong>
         </div>
 
         <div>
-          <span>عنوان المنشأة</span>
+          <span>{{ 'common.address' | t }}</span>
           <strong>{{ d.establishmentAddress }}</strong>
         </div>
 
         <div>
-          <span>الجهة</span>
+          <span>{{ 'common.entity' | t }}</span>
           <strong>{{ d.requestingEntity }}</strong>
         </div>
 
         <div>
-          <span>المركز / المنطقة</span>
+          <span>{{ 'district.name' | t }}</span>
           <strong>{{ d.district }}</strong>
         </div>
 
         <div>
-          <span>نوع النشاط</span>
+          <span>{{ 'common.activity' | t }}</span>
           <strong>{{ d.activityType }}</strong>
         </div>
       </div>
     </section>
 
     <section class="section-card">
-      <h3>بيانات مقدم الطلب</h3>
+      <h3>{{ 'common.applicantData' | t }}</h3>
 
       <div class="info-grid">
         <div>
-          <span>اسم مقدم الطلب</span>
+          <span>{{ 'common.applicantName' | t }}</span>
           <strong>{{ d.applicantName }}</strong>
         </div>
 
         <div>
-          <span>صفة مقدم الطلب</span>
+          <span>{{ 'common.applicantRole' | t }}</span>
           <strong>{{ d.applicantRole }}</strong>
         </div>
 
         <div>
-          <span>الرقم القومي</span>
+          <span>{{ 'common.nationalId' | t }}</span>
           <strong>{{ d.nationalId }}</strong>
         </div>
 
         <div>
-          <span>المدير المسؤول</span>
+          <span>{{ 'common.responsibleManager' | t }}</span>
           <strong>{{ d.responsibleManager }}</strong>
         </div>
 
         <div>
-          <span>رقم الهاتف</span>
+          <span>{{ 'common.phone' | t }}</span>
           <strong>{{ d.phone }}</strong>
         </div>
       </div>
     </section>
 
     <section class="section-card">
-      <h3>بيانات المعاينة</h3>
+      <h3>{{ 'common.inspectionData' | t }}</h3>
 
       <div class="info-grid">
         <div>
-          <span>اسم المعاين</span>
+          <span>{{ 'common.inspectorName' | t }}</span>
           <strong>{{ d.inspectorName || '-' }}</strong>
         </div>
 
         <div>
-          <span>الرأي</span>
+          <span>{{ 'common.opinion' | t }}</span>
           <strong>{{ getOpinionLabel(d.opinion) }}</strong>
         </div>
 
         <div>
-          <span>تمت المعاينة بواسطة</span>
+          <span>{{ 'archive.inspectedBy' | t }}</span>
           <strong>{{ d.inspectedBy || '-' }}</strong>
         </div>
       </div>
     </section>
 
     <section class="section-card">
-      <h3>الملاحظات</h3>
+      <h3>{{ 'common.notes' | t }}</h3>
 
       <div class="empty-box" *ngIf="!d.notes || d.notes.length === 0">
-        لا توجد ملاحظات.
+        {{ 'common.noNotes' | t }}
       </div>
 
       <div class="note-card" *ngFor="let note of d.notes || []">
@@ -140,14 +140,14 @@
     </section>
 
     <section class="section-card">
-      <h3>المرفقات</h3>
+      <h3>{{ 'common.attachments' | t }}</h3>
 
       <div class="attachments-grid">
         <div class="attachment-group">
-          <h4>خطابات الجهة</h4>
+          <h4>{{ 'common.entityLetters' | t }}</h4>
 
           <div class="empty-attachment" *ngIf="!d.entityLetters || d.entityLetters.length === 0">
-            لا توجد ملفات.
+            {{ 'common.noFiles' | t }}
           </div>
 
           <div class="attachment-item" *ngFor="let file of d.entityLetters || []">
@@ -160,7 +160,7 @@
               />
 
               <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
-                📎 فتح الملف
+                📎 {{ 'common.openFile' | t }}
               </span>
             </a>
 
@@ -169,10 +169,10 @@
         </div>
 
         <div class="attachment-group">
-          <h4>مستندات الإثبات</h4>
+          <h4>{{ 'common.proofDocuments' | t }}</h4>
 
           <div class="empty-attachment" *ngIf="!d.proofDocuments || d.proofDocuments.length === 0">
-            لا توجد ملفات.
+            {{ 'common.noFiles' | t }}
           </div>
 
           <div class="attachment-item" *ngFor="let file of d.proofDocuments || []">
@@ -185,7 +185,7 @@
               />
 
               <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
-                📎 فتح الملف
+                📎 {{ 'common.openFile' | t }}
               </span>
             </a>
 
@@ -194,10 +194,10 @@
         </div>
 
         <div class="attachment-group">
-          <h4>التقارير الهندسية</h4>
+          <h4>{{ 'common.engineeringReports' | t }}</h4>
 
           <div class="empty-attachment" *ngIf="!d.engineeringReports || d.engineeringReports.length === 0">
-            لا توجد ملفات.
+            {{ 'common.noFiles' | t }}
           </div>
 
           <div class="attachment-item" *ngFor="let file of d.engineeringReports || []">
@@ -210,7 +210,7 @@
               />
 
               <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
-                📎 فتح الملف
+                📎 {{ 'common.openFile' | t }}
               </span>
             </a>
 
@@ -219,10 +219,10 @@
         </div>
 
         <div class="attachment-group">
-          <h4>تقارير المعاينة</h4>
+          <h4>{{ 'common.inspectionReports' | t }}</h4>
 
           <div class="empty-attachment" *ngIf="!d.inspectionReports || d.inspectionReports.length === 0">
-            لا توجد ملفات.
+            {{ 'common.noFiles' | t }}
           </div>
 
           <div class="attachment-item" *ngFor="let file of d.inspectionReports || []">
@@ -235,7 +235,7 @@
               />
 
               <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
-                📎 فتح الملف
+                📎 {{ 'common.openFile' | t }}
               </span>
             </a>
 
@@ -244,10 +244,10 @@
         </div>
 
         <div class="attachment-group">
-          <h4>مرفقات أخرى</h4>
+          <h4>{{ 'common.otherAttachments' | t }}</h4>
 
           <div class="empty-attachment" *ngIf="!d.otherAttachments || d.otherAttachments.length === 0">
-            لا توجد ملفات.
+            {{ 'common.noFiles' | t }}
           </div>
 
           <div class="attachment-item" *ngFor="let file of d.otherAttachments || []">
@@ -260,7 +260,7 @@
               />
 
               <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
-                📎 فتح الملف
+                📎 {{ 'common.openFile' | t }}
               </span>
             </a>
 

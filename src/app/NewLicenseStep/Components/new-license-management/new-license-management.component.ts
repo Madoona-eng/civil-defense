@@ -27,6 +27,7 @@ import { LookupItem } from '../../../Shared/Models/LookupItem';
 import { PagedResult } from '../../../Shared/Models/PagedResult';
 import { CreateComponent, CreateDialogData } from '../create/create.component';
 import { DetailsComponent, DetailsDialogData } from '../details/details.component';
+import { SITE_TRANSLATIONS, SiteTranslationPipe, translateSiteText } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-new-license-management',
@@ -44,6 +45,7 @@ import { DetailsComponent, DetailsDialogData } from '../details/details.componen
     MatSelectModule,
     MatDialogModule,
     MatSnackBarModule,
+    SiteTranslationPipe,
   ],
   templateUrl: './new-license-management.component.html',
   styleUrl: './new-license-management.component.scss',
@@ -138,7 +140,7 @@ export class NewLicenseManagementComponent implements OnInit {
         this.isLoading = false;
 
         if (!res.isSuccess || !res.data) {
-          this.errorMessage = res.message || 'تعذر تحميل معاملات الترخيص الجديد';
+          this.errorMessage = res.message || SITE_TRANSLATIONS['newLicense.listLoadFailed'];
           return;
         }
 
@@ -151,7 +153,7 @@ export class NewLicenseManagementComponent implements OnInit {
       error: (err) => {
         this.isLoading = false;
         this.errorMessage =
-          err?.error?.message || err?.message || 'حدث خطأ أثناء تحميل معاملات الترخيص الجديد';
+          err?.error?.message || err?.message || SITE_TRANSLATIONS['newLicense.listLoadError'];
         console.error('NewLicense GET error:', err);
       },
     });
@@ -216,9 +218,9 @@ export class NewLicenseManagementComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '360px',
       data: {
-        message: `هل أنت متأكد من نقل المعاملة الخاصة بـ "${item.establishmentName}" إلى خطوة إجراء المعاينة؟`,
-        confirmText: 'نقل',
-        cancelText: 'إلغاء',
+        message: translateSiteText('newLicense.movePrompt', { establishmentName: item.establishmentName }),
+        confirmText: SITE_TRANSLATIONS['newLicense.confirmMove'],
+        cancelText: SITE_TRANSLATIONS['common.cancel'],
         confirmClass: 'btn-save',
       },
     });
@@ -229,18 +231,18 @@ export class NewLicenseManagementComponent implements OnInit {
       this.newLicenseService.moveToInspection(item.id).subscribe({
         next: (res: ApiResponse<boolean>) => {
           if (!res.isSuccess) {
-            this.snackBar.open(res.message || 'تعذر نقل المعاملة للخطوة التالية', 'إغلاق', {
+            this.snackBar.open(res.message || SITE_TRANSLATIONS['newLicense.moveFailed'], SITE_TRANSLATIONS['common.close'], {
               duration: 3000,
             });
             return;
           }
 
-          this.snackBar.open('تم نقل المعاملة للخطوة التالية بنجاح', 'إغلاق', { duration: 2500 });
+          this.snackBar.open(SITE_TRANSLATIONS['newLicense.moved'], SITE_TRANSLATIONS['common.close'], { duration: 2500 });
           this.loadData();
         },
         error: (err) => {
-          const message = err?.error?.message || err?.message || 'حدث خطأ أثناء نقل المعاملة';
-          this.snackBar.open(message, 'إغلاق', { duration: 3000 });
+          const message = err?.error?.message || err?.message || SITE_TRANSLATIONS['newLicense.moveError'];
+          this.snackBar.open(message, SITE_TRANSLATIONS['common.close'], { duration: 3000 });
           console.error('NewLicense MOVE-TO-INSPECTION error:', err);
         },
       });
@@ -250,9 +252,9 @@ export class NewLicenseManagementComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '360px',
       data: {
-        message: `هل أنت متأكد من مسح المعاملة الخاصة بـ "${item.establishmentName}"؟ لا يمكن التراجع عن هذا الإجراء.`,
-        confirmText: 'مسح',
-        cancelText: 'إلغاء',
+        message: translateSiteText('newLicense.deletePrompt', { establishmentName: item.establishmentName }),
+        confirmText: SITE_TRANSLATIONS['common.clear'],
+        cancelText: SITE_TRANSLATIONS['common.cancel'],
         confirmClass: 'btn-danger',
       },
     });
@@ -263,16 +265,16 @@ export class NewLicenseManagementComponent implements OnInit {
       this.newLicenseService.delete(item.id).subscribe({
         next: (res: ApiResponse<boolean>) => {
           if (!res.isSuccess) {
-            this.snackBar.open(res.message || 'تعذر مسح المعاملة', 'إغلاق', { duration: 3000 });
+            this.snackBar.open(res.message || SITE_TRANSLATIONS['newLicense.deleteFailed'], SITE_TRANSLATIONS['common.close'], { duration: 3000 });
             return;
           }
 
-          this.snackBar.open('تم مسح المعاملة بنجاح', 'إغلاق', { duration: 2500 });
+          this.snackBar.open(SITE_TRANSLATIONS['newLicense.deleted'], SITE_TRANSLATIONS['common.close'], { duration: 2500 });
           this.loadData();
         },
         error: (err) => {
-          const message = err?.error?.message || err?.message || 'حدث خطأ أثناء مسح المعاملة';
-          this.snackBar.open(message, 'إغلاق', { duration: 3000 });
+          const message = err?.error?.message || err?.message || SITE_TRANSLATIONS['newLicense.deleteError'];
+          this.snackBar.open(message, SITE_TRANSLATIONS['common.close'], { duration: 3000 });
           console.error('NewLicense DELETE error:', err);
         },
       });

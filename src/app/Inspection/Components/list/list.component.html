@@ -2,34 +2,34 @@
 <section class="filters-card" dir="rtl">
   <div class="filters-row-primary">
     <div class="form-group search-group">
-      <label>بحث</label>
+      <label>{{ 'common.search' | t }}</label>
       <div class="search-input-wrapper">
         <mat-icon>search</mat-icon>
         <input
           type="text"
           [(ngModel)]="searchTerm"
-          placeholder="ابحث بكود المعاملة، اسم المنشأة، عنوان المنشأة، اسم مقدم الطلب..."
+          [placeholder]="'inspection.searchPlaceholder' | t"
           (keyup.enter)="search()"
         />
       </div>
     </div>
 
     <div class="form-group">
-      <label>التاريخ من</label>
+      <label>{{ 'common.dateFrom' | t }}</label>
       <input type="date" [(ngModel)]="submissionDateFrom" />
     </div>
 
     <div class="form-group">
-      <label>التاريخ إلى</label>
+      <label>{{ 'common.dateTo' | t }}</label>
       <input type="date" [(ngModel)]="submissionDateTo" />
     </div>
   </div>
 
   <div class="filters-row-secondary">
     <div class="form-group">
-      <label>الجهة الطالبة</label>
+      <label>{{ 'common.requestingEntity' | t }}</label>
       <select [(ngModel)]="requestingEntityId">
-        <option value="">كل الجهات</option>
+        <option value="">{{ 'common.allEntities' | t }}</option>
         <option *ngFor="let entity of requestingEntities" [value]="entity.id">
           {{ entity.name }}
         </option>
@@ -37,9 +37,9 @@
     </div>
 
     <div class="form-group">
-      <label>المركز</label>
+      <label>{{ 'common.district' | t }}</label>
       <select [(ngModel)]="districtId" [disabled]="isDistrictLocked">
-        <option value="">كل المراكز</option>
+        <option value="">{{ 'common.allDistricts' | t }}</option>
         <option *ngFor="let district of districts" [value]="district.id">
           {{ district.name }}
         </option>
@@ -47,9 +47,9 @@
     </div>
 
     <div class="form-group">
-      <label>نوع النشاط</label>
+      <label>{{ 'common.activity' | t }}</label>
       <select [(ngModel)]="activityTypeId">
-        <option value="">كل الأنشطة</option>
+        <option value="">{{ 'common.allActivities' | t }}</option>
         <option *ngFor="let activity of activityTypes" [value]="activity.id">
           {{ activity.name }}
         </option>
@@ -57,21 +57,21 @@
     </div>
 
     <div class="form-group">
-      <label>حالة الإرجاع</label>
+      <label>{{ 'common.returnState' | t }}</label>
       <select [(ngModel)]="isReturned">
-        <option value="">الكل</option>
-        <option value="true">مرتجعة</option>
-        <option value="false">غير مرتجعة</option>
+        <option value="">{{ 'common.all' | t }}</option>
+        <option value="true">{{ 'inspection.returned' | t }}</option>
+        <option value="false">{{ 'inspection.notReturned' | t }}</option>
       </select>
     </div>
 
     <!-- الفلتر المضاف: الرأي الفني للمعاينة -->
     <div class="form-group">
-      <label>الرأي الفني للمعاينة</label>
+      <label>{{ 'inspection.technicalOpinion' | t }}</label>
       <select [(ngModel)]="opinion">
-        <option value="">كل الحالات</option>
-        <option value="Compliant">مطابق للمواصفات</option>
-        <option value="NonCompliant">غير مطابق للمواصفات</option>
+        <option value="">{{ 'common.allStatuses' | t }}</option>
+        <option value="Compliant">{{ 'common.compliantSpec' | t }}</option>
+        <option value="NonCompliant">{{ 'common.nonCompliantSpec' | t }}</option>
       </select>
     </div>
   </div>
@@ -79,12 +79,12 @@
   <div class="filter-actions">
     <button type="button" class="btn-search" (click)="search()">
       <mat-icon>search</mat-icon>
-      <span>بحث</span>
+      <span>{{ 'common.search' | t }}</span>
     </button>
 
     <button type="button" class="btn-reset" (click)="resetFilters()">
       <mat-icon>refresh</mat-icon>
-      <span>إعادة ضبط</span>
+      <span>{{ 'common.reset' | t }}</span>
     </button>
   </div>
 </section>
@@ -94,14 +94,14 @@
   
   <div class="table-header-row">
     <div>
-      <h3>معاملات المعاينة</h3>
-      <span class="results-count">إجمالي النتائج: {{ totalCount }}</span>
+      <h3>{{ 'inspection.results' | t }}</h3>
+      <span class="results-count">{{ 'common.totalResults' | t: { count: totalCount } }}</span>
     </div>
   </div>
 
   <div class="loading-box" *ngIf="isLoading">
     <mat-icon class="spin-icon">sync</mat-icon>
-    <span>جاري تحميل معاملات المعاينة...</span>
+    <span>{{ 'inspection.loadingList' | t }}</span>
   </div>
 
   <div class="message-banner error" *ngIf="errorMessage">
@@ -111,23 +111,23 @@
 
   <div class="empty-box" *ngIf="!isLoading && items.length === 0 && !errorMessage">
     <mat-icon>inbox</mat-icon>
-    <span>لا توجد معاملات معاينة مطابقة.</span>
+    <span>{{ 'inspection.empty' | t }}</span>
   </div>
 
   <div class="table-scroll" *ngIf="!isLoading && items.length > 0">
     <table class="mat-mdc-table">
       <thead>
         <tr class="mat-mdc-header-row">
-          <th class="mat-mdc-header-cell">كود المعاملة</th>
-          <th class="mat-mdc-header-cell">تاريخ التقديم</th>
-          <th class="mat-mdc-header-cell">اسم المنشأة</th>
-          <th class="mat-mdc-header-cell">عنوان المنشأة</th>
-          <th class="mat-mdc-header-cell">الجهة الطالبة</th>
-          <th class="mat-mdc-header-cell">المركز</th>
-          <th class="mat-mdc-header-cell">نوع النشاط</th>
-          <th class="mat-mdc-header-cell">مقدم الطلب</th>
-          <th class="mat-mdc-header-cell">الحالة</th>
-          <th class="mat-mdc-header-cell">الإجراءات</th>
+          <th class="mat-mdc-header-cell">{{ 'common.requestCode' | t }}</th>
+          <th class="mat-mdc-header-cell">{{ 'common.submissionDate' | t }}</th>
+          <th class="mat-mdc-header-cell">{{ 'common.establishment' | t }}</th>
+          <th class="mat-mdc-header-cell">{{ 'common.address' | t }}</th>
+          <th class="mat-mdc-header-cell">{{ 'common.requestingEntity' | t }}</th>
+          <th class="mat-mdc-header-cell">{{ 'common.district' | t }}</th>
+          <th class="mat-mdc-header-cell">{{ 'common.activity' | t }}</th>
+          <th class="mat-mdc-header-cell">{{ 'common.applicant' | t }}</th>
+          <th class="mat-mdc-header-cell">{{ 'archive.reviewState' | t }}</th>
+          <th class="mat-mdc-header-cell">{{ 'common.actions' | t }}</th>
         </tr>
       </thead>
 
@@ -145,7 +145,7 @@
           <td class="mat-mdc-cell">{{ item.applicantName }}</td>
           <td class="mat-mdc-cell">
             <span class="status-pill" [class.returned]="item.isReturned">
-              {{ item.isReturned ? 'مرتجعة' : 'سارية' }}
+              {{ item.isReturned ? ('inspection.returned' | t) : ('inspection.active' | t) }}
             </span>
           </td>
 
@@ -155,14 +155,22 @@
               type="button"
               class="btn-action-more"
               [matMenuTriggerFor]="actionMenu"
-              aria-label="خيارات">
+              [attr.aria-label]="'common.options' | t">
               <mat-icon>more_vert</mat-icon>
             </button>
 
             <mat-menu #actionMenu="matMenu" xPosition="before" class="custom-action-menu">
               <button mat-menu-item (click)="requestEdit(item)">
                 <mat-icon class="menu-icon edit-icon">assignment_turned_in</mat-icon>
-                <span>إجراء المعاينة</span>
+                <span>{{ 'inspection.action' | t }}</span>
+              </button>
+              <button
+                mat-menu-item
+                *ngIf="canMoveToFinalApproval"
+                (click)="moveToFinalApproval(item)"
+                [disabled]="movingToFinalApprovalId === item.id">
+                <mat-icon class="menu-icon">arrow_forward</mat-icon>
+                <span>{{ 'inspection.moveToFinalApproval' | t }}</span>
               </button>
             </mat-menu>
           </td>
@@ -174,7 +182,7 @@
   <!-- الترقيم السفلي -->
   <div class="pagination-footer" *ngIf="!isLoading && totalPages > 0">
     <div class="page-size-selector">
-      <label>عناصر لكل صفحة:</label>
+      <label>{{ 'common.itemsPerPage' | t }}</label>
       <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
         <option [value]="10">10</option>
         <option [value]="25">25</option>
@@ -183,7 +191,7 @@
     </div>
 
     <div class="pagination-controls">
-      <span>صفحة {{ pageNumber }} من {{ totalPages }}</span>
+      <span>{{ 'common.pageOf' | t: { page: pageNumber, pages: totalPages } }}</span>
       <div class="nav-buttons">
         <button
           type="button"

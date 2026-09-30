@@ -81,6 +81,13 @@ export class InspectionService {
     return this.http.delete<ApiResponse<boolean>>(`${this.processUrl}/${id}`);
   }
 
+  moveToFinalApproval(id: string): Observable<ApiResponse<boolean>> {
+    return this.http.put<ApiResponse<boolean>>(
+      `${this.apiUrl}${id}/move-to-final-approval`,
+      {},
+    );
+  }
+
   buildFileUrl(filePath: string): string {
     const cleanPath = filePath.replace(/^\/+/, '').replace(/\\/g, '/');
 

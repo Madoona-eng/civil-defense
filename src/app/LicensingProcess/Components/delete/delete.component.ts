@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ApiResponse, LicensingProcessItem } from '../../Models/licensing-process';
 import { LicensingProcessService } from '../../Services/licensing-process.service';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-licensing-process-delete',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SiteTranslationPipe],
   templateUrl: './delete.component.html',
   styleUrl: './delete.component.scss'
 })
@@ -23,7 +24,7 @@ export class DeleteComponent {
 
   confirmDelete(): void {
     if (!this.item?.id) {
-      this.errorMessage = 'لم يتم تحديد طلب الترخيص';
+      this.errorMessage = SITE_TRANSLATIONS['licensing.deleteNotSelected'];
       return;
     }
 
@@ -35,7 +36,7 @@ export class DeleteComponent {
         this.deleting = false;
 
         if (!res.isSuccess) {
-          this.errorMessage = res.message || 'تعذر حذف طلب الترخيص';
+          this.errorMessage = res.message || SITE_TRANSLATIONS['licensing.deleteFailed'];
           return;
         }
 
@@ -49,7 +50,7 @@ export class DeleteComponent {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء حذف طلب الترخيص';
+          SITE_TRANSLATIONS['licensing.deleteError'];
       }
     });
   }

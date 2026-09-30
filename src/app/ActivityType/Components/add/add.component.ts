@@ -3,11 +3,12 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiResponse, CreateActivityTypeRequest } from '../../Models/activity-type';
 import { ActivityTypeService } from '../../Services/activity-type.service';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-add',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SiteTranslationPipe],
   templateUrl: './add.component.html',
   styleUrl: './add.component.scss'
 })
@@ -34,12 +35,12 @@ export class AddComponent {
   const name = this.formModel.name.trim();
 
   if (!Number.isFinite(code) || code <= 0) {
-    this.errorMessage = 'من فضلك أدخلي رقم كود صحيح';
+    this.errorMessage = SITE_TRANSLATIONS['activity.invalidCode'];
     return;
   }
 
   if (!name) {
-    this.errorMessage = 'من فضلك أدخلي اسم نوع النشاط';
+    this.errorMessage = SITE_TRANSLATIONS['activity.nameRequired'];
     return;
   }
 
@@ -55,11 +56,11 @@ export class AddComponent {
       this.saving = false;
 
       if (!res.isSuccess) {
-        this.errorMessage = res.message || 'لم يتم إنشاء نوع النشاط';
+        this.errorMessage = res.message || SITE_TRANSLATIONS['activity.createFailed'];
         return;
       }
 
-      this.successMessage = res.message || 'تم إنشاء نوع النشاط بنجاح';
+      this.successMessage = res.message || SITE_TRANSLATIONS['activity.createSucceeded'];
 
       this.formModel = {
         code: null,
@@ -78,7 +79,7 @@ export class AddComponent {
         err?.error?.message ||
         err?.error?.Message ||
         err?.message ||
-        'حدث خطأ أثناء إضافة نوع النشاط';
+        SITE_TRANSLATIONS['activity.createError'];
     }
   });
 }

@@ -1,28 +1,28 @@
 <div class="list-card" dir="rtl">
   <div class="list-header">
     <div>
-      <h3>قائمة تراخيص المحال</h3>
-      <p>عرض ومتابعة طلبات تراخيص المحال المسجلة في النظام.</p>
+      <h3>{{ 'shop.list' | t }}</h3>
+      <p>{{ 'shop.description' | t }}</p>
     </div>
 
     <button type="button" class="refresh-btn" (click)="loadLicensingProcesses()">
-      تحديث
+      {{ 'common.refresh' | t }}
     </button>
   </div>
 
   <div class="filters">
     <div class="field">
-      <label>بحث</label>
+      <label>{{ 'shop.search' | t }}</label>
       <input
         type="text"
         [(ngModel)]="searchTerm"
         name="searchTerm"
-        placeholder="ابحث باسم المنشأة أو كود المعاملة"
+        [placeholder]="'shop.searchPlaceholder' | t"
       />
     </div>
 
     <div class="field">
-      <label>مرحلة الطلب</label>
+      <label>{{ 'shop.stage' | t }}</label>
       <select [(ngModel)]="processStep" name="processStep">
         <option *ngFor="let step of processSteps" [value]="step.value">
           {{ step.label }}
@@ -32,11 +32,11 @@
 
     <div class="filter-actions">
       <button type="button" class="search-btn" (click)="search()">
-        بحث
+        {{ 'shop.search' | t }}
       </button>
 
       <button type="button" class="reset-btn" (click)="resetFilters()">
-        إلغاء الفلتر
+        {{ 'shop.clearFilter' | t }}
       </button>
     </div>
   </div>
@@ -46,11 +46,11 @@
   </div>
 
   <div class="loading-box" *ngIf="isLoading">
-    جاري تحميل البيانات...
+    {{ 'common.loadingDataWithEllipsis' | t }}
   </div>
 
   <div class="empty-box" *ngIf="!isLoading && items.length === 0">
-    لا توجد تراخيص محال مسجلة حتى الآن.
+    {{ 'shop.empty' | t }}
   </div>
 
   <div class="table-wrap" *ngIf="!isLoading && items.length > 0">
@@ -58,16 +58,16 @@
       <thead>
         <tr>
           <th style="width: 40px;">#</th>
-          <th>كود المعاملة</th>
-          <th>تاريخ التقديم</th>
-          <th>اسم المنشأة</th>
-          <th>العنوان</th>
-          <th>الجهة</th>
-          <th>المركز / المنطقة</th>
-          <th>نوع النشاط</th>
-          <th>مقدم الطلب</th>
-          <th>المرحلة الحالية</th>
-          <th style="width: 70px;">الإجراءات</th>
+          <th>{{ 'common.requestCode' | t }}</th>
+          <th>{{ 'common.submissionDate' | t }}</th>
+          <th>{{ 'common.establishment' | t }}</th>
+          <th>{{ 'common.address' | t }}</th>
+          <th>{{ 'common.requestingEntity' | t }}</th>
+          <th>{{ 'district.name' | t }}</th>
+          <th>{{ 'common.activity' | t }}</th>
+          <th>{{ 'common.applicant' | t }}</th>
+          <th>{{ 'shop.currentStage' | t }}</th>
+          <th style="width: 70px;">{{ 'common.actions' | t }}</th>
         </tr>
       </thead>
 
@@ -96,7 +96,7 @@
       type="button" 
       class="dots-btn" 
       (click)="toggleDropdown(item.id, $event)" 
-      title="خيارات الإجراءات">
+      [title]="'shop.actionTitle' | t">
       ⋮
     </button>
 
@@ -104,17 +104,27 @@
     <div class="dropdown-menu" *ngIf="activeDropdownId === item.id" (click)="$event.stopPropagation()">
       <button type="button" class="menu-item view" (click)="requestDetails(item.id)">
         <span class="icon">👁️</span>
-        <span>عرض التفاصيل</span>
+        <span>{{ 'shop.viewDetails' | t }}</span>
+      </button>
+
+      <button
+        *ngIf="canMoveToInspection && isNewLicenseStep(item.currentStep)"
+        type="button"
+        class="menu-item edit"
+        (click)="moveToInspection(item)"
+        [disabled]="movingToInspectionId === item.id">
+        <span class="icon">↪</span>
+        <span>{{ 'newLicense.nextStep' | t }}</span>
       </button>
 
       <button type="button" class="menu-item edit" (click)="requestEdit(item.id)">
         <span class="icon">✏️</span>
-        <span>تعديل</span>
+        <span>{{ 'common.edit' | t }}</span>
       </button>
 
       <button type="button" class="menu-item delete" (click)="requestDelete(item)">
         <span class="icon">🗑️</span>
-        <span>حذف</span>
+        <span>{{ 'common.delete' | t }}</span>
       </button>
     </div>
   </div>
@@ -126,15 +136,15 @@
 
   <div class="pagination" *ngIf="!isLoading && totalCount > 0">
     <button type="button" (click)="previousPage()" [disabled]="!hasPreviousPage">
-      السابق
+      {{ 'common.previous' | t }}
     </button>
 
     <span>
-      صفحة {{ pageNumber }} من {{ totalPages }} - إجمالي {{ totalCount }}
+      {{ 'shop.pageInfo' | t: { page: pageNumber, pages: totalPages, count: totalCount } }}
     </span>
 
     <button type="button" (click)="nextPage()" [disabled]="!hasNextPage">
-      التالي
+      {{ 'common.next' | t }}
     </button>
   </div>
 

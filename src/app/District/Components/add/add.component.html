@@ -9,12 +9,12 @@
         </div>
 
         <div class="header-text">
-          <span class="eyebrow">إدارة المراكز / المناطق</span>
-          <h2>إضافة مركز / منطقة</h2>
+          <span class="eyebrow">{{ 'district.manage' | t }}</span>
+          <h2>{{ 'district.add' | t }}</h2>
         </div>
       </div>
 
-      <button type="button" class="btn-dialog-close" (click)="cancel()" aria-label="إغلاق">
+      <button type="button" class="btn-dialog-close" (click)="cancel()" [attr.aria-label]="'common.close' | t">
         <mat-icon>close</mat-icon>
       </button>
     </div>
@@ -23,7 +23,7 @@
     <div class="dialog-body">
       <div class="form-grid">
         <div class="form-group">
-          <label>كود المركز / المنطقة</label>
+          <label>{{ 'district.code' | t }}</label>
           <input
             type="number"
             [(ngModel)]="formModel.code"
@@ -34,13 +34,13 @@
         </div>
 
         <div class="form-group">
-          <label>اسم المركز / المنطقة</label>
+          <label>{{ 'district.name' | t }}</label>
           <input
             type="text"
             [(ngModel)]="formModel.name"
             name="name"
             class="dialog-input"
-            placeholder="مثال: مركز المنيا"
+            [placeholder]="'district.example' | t"
           />
         </div>
       </div>
@@ -63,7 +63,7 @@
         type="button" 
         class="btn-reset" 
         (click)="cancel()">
-        إلغاء
+        {{ 'common.cancel' | t }}
       </button>
 
       <button
@@ -71,7 +71,7 @@
         class="btn-save"
         (click)="save()"
         [disabled]="saving">
-        {{ saving ? 'جاري الحفظ...' : 'حفظ المركز / المنطقة' }}
+        {{ saving ? ('common.saving' | t) : ('district.save' | t) }}
       </button>
     </div>
 

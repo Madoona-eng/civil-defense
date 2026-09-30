@@ -26,6 +26,7 @@ import {
   ProcessStep,
   InspectionOpinion,
 } from '../../../Shared/Enums/enums';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 
 
@@ -34,7 +35,7 @@ import {
 @Component({
   selector: 'app-inspection-process',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SiteTranslationPipe],
   templateUrl: './inspection-process.component.html',
   styleUrl: './inspection-process.component.scss',
 })
@@ -89,7 +90,7 @@ export class InspectionProcessComponent implements OnChanges {
         this.loading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || 'تعذر تحميل بيانات المعاينة';
+          this.errorMessage = response.message || SITE_TRANSLATIONS['inspection.loadFailed'];
           return;
         }
 
@@ -104,7 +105,7 @@ export class InspectionProcessComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تحميل بيانات المعاينة';
+          SITE_TRANSLATIONS['inspection.loadError'];
       },
     });
   }
@@ -167,7 +168,7 @@ export class InspectionProcessComponent implements OnChanges {
     this.successMessage = '';
 
     if (!this.item?.id) {
-      this.formErrorMessage = 'لم يتم تحديد معاملة المعاينة';
+      this.formErrorMessage = SITE_TRANSLATIONS['inspection.formNotSelected'];
       return;
     }
 
@@ -204,13 +205,11 @@ export class InspectionProcessComponent implements OnChanges {
         this.saving = false;
 
         if (!response.isSuccess) {
-          this.formErrorMessage =
-            response.message || 'تعذر حفظ بيانات المعاينة';
+          this.formErrorMessage = response.message || SITE_TRANSLATIONS['inspection.saveFailed'];
           return;
         }
 
-        this.successMessage =
-          response.message || 'تم حفظ بيانات المعاينة بنجاح';
+        this.successMessage = response.message || SITE_TRANSLATIONS['inspection.saved'];
 
         setTimeout(() => {
           this.saved.emit();
@@ -224,24 +223,24 @@ export class InspectionProcessComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء حفظ بيانات المعاينة';
+          SITE_TRANSLATIONS['inspection.saveError'];
       },
     });
   }
 
   validateForm(): boolean {
     if (!this.formModel.inspectorName.trim()) {
-      this.formErrorMessage = 'من فضلك أدخلي اسم المعاين';
+      this.formErrorMessage = SITE_TRANSLATIONS['inspection.inspectorRequired'];
       return false;
     }
 
     if (!this.formModel.opinion) {
-      this.formErrorMessage = 'من فضلك اختاري الرأي';
+      this.formErrorMessage = SITE_TRANSLATIONS['inspection.opinionRequired'];
       return false;
     }
 
     if (this.details?.isReturned && !this.formModel.inspectionNote.trim()) {
-      this.formErrorMessage = 'يجب إدخال ملاحظة عند إعادة إجراء المعاينة';
+      this.formErrorMessage = SITE_TRANSLATIONS['inspection.returnNoteRequired'];
       return false;
     }
 
@@ -249,7 +248,7 @@ export class InspectionProcessComponent implements OnChanges {
       this.formModel.opinion === 'NonCompliant' &&
       !this.formModel.inspectionNote.trim()
     ) {
-      this.formErrorMessage = 'يجب إدخال السبب عند عدم الاستيفاء';
+      this.formErrorMessage = SITE_TRANSLATIONS['inspection.nonCompliantReasonRequired'];
       return false;
     }
 
@@ -290,11 +289,11 @@ export class InspectionProcessComponent implements OnChanges {
 
   getAttachmentGroups(details: InspectionStepDetails): AttachmentGroup[] {
     return [
-      { title: 'خطابات الجهة', files: details.entityLetters || [] },
-      { title: 'مستندات الإثبات', files: details.proofDocuments || [] },
-      { title: 'التقارير الهندسية', files: details.engineeringReports || [] },
-      { title: 'تقارير المعاينة', files: details.inspectionReports || [] },
-      { title: 'مرفقات أخرى', files: details.otherAttachments || [] },
+      { title: SITE_TRANSLATIONS['common.entityLetters'], files: details.entityLetters || [] },
+      { title: SITE_TRANSLATIONS['common.proofDocuments'], files: details.proofDocuments || [] },
+      { title: SITE_TRANSLATIONS['common.engineeringReports'], files: details.engineeringReports || [] },
+      { title: SITE_TRANSLATIONS['common.inspectionReports'], files: details.inspectionReports || [] },
+      { title: SITE_TRANSLATIONS['common.otherAttachments'], files: details.otherAttachments || [] },
     ];
   }
 
