@@ -1,4 +1,3 @@
-<!-- //TODO: inhence styles for filters card and table -->
 <div class="page-actions-row" dir="rtl">
   <button class="btn-custom btn-add" (click)="onAddNew()">
     <lucide-angular [img]="Plus" [size]="18"></lucide-angular>
@@ -8,7 +7,11 @@
 
 <section class="filters-card" dir="rtl">
   <div class="filters-row-primary">
-    <mat-form-field appearance="outline" class="form-group search-field">
+    <mat-form-field
+      appearance="outline"
+      subscriptSizing="dynamic"
+      class="form-group search-field"
+    >
       <mat-label>بحث</mat-label>
       <input
         matInput
@@ -25,14 +28,14 @@
       ></lucide-angular>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="form-group date-field">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group date-field">
       <mat-label>التاريخ من</mat-label>
       <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="submissionDateFrom" />
       <mat-datepicker-toggle matIconSuffix [for]="pickerFrom"></mat-datepicker-toggle>
       <mat-datepicker #pickerFrom></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="form-group date-field">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group date-field">
       <mat-label>التاريخ إلى</mat-label>
       <input matInput [matDatepicker]="pickerTo" [(ngModel)]="submissionDateTo" />
       <mat-datepicker-toggle matIconSuffix [for]="pickerTo"></mat-datepicker-toggle>
@@ -41,7 +44,7 @@
   </div>
 
   <div class="filters-row-secondary">
-    <mat-form-field appearance="outline" class="form-group">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group">
       <mat-label>الجهة الطالبة</mat-label>
       <mat-select [(ngModel)]="requestingEntityId">
         <mat-option value="">كل الجهات</mat-option>
@@ -51,7 +54,7 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="form-group">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group">
       <mat-label>المركز</mat-label>
       <mat-select [(ngModel)]="districtId">
         <mat-option value="">كل المراكز</mat-option>
@@ -61,7 +64,7 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="form-group">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group">
       <mat-label>نوع النشاط</mat-label>
       <mat-select [(ngModel)]="activityTypeId">
         <mat-option value="">كل الأنشطة</mat-option>
@@ -73,12 +76,12 @@
   </div>
 
   <div class="filter-actions">
-    <button mat-fab extended class="btn-save" (click)="search()">
+    <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
       <lucide-angular [img]="Search" [size]="18"></lucide-angular>
       <span>بحث</span>
     </button>
 
-    <button mat-fab extended class="btn-reset" (click)="resetFilters()">
+    <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
       <lucide-angular [img]="RotateCcw" [size]="16"></lucide-angular>
       <span>إعادة ضبط</span>
     </button>

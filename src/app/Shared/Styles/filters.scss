@@ -1,0 +1,141 @@
+.page-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+/* ============================================================
+   FILTERS CARD
+   ============================================================ */
+.filters-card {
+  --field-radius: 28px;
+  --field-outline: #e3dde8;
+  --field-outline-hover: #b9a3e3;
+  --field-outline-focus: var(--color-primary, #5d3a99);
+
+  background: var(--color-bg-filters, #f7f4f9);
+  border: 1px solid var(--color-border, #f3e8ff);
+  border-radius: 24px;
+  padding: 22px 26px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 4px 16px rgba(93, 58, 153, 0.06);
+}
+
+// الصفين grid بنفس الأعمدة عشان يتراصوا
+.filters-row-primary,
+.filters-row-secondary {
+  display: grid;
+  gap: 16px;
+}
+
+.filters-row-primary {
+  grid-template-columns: 2fr 1fr 1fr;
+}
+
+.filters-row-secondary {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+  .filters-row-primary,
+  .filters-row-secondary {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   MAT-FORM-FIELD (Angular Material 17.3 tokens)
+   ============================================================ */
+.filters-card .mat-mdc-form-field {
+  width: 100%;
+
+  --mdc-outlined-text-field-container-shape: var(--field-radius);
+  --mdc-outlined-text-field-outline-color: var(--field-outline);
+  --mdc-outlined-text-field-hover-outline-color: var(--field-outline-hover);
+  --mdc-outlined-text-field-focus-outline-color: var(--field-outline-focus);
+  --mdc-outlined-text-field-outline-width: 1px;
+  --mdc-outlined-text-field-focus-outline-width: 2px;
+
+  --mdc-outlined-text-field-input-text-color: var(--color-text-primary, #2d2d3f);
+  --mdc-outlined-text-field-input-text-placeholder-color: #b5b5ca;
+  --mdc-outlined-text-field-caret-color: var(--field-outline-focus);
+  --mdc-outlined-text-field-label-text-color: var(--color-text-secondary, #8e8ea9);
+  --mdc-outlined-text-field-hover-label-text-color: var(--color-text-secondary, #8e8ea9);
+  --mdc-outlined-text-field-focus-label-text-color: var(--field-outline-focus);
+  --mdc-outlined-text-field-label-text-size: 13px;
+  --mdc-outlined-text-field-label-text-weight: 700;
+
+  --mat-form-field-leading-icon-color: var(--color-text-secondary, #8e8ea9);
+  --mat-form-field-trailing-icon-color: var(--color-text-secondary, #8e8ea9);
+  --mat-select-enabled-trigger-text-color: var(--color-text-primary, #2d2d3f);
+  --mat-select-trigger-text-size: 13.5px;
+  --mat-select-trigger-text-weight: 600;
+}
+
+// الخلفية البيضاء للحقل
+.filters-card .mat-mdc-form-field .mdc-text-field--outlined {
+  background: var(--color-bg-card, #fff);
+  border-radius: var(--field-radius);
+}
+
+.filters-card .mat-mdc-form-field input.mat-mdc-input-element {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.field-prefix-icon {
+  margin-inline: 14px 6px;
+  color: var(--color-text-secondary, #8e8ea9);
+}
+
+/* ============================================================
+   ACTION BUTTONS
+   ============================================================ */
+.filter-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-btn {
+  min-height: 44px;
+  padding: 0 22px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &--primary {
+    background: var(--color-primary, #5d3a99);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(93, 58, 153, 0.2);
+
+    &:hover {
+      box-shadow: 0 6px 18px rgba(139, 92, 246, 0.3);
+    }
+  }
+
+  &--ghost {
+    background: #fff;
+    color: var(--color-text-secondary, #8e8ea9);
+    border-color: var(--color-border, #f3e8ff);
+
+    &:hover {
+      background: #ede4f8;
+      color: var(--color-primary, #5d3a99);
+    }
+  }
+}

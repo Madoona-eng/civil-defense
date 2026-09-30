@@ -102,3 +102,27 @@
   color: #e11d48;
   margin-inline-end: auto;
 }
+/* ============================================================
+   ROUNDED / SMOOTH INPUTS (Angular Material outline)
+   ============================================================ */
+.dialog-body .mat-mdc-form-field {
+  // نص ارتفاع الحقل تقريبًا = بيضاوي من غير ما الـ outline يتكسر
+  --mdc-outlined-text-field-container-shape: 28px;          // Angular Material 15–17
+
+  --mdc-outlined-text-field-outline-color: #e3dde8;
+  --mdc-outlined-text-field-hover-outline-color: #b9a3e3;
+  --mdc-outlined-text-field-focus-outline-color: var(--color-primary, #5d3a99);
+  --mdc-outlined-text-field-outline-width: 1px;
+  --mdc-outlined-text-field-focus-outline-width: 2px;
+
+  --mat-form-field-outlined-outline-color: #e3dde8;
+  --mat-form-field-outlined-hover-outline-color: #b9a3e3;
+  --mat-form-field-outlined-focus-outline-color: var(--color-primary, #5d3a99);
+  --mat-form-field-outlined-outline-width: 1px;
+  --mat-form-field-outlined-focus-outline-width: 2px;
+}
+
+// رسائل الخطأ بعيدة شوية عن الحافة الدايرية
+.dialog-body .mat-mdc-form-field .mat-mdc-form-field-subscript-wrapper {
+  padding-inline: 16px;
+}
