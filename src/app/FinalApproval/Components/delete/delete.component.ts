@@ -7,11 +7,12 @@ import {
 } from '../../Models/final-approval';
 
 import { FinalApprovalService } from '../../Services/final-approval.service';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-final-approval-delete',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SiteTranslationPipe],
   templateUrl: './delete.component.html',
   styleUrl: './delete.component.scss'
 })
@@ -30,7 +31,7 @@ export class DeleteComponent {
     this.errorMessage = '';
 
     if (!this.item?.id) {
-      this.errorMessage = 'لم يتم تحديد معاملة الموافقة النهائية';
+      this.errorMessage = SITE_TRANSLATIONS['final.notSelected'];
       return;
     }
 
@@ -41,7 +42,7 @@ export class DeleteComponent {
         this.deleting = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || 'تعذر حذف المعاملة';
+          this.errorMessage = response.message || SITE_TRANSLATIONS['final.deleteFailed'];
           return;
         }
 
@@ -55,7 +56,7 @@ export class DeleteComponent {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء حذف المعاملة';
+          SITE_TRANSLATIONS['final.deleteError'];
       }
     });
   }

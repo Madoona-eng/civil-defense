@@ -1,13 +1,13 @@
 <div class="inspection-process" dir="rtl">
   <div class="process-header">
     <div>
-      <h2>إجراء المعاينة</h2>
+      <h2>{{ 'inspection.process' | t }}</h2>
     </div>
 
     <button type="button" class="close-btn" (click)="close()">×</button>
   </div>
 
-  <div class="loading-box" *ngIf="loading">جاري تحميل بيانات المعاينة...</div>
+  <div class="loading-box" *ngIf="loading">{{ 'inspection.loading' | t }}</div>
 
   <div class="message error" *ngIf="errorMessage">
     {{ errorMessage }}
@@ -17,28 +17,28 @@
     <!-- ===== ملخص المعاملة (سياق سريع) ===== -->
     <div class="summary-card" *ngIf="item">
       <div>
-        <span>كود المعاملة</span>
+        <span>{{ 'common.requestCode' | t }}</span>
         <strong>{{ item.transactionCode }}</strong>
       </div>
 
       <div>
-        <span>اسم المنشأة</span>
+        <span>{{ 'common.establishment' | t }}</span>
         <strong>{{ item.establishmentName }}</strong>
       </div>
 
       <div>
-        <span>العنوان</span>
+        <span>{{ 'common.address' | t }}</span>
         <strong>{{ item.establishmentAddress }}</strong>
       </div>
 
       <div>
-        <span>نوع النشاط</span>
+        <span>{{ 'common.activity' | t }}</span>
         <strong>{{ item.activityType }}</strong>
       </div>
 
       <div>
-        <span>حالة الإرجاع</span>
-        <strong>{{ d.isReturned ? "مرتجعة" : "غير مرتجعة" }}</strong>
+        <span>{{ 'common.returnState' | t }}</span>
+        <strong>{{ d.isReturned ? ('inspection.returned' | t) : ('inspection.notReturned' | t) }}</strong>
       </div>
     </div>
 
@@ -48,27 +48,27 @@
       *ngIf="d.isReturned && d.notes && d.notes.length > 0"
     >
       <div class="section-title">
-        <h3>ملاحظات المعاينة</h3>
+        <h3>{{ 'inspection.notes' | t }}</h3>
       </div>
 
       <div class="note-card" *ngFor="let note of d.notes">
         <div class="note-row">
-          <span class="note-label">الخطوة:</span>
+          <span class="note-label">{{ 'common.stepLabel' | t }}</span>
           <span class="note-value">{{ getStepLabel(note.processStep) }}</span>
         </div>
 
         <div class="note-row">
-          <span class="note-label">المحتوى:</span>
+          <span class="note-label">{{ 'common.contentLabel' | t }}</span>
           <span class="note-value">{{ note.content }}</span>
         </div>
 
         <div class="note-row">
-          <span class="note-label">الوقت:</span>
+          <span class="note-label">{{ 'common.timeLabel' | t }}</span>
           <span class="note-value">{{ formatDate(note.createdAt) }}</span>
         </div>
 
         <div class="note-row">
-          <span class="note-label">بواسطة:</span>
+          <span class="note-label">{{ 'common.byLabel' | t }}</span>
           <span class="note-value">{{ note.createdByUserName }}</span>
         </div>
       </div>
@@ -76,7 +76,7 @@
 
     <!-- ===== accordion المرفقات القديمة: مقفول افتراضيًا ===== -->
     <details class="attachments-accordion">
-      <summary>📎 عرض المرفقات المرفوعة سابقًا</summary>
+      <summary>📎 {{ 'inspection.oldAttachments' | t }}</summary>
 
       <div class="attachments-grid">
         <div
@@ -86,7 +86,7 @@
           <h4>{{ group.title }}</h4>
 
           <div class="empty-attachment" *ngIf="group.files.length === 0">
-            لا توجد ملفات.
+            {{ 'common.noFiles' | t }}
           </div>
 
           <div class="attachment-item" *ngFor="let file of group.files">
@@ -105,7 +105,7 @@
                   !isImageFile(file.fileName) || hasImageError(file.filePath)
                 "
               >
-                📎 فتح الملف
+                📎 {{ 'common.openFile' | t }}
               </span>
             </a>
 
@@ -119,30 +119,30 @@
     <div class="form-section">
       <div class="section-title">
         <span>✍️</span>
-        <h3>بيانات المعاينة الجديدة</h3>
+        <h3>{{ 'inspection.newData' | t }}</h3>
       </div>
 
       <div class="form-grid">
         <div class="form-group">
-          <label>القائم بالمعاينة</label>
+          <label>{{ 'common.inspector' | t }}</label>
           <input
             type="text"
             [(ngModel)]="formModel.inspectorName"
-            placeholder="أدخل اسم القائم بالمعاينة"
+            [placeholder]="'inspection.inspectorPlaceholder' | t"
           />
         </div>
 
         <div class="form-group">
-          <label>الرأي</label>
+          <label>{{ 'common.opinion' | t }}</label>
           <select [(ngModel)]="formModel.opinion">
-            <option value="Compliant">مستوفي</option>
-            <option value="NonCompliant">غير مستوفي</option>
+            <option value="Compliant">{{ 'opinion.compliant' | t }}</option>
+            <option value="NonCompliant">{{ 'opinion.nonCompliant' | t }}</option>
           </select>
         </div>
 
         <div class="form-group full-width">
           <label>
-            ملاحظات المعاينة
+            {{ 'inspection.notesLabel' | t }}
             <span *ngIf="formModel.opinion === 'NonCompliant'" class="required"
               >*</span
             >
@@ -151,12 +151,12 @@
           <textarea
             rows="4"
             [(ngModel)]="formModel.inspectionNote"
-            placeholder="قم بكتابة سبب عدم الاستيفاء أو ملاحظات المعاينة"
+            [placeholder]="'inspection.notePlaceholder' | t"
           ></textarea>
         </div>
 
         <div class="form-group">
-          <label>خطابات الجهة</label>
+          <label>{{ 'common.entityLetters' | t }}</label>
           <input
             type="file"
             multiple
@@ -174,7 +174,7 @@
         </div>
 
         <div class="form-group">
-          <label>أوراق الثبوت</label>
+          <label>{{ 'common.proofDocuments' | t }}</label>
           <input
             type="file"
             multiple
@@ -192,7 +192,7 @@
         </div>
 
         <div class="form-group">
-          <label>التقارير الهندسية</label>
+          <label>{{ 'common.engineeringReports' | t }}</label>
           <input
             type="file"
             multiple
@@ -213,7 +213,7 @@
         </div>
 
         <div class="form-group">
-          <label>تقارير المعاينة</label>
+          <label>{{ 'common.inspectionReports' | t }}</label>
           <input
             type="file"
             multiple
@@ -234,7 +234,7 @@
         </div>
 
         <div class="form-group full-width">
-          <label>مرفقات أخرى</label>
+          <label>{{ 'common.otherAttachments' | t }}</label>
           <input
             type="file"
             multiple
@@ -267,11 +267,11 @@
           (click)="save()"
           [disabled]="saving"
         >
-          {{ saving ? "جاري الحفظ..." : "حفظ المعاينة" }}
+          {{ saving ? ('common.saving' | t) : ('inspection.save' | t) }}
         </button>
 
         <button type="button" class="cancel-btn" (click)="close()">
-          إلغاء
+          {{ 'common.cancel' | t }}
         </button>
       </div>
     </div>

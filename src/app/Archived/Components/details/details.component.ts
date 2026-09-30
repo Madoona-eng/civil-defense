@@ -2,11 +2,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ArchivedService } from '../../Services/archived.service';
 import { ArchivedDetails } from '../../Models/archived';
+import { APPLICATION_STATUS_LABELS, APPLICANT_ROLE_LABELS, INSPECTION_OPINION_LABELS, PROCESS_STEP_LABELS, REVIEW_STATUS_LABELS } from '../../../Shared/Enums/enums';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, SiteTranslationPipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
@@ -31,7 +33,7 @@ export class DetailsComponent implements OnInit {
       next: (res) => {
         this.isLoading = false;
         if (!res.isSuccess) {
-          this.errorMessage = res.message || 'تعذر تحميل التفاصيل';
+          this.errorMessage = res.message || SITE_TRANSLATIONS['archive.loadFailed'];
           return;
         }
         this.details = res.data;
@@ -42,50 +44,29 @@ export class DetailsComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تحميل التفاصيل';
+          SITE_TRANSLATIONS['archive.loadError'];
       },
     });
   }
   getOpinionLabel(opinion: string): string {
-    const map: Record<string, string> = {
-      Compliant: 'مستوفي',
-      NonCompliant: 'غير مستوفي',
-    };
-    return map[opinion] ?? opinion;
+    return INSPECTION_OPINION_LABELS[opinion as keyof typeof INSPECTION_OPINION_LABELS] ?? opinion;
   }
 
   getFinalStatusLabel(status: string): string {
-    const map: Record<string, string> = {
-      Waiting: 'انتظار',
-      Closed: 'مغلق',
-      Completed: 'مكتمل',
-    };
-    return map[status] ?? status;
+    return APPLICATION_STATUS_LABELS[status as keyof typeof APPLICATION_STATUS_LABELS] ?? status;
   }
 
   getApplicantRoleLabel(role: string): string {
-    const map: Record<string, string> = {
-      Owner: 'مالك',
-      Agent: 'توكيل',
-    };
-    return map[role] ?? role;
+    return role === 'Agent'
+      ? SITE_TRANSLATIONS['applicant.proxy']
+      : APPLICANT_ROLE_LABELS[role as keyof typeof APPLICANT_ROLE_LABELS] ?? role;
   }
 
   getReviewStatusLabel(status: string): string {
-    const map: Record<string, string> = {
-      Accepted: 'مقبول',
-      Rejected: 'مرفوض',
-    };
-    return map[status] ?? status;
+    return REVIEW_STATUS_LABELS[status as keyof typeof REVIEW_STATUS_LABELS] ?? status;
   }
 
   getStepLabel(step: string): string {
-    const map: Record<string, string> = {
-      NewLicense: 'طلب جديد',
-      Inspection: 'معاينة',
-      FinalApproval: 'موافقة نهائية',
-      Archive: 'أرشيف',
-    };
-    return map[step] ?? step;
+    return PROCESS_STEP_LABELS[step as keyof typeof PROCESS_STEP_LABELS] ?? step;
   }
 }

@@ -7,9 +7,9 @@
     <div class="header-icon">✅</div>
 
     <div>
-      <h2>قرار الموافقة النهائية</h2>
+      <h2>{{ 'final.decision' | t }}</h2>
       <p *ngIf="item">
-        كود المعاملة:
+        {{ 'common.requestCode' | t }}:
         <strong>{{ item.transactionCode }}</strong>
       </p>
     </div>
@@ -17,17 +17,17 @@
 
   <div class="summary-card" *ngIf="item">
     <div class="summary-item">
-      <span>اسم المنشأة</span>
+      <span>{{ 'common.establishment' | t }}</span>
       <strong>{{ item.establishmentName }}</strong>
     </div>
 
     <div class="summary-item">
-      <span>العنوان</span>
+      <span>{{ 'common.address' | t }}</span>
       <strong>{{ item.establishmentAddress }}</strong>
     </div>
 
     <div class="summary-item">
-      <span>نوع النشاط</span>
+      <span>{{ 'common.activity' | t }}</span>
       <strong>{{ item.activityType }}</strong>
     </div>
   </div>
@@ -35,36 +35,36 @@
   <div class="form-card">
     <div class="section-title">
       <span>📝</span>
-      <h3>بيانات القرار</h3>
+      <h3>{{ 'common.decisionData' | t }}</h3>
     </div>
 
     <div class="form-grid">
       <div class="form-group">
-        <label>حالة القرار</label>
+        <label>{{ 'common.finalDecisionState' | t }}</label>
         <select [(ngModel)]="formModel.reviewStatus">
-          <option value="Accepted">مقبول / اعتماد نهائي</option>
-          <option value="Rejected">مرفوض</option>
+          <option value="Accepted">{{ 'final.approve' | t }}</option>
+          <option value="Rejected">{{ 'review.rejected' | t }}</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label>هل تم السداد؟</label>
+        <label>{{ 'archive.paid' | t }}</label>
         <select [(ngModel)]="formModel.isPaid">
-          <option [ngValue]="true">نعم</option>
-          <option [ngValue]="false">لا</option>
+          <option [ngValue]="true">{{ 'common.yes' | t }}</option>
+          <option [ngValue]="false">{{ 'common.no' | t }}</option>
         </select>
       </div>
 
       <div class="form-group full-width">
         <label>
-          سبب الرفض
+          {{ 'common.rejectionReason' | t }}
           <span *ngIf="formModel.reviewStatus === 'Rejected'" class="required">*</span>
         </label>
 
         <textarea
           rows="4"
           [(ngModel)]="formModel.rejectionNote"
-          placeholder="اكتبي سبب الرفض في حالة رفض المعاملة"
+          [placeholder]="'final.rejectionPlaceholder' | t"
         ></textarea>
       </div>
     </div>
@@ -73,12 +73,12 @@
   <div class="form-card">
     <div class="section-title">
       <span>📎</span>
-      <h3>المرفقات</h3>
+      <h3>{{ 'common.attachments' | t }}</h3>
     </div>
 
     <div class="files-grid">
       <div class="file-group">
-        <label>خطابات الجهة</label>
+        <label>{{ 'common.entityLetters' | t }}</label>
         <input
           type="file"
           multiple
@@ -87,7 +87,7 @@
       </div>
 
       <div class="file-group">
-        <label>مستندات الإثبات</label>
+        <label>{{ 'common.proofDocuments' | t }}</label>
         <input
           type="file"
           multiple
@@ -96,7 +96,7 @@
       </div>
 
       <div class="file-group">
-        <label>التقارير الهندسية</label>
+        <label>{{ 'common.engineeringReports' | t }}</label>
         <input
           type="file"
           multiple
@@ -105,7 +105,7 @@
       </div>
 
       <div class="file-group">
-        <label>تقارير المعاينة</label>
+        <label>{{ 'common.inspectionReports' | t }}</label>
         <input
           type="file"
           multiple
@@ -114,7 +114,7 @@
       </div>
 
       <div class="file-group full-width">
-        <label>مرفقات أخرى</label>
+        <label>{{ 'common.otherAttachments' | t }}</label>
         <input
           type="file"
           multiple
@@ -139,11 +139,11 @@
       (click)="save()"
       [disabled]="saving"
     >
-      {{ saving ? 'جاري الحفظ...' : 'حفظ القرار' }}
+      {{ saving ? ('common.saving' | t) : ('final.saveDecision' | t) }}
     </button>
 
     <button type="button" class="cancel-btn" (click)="cancel()">
-      إلغاء
+      {{ 'common.cancel' | t }}
     </button>
   </div>
 </div>

@@ -22,6 +22,7 @@ import {
   ProcessStep,
   InspectionOpinion,
 } from '../../../Shared/Enums/enums';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 interface AttachmentGroup {
   title: string;
@@ -31,7 +32,7 @@ interface AttachmentGroup {
 @Component({
   selector: 'app-inspection-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SiteTranslationPipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
@@ -73,7 +74,7 @@ export class DetailsComponent implements OnChanges {
         this.loading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || 'تعذر تحميل بيانات المعاينة';
+          this.errorMessage = response.message || SITE_TRANSLATIONS['inspection.loadFailed'];
           return;
         }
 
@@ -87,7 +88,7 @@ export class DetailsComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تحميل بيانات المعاينة';
+          SITE_TRANSLATIONS['inspection.loadError'];
       },
     });
   }
@@ -117,11 +118,11 @@ export class DetailsComponent implements OnChanges {
 
   getAttachmentGroups(details: InspectionStepDetails): AttachmentGroup[] {
     return [
-      { title: 'خطابات الجهة', files: details.entityLetters || [] },
-      { title: 'مستندات الإثبات', files: details.proofDocuments || [] },
-      { title: 'التقارير الهندسية', files: details.engineeringReports || [] },
-      { title: 'تقارير المعاينة', files: details.inspectionReports || [] },
-      { title: 'مرفقات أخرى', files: details.otherAttachments || [] },
+      { title: SITE_TRANSLATIONS['common.entityLetters'], files: details.entityLetters || [] },
+      { title: SITE_TRANSLATIONS['common.proofDocuments'], files: details.proofDocuments || [] },
+      { title: SITE_TRANSLATIONS['common.engineeringReports'], files: details.engineeringReports || [] },
+      { title: SITE_TRANSLATIONS['common.inspectionReports'], files: details.inspectionReports || [] },
+      { title: SITE_TRANSLATIONS['common.otherAttachments'], files: details.otherAttachments || [] },
     ];
   }
 

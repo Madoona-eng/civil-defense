@@ -2,19 +2,19 @@
  
   <div class="filters-grid">
     <div class="form-group search-group">
-      <label>بحث</label>
+      <label>{{ 'common.search' | t }}</label>
       <input
         type="text"
         [(ngModel)]="searchTerm"
-        placeholder="ابحث بكود المعاملة أو اسم المنشأة أو مقدم الطلب"
+        [placeholder]="'final.searchPlaceholder' | t"
         (keyup.enter)="search()"
       />
     </div>
 
     <div class="form-group">
-      <label>الجهة</label>
+      <label>{{ 'common.requestingEntity' | t }}</label>
       <select [(ngModel)]="requestingEntityId">
-        <option value="">كل الجهات</option>
+        <option value="">{{ 'common.allEntities' | t }}</option>
         <option *ngFor="let entity of requestingEntities" [value]="entity.id">
           {{ entity.name }}
         </option>
@@ -22,9 +22,9 @@
     </div>
 
     <div class="form-group">
-      <label>المركز</label>
+      <label>{{ 'common.district' | t }}</label>
       <select [(ngModel)]="districtId">
-        <option value="">كل المراكز</option>
+        <option value="">{{ 'common.allDistricts' | t }}</option>
         <option *ngFor="let district of districts" [value]="district.id">
           {{ district.name }}
         </option>
@@ -32,9 +32,9 @@
     </div>
 
     <div class="form-group">
-      <label>نوع النشاط</label>
+      <label>{{ 'common.activity' | t }}</label>
       <select [(ngModel)]="activityTypeId">
-        <option value="">كل الأنشطة</option>
+        <option value="">{{ 'common.allActivities' | t }}</option>
         <option *ngFor="let activity of activityTypes" [value]="activity.id">
           {{ activity.name }}
         </option>
@@ -42,22 +42,22 @@
     </div>
 
     <div class="form-group">
-      <label>رأي المعاينة</label>
+      <label>{{ 'common.opinion' | t }}</label>
       <select [(ngModel)]="opinion">
-        <option value="">كل الآراء</option>
-        <option value="Compliant">مطابق / مستوفي</option>
-        <option value="NonCompliant">غير مطابق / غير مستوفي</option>
+        <option value="">{{ 'common.allOpinions' | t }}</option>
+        <option value="Compliant">{{ 'final.opinionCompliant' | t }}</option>
+        <option value="NonCompliant">{{ 'final.opinionNonCompliant' | t }}</option>
       </select>
     </div>
   </div>
 
   <div class="filter-actions">
     <button type="button" class="search-btn" (click)="search()">
-      🔍 بحث
+      🔍 {{ 'common.search' | t }}
     </button>
 
     <button type="button" class="reset-btn" (click)="resetFilters()">
-      ↺ إعادة ضبط
+      ↺ {{ 'common.reset' | t }}
     </button>
   </div>
 </section>
@@ -65,17 +65,17 @@
 <section class="table-card" dir="rtl">
   <div class="table-header">
     <div>
-      <h3>قائمة الموافقات النهائية</h3>
+      <h3>{{ 'final.list' | t }}</h3>
     </div>
 
     <div class="table-count">
       <span>{{ totalCount }}</span>
-      <small>معاملة</small>
+      <small>{{ 'final.unit' | t }}</small>
     </div>
   </div>
 
   <div class="loading-box" *ngIf="isLoading">
-    جاري تحميل معاملات الموافقة النهائية...
+    {{ 'final.loadingList' | t }}
   </div>
 
   <div class="message error" *ngIf="errorMessage">
@@ -84,24 +84,24 @@
 
   <div class="empty-box" *ngIf="!isLoading && items.length === 0 && !errorMessage">
     <div class="empty-icon">📭</div>
-    <h4>لا توجد معاملات</h4>
-    <p>لا توجد معاملات في مرحلة الموافقة النهائية حسب الفلاتر الحالية.</p>
+    <h4>{{ 'final.emptyTitle' | t }}</h4>
+    <p>{{ 'final.emptyDescription' | t }}</p>
   </div>
 
   <div class="table-scroll" *ngIf="!isLoading && items.length > 0">
     <table>
       <thead>
         <tr>
-          <th>كود المعاملة</th>
-          <th>تاريخ التقديم</th>
-          <th>اسم المنشأة</th>
-          <th>عنوان المنشأة</th>
-          <th>الجهة الطالبة</th>
-          <th>المركز</th>
-          <th>نوع النشاط</th>
-          <th>مقدم الطلب</th>
-          <th>المرحلة</th>
-          <th>الإجراءات</th>
+          <th>{{ 'common.requestCode' | t }}</th>
+          <th>{{ 'common.submissionDate' | t }}</th>
+          <th>{{ 'common.establishment' | t }}</th>
+          <th>{{ 'common.address' | t }}</th>
+          <th>{{ 'common.requestingEntity' | t }}</th>
+          <th>{{ 'common.district' | t }}</th>
+          <th>{{ 'common.activity' | t }}</th>
+          <th>{{ 'common.applicant' | t }}</th>
+          <th>{{ 'common.currentStep' | t }}</th>
+          <th>{{ 'common.actions' | t }}</th>
         </tr>
       </thead>
 
@@ -136,47 +136,44 @@
           </td>
 
           <td class="actions-cell">
-            <div class="row-actions">
-              <button
-                type="button"
-                class="action-btn details-btn"
-                (click)="requestDetails(item.id)"
-                title="عرض التفاصيل"
-              >
-                <span>👁️</span>
-                عرض
+            <button
+              type="button"
+              class="actions-menu-trigger"
+              [matMenuTriggerFor]="actionsMenu"
+              [attr.aria-label]="'common.options' | t">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <mat-menu #actionsMenu="matMenu" xPosition="before">
+              <button mat-menu-item (click)="requestDetails(item.id)">
+                <mat-icon>visibility</mat-icon>
+                <span>{{ 'archive.details' | t }}</span>
+              </button>
+
+              <button mat-menu-item *ngIf="canManageFinalApproval" (click)="requestEdit(item)">
+                <mat-icon>fact_check</mat-icon>
+                <span>{{ 'final.approval' | t }}</span>
+              </button>
+
+              <button mat-menu-item *ngIf="canManageFinalApproval" (click)="requestReturn(item)">
+                <mat-icon>undo</mat-icon>
+                <span>{{ 'final.returnToInspection' | t }}</span>
               </button>
 
               <button
-                type="button"
-                class="action-btn edit-btn"
-                (click)="requestEdit(item)"
-                title="قرار الموافقة النهائية"
-              >
-                <span>✅</span>
-                قرار
+                mat-menu-item
+                *ngIf="canManageFinalApproval"
+                (click)="moveToArchive(item)"
+                [disabled]="archivingItemId === item.id">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'final.moveArchive' | t }}</span>
               </button>
 
-              <button
-                type="button"
-                class="action-btn return-btn"
-                (click)="requestReturn(item)"
-                title="إرجاع للمعاينة"
-              >
-                <span>↩️</span>
-                إرجاع
+              <button mat-menu-item (click)="requestDelete(item)">
+                <mat-icon>delete_outline</mat-icon>
+                <span>{{ 'common.delete' | t }}</span>
               </button>
-
-              <button
-                type="button"
-                class="action-btn delete-btn"
-                (click)="requestDelete(item)"
-                title="حذف"
-              >
-                <span>🗑️</span>
-                حذف
-              </button>
-            </div>
+            </mat-menu>
           </td>
         </tr>
       </tbody>
@@ -185,13 +182,13 @@
 
   <div class="pagination" *ngIf="!isLoading && totalPages > 0">
     <button type="button" (click)="previousPage()" [disabled]="!hasPreviousPage">
-      السابق
+      {{ 'common.previous' | t }}
     </button>
 
-    <span>صفحة {{ pageNumber }} من {{ totalPages }}</span>
+    <span>{{ 'common.pageOf' | t: { page: pageNumber, pages: totalPages } }}</span>
 
     <button type="button" (click)="nextPage()" [disabled]="!hasNextPage">
-      التالي
+      {{ 'common.next' | t }}
     </button>
   </div>
 </section>

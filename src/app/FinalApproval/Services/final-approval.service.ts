@@ -74,10 +74,17 @@ export class FinalApprovalService {
     noteContent: string,
   ): Observable<ApiResponse<boolean>> {
     return this.http.put<ApiResponse<boolean>>(
-      `${this.processUrl}/${id}/return-to-inspection`,
+      `${this.apiUrl}${id}/return-to-inspection`,
       {
         noteContent: noteContent,
       },
+    );
+  }
+
+  moveToArchive(id: string): Observable<ApiResponse<boolean>> {
+    return this.http.put<ApiResponse<boolean>>(
+      `${this.apiUrl}${id}/move-to-archive`,
+      {},
     );
   }
 

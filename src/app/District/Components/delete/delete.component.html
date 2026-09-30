@@ -5,8 +5,8 @@
     <div class="header-right">
       <div class="header-icon">!</div>
       <div class="header-title">
-        <span class="subtitle">تأكيد العملية</span>
-        <h2>حذف المركز / المنطقة</h2>
+        <span class="subtitle">{{ 'common.actionConfirmation' | t }}</span>
+        <h2>{{ 'district.delete' | t }}</h2>
       </div>
     </div>
 
@@ -20,7 +20,7 @@
     </div>
 
     <p class="confirm-text">
-      هل أنتِ متأكدة من حذف المركز / المنطقة
+      {{ 'district.deletePrompt' | t }}
       <strong class="highlight-name">"{{ district?.name }}"</strong>؟
     </p>
 
@@ -37,11 +37,11 @@
         (click)="confirmDelete()"
         [disabled]="deleting"
       >
-        {{ deleting ? 'جاري الحذف...' : 'نعم، حذف' }}
+        {{ deleting ? ('common.deleting' | t) : ('common.confirmDelete' | t) }}
       </button>
 
       <button type="button" class="cancel-btn" (click)="cancel()">
-        إلغاء
+        {{ 'common.cancel' | t }}
       </button>
     </div>
   </div>

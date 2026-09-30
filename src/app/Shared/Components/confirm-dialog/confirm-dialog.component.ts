@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { LucideAngularModule, TriangleAlert } from 'lucide-angular';
+import { SiteTranslationPipe } from '../../Enums/site-translations';
 
 export interface ConfirmDialogData {
   message: string;
@@ -14,7 +15,7 @@ export interface ConfirmDialogData {
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule, LucideAngularModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, LucideAngularModule, SiteTranslationPipe],
   templateUrl: './confirm-dialog.component.html',
   styleUrl: './confirm-dialog.component.scss',
 })

@@ -4,7 +4,7 @@
   </div>
 
   <p class="delete-text">
-    هل أنتِ متأكدة من حذف نوع النشاط
+    {{ 'activity.deletePrompt' | t }}
     <strong>"{{ activityType?.name }}"</strong>؟
   </p>
 
@@ -14,9 +14,9 @@
 
   <div class="actions">
     <button type="button" class="delete-btn" (click)="confirmDelete()" [disabled]="deleting">
-      {{ deleting ? 'جاري الحذف...' : 'نعم، حذف' }}
+      {{ deleting ? ('common.deleting' | t) : ('common.confirmDelete' | t) }}
     </button>
 
-    <button type="button" class="cancel-btn" (click)="cancel()">إلغاء</button>
+    <button type="button" class="cancel-btn" (click)="cancel()">{{ 'common.cancel' | t }}</button>
   </div>
 </div>

@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { ActivityType } from '../../Models/activity-type';
 import { MatButtonModule } from '@angular/material/button';
+import { SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-activity-type-management',
@@ -18,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     MatButtonModule,
       MatIconModule,
+      SiteTranslationPipe,
     AddComponent,
     ListComponent,
     EditComponent,

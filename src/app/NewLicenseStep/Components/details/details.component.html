@@ -6,9 +6,9 @@
           <mat-icon>description</mat-icon>
         </div>
         <div class="header-text">
-          <span class="eyebrow">تفاصيل المعاملة</span>
+          <span class="eyebrow">{{ 'newLicense.details' | t }}</span>
           <h2 *ngIf="details">{{ details.establishmentName }}</h2>
-          <h2 *ngIf="!details">جاري التحميل...</h2>
+          <h2 *ngIf="!details">{{ 'newLicense.loading' | t }}</h2>
         </div>
       </div>
       <button class="btn-dialog-close" (click)="close()">
@@ -19,7 +19,7 @@
     <div class="dialog-body">
       <div class="loading-box" *ngIf="loading">
         <mat-icon class="spin-icon">progress_activity</mat-icon>
-        جاري تحميل البيانات...
+        {{ 'common.loadingDataWithEllipsis' | t }}
       </div>
 
       <div class="message-banner error" *ngIf="!loading && errorMessage">
@@ -28,7 +28,7 @@
 
       <ng-container *ngIf="!loading && !errorMessage && details">
         <section class="info-section">
-          <h3>البيانات الأساسية</h3>
+          <h3>{{ 'newLicense.basicData' | t }}</h3>
           <div class="form-grid info-grid">
             <div class="form-group">
               <label>كود المعاملة</label>
@@ -37,37 +37,37 @@
               }}</span>
             </div>
             <div class="form-group">
-              <label>تاريخ التقديم</label>
+              <label>{{ 'common.submissionDate' | t }}</label>
               <span class="dialog-input readonly-value">{{ details.submissionDate }}</span>
             </div>
             <div class="form-group">
-              <label>اسم المنشأة</label>
+              <label>{{ 'common.establishmentName' | t }}</label>
               <span class="dialog-input readonly-value">{{ details.establishmentName }}</span>
             </div>
             <div class="form-group">
-              <label>عنوان المنشأة</label>
+              <label>{{ 'common.establishmentAddress' | t }}</label>
               <span class="dialog-input readonly-value">{{ details.establishmentAddress }}</span>
             </div>
             <div class="form-group">
-              <label>الجهة الطالبة</label>
+              <label>{{ 'common.requestingEntity' | t }}</label>
               <span class="dialog-input readonly-value">{{ details.requestingEntity }}</span>
             </div>
             <div class="form-group">
-              <label>المركز</label>
+              <label>{{ 'common.district' | t }}</label>
               <span class="dialog-input readonly-value">{{ details.district }}</span>
             </div>
             <div class="form-group">
-              <label>نوع النشاط</label>
+              <label>{{ 'common.activity' | t }}</label>
               <span class="dialog-input readonly-value">{{ details.activityType }}</span>
             </div>
           </div>
         </section>
 
         <section class="info-section">
-          <h3>بيانات مقدم الطلب</h3>
+          <h3>{{ 'common.applicantData' | t }}</h3>
           <div class="form-grid info-grid">
             <div class="form-group">
-              <label>اسم مقدم الطلب</label>
+              <label>{{ 'common.applicantName' | t }}</label>
               <span class="dialog-input readonly-value">{{ details.applicantName }}</span>
             </div>
             <div class="form-group">
@@ -83,7 +83,7 @@
               }}</span>
             </div>
             <div class="form-group">
-              <label>المسؤول</label>
+              <label>{{ 'newLicense.responsible' | t }}</label>
               <span class="dialog-input readonly-value">{{ details.responsibleManager }}</span>
             </div>
             <div class="form-group">
@@ -125,7 +125,7 @@
     </div>
 
     <div class="dialog-actions">
-      <button class="btn-reset" (click)="close()">إغلاق</button>
+      <button class="btn-reset" (click)="close()">{{ 'common.close' | t }}</button>
     </div>
   </div>
 </div>

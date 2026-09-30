@@ -8,11 +8,12 @@ import {
 } from '../../Models/final-approval';
 
 import { FinalApprovalService } from '../../Services/final-approval.service';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-final-approval-return-to-inspection',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SiteTranslationPipe],
   templateUrl: './return-to-inspection.component.html',
   styleUrl: './return-to-inspection.component.scss'
 })
@@ -32,12 +33,12 @@ export class ReturnToInspectionComponent {
     this.errorMessage = '';
 
     if (!this.item?.id) {
-      this.errorMessage = 'لم يتم تحديد المعاملة';
+      this.errorMessage = SITE_TRANSLATIONS['final.returnNotSelected'];
       return;
     }
 
     if (!this.noteContent.trim()) {
-      this.errorMessage = 'من فضلك أدخلي سبب إرجاع المعاملة للمعاينة';
+      this.errorMessage = SITE_TRANSLATIONS['final.returnReasonRequired'];
       return;
     }
 
@@ -50,7 +51,7 @@ export class ReturnToInspectionComponent {
           this.processing = false;
 
           if (!response.isSuccess) {
-            this.errorMessage = response.message || 'تعذر إرجاع المعاملة إلى المعاينة';
+            this.errorMessage = response.message || SITE_TRANSLATIONS['final.returnFailed'];
             return;
           }
 
@@ -64,7 +65,7 @@ export class ReturnToInspectionComponent {
             err?.error?.message ||
             err?.error?.Message ||
             err?.message ||
-            'حدث خطأ أثناء إرجاع المعاملة إلى المعاينة';
+            SITE_TRANSLATIONS['final.returnError'];
         }
       });
   }

@@ -6,12 +6,14 @@ import { DetailsComponent } from '../details/details.component';
 import { EditComponent } from '../edit/edit.component';
 import { DeleteComponent } from '../delete/delete.component';
 import { LicensingProcessItem } from '../../Models/licensing-process';
+import { SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-licensing-process-management',
   standalone: true,
   imports: [
     CommonModule,
+    SiteTranslationPipe,
     AddComponent,
     ListComponent,
     DetailsComponent,

@@ -7,11 +7,12 @@ import {
   UpdateActivityTypeRequest
 } from '../../Models/activity-type';
 import { ActivityTypeService } from '../../Services/activity-type.service';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SiteTranslationPipe],
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.scss'
 })
@@ -49,7 +50,7 @@ export class EditComponent implements OnChanges {
         this.loading = false;
 
         if (!res.isSuccess || !res.data) {
-          this.errorMessage = res.message || 'تعذر تحميل بيانات نوع النشاط';
+          this.errorMessage = res.message || SITE_TRANSLATIONS['activity.loadFailed'];
           return;
         }
 
@@ -66,14 +67,14 @@ export class EditComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تحميل بيانات نوع النشاط';
+          SITE_TRANSLATIONS['activity.loadError'];
       }
     });
   }
 
   save(): void {
     if (!this.activityTypeId) {
-      this.errorMessage = 'لم يتم تحديد نوع النشاط';
+      this.errorMessage = SITE_TRANSLATIONS['activity.notSelected'];
       return;
     }
 
@@ -84,12 +85,12 @@ export class EditComponent implements OnChanges {
     const name = this.formModel.name.trim();
 
     if (!Number.isFinite(code) || code <= 0) {
-      this.errorMessage = 'من فضلك أدخلي رقم كود صحيح';
+      this.errorMessage = SITE_TRANSLATIONS['activity.invalidCode'];
       return;
     }
 
     if (!name) {
-      this.errorMessage = 'من فضلك أدخلي اسم نوع النشاط';
+      this.errorMessage = SITE_TRANSLATIONS['activity.nameRequired'];
       return;
     }
 
@@ -105,11 +106,11 @@ export class EditComponent implements OnChanges {
         this.saving = false;
 
         if (!res.isSuccess) {
-          this.errorMessage = res.message || 'لم يتم تعديل نوع النشاط';
+          this.errorMessage = res.message || SITE_TRANSLATIONS['activity.updateFailed'];
           return;
         }
 
-        this.successMessage = res.message || 'تم تعديل نوع النشاط بنجاح';
+        this.successMessage = res.message || SITE_TRANSLATIONS['activity.updateSucceeded'];
 
         setTimeout(() => {
           this.saved.emit();
@@ -123,7 +124,7 @@ export class EditComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تعديل نوع النشاط';
+          SITE_TRANSLATIONS['activity.updateError'];
       }
     });
   }

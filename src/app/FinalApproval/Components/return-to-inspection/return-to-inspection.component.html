@@ -5,26 +5,26 @@
 
   <div class="return-icon">↩️</div>
 
-  <h2>إرجاع المعاملة للمعاينة</h2>
+  <h2>{{ 'final.returnTitle' | t }}</h2>
 
   <p>
-    هل أنتِ متأكدة من إرجاع معاملة
+    {{ 'final.returnPrompt' | t }}
     <strong>{{ item?.establishmentName }}</strong>
-    إلى مرحلة المعاينة؟
+    {{ 'common.step.inspection' | t }}؟
   </p>
 
   <div class="transaction-card" *ngIf="item">
-    <span>كود المعاملة</span>
+    <span>{{ 'common.requestCode' | t }}</span>
     <strong>{{ item.transactionCode }}</strong>
   </div>
 
   <div class="note-box">
-    <label>سبب الإرجاع للمعاينة</label>
+    <label>{{ 'final.returnReason' | t }}</label>
 
     <textarea
       rows="4"
       [(ngModel)]="noteContent"
-      placeholder="اكتبي سبب إرجاع المعاملة إلى مرحلة المعاينة"
+      [placeholder]="'final.returnReasonPlaceholder' | t"
     ></textarea>
   </div>
 
@@ -39,11 +39,11 @@
       (click)="confirmReturn()"
       [disabled]="processing"
     >
-      {{ processing ? 'جاري الإرجاع...' : 'نعم، إرجاع للمعاينة' }}
+      {{ processing ? ('final.processingReturn' | t) : ('final.confirmReturn' | t) }}
     </button>
 
     <button type="button" class="cancel-btn" (click)="cancel()">
-      إلغاء
+      {{ 'common.cancel' | t }}
     </button>
   </div>
 </div>

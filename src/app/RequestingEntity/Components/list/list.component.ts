@@ -6,11 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-requesting-entity-list',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatMenuModule, MatButtonModule, MatProgressSpinnerModule],
+  imports: [CommonModule, MatIconModule, MatMenuModule, MatButtonModule, MatProgressSpinnerModule, SiteTranslationPipe],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
@@ -38,7 +39,7 @@ export class ListComponent implements OnInit {
         this.isLoading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || 'تعذر تحميل الجهات';
+          this.errorMessage = response.message || SITE_TRANSLATIONS['entity.listLoadFailed'];
           return;
         }
 
@@ -52,7 +53,7 @@ export class ListComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تحميل الجهات';
+          SITE_TRANSLATIONS['entity.listLoadError'];
       }
     });
   }

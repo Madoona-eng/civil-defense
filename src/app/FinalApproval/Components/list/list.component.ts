@@ -2,6 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import {
   ApiResponse,
@@ -16,11 +20,14 @@ import { FinalApprovalService } from '../../Services/final-approval.service';
 import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
 import { DistrictService } from '../../../District/Services/district.service';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
+import { AuthService } from '../../../auth/services/auth.service';
+import { ConfirmDialogComponent } from '../../../Shared/Components/confirm-dialog/confirm-dialog.component';
+import { SITE_TRANSLATIONS, SiteTranslationPipe, translateSiteText } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-final-approval-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SiteTranslationPipe, MatIconModule, MatMenuModule, MatDialogModule, MatSnackBarModule],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
@@ -52,12 +59,16 @@ export class ListComponent implements OnInit {
   totalPages = 0;
   hasNextPage = false;
   hasPreviousPage = false;
+  archivingItemId: string | null = null;
 
   constructor(
     private readonly finalApprovalService: FinalApprovalService,
     private readonly requestingEntityService: RequestingEntityService,
     private readonly districtService: DistrictService,
-    private readonly activityTypeService: ActivityTypeService
+    private readonly activityTypeService: ActivityTypeService,
+    private readonly authService: AuthService,
+    private readonly dialog: MatDialog,
+    private readonly snackBar: MatSnackBar,
   ) {}
 
   ngOnInit(): void {
@@ -114,7 +125,7 @@ export class ListComponent implements OnInit {
         this.isLoading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || 'تعذر تحميل معاملات الموافقة النهائية';
+          this.errorMessage = response.message || SITE_TRANSLATIONS['final.listLoadFailed'];
           return;
         }
 
@@ -134,7 +145,7 @@ export class ListComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تحميل معاملات الموافقة النهائية';
+          SITE_TRANSLATIONS['final.listLoadError'];
       }
     });
   }
@@ -188,21 +199,79 @@ export class ListComponent implements OnInit {
     this.returnRequested.emit(item);
   }
 
+  get canManageFinalApproval(): boolean {
+    const role = this.authService.getRole();
+    return role === 'FinalApprover' || role === 'SuperAdmin';
+  }
+
+  moveToArchive(item: FinalApprovalItem): void {
+    if (!this.canManageFinalApproval || !item.id || this.archivingItemId === item.id) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '360px',
+      data: {
+        message: translateSiteText('final.archivePrompt', {
+          establishmentName: item.establishmentName,
+        }),
+        confirmText: SITE_TRANSLATIONS['final.moveArchive'],
+        cancelText: SITE_TRANSLATIONS['common.cancel'],
+        confirmClass: 'btn-save',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+
+      this.archivingItemId = item.id;
+      this.finalApprovalService.moveToArchive(item.id).subscribe({
+        next: response => {
+          this.archivingItemId = null;
+
+          if (!response.isSuccess) {
+            this.snackBar.open(
+              response.message || SITE_TRANSLATIONS['final.archiveFailed'],
+              SITE_TRANSLATIONS['common.close'],
+              { duration: 3000 },
+            );
+            return;
+          }
+
+          this.snackBar.open(
+            SITE_TRANSLATIONS['final.archived'],
+            SITE_TRANSLATIONS['common.close'],
+            { duration: 2500 },
+          );
+          this.loadFinalApprovals();
+        },
+        error: error => {
+          this.archivingItemId = null;
+          this.snackBar.open(
+            error?.error?.message || error?.message || SITE_TRANSLATIONS['final.archiveError'],
+            SITE_TRANSLATIONS['common.close'],
+            { duration: 3000 },
+          );
+        },
+      });
+    });
+  }
+
   getStepLabel(step: string): string {
     if (step === 'FinalApproval') {
-      return 'الموافقة النهائية';
+      return SITE_TRANSLATIONS['step.finalApproval'];
     }
 
     if (step === 'Archive') {
-      return 'الأرشيف';
+      return SITE_TRANSLATIONS['step.archive'];
     }
 
     if (step === 'Inspection') {
-      return 'المعاينة';
+      return SITE_TRANSLATIONS['step.inspection'];
     }
 
     if (step === 'NewLicense') {
-      return 'ترخيص جديد';
+      return SITE_TRANSLATIONS['step.newLicense'];
     }
 
     return step || '-';

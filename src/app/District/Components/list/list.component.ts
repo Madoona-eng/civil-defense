@@ -13,12 +13,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-district-list',
   standalone: true,
   imports: [CommonModule,MatIconModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatSelectModule,
-    MatTableModule, MatPaginatorModule, MatSortModule, FormsModule, ReactiveFormsModule, MatMenuModule],
+    MatTableModule, MatPaginatorModule, MatSortModule, FormsModule, ReactiveFormsModule, MatMenuModule, SiteTranslationPipe],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
@@ -46,7 +47,7 @@ export class ListComponent implements OnInit {
         this.isLoading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || 'تعذر تحميل المراكز / المناطق';
+          this.errorMessage = response.message || SITE_TRANSLATIONS['district.loadFailed'];
           return;
         }
 
@@ -60,7 +61,7 @@ export class ListComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تحميل المراكز / المناطق';
+          SITE_TRANSLATIONS['district.loadError'];
       }
     });
   }

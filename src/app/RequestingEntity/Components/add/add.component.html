@@ -3,8 +3,8 @@
     <div class="header-right">
       <div class="header-icon">+</div>
       <div class="header-titles">
-        <span class="sub-title">إدارة الجهات</span>
-        <h2>إضافة جهة</h2>
+        <span class="sub-title">{{ 'entity.manage' | t }}</span>
+        <h2>{{ 'entity.add' | t }}</h2>
       </div>
     </div>
     <button type="button" class="close-btn" (click)="cancel()">✕</button>
@@ -13,24 +13,24 @@
   <div class="form-body">
     <div class="form-grid">
      <div class="field">
-  <label>كود الجهة</label>
+  <label>{{ 'entity.code' | t }}</label>
   <input
     type="number"
     min="1"
     (keydown)="preventNegative($event)"
     [(ngModel)]="formModel.code"
     name="code"
-    placeholder="مثال: 100"
+    [placeholder]="'entity.exampleCode' | t"
   />
 </div>
 
       <div class="field">
-        <label>اسم الجهة</label>
+        <label>{{ 'entity.name' | t }}</label>
         <input
           type="text"
           [(ngModel)]="formModel.name"
           name="name"
-          placeholder="مثال: الوحدة المحلية / شركة / جهة حكومية"
+          [placeholder]="'entity.exampleName' | t"
         />
       </div>
     </div>
@@ -45,11 +45,11 @@
 
     <div class="actions">
       <button type="button" class="save-btn" (click)="save()" [disabled]="saving">
-        {{ saving ? 'جاري الحفظ...' : 'حفظ الجهة' }}
+        {{ saving ? ('common.saving' | t) : ('entity.save' | t) }}
       </button>
 
       <button type="button" class="cancel-btn" (click)="cancel()">
-        إلغاء
+        {{ 'common.cancel' | t }}
       </button>
     </div>
   </div>

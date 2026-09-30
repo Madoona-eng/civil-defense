@@ -11,7 +11,7 @@
     <div class="field">
 
       <label for="activity-code">
-        كود نوع النشاط
+        {{ 'activity.code' | t }}
       </label>
 
       <input
@@ -19,7 +19,7 @@
         type="number"
         [(ngModel)]="formModel.code"
         name="code"
-        placeholder="مثال: 20"
+        [placeholder]="'common.exampleCode' | t"
       />
 
     </div>
@@ -30,7 +30,7 @@
     <div class="field">
 
       <label for="activity-name">
-        اسم نوع النشاط
+        {{ 'activity.name' | t }}
       </label>
 
       <input
@@ -38,7 +38,7 @@
         type="text"
         [(ngModel)]="formModel.name"
         name="name"
-        placeholder="مثال: اشغال علاجي"
+        [placeholder]="'common.exampleActivity' | t"
       />
 
     </div>
@@ -84,11 +84,11 @@
     >
 
       <span *ngIf="!saving">
-        حفظ نوع النشاط
+        {{ 'activity.save' | t }}
       </span>
 
       <span *ngIf="saving">
-        جاري الحفظ...
+        {{ 'common.saving' | t }}
       </span>
 
     </button>
@@ -99,7 +99,7 @@
       class="cancel-btn"
       (click)="cancel()"
     >
-      إلغاء
+      {{ 'common.cancel' | t }}
     </button>
 
   </div>

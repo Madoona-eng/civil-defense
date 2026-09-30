@@ -1,8 +1,8 @@
 <div class="archived-page" dir="rtl">
   <div class="page-header">
     <div>
-      <h2>الأرشيف</h2>
-      <p>عرض جميع المعاملات المؤرشفة في النظام.</p>
+      <h2>{{ 'archive.title' | t }}</h2>
+      <p>{{ 'archive.description' | t }}</p>
     </div>
   </div>
 
@@ -12,14 +12,14 @@
         <input
           type="text"
           [(ngModel)]="filter.searchTerm"
-          placeholder="بحث بـ: كود المعاملة، اسم المنشأة، العنوان، مقدم الطلب، الرقم القومي، المدير المسؤول، الهاتف..."
+          [placeholder]="'archive.searchPlaceholder' | t"
           (keyup.enter)="search()"
         />
       </div>
 
       <div class="filters-row">
         <div class="form-group">
-          <label>الجهة الطالبه</label>
+          <label>{{ 'common.requestingEntity' | t }}</label>
           <select [(ngModel)]="filter.requestingEntityId">
             @for (item of requestingEntities; track item.id) {
               <option [value]="item.id">{{ item.name }}</option>
@@ -28,7 +28,7 @@
         </div>
 
         <div class="form-group">
-          <label> المركز </label>
+          <label>{{ 'common.district' | t }}</label>
           <select [(ngModel)]="filter.districtId">
             @for (item of districts; track item.id) {
               <option [value]="item.id">{{ item.name }}</option>
@@ -37,7 +37,7 @@
         </div>
 
         <div class="form-group">
-          <label>نوع النشاط</label>
+          <label>{{ 'common.activity' | t }}</label>
           <select [(ngModel)]="filter.activityTypeId">
             @for (item of activityTypes; track item.id) {
               <option [value]="item.id">{{ item.name }}</option>
@@ -46,19 +46,19 @@
         </div>
 
         <div class="form-group">
-          <label>حالة المراجعة</label>
+          <label>{{ 'archive.reviewStatus' | t }}</label>
           <select [(ngModel)]="filter.reviewStatus">
-            <option value="Accepted">مقبول</option>
-            <option value="Rejected">مرفوض</option>
+            <option value="Accepted">{{ 'review.accepted' | t }}</option>
+            <option value="Rejected">{{ 'review.rejected' | t }}</option>
           </select>
         </div>
       </div>
     </div>
 
     <div class="filter-actions">
-      <button type="button" class="search-btn" (click)="search()">بحث</button>
+      <button type="button" class="search-btn" (click)="search()">{{ 'common.search' | t }}</button>
       <button type="button" class="reset-btn" (click)="resetFilters()">
-        إعادة ضبط
+        {{ 'archive.reset' | t }}
       </button>
     </div>
   </section>
@@ -87,22 +87,22 @@
           ×
         </button>
         <div class="delete-confirm">
-          <h3>تأكيد الحذف</h3>
+          <h3>{{ 'archive.confirmDelete' | t }}</h3>
           <p>
-            هل أنت متأكد من حذف المعاملة
+            {{ 'archive.deletePrompt' | t }}
             <strong>{{ selectedItem?.establishmentName }}</strong
             >؟
           </p>
           <div class="delete-actions">
             <button type="button" class="delete-btn" (click)="confirmDelete()">
-              حذف
+              {{ 'common.delete' | t }}
             </button>
             <button
               type="button"
               class="cancel-btn"
               (click)="closeDeletePopup()"
             >
-              إلغاء
+              {{ 'common.cancel' | t }}
             </button>
           </div>
         </div>

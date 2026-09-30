@@ -9,6 +9,7 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../Shared/Enums/site-translations';
 import {
   LucideAngularModule,
   PanelRightOpen,
@@ -36,6 +37,7 @@ import {
     LucideAngularModule,
     MatButtonModule,
     MatTooltipModule,
+    SiteTranslationPipe,
   ],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',
@@ -54,7 +56,7 @@ export class DashboardLayoutComponent implements OnInit {
   readonly ShieldCheck = ShieldCheck;
   readonly Archive = Archive;
 
-  title = 'لوحة التحكم';
+  title = SITE_TRANSLATIONS['app.dashboard'];
   username = '';
   userRole = '';
   isCollapsed = false;

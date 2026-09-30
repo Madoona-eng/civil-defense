@@ -7,6 +7,7 @@ import { APPLICANT_ROLE_LABELS, ApplicantRole } from '../../../Shared/Enums/enum
 import { ApiResponse } from '../../../Shared/Models/ApiResponse';
 import { AttachmentGroup, NewLicenseDetails } from '../../Models/new-license';
 import { NewLicenseService } from '../../Services/new-license.service';
+import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 export interface DetailsDialogData {
   id: string;
@@ -15,7 +16,7 @@ export interface DetailsDialogData {
 @Component({
   selector: 'app-new-license-details',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatIconModule],
+  imports: [CommonModule, MatDialogModule, MatIconModule, SiteTranslationPipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
@@ -47,7 +48,7 @@ export class DetailsComponent implements OnInit {
         this.loading = false;
 
         if (!response.isSuccess || !response.data) {
-          this.errorMessage = response.message || 'تعذر تحميل تفاصيل المعاملة';
+          this.errorMessage = response.message || SITE_TRANSLATIONS['newLicense.detailsLoadFailed'];
           return;
         }
 
@@ -61,7 +62,7 @@ export class DetailsComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          'حدث خطأ أثناء تحميل تفاصيل المعاملة';
+          SITE_TRANSLATIONS['newLicense.detailsLoadError'];
       },
     });
   }
@@ -95,10 +96,10 @@ export class DetailsComponent implements OnInit {
 
   getAttachmentGroups(details: NewLicenseDetails): AttachmentGroup[] {
     return [
-      { title: 'خطابات الجهة', files: details.entityLetters || [] },
-      { title: 'مستندات الإثبات', files: details.proofDocuments || [] },
-      { title: 'التقارير الهندسية', files: details.engineeringReports || [] },
-      { title: 'مرفقات أخرى', files: details.otherAttachments || [] },
+      { title: SITE_TRANSLATIONS['common.entityLetters'], files: details.entityLetters || [] },
+      { title: SITE_TRANSLATIONS['common.proofDocuments'], files: details.proofDocuments || [] },
+      { title: SITE_TRANSLATIONS['common.engineeringReports'], files: details.engineeringReports || [] },
+      { title: SITE_TRANSLATIONS['common.otherAttachments'], files: details.otherAttachments || [] },
     ];
   }
 
