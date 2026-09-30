@@ -75,8 +75,7 @@
   --mat-select-trigger-text-weight: 600;
 }
 
-// الخلفية البيضاء للحقل
-.filters-card .mat-mdc-form-field .mdc-text-field--outlined {
+:host ::ng-deep .filters-card .mat-mdc-form-field .mdc-text-field--outlined {
   background: var(--color-bg-card, #fff);
   border-radius: var(--field-radius);
 }
