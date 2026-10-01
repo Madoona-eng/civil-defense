@@ -19,7 +19,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { APPLICANT_ROLE_LABELS, ApplicantRole } from '../../../Shared/Enums/enums';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 import { formatDateForApi } from '../../../Shared/Helpers/date.helper';
 import {
   FILE_ACCEPT,
@@ -59,7 +58,6 @@ export interface CreateDialogData {
     MatInputModule,
     MatSelectModule,
     MatSnackBarModule,
-    SiteTranslationPipe,
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -70,7 +68,8 @@ export class CreateComponent implements OnDestroy {
   errorMessage = '';
   attemptedSave = false;
 
-  private readonly moveToInspectionFallbackError = SITE_TRANSLATIONS['newLicense.moveFallbackError'];
+  private readonly moveToInspectionFallbackError =
+    'تم حفظ المعاملة بنجاح، لكن حدث خطأ أثناء نقلها لمرحلة المعاينة. حاول النقل مرة أخرى من صفحة القائمة';
 
   readonly applicantRoles = Object.values(ApplicantRole);
   readonly applicantRoleLabels = APPLICANT_ROLE_LABELS;
@@ -202,7 +201,7 @@ export class CreateComponent implements OnDestroy {
       next: (res: ApiResponse<string>) => {
         if (!res.isSuccess || !res.data) {
           this.saving = false;
-          this.errorMessage = res.message || SITE_TRANSLATIONS['newLicense.createFailed'];
+          this.errorMessage = res.message || 'تعذر إنشاء المعاملة';
           return;
         }
 
@@ -210,7 +209,7 @@ export class CreateComponent implements OnDestroy {
 
         if (!moveToInspection) {
           this.saving = false;
-          this.snackBar.open(res.message || SITE_TRANSLATIONS['newLicense.createSucceeded'], SITE_TRANSLATIONS['common.close'], { duration: 6000 });
+          this.snackBar.open(res.message || 'تم إنشاء المعاملة بنجاح', 'إغلاق', { duration: 6000 });
           (document.activeElement as HTMLElement)?.blur();
           this.dialogRef.close(true);
           return;
@@ -226,7 +225,7 @@ export class CreateComponent implements OnDestroy {
               return;
             }
 
-            this.snackBar.open(SITE_TRANSLATIONS['newLicense.movedOnCreate'], SITE_TRANSLATIONS['common.close'], {
+            this.snackBar.open('تم إنشاء المعاملة ونقلها لمرحلة المعاينة بنجاح', 'إغلاق', {
               duration: 6000,
             });
             (document.activeElement as HTMLElement)?.blur();
@@ -242,7 +241,7 @@ export class CreateComponent implements OnDestroy {
       },
       error: (err) => {
         this.saving = false;
-        this.errorMessage = err?.error?.message || err?.message || SITE_TRANSLATIONS['newLicense.createError'];
+        this.errorMessage = err?.error?.message || err?.message || 'حدث خطأ أثناء إنشاء المعاملة';
         console.error('NewLicense CREATE error:', err);
       },
     });

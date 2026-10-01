@@ -1,7 +1,7 @@
 <div class="page-actions-row" dir="rtl">
   <button class="btn-custom btn-add" (click)="onAddNew()">
     <lucide-angular [img]="Plus" [size]="18"></lucide-angular>
-    <span>{{ 'newLicense.create' | t }}</span>
+    <span>إضافة ترخيص جديد</span>
   </button>
 </div>
 
@@ -12,12 +12,12 @@
       subscriptSizing="dynamic"
       class="form-group search-field"
     >
-      <mat-label>{{ 'common.search' | t }}</mat-label>
+      <mat-label>بحث</mat-label>
       <input
         matInput
         type="text"
         [(ngModel)]="searchTerm"
-        [placeholder]="'newLicense.searchPlaceholder' | t"
+        placeholder="ابحث بكود المعاملة، اسم المنشأة، اسم مقدم الطلب..."
         (keyup.enter)="search()"
       />
       <lucide-angular
@@ -29,14 +29,14 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group date-field">
-      <mat-label>{{ 'common.dateFrom' | t }}</mat-label>
+      <mat-label>التاريخ من</mat-label>
       <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="submissionDateFrom" />
       <mat-datepicker-toggle matIconSuffix [for]="pickerFrom"></mat-datepicker-toggle>
       <mat-datepicker #pickerFrom></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group date-field">
-      <mat-label>{{ 'common.dateTo' | t }}</mat-label>
+      <mat-label>التاريخ إلى</mat-label>
       <input matInput [matDatepicker]="pickerTo" [(ngModel)]="submissionDateTo" />
       <mat-datepicker-toggle matIconSuffix [for]="pickerTo"></mat-datepicker-toggle>
       <mat-datepicker #pickerTo></mat-datepicker>
@@ -45,9 +45,9 @@
 
   <div class="filters-row-secondary">
     <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group">
-      <mat-label>{{ 'common.requestingEntity' | t }}</mat-label>
+      <mat-label>الجهة الطالبة</mat-label>
       <mat-select [(ngModel)]="requestingEntityId">
-        <mat-option value="">{{ 'newLicense.allEntities' | t }}</mat-option>
+        <mat-option value="">كل الجهات</mat-option>
         <mat-option *ngFor="let entity of requestingEntities" [value]="entity.id">
           {{ entity.name }}
         </mat-option>
@@ -55,9 +55,9 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group">
-      <mat-label>{{ 'common.district' | t }}</mat-label>
+      <mat-label>المركز</mat-label>
       <mat-select [(ngModel)]="districtId">
-        <mat-option value="">{{ 'newLicense.allDistricts' | t }}</mat-option>
+        <mat-option value="">كل المراكز</mat-option>
         <mat-option *ngFor="let district of districts" [value]="district.id">
           {{ district.name }}
         </mat-option>
@@ -65,9 +65,9 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group">
-      <mat-label>{{ 'common.activity' | t }}</mat-label>
+      <mat-label>نوع النشاط</mat-label>
       <mat-select [(ngModel)]="activityTypeId">
-        <mat-option value="">{{ 'newLicense.allActivities' | t }}</mat-option>
+        <mat-option value="">كل الأنشطة</mat-option>
         <mat-option *ngFor="let activity of activityTypes" [value]="activity.id">
           {{ activity.name }}
         </mat-option>
@@ -78,12 +78,12 @@
   <div class="filter-actions">
     <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
       <lucide-angular [img]="Search" [size]="18"></lucide-angular>
-      <span>{{ 'common.search' | t }}</span>
+      <span>بحث</span>
     </button>
 
     <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
       <lucide-angular [img]="RotateCcw" [size]="16"></lucide-angular>
-      <span>{{ 'common.reset' | t }}</span>
+      <span>إعادة ضبط</span>
     </button>
   </div>
 </section>

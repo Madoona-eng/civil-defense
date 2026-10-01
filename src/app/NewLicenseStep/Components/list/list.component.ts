@@ -8,7 +8,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LucideAngularModule, EllipsisVertical, Eye, Pencil, CircleArrowLeft, Trash2, ChevronsLeft } from 'lucide-angular';
 import { NewLicenseListItem } from '../../Models/new-license';
-import { SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-list',
@@ -21,8 +20,7 @@ import { SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    LucideAngularModule,
-    SiteTranslationPipe,
+    LucideAngularModule
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
