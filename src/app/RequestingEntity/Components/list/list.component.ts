@@ -6,12 +6,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+
 
 @Component({
   selector: 'app-requesting-entity-list',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatMenuModule, MatButtonModule, MatProgressSpinnerModule, SiteTranslationPipe],
+  imports: [CommonModule, MatIconModule, MatMenuModule, MatButtonModule, MatProgressSpinnerModule, TranslatePipe],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
@@ -39,7 +40,7 @@ export class ListComponent implements OnInit {
         this.isLoading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || SITE_TRANSLATIONS['entity.listLoadFailed'];
+          this.errorMessage = response.message || 'entity.listLoadFailed';
           return;
         }
 
@@ -49,11 +50,11 @@ export class ListComponent implements OnInit {
         this.isLoading = false;
         console.error('RequestingEntity GET error:', err);
 
-        this.errorMessage =
+        const message =
           err?.error?.message ||
           err?.error?.Message ||
-          err?.message ||
-          SITE_TRANSLATIONS['entity.listLoadError'];
+          err?.message;
+        this.errorMessage = typeof message === 'string' ? message : 'entity.listLoadError';
       }
     });
   }

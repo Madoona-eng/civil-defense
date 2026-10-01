@@ -19,6 +19,7 @@ import {
 } from '../../Models/inspection';
 
 import { InspectionService } from '../../Services/inspection.service';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 import {
   PROCESS_STEP_LABELS,
@@ -26,16 +27,11 @@ import {
   ProcessStep,
   InspectionOpinion,
 } from '../../../Shared/Enums/enums';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
-
-
-
-
 
 @Component({
   selector: 'app-inspection-process',
   standalone: true,
-  imports: [CommonModule, FormsModule, SiteTranslationPipe],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './inspection-process.component.html',
   styleUrl: './inspection-process.component.scss',
 })
@@ -69,7 +65,7 @@ export class InspectionProcessComponent implements OnChanges {
   inspectionReports: File[] = [];
   otherAttachments: File[] = [];
 
-  constructor(private readonly inspectionService: InspectionService) { }
+  constructor(private readonly inspectionService: InspectionService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['item'] && this.item?.id) {
@@ -90,7 +86,7 @@ export class InspectionProcessComponent implements OnChanges {
         this.loading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || SITE_TRANSLATIONS['inspection.loadFailed'];
+          this.errorMessage = response.message || 'فشل تحميل بيانات المعاينة';
           return;
         }
 
@@ -105,7 +101,7 @@ export class InspectionProcessComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['inspection.loadError'];
+          'حدث خطأ أثناء تحميل بيانات المعاينة';
       },
     });
   }
@@ -143,6 +139,7 @@ export class InspectionProcessComponent implements OnChanges {
       inspectionNote: '',
     };
   }
+
   onFilesSelected(event: Event, type: AttachmentType): void {
     const input = event.target as HTMLInputElement;
     const newFiles = Array.from(input.files || []);
@@ -168,7 +165,7 @@ export class InspectionProcessComponent implements OnChanges {
     this.successMessage = '';
 
     if (!this.item?.id) {
-      this.formErrorMessage = SITE_TRANSLATIONS['inspection.formNotSelected'];
+      this.formErrorMessage = 'لم يتم تحديد طلب المعاينة المراد حفظه';
       return;
     }
 
@@ -205,11 +202,11 @@ export class InspectionProcessComponent implements OnChanges {
         this.saving = false;
 
         if (!response.isSuccess) {
-          this.formErrorMessage = response.message || SITE_TRANSLATIONS['inspection.saveFailed'];
+          this.formErrorMessage = response.message || 'فشل حفظ تقرير المعاينة';
           return;
         }
 
-        this.successMessage = response.message || SITE_TRANSLATIONS['inspection.saved'];
+        this.successMessage = response.message || 'تم حفظ تقرير المعاينة بنجاح';
 
         setTimeout(() => {
           this.saved.emit();
@@ -223,24 +220,24 @@ export class InspectionProcessComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['inspection.saveError'];
+          'حدث خطأ أثناء حفظ تقرير المعاينة';
       },
     });
   }
 
   validateForm(): boolean {
     if (!this.formModel.inspectorName.trim()) {
-      this.formErrorMessage = SITE_TRANSLATIONS['inspection.inspectorRequired'];
+      this.formErrorMessage = 'يرجى إدخال اسم المفتش';
       return false;
     }
 
     if (!this.formModel.opinion) {
-      this.formErrorMessage = SITE_TRANSLATIONS['inspection.opinionRequired'];
+      this.formErrorMessage = 'يرجى تحديد رأي المفتش';
       return false;
     }
 
     if (this.details?.isReturned && !this.formModel.inspectionNote.trim()) {
-      this.formErrorMessage = SITE_TRANSLATIONS['inspection.returnNoteRequired'];
+      this.formErrorMessage = 'يرجى إدخال ملاحظات الإعادة للمعاينة';
       return false;
     }
 
@@ -248,7 +245,7 @@ export class InspectionProcessComponent implements OnChanges {
       this.formModel.opinion === 'NonCompliant' &&
       !this.formModel.inspectionNote.trim()
     ) {
-      this.formErrorMessage = SITE_TRANSLATIONS['inspection.nonCompliantReasonRequired'];
+      this.formErrorMessage = 'يرجى إدخال سبب عدم المطابقة';
       return false;
     }
 
@@ -289,11 +286,11 @@ export class InspectionProcessComponent implements OnChanges {
 
   getAttachmentGroups(details: InspectionStepDetails): AttachmentGroup[] {
     return [
-      { title: SITE_TRANSLATIONS['common.entityLetters'], files: details.entityLetters || [] },
-      { title: SITE_TRANSLATIONS['common.proofDocuments'], files: details.proofDocuments || [] },
-      { title: SITE_TRANSLATIONS['common.engineeringReports'], files: details.engineeringReports || [] },
-      { title: SITE_TRANSLATIONS['common.inspectionReports'], files: details.inspectionReports || [] },
-      { title: SITE_TRANSLATIONS['common.otherAttachments'], files: details.otherAttachments || [] },
+      { title: 'خطابات الجهات', files: details.entityLetters || [] },
+      { title: 'مستندات الإثبات', files: details.proofDocuments || [] },
+      { title: 'التقارير الهندسية', files: details.engineeringReports || [] },
+      { title: 'تقارير المعاينة', files: details.inspectionReports || [] },
+      { title: 'مرفقات أخرى', files: details.otherAttachments || [] },
     ];
   }
 

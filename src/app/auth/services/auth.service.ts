@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, catchError, map, of } from 'rxjs';
 import { BaseAPI } from '../../Shared/Env/env';
-import { SITE_TRANSLATIONS } from '../../Shared/Enums/site-translations';
 
 export interface LoginRequest {
   username: string;
@@ -51,13 +50,13 @@ export class AuthService {
         if (!response.isSuccess) {
           return {
             success: false,
-            message: response.message || SITE_TRANSLATIONS['login.failed']
+            message: response.message || 'فشل تسجيل الدخول'
           };
         }
 
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('username', response.data.userName);
-        localStorage.setItem('role', response.data.role);
+        localStorage.setItem(this.tokenKey, response.data.token);
+        localStorage.setItem(this.usernameKey, response.data.userName);
+        localStorage.setItem(this.roleKey, response.data.role);
 
         return {
           success: true,
@@ -72,7 +71,7 @@ export class AuthService {
 
         return of({
           success: false,
-          message: error?.error?.message || SITE_TRANSLATIONS['login.connectionError']
+          message: error?.error?.message || 'حدث خطأ في الاتصال بالسيرفر'
         });
       })
     );
@@ -95,7 +94,7 @@ export class AuthService {
   }
 
   getUsername(): string {
-    return localStorage.getItem(this.usernameKey) || SITE_TRANSLATIONS['common.user'];
+    return localStorage.getItem(this.usernameKey) || 'مستخدم';
   }
 
   getRole(): string {

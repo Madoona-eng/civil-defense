@@ -12,12 +12,13 @@ import { LicensingProcessService } from '../../Services/licensing-process.servic
 import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
 import { DistrictService } from '../../../District/Services/district.service';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
-import { SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+
 
 @Component({
   selector: 'app-licensing-process-add',
   standalone: true,
-  imports: [CommonModule, FormsModule, SiteTranslationPipe],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './add.component.html',
   styleUrl: './add.component.scss'
 })

@@ -8,12 +8,12 @@ import {
 } from '../../Models/final-approval';
 
 import { FinalApprovalService } from '../../Services/final-approval.service';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 @Component({
   selector: 'app-final-approval-return-to-inspection',
   standalone: true,
-  imports: [CommonModule, FormsModule, SiteTranslationPipe],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './return-to-inspection.component.html',
   styleUrl: './return-to-inspection.component.scss'
 })
@@ -33,12 +33,12 @@ export class ReturnToInspectionComponent {
     this.errorMessage = '';
 
     if (!this.item?.id) {
-      this.errorMessage = SITE_TRANSLATIONS['final.returnNotSelected'];
+      this.errorMessage = 'لم يتم تحديد العنصر المراد إعادته للمعاينة';
       return;
     }
 
     if (!this.noteContent.trim()) {
-      this.errorMessage = SITE_TRANSLATIONS['final.returnReasonRequired'];
+      this.errorMessage = 'يرجى إدخال سبب الإعادة للمعاينة';
       return;
     }
 
@@ -51,7 +51,7 @@ export class ReturnToInspectionComponent {
           this.processing = false;
 
           if (!response.isSuccess) {
-            this.errorMessage = response.message || SITE_TRANSLATIONS['final.returnFailed'];
+            this.errorMessage = response.message || 'فشل إرجاع الطلب إلى مرحلة المعاينة';
             return;
           }
 
@@ -65,7 +65,7 @@ export class ReturnToInspectionComponent {
             err?.error?.message ||
             err?.error?.Message ||
             err?.message ||
-            SITE_TRANSLATIONS['final.returnError'];
+            'حدث خطأ أثناء إرجاع الطلب إلى مرحلة المعاينة';
         }
       });
   }

@@ -6,12 +6,13 @@ import {
   CreateRequestingEntityRequest
 } from '../../Models/requesting-entity';
 import { RequestingEntityService } from '../../Services/requesting-entity.service';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+
 
 @Component({
   selector: 'app-requesting-entity-add',
   standalone: true,
-  imports: [CommonModule, FormsModule, SiteTranslationPipe],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './add.component.html',
   styleUrl: './add.component.scss'
 })
@@ -46,12 +47,12 @@ export class AddComponent {
 
     // التحقق من أن الكود موجود وأكبر من الصفر (لا يسمح بالصفر أو السالب)
     if (code === null || code === undefined || code <= 0) {
-      this.errorMessage = SITE_TRANSLATIONS['entity.invalidCode'];
+      this.errorMessage = 'entity.invalidCode';
       return;
     }
 
     if (!name) {
-      this.errorMessage = SITE_TRANSLATIONS['entity.nameRequired'];
+      this.errorMessage = 'entity.nameRequired';
       return;
     }
 
@@ -67,11 +68,11 @@ export class AddComponent {
         this.saving = false;
 
         if (!res.isSuccess) {
-          this.errorMessage = res.message || SITE_TRANSLATIONS['entity.createFailed'];
+          this.errorMessage = res.message || 'entity.createFailed';
           return;
         }
 
-        this.successMessage = res.message || SITE_TRANSLATIONS['entity.createSucceeded'];
+        this.successMessage = res.message || 'entity.createSucceeded';
 
         this.formModel = {
           code: 0,
@@ -90,7 +91,7 @@ export class AddComponent {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['entity.createError'];
+          ['entity.createError'];
       }
     });
   }

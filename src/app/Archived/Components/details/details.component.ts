@@ -3,12 +3,12 @@ import { DatePipe } from '@angular/common';
 import { ArchivedService } from '../../Services/archived.service';
 import { ArchivedDetails } from '../../Models/archived';
 import { APPLICATION_STATUS_LABELS, APPLICANT_ROLE_LABELS, INSPECTION_OPINION_LABELS, PROCESS_STEP_LABELS, REVIEW_STATUS_LABELS } from '../../../Shared/Enums/enums';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [DatePipe, SiteTranslationPipe],
+  imports: [DatePipe, TranslatePipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
@@ -33,7 +33,7 @@ export class DetailsComponent implements OnInit {
       next: (res) => {
         this.isLoading = false;
         if (!res.isSuccess) {
-          this.errorMessage = res.message || SITE_TRANSLATIONS['archive.loadFailed'];
+          this.errorMessage = res.message || 'فشل تحميل تفاصيل الأرشيف';
           return;
         }
         this.details = res.data;
@@ -44,10 +44,11 @@ export class DetailsComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['archive.loadError'];
+          'حدث خطأ أثناء تحميل التفاصيل الأرشيفية';
       },
     });
   }
+
   getOpinionLabel(opinion: string): string {
     return INSPECTION_OPINION_LABELS[opinion as keyof typeof INSPECTION_OPINION_LABELS] ?? opinion;
   }
@@ -58,7 +59,7 @@ export class DetailsComponent implements OnInit {
 
   getApplicantRoleLabel(role: string): string {
     return role === 'Agent'
-      ? SITE_TRANSLATIONS['applicant.proxy']
+      ? 'وكيل'
       : APPLICANT_ROLE_LABELS[role as keyof typeof APPLICANT_ROLE_LABELS] ?? role;
   }
 

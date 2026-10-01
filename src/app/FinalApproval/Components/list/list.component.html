@@ -1,21 +1,21 @@
 <section class="filters-card" dir="rtl">
   <div class="filters-row-primary">
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
-      <mat-label>{{ 'common.search' | t }}</mat-label>
+      <mat-label>بحث</mat-label>
       <mat-icon matPrefix>search</mat-icon>
       <input
         matInput
         type="text"
         [(ngModel)]="searchTerm"
-        [placeholder]="'final.searchPlaceholder' | t"
+        placeholder="ابحث برقم الطلب أو اسم المنشأة..."
         (keyup.enter)="search()"
       />
     </mat-form-field>
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
-      <mat-label>{{ 'common.requestingEntity' | t }}</mat-label>
+      <mat-label>الجهة الطالبة</mat-label>
       <mat-select [(ngModel)]="requestingEntityId">
-        <mat-option value="">{{ 'common.allEntities' | t }}</mat-option>
+        <mat-option value="">جميع الجهات</mat-option>
         <mat-option *ngFor="let entity of requestingEntities" [value]="entity.id">
           {{ entity.name }}
         </mat-option>
@@ -23,9 +23,9 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
-      <mat-label>{{ 'common.district' | t }}</mat-label>
+      <mat-label>النعمة / الحي</mat-label>
       <mat-select [(ngModel)]="districtId">
-        <mat-option value="">{{ 'common.allDistricts' | t }}</mat-option>
+        <mat-option value="">جميع الأحياء</mat-option>
         <mat-option *ngFor="let district of districts" [value]="district.id">
           {{ district.name }}
         </mat-option>
@@ -35,9 +35,9 @@
 
   <div class="filters-row-secondary">
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
-      <mat-label>{{ 'common.activity' | t }}</mat-label>
+      <mat-label>النشاط</mat-label>
       <mat-select [(ngModel)]="activityTypeId">
-        <mat-option value="">{{ 'common.allActivities' | t }}</mat-option>
+        <mat-option value="">جميع الأنشطة</mat-option>
         <mat-option *ngFor="let activity of activityTypes" [value]="activity.id">
           {{ activity.name }}
         </mat-option>
@@ -45,11 +45,11 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
-      <mat-label>{{ 'common.opinion' | t }}</mat-label>
+      <mat-label>الرأي</mat-label>
       <mat-select [(ngModel)]="opinion">
-        <mat-option value="">{{ 'common.allOpinions' | t }}</mat-option>
-        <mat-option value="Compliant">{{ 'final.opinionCompliant' | t }}</mat-option>
-        <mat-option value="NonCompliant">{{ 'final.opinionNonCompliant' | t }}</mat-option>
+        <mat-option value="">جميع الآراء</mat-option>
+        <mat-option value="Compliant">مطابق</mat-option>
+        <mat-option value="NonCompliant">غير مطابق</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
@@ -57,12 +57,12 @@
   <div class="filter-actions">
     <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
       <mat-icon>search</mat-icon>
-      <span>{{ 'common.search' | t }}</span>
+      <span>بحث</span>
     </button>
 
     <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
       <mat-icon>refresh</mat-icon>
-      <span>{{ 'common.reset' | t }}</span>
+      <span>إعادة ضبط</span>
     </button>
   </div>
 </section>
@@ -70,17 +70,17 @@
 <section class="table-card" dir="rtl">
   <div class="table-header">
     <div>
-      <h3>{{ 'final.list' | t }}</h3>
+      <h3>قائمة الموافقات النهائية</h3>
     </div>
 
     <div class="table-count">
       <span>{{ totalCount }}</span>
-      <small>{{ 'final.unit' | t }}</small>
+      <small>طلب</small>
     </div>
   </div>
 
   <div class="loading-box" *ngIf="isLoading">
-    {{ 'final.loadingList' | t }}
+    جاري تحميل القائمة...
   </div>
 
   <div class="message error" *ngIf="errorMessage">
@@ -89,24 +89,24 @@
 
   <div class="empty-box" *ngIf="!isLoading && items.length === 0 && !errorMessage">
     <div class="empty-icon">📭</div>
-    <h4>{{ 'final.emptyTitle' | t }}</h4>
-    <p>{{ 'final.emptyDescription' | t }}</p>
+    <h4>لا توجد بيانات</h4>
+    <p>لم يتم العثور على أي طلبات مطابقة لشروط البحث.</p>
   </div>
 
   <div class="table-scroll" *ngIf="!isLoading && items.length > 0">
     <table>
       <thead>
         <tr>
-          <th>{{ 'common.requestCode' | t }}</th>
-          <th>{{ 'common.submissionDate' | t }}</th>
-          <th>{{ 'common.establishment' | t }}</th>
-          <th>{{ 'common.address' | t }}</th>
-          <th>{{ 'common.requestingEntity' | t }}</th>
-          <th>{{ 'common.district' | t }}</th>
-          <th>{{ 'common.activity' | t }}</th>
-          <th>{{ 'common.applicant' | t }}</th>
-          <th>{{ 'common.currentStep' | t }}</th>
-          <th>{{ 'common.actions' | t }}</th>
+          <th>رقم الطلب</th>
+          <th>تاريخ تقديم الطلب</th>
+          <th>المنشأة</th>
+          <th>العنوان</th>
+          <th>الجهة الطالبة</th>
+          <th>الحي</th>
+          <th>النشاط</th>
+          <th>مقدم الطلب</th>
+          <th>الخطوة الحالية</th>
+          <th>الإجراءات</th>
         </tr>
       </thead>
 
@@ -145,24 +145,25 @@
               type="button"
               class="actions-menu-trigger"
               [matMenuTriggerFor]="actionsMenu"
-              [attr.aria-label]="'common.options' | t">
+              aria-label="خيارات">
               <mat-icon>more_vert</mat-icon>
             </button>
 
             <mat-menu #actionsMenu="matMenu" xPosition="before">
               <button mat-menu-item (click)="requestDetails(item.id)">
                 <mat-icon>visibility</mat-icon>
-                <span>{{ 'archive.details' | t }}</span>
+                <span>التفاصيل</span>
               </button>
 
               <button mat-menu-item *ngIf="canManageFinalApproval" (click)="requestEdit(item)">
                 <mat-icon>fact_check</mat-icon>
-                <span>{{ 'final.approval' | t }}</span>
+                <span>الموافقة النهائية</span>
               </button>
 
               <button mat-menu-item *ngIf="canManageFinalApproval" (click)="requestReturn(item)">
                 <mat-icon>undo</mat-icon>
-                <span>{{ 'final.returnToInspection' | t }}</span>
+
+                <span>إعادة للمعاينة</span>
               </button>
 
               <button
@@ -171,12 +172,12 @@
                 (click)="moveToArchive(item)"
                 [disabled]="archivingItemId === item.id">
                 <mat-icon>archive</mat-icon>
-                <span>{{ 'final.moveArchive' | t }}</span>
+                <span>نقل للأرشيف</span>
               </button>
 
               <button mat-menu-item (click)="requestDelete(item)">
                 <mat-icon>delete_outline</mat-icon>
-                <span>{{ 'common.delete' | t }}</span>
+                <span>حذف</span>
               </button>
             </mat-menu>
           </td>
@@ -187,13 +188,13 @@
 
   <div class="pagination" *ngIf="!isLoading && totalPages > 0">
     <button type="button" (click)="previousPage()" [disabled]="!hasPreviousPage">
-      {{ 'common.previous' | t }}
+      السابق
     </button>
 
-    <span>{{ 'common.pageOf' | t: { page: pageNumber, pages: totalPages } }}</span>
+    <span>صفحة {{ pageNumber }} من {{ totalPages }}</span>
 
     <button type="button" (click)="nextPage()" [disabled]="!hasNextPage">
-      {{ 'common.next' | t }}
+      التالي
     </button>
   </div>
 </section>

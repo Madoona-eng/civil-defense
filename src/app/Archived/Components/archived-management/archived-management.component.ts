@@ -6,12 +6,12 @@ import { DetailsComponent } from '../details/details.component';
 import { Archived, ArchivedFilter, LookupItem } from '../../Models/archived';
 import { ArchivedService } from '../../Services/archived.service';
 import { CommonModule } from '@angular/common';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 @Component({
   selector: 'app-archived-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, ListComponent, DetailsComponent, SiteTranslationPipe],
+  imports: [CommonModule, FormsModule, ListComponent, DetailsComponent, TranslatePipe],
   templateUrl: './archived-management.component.html',
   styleUrl: './archived-management.component.scss'
 })
@@ -96,7 +96,7 @@ export class ArchivedManagementComponent implements OnInit {
         }
       },
       error: (err) => {
-        alert(err?.error?.message || SITE_TRANSLATIONS['archive.deleteError']);
+        alert(err?.error?.message || 'حدث خطأ أثناء حذف العنصر الأرشيفي');
       }
     });
   }

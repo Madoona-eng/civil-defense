@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ApiResponse, District } from '../../Models/district';
 import { DistrictService } from '../../Services/district.service';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 @Component({
   selector: 'app-district-delete',
   standalone: true,
-  imports: [CommonModule, SiteTranslationPipe],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './delete.component.html',
   styleUrl: './delete.component.scss'
 })
@@ -24,7 +24,7 @@ export class DeleteComponent {
 
   confirmDelete(): void {
     if (!this.district?.id) {
-      this.errorMessage = SITE_TRANSLATIONS['district.notSelected'];
+      this.errorMessage = 'لم يتم تحديد الحي / المركز المراد حذفه';
       return;
     }
 
@@ -36,7 +36,7 @@ export class DeleteComponent {
         this.deleting = false;
 
         if (!res.isSuccess) {
-          this.errorMessage = res.message || SITE_TRANSLATIONS['district.deleteFailed'];
+          this.errorMessage = res.message || 'فشل حذف الحي / المركز';
           return;
         }
 
@@ -50,7 +50,7 @@ export class DeleteComponent {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['district.deleteError'];
+          'حدث خطأ أثناء حذف الحي / المركز';
       }
     });
   }

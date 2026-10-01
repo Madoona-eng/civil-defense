@@ -5,12 +5,12 @@ import {
   LicensingProcessDetails
 } from '../../Models/licensing-process';
 import { LicensingProcessService } from '../../Services/licensing-process.service';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 @Component({
   selector: 'app-licensing-process-details',
   standalone: true,
-  imports: [CommonModule, SiteTranslationPipe],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss'
 })
@@ -46,7 +46,7 @@ export class DetailsComponent implements OnChanges {
         this.loading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || SITE_TRANSLATIONS['licensing.loadFailed'];
+          this.errorMessage = response.message || 'فشل تحميل بيانات الترخيص';
           return;
         }
 
@@ -60,7 +60,7 @@ export class DetailsComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['licensing.loadError'];
+          'حدث خطأ أثناء تحميل بيانات الترخيص';
       }
     });
   }
@@ -71,19 +71,19 @@ export class DetailsComponent implements OnChanges {
 
   getStepLabel(step: string | null): string {
     if (step === 'Inspection') {
-      return SITE_TRANSLATIONS['step.inspection'];
+      return 'التفتيش / المعاينة';
     }
 
     if (step === 'FinalApproval') {
-      return SITE_TRANSLATIONS['step.finalApproval'];
+      return 'الموافقة النهائية';
     }
 
     if (step === 'Archive') {
-      return SITE_TRANSLATIONS['step.archive'];
+      return 'الأرشيف';
     }
 
     if (step === 'NewLicense') {
-      return SITE_TRANSLATIONS['step.newLicense'];
+      return 'ترخيص جديد';
     }
 
     return step || '-';
@@ -91,11 +91,11 @@ export class DetailsComponent implements OnChanges {
 
   getOpinionLabel(opinion: string | null): string {
     if (opinion === 'Compliant') {
-      return SITE_TRANSLATIONS['licensing.compliant'];
+      return 'مطابق';
     }
 
     if (opinion === 'NonCompliant') {
-      return SITE_TRANSLATIONS['licensing.nonCompliant'];
+      return 'غير مطابق';
     }
 
     return opinion || '-';

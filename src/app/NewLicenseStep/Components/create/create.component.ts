@@ -19,7 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { APPLICANT_ROLE_LABELS, ApplicantRole } from '../../../Shared/Enums/enums';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 import { formatDateForApi } from '../../../Shared/Helpers/date.helper';
 import { ApiResponse } from '../../../Shared/Models/ApiResponse';
 import { LookupItem } from '../../../Shared/Models/LookupItem';
@@ -38,6 +38,12 @@ type AttachmentField =
   | 'engineeringReports'
   | 'otherAttachments';
 
+class LocalTranslateService {
+  instant(key: string): string {
+    return key;
+  }
+}
+
 @Component({
   selector: 'app-create',
   standalone: true,
@@ -53,7 +59,7 @@ type AttachmentField =
     MatInputModule,
     MatSelectModule,
     MatSnackBarModule,
-    SiteTranslationPipe,
+    TranslatePipe
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -61,10 +67,11 @@ type AttachmentField =
 export class CreateComponent {
   form: FormGroup;
   saving = false;
-  errorMessage = '';
+  errorMessage: string | string[] = '';
   attemptedSave = false;
+  private readonly translate = new LocalTranslateService();
 
-  private readonly moveToInspectionFallbackError = SITE_TRANSLATIONS['newLicense.moveFallbackError'];
+  private readonly moveToInspectionFallbackError = 'newLicense.moveFallbackError';
 
   readonly applicantRoles = Object.values(ApplicantRole);
   readonly applicantRoleLabels = APPLICANT_ROLE_LABELS;
@@ -92,7 +99,7 @@ export class CreateComponent {
     this.activityTypes = data.activityTypes;
 
     this.form = this.fb.group({
-      submissionDate: [null, [Validators.required, this.notFutureDateValidator]],
+      submissionDate: [null, [Validators.required, this.notFutureDateValidator.bind(this)]],
       requestingEntityId: ['', Validators.required],
       establishmentName: ['', [Validators.required, Validators.maxLength(200)]],
       establishmentAddress: ['', [Validators.required, Validators.maxLength(500)]],
@@ -163,7 +170,7 @@ export class CreateComponent {
       next: (res: ApiResponse<string>) => {
         if (!res.isSuccess || !res.data) {
           this.saving = false;
-          this.errorMessage = res.message || SITE_TRANSLATIONS['newLicense.createFailed'];
+          this.errorMessage = res.message || this.translate.instant('newLicense.createFailed');
           return;
         }
 
@@ -171,43 +178,46 @@ export class CreateComponent {
 
         if (!moveToInspection) {
           this.saving = false;
-          this.snackBar.open(res.message || SITE_TRANSLATIONS['newLicense.createSucceeded'], SITE_TRANSLATIONS['common.close'], { duration: 6000 });
+          this.showSnackBar(res.message || 'newLicense.createSucceeded');
           (document.activeElement as HTMLElement)?.blur();
           this.dialogRef.close(true);
           return;
         }
 
-        // المستخدم عايز ينقل على طول لمرحلة المعاينة
         this.newLicenseService.moveToInspection(processId).subscribe({
           next: (moveRes: ApiResponse<boolean>) => {
             this.saving = false;
 
             if (!moveRes.isSuccess) {
-              // المعاملة اتحفظت لكن النقل فشل - الديالوج يفضل فاتح ويوضح الخطأ
-              this.errorMessage = moveRes.message || this.moveToInspectionFallbackError;
+              this.errorMessage = moveRes.message || this.translate.instant(this.moveToInspectionFallbackError);
               return;
             }
 
-            this.snackBar.open(SITE_TRANSLATIONS['newLicense.movedOnCreate'], SITE_TRANSLATIONS['common.close'], {
-              duration: 6000,
-            });
+            this.showSnackBar('newLicense.movedOnCreate');
             (document.activeElement as HTMLElement)?.blur();
             this.dialogRef.close(true);
           },
           error: (err) => {
             this.saving = false;
             this.errorMessage =
-              err?.error?.message || err?.message || this.moveToInspectionFallbackError;
+              err?.error?.message || err?.message || this.translate.instant(this.moveToInspectionFallbackError);
             console.error('NewLicense moveToInspection error:', err);
           },
         });
       },
       error: (err) => {
         this.saving = false;
-        this.errorMessage = err?.error?.message || err?.message || SITE_TRANSLATIONS['newLicense.createError'];
+        this.errorMessage =
+          err?.error?.message || err?.message || this.translate.instant('newLicense.createError');
         console.error('NewLicense CREATE error:', err);
       },
     });
+  }
+
+  private showSnackBar(messageKey: string): void {
+    const message = this.translate.instant(messageKey);
+    const closeAction = this.translate.instant('common.close');
+    this.snackBar.open(message, closeAction, { duration: 6000 });
   }
 
   cancel(): void {

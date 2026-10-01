@@ -23,17 +23,27 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../../../Shared/Components/confirm-dialog/confirm-dialog.component';
 import { AuthService } from '../../../auth/services/auth.service';
-import { SITE_TRANSLATIONS, SiteTranslationPipe, translateSiteText } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-inspection-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatMenuModule, MatButtonModule, MatTooltipModule, SiteTranslationPipe, MatDialogModule, MatSnackBarModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatDialogModule,
+    MatSnackBarModule,
+  ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
 })
@@ -78,7 +88,7 @@ export class ListComponent implements OnInit {
     private readonly authService: AuthService,
     private readonly dialog: MatDialog,
     private readonly snackBar: MatSnackBar,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadLookups();
@@ -125,7 +135,7 @@ export class ListComponent implements OnInit {
       activityTypeId: this.activityTypeId || undefined,
       isReturned:
         this.isReturned === '' ? undefined : this.isReturned === 'true',
-        opinion: this.opinion || undefined,
+      opinion: this.opinion || undefined,
       submissionDateFrom: this.submissionDateFrom || undefined,
       submissionDateTo: this.submissionDateTo || undefined,
       searchTerm: this.searchTerm.trim() || undefined,
@@ -138,7 +148,7 @@ export class ListComponent implements OnInit {
         this.isLoading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || SITE_TRANSLATIONS['inspection.listLoadFailed'];
+          this.errorMessage = response.message || 'فشل في تحميل قائمة المعاينات.';
           return;
         }
 
@@ -158,7 +168,7 @@ export class ListComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['inspection.listLoadError'];
+          'حدث خطأ أثناء تحميل بيانات المعاينات.';
       },
     });
   }
@@ -176,6 +186,7 @@ export class ListComponent implements OnInit {
     this.isReturned = '';
     this.submissionDateFrom = '';
     this.submissionDateTo = '';
+    this.opinion = '';
     this.pageNumber = 1;
     this.loadInspections();
   }
@@ -215,11 +226,9 @@ export class ListComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '360px',
       data: {
-        message: translateSiteText('inspection.movePrompt', {
-          establishmentName: item.establishmentName,
-        }),
-        confirmText: SITE_TRANSLATIONS['inspection.moveToFinalApproval'],
-        cancelText: SITE_TRANSLATIONS['common.cancel'],
+        message: `هل أنت تأكد من نقل المنشأة "${item.establishmentName}" للموافقة النهائية؟`,
+        confirmText: 'نقل للموافقة النهائية',
+        cancelText: 'إلغاء',
         confirmClass: 'btn-save',
       },
     });
@@ -229,30 +238,30 @@ export class ListComponent implements OnInit {
 
       this.movingToFinalApprovalId = item.id;
       this.inspectionService.moveToFinalApproval(item.id).subscribe({
-        next: response => {
+        next: (response) => {
           this.movingToFinalApprovalId = null;
 
           if (!response.isSuccess) {
             this.snackBar.open(
-              response.message || SITE_TRANSLATIONS['inspection.moveFailed'],
-              SITE_TRANSLATIONS['common.close'],
+              response.message || 'فشلت عملية النقل للموافقة النهائية.',
+              'إغلاق',
               { duration: 3000 },
             );
             return;
           }
 
           this.snackBar.open(
-            SITE_TRANSLATIONS['inspection.moved'],
-            SITE_TRANSLATIONS['common.close'],
+            'تم نقل الطلب بنجاح للموافقة النهائية.',
+            'إغلاق',
             { duration: 2500 },
           );
           this.loadInspections();
         },
-        error: error => {
+        error: (error) => {
           this.movingToFinalApprovalId = null;
           this.snackBar.open(
-            error?.error?.message || error?.message || SITE_TRANSLATIONS['inspection.moveError'],
-            SITE_TRANSLATIONS['common.close'],
+            error?.error?.message || error?.message || 'حدث خطأ أثناء نقل الطلب.',
+            'إغلاق',
             { duration: 3000 },
           );
         },
@@ -260,28 +269,25 @@ export class ListComponent implements OnInit {
     });
   }
 
-  //TODO : Use enum for step values instead of hardcoded strings 
   getStepLabel(step: string): string {
     if (step === 'Inspection') {
-      return SITE_TRANSLATIONS['step.inspection'];
+      return 'المعاينة';
     }
 
     if (step === 'FinalApproval') {
-      return SITE_TRANSLATIONS['step.finalApproval'];
+      return 'الموافقة النهائية';
     }
 
     if (step === 'Archive') {
-      return SITE_TRANSLATIONS['step.archive'];
+      return 'الأرشيف';
     }
 
     if (step === 'NewLicense') {
-      return SITE_TRANSLATIONS['step.newLicense'];
+      return 'رخصة جديدة';
     }
 
     return step || '-';
   }
-
-
 
   onPageSizeChange(): void {
     this.pageSize = Number(this.pageSize);

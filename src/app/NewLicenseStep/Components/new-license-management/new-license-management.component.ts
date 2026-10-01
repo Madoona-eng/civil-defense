@@ -25,9 +25,10 @@ import { formatDateForApi } from '../../../Shared/Helpers/date.helper';
 import { ApiResponse } from '../../../Shared/Models/ApiResponse';
 import { LookupItem } from '../../../Shared/Models/LookupItem';
 import { PagedResult } from '../../../Shared/Models/PagedResult';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 import { CreateComponent, CreateDialogData } from '../create/create.component';
 import { DetailsComponent, DetailsDialogData } from '../details/details.component';
-import { SITE_TRANSLATIONS, SiteTranslationPipe, translateSiteText } from '../../../Shared/Enums/site-translations';
+
 
 @Component({
   selector: 'app-new-license-management',
@@ -45,7 +46,8 @@ import { SITE_TRANSLATIONS, SiteTranslationPipe, translateSiteText } from '../..
     MatSelectModule,
     MatDialogModule,
     MatSnackBarModule,
-    SiteTranslationPipe,
+    TranslatePipe,
+  
   ],
   templateUrl: './new-license-management.component.html',
   styleUrl: './new-license-management.component.scss',
@@ -86,6 +88,14 @@ export class NewLicenseManagementComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly snackBar: MatSnackBar,
   ) {}
+
+  private snackMessage(message: string | string[] | undefined, fallback: string): string {
+    if (Array.isArray(message)) {
+      return message.join(' ');
+    }
+
+    return message || fallback;
+  }
 
   ngOnInit(): void {
     this.loadLookups();
@@ -140,7 +150,7 @@ export class NewLicenseManagementComponent implements OnInit {
         this.isLoading = false;
 
         if (!res.isSuccess || !res.data) {
-          this.errorMessage = res.message || SITE_TRANSLATIONS['newLicense.listLoadFailed'];
+          this.errorMessage = res.message || 'newLicense.listLoadFailed';
           return;
         }
 
@@ -153,7 +163,7 @@ export class NewLicenseManagementComponent implements OnInit {
       error: (err) => {
         this.isLoading = false;
         this.errorMessage =
-          err?.error?.message || err?.message || SITE_TRANSLATIONS['newLicense.listLoadError'];
+          err?.error?.message || err?.message || ['newLicense.listLoadError'];
         console.error('NewLicense GET error:', err);
       },
     });
@@ -219,8 +229,8 @@ export class NewLicenseManagementComponent implements OnInit {
       width: '360px',
       data: {
         message: translateSiteText('newLicense.movePrompt', { establishmentName: item.establishmentName }),
-        confirmText: SITE_TRANSLATIONS['newLicense.confirmMove'],
-        cancelText: SITE_TRANSLATIONS['common.cancel'],
+        confirmText: ['newLicense.confirmMove'],
+        cancelText: ['common.cancel'],
         confirmClass: 'btn-save',
       },
     });
@@ -231,18 +241,18 @@ export class NewLicenseManagementComponent implements OnInit {
       this.newLicenseService.moveToInspection(item.id).subscribe({
         next: (res: ApiResponse<boolean>) => {
           if (!res.isSuccess) {
-            this.snackBar.open(res.message || SITE_TRANSLATIONS['newLicense.moveFailed'], SITE_TRANSLATIONS['common.close'], {
+            this.snackBar.open(this.snackMessage(res.message, 'newLicense.moveFailed'), 'common.close', {
               duration: 3000,
             });
             return;
           }
 
-          this.snackBar.open(SITE_TRANSLATIONS['newLicense.moved'], SITE_TRANSLATIONS['common.close'], { duration: 2500 });
+          this.snackBar.open(this.snackMessage(['newLicense.moved'], 'newLicense.moved'), 'common.close', { duration: 2500 });
           this.loadData();
         },
         error: (err) => {
-          const message = err?.error?.message || err?.message || SITE_TRANSLATIONS['newLicense.moveError'];
-          this.snackBar.open(message, SITE_TRANSLATIONS['common.close'], { duration: 3000 });
+          const message = this.snackMessage(err?.error?.message || err?.message || ['newLicense.moveError'], 'newLicense.moveError');
+          this.snackBar.open(message, 'common.close', { duration: 3000 });
           console.error('NewLicense MOVE-TO-INSPECTION error:', err);
         },
       });
@@ -253,8 +263,8 @@ export class NewLicenseManagementComponent implements OnInit {
       width: '360px',
       data: {
         message: translateSiteText('newLicense.deletePrompt', { establishmentName: item.establishmentName }),
-        confirmText: SITE_TRANSLATIONS['common.clear'],
-        cancelText: SITE_TRANSLATIONS['common.cancel'],
+        confirmText: ['common.clear'],
+        cancelText: ['common.cancel'],
         confirmClass: 'btn-danger',
       },
     });
@@ -265,19 +275,23 @@ export class NewLicenseManagementComponent implements OnInit {
       this.newLicenseService.delete(item.id).subscribe({
         next: (res: ApiResponse<boolean>) => {
           if (!res.isSuccess) {
-            this.snackBar.open(res.message || SITE_TRANSLATIONS['newLicense.deleteFailed'], SITE_TRANSLATIONS['common.close'], { duration: 3000 });
+            this.snackBar.open(this.snackMessage(res.message, 'newLicense.deleteFailed'), 'common.close', { duration: 3000 });
             return;
           }
 
-          this.snackBar.open(SITE_TRANSLATIONS['newLicense.deleted'], SITE_TRANSLATIONS['common.close'], { duration: 2500 });
+          this.snackBar.open('newLicense.deleted', 'common.close', { duration: 2500 });
           this.loadData();
         },
         error: (err) => {
-          const message = err?.error?.message || err?.message || SITE_TRANSLATIONS['newLicense.deleteError'];
-          this.snackBar.open(message, SITE_TRANSLATIONS['common.close'], { duration: 3000 });
+          const message = this.snackMessage(err?.error?.message || err?.message || 'newLicense.deleteError', 'newLicense.deleteError');
+          this.snackBar.open(message, 'common.close', { duration: 3000 });
           console.error('NewLicense DELETE error:', err);
         },
       });
     });
   }
 }
+function translateSiteText(arg0: string, arg1: { establishmentName: string; }): any {
+  throw new Error('Function not implemented.');
+}
+

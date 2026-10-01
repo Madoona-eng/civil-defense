@@ -12,16 +12,27 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../Shared/Components/confirm-dialog/confirm-dialog.component';
-import { SITE_TRANSLATIONS, SiteTranslationPipe, translateSiteText } from '../Shared/Enums/site-translations';
 import { AuthService } from '../auth/services/auth.service';
 import { NewLicenseService } from '../NewLicenseStep/Services/new-license.service';
 
 @Component({
   selector: 'app-shop-licenses',
   standalone: true,
-  imports: [CommonModule, FormsModule, DetailsComponent, EditComponent, DeleteComponent, SiteTranslationPipe, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MatDialogModule, MatSnackBarModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DetailsComponent,
+    EditComponent,
+    DeleteComponent,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDialogModule,
+    MatSnackBarModule,
+  ],
   templateUrl: './shop-licenses.component.html',
-  styleUrl: './shop-licenses.component.scss'
+  styleUrl: './shop-licenses.component.scss',
 })
 export class ShopLicensesComponent implements OnInit {
   @Output() editRequested = new EventEmitter<string>();
@@ -44,11 +55,11 @@ export class ShopLicensesComponent implements OnInit {
   searchTerm = '';
   processStep = '';
   processSteps = [
-    { label: SITE_TRANSLATIONS['shop.allStages'], value: '' },
-    { label: SITE_TRANSLATIONS['shop.application'], value: 'APPLICATION' },
-    { label: SITE_TRANSLATIONS['shop.inspection'], value: 'INSPECTION' },
-    { label: SITE_TRANSLATIONS['shop.finalApproval'], value: 'FINAL_APPROVAL' },
-    { label: SITE_TRANSLATIONS['shop.archive'], value: 'ARCHIVE' }
+    { label: 'جميع المراحل', value: '' },
+    { label: 'تقديم الطلب', value: 'APPLICATION' },
+    { label: 'المعاينة', value: 'INSPECTION' },
+    { label: 'الموافقة النهائية', value: 'FINAL_APPROVAL' },
+    { label: 'الأرشيف', value: 'ARCHIVE' },
   ];
 
   pageNumber = 1;
@@ -79,15 +90,15 @@ export class ShopLicensesComponent implements OnInit {
       pageNumber: this.pageNumber,
       pageSize: this.pageSize,
       searchTerm: this.searchTerm || undefined,
-      processStep: this.processStep || undefined
+      processStep: this.processStep || undefined,
     };
 
     this.licensingProcessService.getAll(queryParams).subscribe({
-      next: response => {
+      next: (response) => {
         this.isLoading = false;
 
         if (response && response.isSuccess === false) {
-          this.errorMessage = response.message || SITE_TRANSLATIONS['shop.loadFailed'];
+          this.errorMessage = response.message || 'فشل في تحميل تراخيص المحال.';
           return;
         }
 
@@ -104,63 +115,134 @@ export class ShopLicensesComponent implements OnInit {
           return {
             ...item,
             id: item.id || item.Id,
-            transactionCode: this.getValue(item, ['transactionCode', 'code', 'Code', 'TransactionCode', 'requestNumber', 'licenseNumber']),
-            submissionDate: this.getValue(item, ['createdDate', 'createdAt', 'creationDate', 'CreatedDate', 'requestDate', 'submissionDate', 'date']),
+            transactionCode: this.getValue(item, [
+              'transactionCode',
+              'code',
+              'Code',
+              'TransactionCode',
+              'requestNumber',
+              'licenseNumber',
+            ]),
+            submissionDate: this.getValue(item, [
+              'createdDate',
+              'createdAt',
+              'creationDate',
+              'CreatedDate',
+              'requestDate',
+              'submissionDate',
+              'date',
+            ]),
 
             // اسم المنشأة / المحل
             establishmentName: this.getValue(item, [
-              'establishmentName', 'facilityName', 'shopName', 'name', 'title',
-              'FacilityName', 'ShopName', 'facility.name', 'shop.name', 'establishment.name',
-              'facility.title', 'shop.title'
+              'establishmentName',
+              'facilityName',
+              'shopName',
+              'name',
+              'title',
+              'FacilityName',
+              'ShopName',
+              'facility.name',
+              'shop.name',
+              'establishment.name',
+              'facility.title',
+              'shop.title',
             ]),
 
             // العنوان
             establishmentAddress: this.getValue(item, [
-              'establishmentAddress', 'address', 'location', 'shopAddress',
-              'Address', 'Location', 'facility.address', 'shop.address', 'establishment.address',
-              'detailsAddress', 'fullAddress'
+              'establishmentAddress',
+              'address',
+              'location',
+              'shopAddress',
+              'Address',
+              'Location',
+              'facility.address',
+              'shop.address',
+              'establishment.address',
+              'detailsAddress',
+              'fullAddress',
             ]),
 
             // الجهة
             requestingEntity: this.getValue(item, [
-              'requestingEntity', 'requestingEntityName', 'entityName', 'entity',
-              'requestingEntity.name', 'requestingEntity.title', 'entity.name', 'EntityName',
-              'requestingEntityTitle', 'entityTitle'
+              'requestingEntity',
+              'requestingEntityName',
+              'entityName',
+              'entity',
+              'requestingEntity.name',
+              'requestingEntity.title',
+              'entity.name',
+              'EntityName',
+              'requestingEntityTitle',
+              'entityTitle',
             ]),
 
             // المركز / المنطقة
             district: this.getValue(item, [
-              'district', 'districtName', 'centerName', 'regionName', 'center', 'region',
-              'district.name', 'center.name', 'region.name', 'district.title', 'DistrictName',
-              'districtTitle', 'centerTitle'
+              'district',
+              'districtName',
+              'centerName',
+              'regionName',
+              'center',
+              'region',
+              'district.name',
+              'center.name',
+              'region.name',
+              'district.title',
+              'DistrictName',
+              'districtTitle',
+              'centerTitle',
             ]),
 
             // نوع النشاط
             activityType: this.getValue(item, [
-              'activityType', 'activityTypeName', 'activityType.name', 'activityType.title',
-              'ActivityTypeName', 'activityTypeTitle', 'businessType', 'activity'
+              'activityType',
+              'activityTypeName',
+              'activityType.name',
+              'activityType.title',
+              'ActivityTypeName',
+              'activityTypeTitle',
+              'businessType',
+              'activity',
             ]),
 
             // مقدم الطلب
             applicantName: this.getValue(item, [
-              'applicantName', 'createdByName', 'applicant', 'createdBy', 'ApplicantName',
-              'applicant.name', 'applicant.fullName', 'ownerName', 'clientName'
+              'applicantName',
+              'createdByName',
+              'applicant',
+              'createdBy',
+              'ApplicantName',
+              'applicant.name',
+              'applicant.fullName',
+              'ownerName',
+              'clientName',
             ]),
 
-            currentStep: item.processStep ?? item.step ?? item.ProcessStep ?? item.Step ?? item.status ?? item.statusId ?? item.Status
+            currentStep:
+              item.processStep ??
+              item.step ??
+              item.ProcessStep ??
+              item.Step ??
+              item.status ??
+              item.statusId ??
+              item.Status,
           };
         });
 
         this.totalCount = responseData.totalCount || this.items.length;
-        this.totalPages = responseData.totalPages || Math.ceil(this.totalCount / this.pageSize) || 1;
+        this.totalPages =
+          responseData.totalPages || Math.ceil(this.totalCount / this.pageSize) || 1;
 
         this.updatePaginationState();
       },
-      error: err => {
+      error: (err) => {
         this.isLoading = false;
         console.error('LicensingProcess GET error:', err);
-        this.errorMessage = err?.error?.message || err?.message || SITE_TRANSLATIONS['shop.loadError'];
-      }
+        this.errorMessage =
+          err?.error?.message || err?.message || 'حدث خطأ أثناء تحميل بيانات تراخيص المحال.';
+      },
     });
   }
 
@@ -171,17 +253,32 @@ export class ShopLicensesComponent implements OnInit {
       let val: any;
 
       if (key.includes('.')) {
-        val = key.split('.').reduce((acc, part) => (acc && acc[part] !== undefined ? acc[part] : undefined), obj);
+        val = key.split('.').reduce(
+          (acc, part) => (acc && acc[part] !== undefined ? acc[part] : undefined),
+          obj,
+        );
       } else {
         val = obj[key];
       }
 
       // إذا كانت القيمة عبارة عن Object يحتوي على أسم أو عنوان
       if (val && typeof val === 'object') {
-        val = val.name || val.title || val.arName || val.nameAr || val.enName || val.value || null;
+        val =
+          val.name ||
+          val.title ||
+          val.arName ||
+          val.nameAr ||
+          val.enName ||
+          val.value ||
+          null;
       }
 
-      if (val !== null && val !== undefined && String(val).trim() !== '' && String(val) !== 'null') {
+      if (
+        val !== null &&
+        val !== undefined &&
+        String(val).trim() !== '' &&
+        String(val) !== 'null'
+      ) {
         return String(val);
       }
     }
@@ -251,23 +348,27 @@ export class ShopLicensesComponent implements OnInit {
 
   getStepLabel(step: any): string {
     if (step === null || step === undefined || step === '') {
-      return SITE_TRANSLATIONS['common.unavailable'];
+      return 'غير متوفر';
     }
 
     const stepMap: { [key: string]: string } = {
-      '0': SITE_TRANSLATIONS['shop.application'],
-      '1': SITE_TRANSLATIONS['step.inspection'],
-      '2': SITE_TRANSLATIONS['step.finalApproval'],
-      '3': SITE_TRANSLATIONS['step.archive'],
-      '4': SITE_TRANSLATIONS['shop.complete'],
-      'APPLICATION': SITE_TRANSLATIONS['shop.application'],
-      'INSPECTION': SITE_TRANSLATIONS['step.inspection'],
-      'FINAL_APPROVAL': SITE_TRANSLATIONS['step.finalApproval'],
-      'ARCHIVE': SITE_TRANSLATIONS['step.archive']
+      '0': 'تقديم الطلب',
+      '1': 'المعاينة',
+      '2': 'الموافقة النهائية',
+      '3': 'الأرشيف',
+      '4': 'مكتمل',
+      APPLICATION: 'تقديم الطلب',
+      INSPECTION: 'المعاينة',
+      FINAL_APPROVAL: 'الموافقة النهائية',
+      ARCHIVE: 'الأرشيف',
     };
 
     const stepKey = String(step).trim();
-    return stepMap[stepKey] || this.processSteps.find(s => s.value === stepKey)?.label || stepKey;
+    return (
+      stepMap[stepKey] ||
+      this.processSteps.find((s) => s.value === stepKey)?.label ||
+      stepKey
+    );
   }
 
   requestDetails(id: string): void {
@@ -294,7 +395,11 @@ export class ShopLicensesComponent implements OnInit {
     if (step === null || step === undefined || String(step).trim() === '') return false;
 
     const normalizedStep = String(step).trim().toLowerCase().replace(/[\s_-]/g, '');
-    return normalizedStep === '0' || normalizedStep === 'newlicense' || normalizedStep === 'application';
+    return (
+      normalizedStep === '0' ||
+      normalizedStep === 'newlicense' ||
+      normalizedStep === 'application'
+    );
   }
 
   moveToInspection(item: any): void {
@@ -311,11 +416,9 @@ export class ShopLicensesComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '360px',
       data: {
-        message: translateSiteText('newLicense.movePrompt', {
-          establishmentName: item.establishmentName,
-        }),
-        confirmText: SITE_TRANSLATIONS['newLicense.confirmMove'],
-        cancelText: SITE_TRANSLATIONS['common.cancel'],
+        message: `هل أنت تأكد من نقل المنشأة "${item.establishmentName}" لمرحلة المعاينة؟`,
+        confirmText: 'نقل للمعاينة',
+        cancelText: 'إلغاء',
         confirmClass: 'btn-save',
       },
     });
@@ -325,30 +428,28 @@ export class ShopLicensesComponent implements OnInit {
 
       this.movingToInspectionId = item.id;
       this.newLicenseService.moveToInspection(item.id).subscribe({
-        next: response => {
+        next: (response) => {
           this.movingToInspectionId = null;
 
           if (!response.isSuccess) {
             this.snackBar.open(
-              response.message || SITE_TRANSLATIONS['newLicense.moveFailed'],
-              SITE_TRANSLATIONS['common.close'],
+              response.message || 'فشلت عملية النقل لمرحلة المعاينة.',
+              'إغلاق',
               { duration: 3000 },
             );
             return;
           }
 
-          this.snackBar.open(
-            SITE_TRANSLATIONS['newLicense.moved'],
-            SITE_TRANSLATIONS['common.close'],
-            { duration: 2500 },
-          );
+          this.snackBar.open('تم نقل الطلب بنجاح لمرحلة المعاينة.', 'إغلاق', {
+            duration: 2500,
+          });
           this.loadLicensingProcesses();
         },
-        error: error => {
+        error: (error) => {
           this.movingToInspectionId = null;
           this.snackBar.open(
-            error?.error?.message || error?.message || SITE_TRANSLATIONS['newLicense.moveError'],
-            SITE_TRANSLATIONS['common.close'],
+            error?.error?.message || error?.message || 'حدث خطأ أثناء نقل الطلب.',
+            'إغلاق',
             { duration: 3000 },
           );
         },

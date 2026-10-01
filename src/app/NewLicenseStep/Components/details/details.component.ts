@@ -4,12 +4,13 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatIconModule } from '@angular/material/icon';
 
 import { ApiResponse } from '../../../Shared/Models/ApiResponse';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 import {
   AttachmentGroup,
   NewLicenseDetails,
 } from '../../Models/new-license';
 import { NewLicenseService } from '../../Services/new-license.service';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+
 
 export interface DetailsDialogData {
   id: string;
@@ -18,7 +19,7 @@ export interface DetailsDialogData {
 @Component({
   selector: 'app-new-license-details',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatIconModule, SiteTranslationPipe],
+  imports: [CommonModule, MatDialogModule, MatIconModule, TranslatePipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
@@ -50,7 +51,7 @@ export class DetailsComponent implements OnInit {
         this.loading = false;
 
         if (!response.isSuccess || !response.data) {
-          this.errorMessage = response.message || SITE_TRANSLATIONS['newLicense.detailsLoadFailed'];
+          this.errorMessage = response.message || 'newLicense.detailsLoadFailed';
           return;
         }
 
@@ -64,7 +65,7 @@ export class DetailsComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['newLicense.detailsLoadError'];
+          'newLicense.detailsLoadError';
       },
     });
   }
@@ -98,10 +99,10 @@ export class DetailsComponent implements OnInit {
 
   getAttachmentGroups(details: NewLicenseDetails): AttachmentGroup[] {
     return [
-      { title: SITE_TRANSLATIONS['common.entityLetters'], files: details.entityLetters || [] },
-      { title: SITE_TRANSLATIONS['common.proofDocuments'], files: details.proofDocuments || [] },
-      { title: SITE_TRANSLATIONS['common.engineeringReports'], files: details.engineeringReports || [] },
-      { title: SITE_TRANSLATIONS['common.otherAttachments'], files: details.otherAttachments || [] },
+      { title: 'common.entityLetters', files: details.entityLetters || [] },
+      { title: 'common.proofDocuments', files: details.proofDocuments || [] },
+      { title: 'common.engineeringReports', files: details.engineeringReports || [] },
+      { title: 'common.otherAttachments', files: details.otherAttachments || [] },
     ];
   }
 
