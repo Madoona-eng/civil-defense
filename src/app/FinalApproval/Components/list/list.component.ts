@@ -3,8 +3,11 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import {
@@ -27,7 +30,7 @@ import { SITE_TRANSLATIONS, SiteTranslationPipe, translateSiteText } from '../..
 @Component({
   selector: 'app-final-approval-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, SiteTranslationPipe, MatIconModule, MatMenuModule, MatDialogModule, MatSnackBarModule],
+  imports: [CommonModule, FormsModule, SiteTranslationPipe, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MatMenuModule, MatDialogModule, MatSnackBarModule],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })

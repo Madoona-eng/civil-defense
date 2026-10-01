@@ -6,6 +6,10 @@ import { DetailsComponent } from '../LicensingProcess/Components/details/details
 import { EditComponent } from '../LicensingProcess/Components/edit/edit.component';
 import { DeleteComponent } from '../LicensingProcess/Components/delete/delete.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../Shared/Components/confirm-dialog/confirm-dialog.component';
 import { SITE_TRANSLATIONS, SiteTranslationPipe, translateSiteText } from '../Shared/Enums/site-translations';
@@ -15,7 +19,7 @@ import { NewLicenseService } from '../NewLicenseStep/Services/new-license.servic
 @Component({
   selector: 'app-shop-licenses',
   standalone: true,
-  imports: [CommonModule, FormsModule, DetailsComponent, EditComponent, DeleteComponent, SiteTranslationPipe, MatDialogModule, MatSnackBarModule],
+  imports: [CommonModule, FormsModule, DetailsComponent, EditComponent, DeleteComponent, SiteTranslationPipe, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MatDialogModule, MatSnackBarModule],
   templateUrl: './shop-licenses.component.html',
   styleUrl: './shop-licenses.component.scss'
 })

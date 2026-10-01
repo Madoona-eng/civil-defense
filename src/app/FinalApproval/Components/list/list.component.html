@@ -1,63 +1,68 @@
 <section class="filters-card" dir="rtl">
- 
-  <div class="filters-grid">
-    <div class="form-group search-group">
-      <label>{{ 'common.search' | t }}</label>
+  <div class="filters-row-primary">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ 'common.search' | t }}</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
       <input
+        matInput
         type="text"
         [(ngModel)]="searchTerm"
         [placeholder]="'final.searchPlaceholder' | t"
         (keyup.enter)="search()"
       />
-    </div>
+    </mat-form-field>
 
-    <div class="form-group">
-      <label>{{ 'common.requestingEntity' | t }}</label>
-      <select [(ngModel)]="requestingEntityId">
-        <option value="">{{ 'common.allEntities' | t }}</option>
-        <option *ngFor="let entity of requestingEntities" [value]="entity.id">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ 'common.requestingEntity' | t }}</mat-label>
+      <mat-select [(ngModel)]="requestingEntityId">
+        <mat-option value="">{{ 'common.allEntities' | t }}</mat-option>
+        <mat-option *ngFor="let entity of requestingEntities" [value]="entity.id">
           {{ entity.name }}
-        </option>
-      </select>
-    </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-    <div class="form-group">
-      <label>{{ 'common.district' | t }}</label>
-      <select [(ngModel)]="districtId">
-        <option value="">{{ 'common.allDistricts' | t }}</option>
-        <option *ngFor="let district of districts" [value]="district.id">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ 'common.district' | t }}</mat-label>
+      <mat-select [(ngModel)]="districtId">
+        <mat-option value="">{{ 'common.allDistricts' | t }}</mat-option>
+        <mat-option *ngFor="let district of districts" [value]="district.id">
           {{ district.name }}
-        </option>
-      </select>
-    </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
-    <div class="form-group">
-      <label>{{ 'common.activity' | t }}</label>
-      <select [(ngModel)]="activityTypeId">
-        <option value="">{{ 'common.allActivities' | t }}</option>
-        <option *ngFor="let activity of activityTypes" [value]="activity.id">
+  <div class="filters-row-secondary">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ 'common.activity' | t }}</mat-label>
+      <mat-select [(ngModel)]="activityTypeId">
+        <mat-option value="">{{ 'common.allActivities' | t }}</mat-option>
+        <mat-option *ngFor="let activity of activityTypes" [value]="activity.id">
           {{ activity.name }}
-        </option>
-      </select>
-    </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-    <div class="form-group">
-      <label>{{ 'common.opinion' | t }}</label>
-      <select [(ngModel)]="opinion">
-        <option value="">{{ 'common.allOpinions' | t }}</option>
-        <option value="Compliant">{{ 'final.opinionCompliant' | t }}</option>
-        <option value="NonCompliant">{{ 'final.opinionNonCompliant' | t }}</option>
-      </select>
-    </div>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ 'common.opinion' | t }}</mat-label>
+      <mat-select [(ngModel)]="opinion">
+        <mat-option value="">{{ 'common.allOpinions' | t }}</mat-option>
+        <mat-option value="Compliant">{{ 'final.opinionCompliant' | t }}</mat-option>
+        <mat-option value="NonCompliant">{{ 'final.opinionNonCompliant' | t }}</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 
   <div class="filter-actions">
-    <button type="button" class="search-btn" (click)="search()">
-      🔍 {{ 'common.search' | t }}
+    <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
+      <mat-icon>search</mat-icon>
+      <span>{{ 'common.search' | t }}</span>
     </button>
 
-    <button type="button" class="reset-btn" (click)="resetFilters()">
-      ↺ {{ 'common.reset' | t }}
+    <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
+      <mat-icon>refresh</mat-icon>
+      <span>{{ 'common.reset' | t }}</span>
     </button>
   </div>
 </section>

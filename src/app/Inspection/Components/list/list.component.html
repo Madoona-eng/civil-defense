@@ -1,88 +1,87 @@
 <!-- كارت الفلاتر والبحث -->
 <section class="filters-card" dir="rtl">
   <div class="filters-row-primary">
-    <div class="form-group search-group">
-      <label>{{ 'common.search' | t }}</label>
-      <div class="search-input-wrapper">
-        <mat-icon>search</mat-icon>
-        <input
-          type="text"
-          [(ngModel)]="searchTerm"
-          [placeholder]="'inspection.searchPlaceholder' | t"
-          (keyup.enter)="search()"
-        />
-      </div>
-    </div>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ 'common.search' | t }}</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="searchTerm"
+        [placeholder]="'inspection.searchPlaceholder' | t"
+        (keyup.enter)="search()"
+      />
+    </mat-form-field>
 
-    <div class="form-group">
-      <label>{{ 'common.dateFrom' | t }}</label>
-      <input type="date" [(ngModel)]="submissionDateFrom" />
-    </div>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ 'common.dateFrom' | t }}</mat-label>
+      <input matInput type="date" [(ngModel)]="submissionDateFrom" />
+    </mat-form-field>
 
-    <div class="form-group">
-      <label>{{ 'common.dateTo' | t }}</label>
-      <input type="date" [(ngModel)]="submissionDateTo" />
-    </div>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ 'common.dateTo' | t }}</mat-label>
+      <input matInput type="date" [(ngModel)]="submissionDateTo" />
+    </mat-form-field>
   </div>
 
   <div class="filters-row-secondary">
-    <div class="form-group">
-      <label>{{ 'common.requestingEntity' | t }}</label>
-      <select [(ngModel)]="requestingEntityId">
-        <option value="">{{ 'common.allEntities' | t }}</option>
-        <option *ngFor="let entity of requestingEntities" [value]="entity.id">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ 'common.requestingEntity' | t }}</mat-label>
+      <mat-select [(ngModel)]="requestingEntityId">
+        <mat-option value="">{{ 'common.allEntities' | t }}</mat-option>
+        <mat-option *ngFor="let entity of requestingEntities" [value]="entity.id">
           {{ entity.name }}
-        </option>
-      </select>
-    </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-    <div class="form-group">
-      <label>{{ 'common.district' | t }}</label>
-      <select [(ngModel)]="districtId" [disabled]="isDistrictLocked">
-        <option value="">{{ 'common.allDistricts' | t }}</option>
-        <option *ngFor="let district of districts" [value]="district.id">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ 'common.district' | t }}</mat-label>
+      <mat-select [(ngModel)]="districtId" [disabled]="isDistrictLocked">
+        <mat-option value="">{{ 'common.allDistricts' | t }}</mat-option>
+        <mat-option *ngFor="let district of districts" [value]="district.id">
           {{ district.name }}
-        </option>
-      </select>
-    </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-    <div class="form-group">
-      <label>{{ 'common.activity' | t }}</label>
-      <select [(ngModel)]="activityTypeId">
-        <option value="">{{ 'common.allActivities' | t }}</option>
-        <option *ngFor="let activity of activityTypes" [value]="activity.id">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ 'common.activity' | t }}</mat-label>
+      <mat-select [(ngModel)]="activityTypeId">
+        <mat-option value="">{{ 'common.allActivities' | t }}</mat-option>
+        <mat-option *ngFor="let activity of activityTypes" [value]="activity.id">
           {{ activity.name }}
-        </option>
-      </select>
-    </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-    <div class="form-group">
-      <label>{{ 'common.returnState' | t }}</label>
-      <select [(ngModel)]="isReturned">
-        <option value="">{{ 'common.all' | t }}</option>
-        <option value="true">{{ 'inspection.returned' | t }}</option>
-        <option value="false">{{ 'inspection.notReturned' | t }}</option>
-      </select>
-    </div>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ 'common.returnState' | t }}</mat-label>
+      <mat-select [(ngModel)]="isReturned">
+        <mat-option value="">{{ 'common.all' | t }}</mat-option>
+        <mat-option value="true">{{ 'inspection.returned' | t }}</mat-option>
+        <mat-option value="false">{{ 'inspection.notReturned' | t }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
     <!-- الفلتر المضاف: الرأي الفني للمعاينة -->
-    <div class="form-group">
-      <label>{{ 'inspection.technicalOpinion' | t }}</label>
-      <select [(ngModel)]="opinion">
-        <option value="">{{ 'common.allStatuses' | t }}</option>
-        <option value="Compliant">{{ 'common.compliantSpec' | t }}</option>
-        <option value="NonCompliant">{{ 'common.nonCompliantSpec' | t }}</option>
-      </select>
-    </div>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ 'inspection.technicalOpinion' | t }}</mat-label>
+      <mat-select [(ngModel)]="opinion">
+        <mat-option value="">{{ 'common.allStatuses' | t }}</mat-option>
+        <mat-option value="Compliant">{{ 'common.compliantSpec' | t }}</mat-option>
+        <mat-option value="NonCompliant">{{ 'common.nonCompliantSpec' | t }}</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 
   <div class="filter-actions">
-    <button type="button" class="btn-search" (click)="search()">
+    <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
       <mat-icon>search</mat-icon>
       <span>{{ 'common.search' | t }}</span>
     </button>
 
-    <button type="button" class="btn-reset" (click)="resetFilters()">
+    <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
       <mat-icon>refresh</mat-icon>
       <span>{{ 'common.reset' | t }}</span>
     </button>

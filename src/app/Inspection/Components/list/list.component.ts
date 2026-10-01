@@ -17,6 +17,9 @@ import { RequestingEntityService } from '../../../RequestingEntity/Services/requ
 import { DistrictService } from '../../../District/Services/district.service';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -30,7 +33,7 @@ import { SITE_TRANSLATIONS, SiteTranslationPipe, translateSiteText } from '../..
 @Component({
   selector: 'app-inspection-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatMenuModule, MatButtonModule, MatTooltipModule, SiteTranslationPipe, MatDialogModule, MatSnackBarModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatMenuModule, MatButtonModule, MatTooltipModule, SiteTranslationPipe, MatDialogModule, MatSnackBarModule],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
 })

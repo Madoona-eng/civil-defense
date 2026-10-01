@@ -10,36 +10,42 @@
     </button>
   </div>
 
-  <div class="filters">
-    <div class="field">
-      <label>{{ 'shop.search' | t }}</label>
+  <section class="filters-card shop-license-filters" dir="rtl">
+    <div class="filters-row-primary shop-license-filter-row">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>{{ 'shop.search' | t }}</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
       <input
+        matInput
         type="text"
         [(ngModel)]="searchTerm"
         name="searchTerm"
         [placeholder]="'shop.searchPlaceholder' | t"
       />
-    </div>
+      </mat-form-field>
 
-    <div class="field">
-      <label>{{ 'shop.stage' | t }}</label>
-      <select [(ngModel)]="processStep" name="processStep">
-        <option *ngFor="let step of processSteps" [value]="step.value">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>{{ 'shop.stage' | t }}</mat-label>
+        <mat-select [(ngModel)]="processStep" name="processStep">
+          <mat-option *ngFor="let step of processSteps" [value]="step.value">
           {{ step.label }}
-        </option>
-      </select>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
     <div class="filter-actions">
-      <button type="button" class="search-btn" (click)="search()">
-        {{ 'shop.search' | t }}
+      <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
+        <mat-icon>search</mat-icon>
+        <span>{{ 'shop.search' | t }}</span>
       </button>
 
-      <button type="button" class="reset-btn" (click)="resetFilters()">
-        {{ 'shop.clearFilter' | t }}
+      <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
+        <mat-icon>refresh</mat-icon>
+        <span>{{ 'shop.clearFilter' | t }}</span>
       </button>
     </div>
-  </div>
+  </section>
 
   <div class="message error" *ngIf="errorMessage">
     {{ errorMessage }}
