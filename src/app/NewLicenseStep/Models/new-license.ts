@@ -106,7 +106,7 @@ export type AttachmentField =
 
 export const ATTACHMENT_TYPES: Record<AttachmentField, { label: string; type: string }> = {
   entityLetters: { label: 'خطابات الجهة', type: 'EntityLetter' },
-  proofDocuments: { label: 'مستندات الإثبات', type: 'ProofDocument' },
+  proofDocuments: { label: 'أوراق الثبوت', type: 'ProofDocument' },
   engineeringReports: { label: 'التقارير الهندسية', type: 'EngineeringReport' },
   otherAttachments: { label: 'مرفقات أخرى', type: 'OtherAttachment' },
 };

@@ -200,12 +200,13 @@
                 <button
                   type="button"
                   class="file-thumb"
-                  (click)="openFile(file)"
+                  (click)="openFile(file.filePath)"
+
                   [attr.aria-label]="'معاينة ' + file.fileName"
                 >
                   <img
-                    *ngIf="isImage(file); else iconTpl"
-                    [src]="fileUrl(file)"
+                   *ngIf="isImageFile(file.fileName); else iconTpl"
+                    [src]="buildFileUrl(file.filePath)"
                     [alt]="file.fileName"
                   />
                   <ng-template #iconTpl>

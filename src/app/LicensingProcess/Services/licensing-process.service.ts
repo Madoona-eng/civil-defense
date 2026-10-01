@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { BaseAPI } from '../../Shared/Env/env';
 import {
   ApiResponse,
   LicensingProcessDetails,
   LicensingProcessItem,
   LicensingProcessQuery,
-  PagedResult
+  PagedResult,
 } from '../Models/licensing-process';
-import { BaseAPI } from '../../Shared/Env/env';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LicensingProcessService {
   private readonly apiUrl = `${BaseAPI}/api/LicensingProcess`;
@@ -60,15 +60,7 @@ export class LicensingProcessService {
     }
 
     return this.http.get<ApiResponse<PagedResult<LicensingProcessItem>>>(this.apiUrl, {
-      params
+      params,
     });
-  }
-
-  buildFileUrl(filePath: string): string {
-    const cleanPath = filePath
-      .replace(/^\/+/, '')
-      .replace(/\\/g, '/');
-
-    return encodeURI(`/${cleanPath}`);
   }
 }

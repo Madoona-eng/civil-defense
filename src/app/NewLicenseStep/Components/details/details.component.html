@@ -1,5 +1,5 @@
 <div class="modal-overlay" (click)="close()">
-  <div class="dialog-card" (click)="$event.stopPropagation()" style="max-width: 800px;">
+  <div class="dialog-card wide-dialog" (click)="$event.stopPropagation()">
 
     <div class="dialog-header">
       <div class="header-content-group">
@@ -12,7 +12,7 @@
           <h2 *ngIf="!details">جاري التحميل...</h2>
         </div>
       </div>
-      <button class="btn-dialog-close" (click)="close()">
+      <button type="button" class="btn-dialog-close" (click)="close()">
         <mat-icon>close</mat-icon>
       </button>
     </div>
@@ -31,7 +31,7 @@
       <ng-container *ngIf="!loading && !errorMessage && details">
 
         <section class="info-section">
-          <h3>البيانات الأساسية</h3>
+          <h3 class="section-title">البيانات الأساسية</h3>
           <div class="form-grid info-grid">
             <div class="form-group">
               <label>كود المعاملة</label>
@@ -65,7 +65,7 @@
         </section>
 
         <section class="info-section">
-          <h3>بيانات مقدم الطلب</h3>
+          <h3 class="section-title">بيانات مقدم الطلب</h3>
           <div class="form-grid info-grid">
             <div class="form-group">
               <label>اسم مقدم الطلب</label>
@@ -73,7 +73,7 @@
             </div>
             <div class="form-group">
               <label>صفة مقدم الطلب</label>
-              <span class="dialog-input readonly-value">{{ details.applicantRole }}</span>
+              <span class="dialog-input readonly-value">{{ getApplicantRoleLabel(details.applicantRole) }}</span>
             </div>
             <div class="form-group">
               <label>الرقم القومي</label>
@@ -90,36 +90,43 @@
           </div>
         </section>
 
-        <section class="attachments-section" *ngFor="let group of getAttachmentGroups(details)">
-          <ng-container *ngIf="group.files.length > 0">
-            <h3>{{ group.title }}</h3>
-            <div class="attachments-grid">
-              <div class="attachment-card" *ngFor="let file of group.files">
-                <ng-container *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath); else fileIcon">
-                  <img
-                    [src]="getFileUrl(file.filePath)"
-                    [alt]="file.fileName"
-                    class="attachment-thumb"
-                    (click)="openFile(file.filePath)"
-                    (error)="onImageError(file.filePath)"
-                  />
-                </ng-container>
-                <ng-template #fileIcon>
-                  <div class="attachment-file" (click)="openFile(file.filePath)">
-                    <span class="file-ext">{{ file.fileName.split('.').pop() }}</span>
+        <section class="attachments-section">
+          <h3 class="section-title">المرفقات</h3>
+
+          <div class="attachments-grid">
+            <div class="attachment-field" *ngFor="let group of getAttachmentGroups(details)">
+              <span class="attachment-label">{{ group.title }}</span>
+
+              <p class="empty-files" *ngIf="group.files.length === 0">لا توجد ملفات</p>
+
+              <div class="file-list" *ngIf="group.files.length > 0">
+                <div class="file-item" *ngFor="let file of group.files">
+                  <button type="button" class="file-thumb" (click)="openFile(file.filePath)">
+                    <img
+                      *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
+                      [src]="getFileUrl(file.filePath)"
+                      [alt]="file.fileName"
+                      (error)="onImageError(file.filePath)" />
+                    <mat-icon
+                      *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
+                      insert_drive_file
+                    </mat-icon>
+                  </button>
+
+                  <div class="file-meta">
+                    <span class="file-name" [title]="file.fileName">{{ file.fileName }}</span>
                   </div>
-                </ng-template>
-                <span class="attachment-name" [title]="file.fileName">{{ file.fileName }}</span>
+                </div>
               </div>
             </div>
-          </ng-container>
+          </div>
         </section>
 
       </ng-container>
     </div>
 
     <div class="dialog-actions">
-      <button class="btn-reset" (click)="close()">إغلاق</button>
+      <button type="button" class="btn-reset" (click)="close()">إغلاق</button>
     </div>
 
   </div>

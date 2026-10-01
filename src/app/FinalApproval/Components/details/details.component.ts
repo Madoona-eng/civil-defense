@@ -4,11 +4,12 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import {
   ApiResponse,
   FinalApprovalAttachment,
-  FinalApprovalDetails
+  FinalApprovalDetails,
 } from '../../Models/final-approval';
 
-import { FinalApprovalService } from '../../Services/final-approval.service';
 import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { buildFileUrl } from '../../../Shared/Utils/file-url';
+import { FinalApprovalService } from '../../Services/final-approval.service';
 
 interface AttachmentGroup {
   title: string;
@@ -20,7 +21,7 @@ interface AttachmentGroup {
   standalone: true,
   imports: [CommonModule, SiteTranslationPipe],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  styleUrl: './details.component.scss',
 })
 export class DetailsComponent implements OnChanges {
   @Input() processId: string | null = null;
@@ -57,7 +58,7 @@ export class DetailsComponent implements OnChanges {
 
         this.details = response.data;
       },
-      error: err => {
+      error: (err) => {
         this.loading = false;
         console.error('Final approval details GET error:', err);
 
@@ -66,7 +67,7 @@ export class DetailsComponent implements OnChanges {
           err?.error?.Message ||
           err?.message ||
           SITE_TRANSLATIONS['final.loadError'];
-      }
+      },
     });
   }
 
@@ -119,14 +120,14 @@ export class DetailsComponent implements OnChanges {
   }
 
   getFileUrl(filePath: string): string {
-    return this.finalApprovalService.buildFileUrl(filePath);
+    return buildFileUrl(filePath);
   }
 
   isImageFile(fileName: string): boolean {
     const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
     const lowerName = fileName.toLowerCase();
 
-    return imageExtensions.some(extension => lowerName.endsWith(extension));
+    return imageExtensions.some((extension) => lowerName.endsWith(extension));
   }
 
   hasImageError(filePath: string): boolean {
@@ -141,24 +142,24 @@ export class DetailsComponent implements OnChanges {
     return [
       {
         title: SITE_TRANSLATIONS['common.entityLetters'],
-        files: details.entityLetters || []
+        files: details.entityLetters || [],
       },
       {
         title: SITE_TRANSLATIONS['common.proofDocuments'],
-        files: details.proofDocuments || []
+        files: details.proofDocuments || [],
       },
       {
         title: SITE_TRANSLATIONS['common.engineeringReports'],
-        files: details.engineeringReports || []
+        files: details.engineeringReports || [],
       },
       {
         title: SITE_TRANSLATIONS['common.inspectionReports'],
-        files: details.inspectionReports || []
+        files: details.inspectionReports || [],
       },
       {
         title: SITE_TRANSLATIONS['common.otherAttachments'],
-        files: details.otherAttachments || []
-      }
+        files: details.otherAttachments || [],
+      },
     ];
   }
 }

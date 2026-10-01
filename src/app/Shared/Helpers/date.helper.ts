@@ -8,7 +8,6 @@ export function formatDateForApi(date: Date | null): string | undefined {
   return `${year}-${month}-${day}`;
 }
 
-// "2026-09-30" -> Date محلي (من غير مشاكل الـ timezone)
 export function parseDateFromApi(value: string | null | undefined): Date | null {
   if (!value) return null;
 
@@ -16,4 +15,19 @@ export function parseDateFromApi(value: string | null | undefined): Date | null 
   if (!year || !month || !day) return null;
 
   return new Date(year, month - 1, day);
+}
+
+export function formatDateTime(value: string | Date | null | undefined): string {
+  if (!value) return '-';
+
+  const date = value instanceof Date ? value : new Date(value);
+  if (isNaN(date.getTime())) return '-';
+
+  return date.toLocaleString('ar-EG', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }

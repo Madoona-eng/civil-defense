@@ -1,6 +1,9 @@
+import { buildFileUrl } from "../Utils/file-url";
+
 export const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'pdf'];
 export const FILE_ACCEPT = ALLOWED_EXTENSIONS.map((e) => `.${e}`).join(',');
 
+const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 // أيقونة لكل امتداد، والباقي بياخد الأيقونة العامة
 const FILE_ICONS: Record<string, string> = {
   pdf: 'picture_as_pdf',
@@ -31,4 +34,13 @@ export function validateFile(file: File): string | null {
   if (file.size === 0) return 'الملف فارغ';
 
   return null;
+}
+
+export function isImageFile(fileName: string | null | undefined): boolean {
+  const name = (fileName ?? '').toLowerCase();
+  return IMAGE_EXTENSIONS.some((ext) => name.endsWith(ext));
+}
+
+export function openFile(filePath: string): void {
+  window.open(buildFileUrl(filePath), '_blank');
 }

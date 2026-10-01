@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { forkJoin } from 'rxjs';
+import { catchError, forkJoin, from, map, mergeMap, of, toArray } from 'rxjs';
 
 import {
   ApiResponse,
@@ -13,24 +13,44 @@ import {
 
 import { InspectionService } from '../../Services/inspection.service';
 
-import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
-import { DistrictService } from '../../../District/Services/district.service';
-import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
+import { DistrictService } from '../../../District/Services/district.service';
+import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
 import { ConfirmDialogComponent } from '../../../Shared/Components/confirm-dialog/confirm-dialog.component';
+import {
+  INSPECTION_OPINION_LABELS,
+  InspectionOpinion,
+  RETURN_STATE_LABELS,
+  ReturnState,
+} from '../../../Shared/Enums/enums';
 import { AuthService } from '../../../auth/services/auth.service';
-import { SITE_TRANSLATIONS, SiteTranslationPipe, translateSiteText } from '../../../Shared/Enums/site-translations';
+
+interface SelectOption {
+  value: string;
+  label: string;
+}
 
 @Component({
   selector: 'app-inspection-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatMenuModule, MatButtonModule, MatTooltipModule, SiteTranslationPipe, MatDialogModule, MatSnackBarModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    MatPaginatorModule,
+  ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
 })
@@ -43,6 +63,18 @@ export class ListComponent implements OnInit {
   districts: LookupItem[] = [];
   activityTypes: LookupItem[] = [];
 
+  // خيارات الفلاتر متولدة من نفس الـ enums والـ labels
+  readonly returnStateOptions: SelectOption[] = Object.values(ReturnState).map((value) => ({
+    value,
+    label: RETURN_STATE_LABELS[value],
+  }));
+
+  readonly opinionOptions: SelectOption[] = Object.values(InspectionOpinion).map((value) => ({
+    value,
+    label: INSPECTION_OPINION_LABELS[value],
+  }));
+
+  isMovingAll = false;
   isLoading = false;
   loadingLookups = false;
   errorMessage = '';
@@ -54,17 +86,12 @@ export class ListComponent implements OnInit {
   isReturned = '';
   submissionDateFrom = '';
   submissionDateTo = '';
-  opinion: string = '';
-  // هيتحط قيمته لاحقًا لما الليدر يجهز الـ role logic
-  // Inspector => true (يقفل الفلتر على مركزه) | SuperAdmin => false
+  opinion: InspectionOpinion | '' = '';
   isDistrictLocked = false;
 
   pageNumber = 1;
   pageSize = 10;
   totalCount = 0;
-  totalPages = 0;
-  hasNextPage = false;
-  hasPreviousPage = false;
   movingToFinalApprovalId: string | null = null;
 
   constructor(
@@ -75,7 +102,7 @@ export class ListComponent implements OnInit {
     private readonly authService: AuthService,
     private readonly dialog: MatDialog,
     private readonly snackBar: MatSnackBar,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadLookups();
@@ -120,9 +147,8 @@ export class ListComponent implements OnInit {
       districtId: this.districtId || undefined,
       requestingEntityId: this.requestingEntityId || undefined,
       activityTypeId: this.activityTypeId || undefined,
-      isReturned:
-        this.isReturned === '' ? undefined : this.isReturned === 'true',
-        opinion: this.opinion || undefined,
+      isReturned: this.isReturned === '' ? undefined : this.isReturned === ReturnState.Returned,
+      opinion: this.opinion || undefined,
       submissionDateFrom: this.submissionDateFrom || undefined,
       submissionDateTo: this.submissionDateTo || undefined,
       searchTerm: this.searchTerm.trim() || undefined,
@@ -135,7 +161,7 @@ export class ListComponent implements OnInit {
         this.isLoading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || SITE_TRANSLATIONS['inspection.listLoadFailed'];
+          this.errorMessage = response.message || 'تعذر تحميل قائمة المعاينات';
           return;
         }
 
@@ -143,9 +169,6 @@ export class ListComponent implements OnInit {
         this.pageNumber = response.data.pageNumber;
         this.pageSize = response.data.pageSize;
         this.totalCount = response.data.totalCount;
-        this.totalPages = response.data.totalPages;
-        this.hasNextPage = response.data.hasNextPage;
-        this.hasPreviousPage = response.data.hasPreviousPage;
       },
       error: (err) => {
         this.isLoading = false;
@@ -155,7 +178,7 @@ export class ListComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['inspection.listLoadError'];
+          'حدث خطأ أثناء تحميل قائمة المعاينات';
       },
     });
   }
@@ -171,28 +194,21 @@ export class ListComponent implements OnInit {
     this.activityTypeId = '';
     this.searchTerm = '';
     this.isReturned = '';
+    this.opinion = '';
     this.submissionDateFrom = '';
     this.submissionDateTo = '';
     this.pageNumber = 1;
     this.loadInspections();
   }
 
-  nextPage(): void {
-    if (!this.hasNextPage) {
-      return;
-    }
-
-    this.pageNumber++;
+  onPageChange(event: PageEvent): void {
+    this.pageNumber = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
     this.loadInspections();
   }
 
-  previousPage(): void {
-    if (!this.hasPreviousPage) {
-      return;
-    }
-
-    this.pageNumber--;
-    this.loadInspections();
+  getReturnStateLabel(isReturned: boolean): string {
+    return RETURN_STATE_LABELS[isReturned ? ReturnState.Returned : ReturnState.NotReturned];
   }
 
   requestEdit(item: InspectionItem): void {
@@ -212,11 +228,9 @@ export class ListComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '360px',
       data: {
-        message: translateSiteText('inspection.movePrompt', {
-          establishmentName: item.establishmentName,
-        }),
-        confirmText: SITE_TRANSLATIONS['inspection.moveToFinalApproval'],
-        cancelText: SITE_TRANSLATIONS['common.cancel'],
+        message: `هل تريد نقل منشأة "${item.establishmentName}" إلى الموافقة النهائية؟`,
+        confirmText: 'نقل للموافقة النهائية',
+        cancelText: 'إلغاء',
         confirmClass: 'btn-save',
       },
     });
@@ -226,30 +240,24 @@ export class ListComponent implements OnInit {
 
       this.movingToFinalApprovalId = item.id;
       this.inspectionService.moveToFinalApproval(item.id).subscribe({
-        next: response => {
+        next: (response) => {
           this.movingToFinalApprovalId = null;
 
           if (!response.isSuccess) {
-            this.snackBar.open(
-              response.message || SITE_TRANSLATIONS['inspection.moveFailed'],
-              SITE_TRANSLATIONS['common.close'],
-              { duration: 3000 },
-            );
+            this.snackBar.open(response.message || 'تعذر نقل المعاينة', 'إغلاق', {
+              duration: 3000,
+            });
             return;
           }
 
-          this.snackBar.open(
-            SITE_TRANSLATIONS['inspection.moved'],
-            SITE_TRANSLATIONS['common.close'],
-            { duration: 2500 },
-          );
+          this.snackBar.open('تم النقل بنجاح', 'إغلاق', { duration: 2500 });
           this.loadInspections();
         },
-        error: error => {
+        error: (error) => {
           this.movingToFinalApprovalId = null;
           this.snackBar.open(
-            error?.error?.message || error?.message || SITE_TRANSLATIONS['inspection.moveError'],
-            SITE_TRANSLATIONS['common.close'],
+            error?.error?.message || error?.message || 'حدث خطأ أثناء النقل',
+            'إغلاق',
             { duration: 3000 },
           );
         },
@@ -257,32 +265,65 @@ export class ListComponent implements OnInit {
     });
   }
 
-  //TODO : Use enum for step values instead of hardcoded strings 
-  getStepLabel(step: string): string {
-    if (step === 'Inspection') {
-      return SITE_TRANSLATIONS['step.inspection'];
-    }
+  moveAllToFinalApproval(): void {
+    if (!this.canMoveToFinalApproval || this.isMovingAll || this.items.length === 0) return;
 
-    if (step === 'FinalApproval') {
-      return SITE_TRANSLATIONS['step.finalApproval'];
-    }
+    const targets = [...this.items];
 
-    if (step === 'Archive') {
-      return SITE_TRANSLATIONS['step.archive'];
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        message: `هل تريد نقل ${targets.length} معاملة إلى الموافقة النهائية؟ المعاملات الناقصة مرفقات سيتم تخطيها.`,
+        confirmText: 'نقل الكل',
+        cancelText: 'إلغاء',
+        confirmClass: 'btn-save',
+      },
+    });
 
-    if (step === 'NewLicense') {
-      return SITE_TRANSLATIONS['step.newLicense'];
-    }
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
 
-    return step || '-';
-  }
+      this.isMovingAll = true;
 
+      from(targets)
+        .pipe(
+          mergeMap(
+            (item) =>
+              this.inspectionService.moveToFinalApproval(item.id).pipe(
+                map((res) => ({ item, ok: res.isSuccess, message: res.message })),
+                catchError((err) =>
+                  of({
+                    item,
+                    ok: false,
+                    message: err?.error?.message || err?.error?.Message || err?.message,
+                  }),
+                ),
+              ),
+            3, // عدد الطلبات المتزامنة
+          ),
+          toArray(),
+        )
+        .subscribe((results) => {
+          this.isMovingAll = false;
 
+          const failed = results.filter((r) => !r.ok);
+          const succeeded = results.length - failed.length;
 
-  onPageSizeChange(): void {
-    this.pageSize = Number(this.pageSize);
-    this.pageNumber = 1;
-    this.loadInspections();
+          failed.forEach((f) => console.warn('Move failed:', f.item.transactionCode, f.message));
+
+          if (failed.length === 0) {
+            this.snackBar.open(`تم نقل ${succeeded} معاملة بنجاح`, 'إغلاق', { duration: 3500 });
+          } else {
+            const reason = failed[0].message ? ` (${failed[0].message})` : '';
+            this.snackBar.open(
+              `تم نقل ${succeeded} من ${results.length}. تعذر نقل ${failed.length}${reason}`,
+              'إغلاق',
+              { duration: 8000 },
+            );
+          }
+
+          this.loadInspections();
+        });
+    });
   }
 }

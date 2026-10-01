@@ -25,10 +25,13 @@ import {
   FILE_ACCEPT,
   formatSize,
   iconByName,
+  isImageFile,
+  openFile,
   validateFile,
 } from '../../../Shared/Helpers/file.helper';
 import { ApiResponse } from '../../../Shared/Models/ApiResponse';
 import { LookupItem } from '../../../Shared/Models/LookupItem';
+import { buildFileUrl } from '../../../Shared/Utils/file-url';
 import {
   ATTACHMENT_FIELDS,
   ATTACHMENT_TYPES,
@@ -102,6 +105,12 @@ export class EditComponent implements OnDestroy {
   readonly districts: LookupItem[];
   readonly activityTypes: LookupItem[];
 
+  readonly isImageFile = isImageFile;
+  readonly openFile = openFile;
+  readonly iconByName = iconByName;
+  readonly formatSize = formatSize;
+  readonly buildFileUrl = buildFileUrl;
+
   // ---------- Attachments ----------
   readonly fileAccept = FILE_ACCEPT;
 
@@ -120,15 +129,9 @@ export class EditComponent implements OnDestroy {
   // رسائل الملفات المرفوضة، لكل خانة رفع على حدة
   fileErrors = emptyRecord<string>();
 
-  readonly formatSize = formatSize;
-  readonly iconByName = iconByName;
-
   private readonly processId: string;
 
-  // نسخة من البيانات الأصلية عشان نرجّعها لو حصل فشل (rollback)
   private readonly originalDto: UpdateProcessDto;
-
-  // بتبقى true بعد ما البيانات تتحفظ فعلًا (وما اتعملهاش rollback)
   private dataSaved = false;
 
   constructor(
@@ -192,7 +195,6 @@ export class EditComponent implements OnDestroy {
   }
 
   // ---------- Attachments: تغييرات محلية بس ----------
-  // الملف الغلط ما بيتضافش، وسبب رفضه بيظهر تحت خانته
   onFilesSelected(event: Event, field: AttachmentField): void {
     const input = event.target as HTMLInputElement;
     const files = input.files ? Array.from(input.files) : [];
@@ -233,19 +235,6 @@ export class EditComponent implements OnDestroy {
 
   private revokePreview(p: PendingFile | undefined): void {
     if (p?.previewUrl) URL.revokeObjectURL(p.previewUrl);
-  }
-
-  // ---------- Attachments: helpers للعرض ----------
-  fileUrl(file: AttachmentItem): string {
-    return this.newLicenseService.buildFileUrl(file.filePath);
-  }
-
-  openFile(file: AttachmentItem): void {
-    window.open(this.fileUrl(file), '_blank');
-  }
-
-  isImage(file: AttachmentItem): boolean {
-    return /\.(png|jpe?g|gif|webp|bmp)$/i.test(file.fileName);
   }
 
   // ---------- Save ----------

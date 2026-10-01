@@ -1,279 +1,313 @@
-<div class="inspection-process" dir="rtl">
-  <div class="process-header">
-    <div>
-      <h2>{{ 'inspection.process' | t }}</h2>
+<div class="modal-overlay">
+  <div class="dialog-card form-dialog wide-dialog">
+    <!-- Header -->
+    <div class="dialog-header">
+      <div class="header-content-group">
+        <div class="dialog-icon primary">
+          <mat-icon>assignment_turned_in</mat-icon>
+        </div>
+        <div class="header-text">
+          <span class="eyebrow">خطوة المعاينة</span>
+          <h2>إجراء المعاينة</h2>
+        </div>
+      </div>
+
+      <button type="button" class="btn-dialog-close" (click)="close()" aria-label="إغلاق">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
 
-    <button type="button" class="close-btn" (click)="close()">×</button>
-  </div>
-
-  <div class="loading-box" *ngIf="loading">{{ 'inspection.loading' | t }}</div>
-
-  <div class="message error" *ngIf="errorMessage">
-    {{ errorMessage }}
-  </div>
-
-  <ng-container *ngIf="!loading && details as d">
-    <!-- ===== ملخص المعاملة (سياق سريع) ===== -->
-    <div class="summary-card" *ngIf="item">
-      <div>
-        <span>{{ 'common.requestCode' | t }}</span>
-        <strong>{{ item.transactionCode }}</strong>
+    <!-- Body -->
+    <div class="dialog-body">
+      <div class="loading-box" *ngIf="loading">
+        <mat-icon class="spin-icon">sync</mat-icon>
+        <span>جاري التحميل...</span>
       </div>
 
-      <div>
-        <span>{{ 'common.establishment' | t }}</span>
-        <strong>{{ item.establishmentName }}</strong>
+      <div class="message-banner error" *ngIf="errorMessage">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage }}</span>
       </div>
 
-      <div>
-        <span>{{ 'common.address' | t }}</span>
-        <strong>{{ item.establishmentAddress }}</strong>
-      </div>
+      <ng-container *ngIf="!loading && details as d">
+        <!-- 1) البيانات الأساسية -->
+        <section class="info-section" *ngIf="item">
+          <h3 class="section-title">البيانات الأساسية</h3>
 
-      <div>
-        <span>{{ 'common.activity' | t }}</span>
-        <strong>{{ item.activityType }}</strong>
-      </div>
-
-      <div>
-        <span>{{ 'common.returnState' | t }}</span>
-        <strong>{{ d.isReturned ? ('inspection.returned' | t) : ('inspection.notReturned' | t) }}</strong>
-      </div>
-    </div>
-
-    <!-- ===== ملاحظة الإرجاع: تبان بس لو المعاملة مرتجعة ===== -->
-    <div
-      class="return-note-box"
-      *ngIf="d.isReturned && d.notes && d.notes.length > 0"
-    >
-      <div class="section-title">
-        <h3>{{ 'inspection.notes' | t }}</h3>
-      </div>
-
-      <div class="note-card" *ngFor="let note of d.notes">
-        <div class="note-row">
-          <span class="note-label">{{ 'common.stepLabel' | t }}</span>
-          <span class="note-value">{{ getStepLabel(note.processStep) }}</span>
-        </div>
-
-        <div class="note-row">
-          <span class="note-label">{{ 'common.contentLabel' | t }}</span>
-          <span class="note-value">{{ note.content }}</span>
-        </div>
-
-        <div class="note-row">
-          <span class="note-label">{{ 'common.timeLabel' | t }}</span>
-          <span class="note-value">{{ formatDate(note.createdAt) }}</span>
-        </div>
-
-        <div class="note-row">
-          <span class="note-label">{{ 'common.byLabel' | t }}</span>
-          <span class="note-value">{{ note.createdByUserName }}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== accordion المرفقات القديمة: مقفول افتراضيًا ===== -->
-    <details class="attachments-accordion">
-      <summary>📎 {{ 'inspection.oldAttachments' | t }}</summary>
-
-      <div class="attachments-grid">
-        <div
-          class="attachment-group"
-          *ngFor="let group of getAttachmentGroups(d)"
-        >
-          <h4>{{ group.title }}</h4>
-
-          <div class="empty-attachment" *ngIf="group.files.length === 0">
-            {{ 'common.noFiles' | t }}
+          <div class="form-grid info-grid">
+            <div class="form-group">
+              <label>كود المعاملة</label>
+              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate">{{
+                item.transactionCode
+              }}</span>
+            </div>
+            <div class="form-group">
+              <label>تاريخ التقديم</label>
+              <span class="dialog-input readonly-value">{{ item.submissionDate }}</span>
+            </div>
+            <div class="form-group">
+              <label>اسم المنشأة</label>
+              <span class="dialog-input readonly-value">{{ item.establishmentName }}</span>
+            </div>
+            <div class="form-group">
+              <label>عنوان المنشأة</label>
+              <span class="dialog-input readonly-value">{{ item.establishmentAddress }}</span>
+            </div>
+            <div class="form-group">
+              <label>الجهة الطالبة</label>
+              <span class="dialog-input readonly-value">{{ item.requestingEntity }}</span>
+            </div>
+            <div class="form-group">
+              <label>المركز</label>
+              <span class="dialog-input readonly-value">{{ item.district }}</span>
+            </div>
+            <div class="form-group">
+              <label>نوع النشاط</label>
+              <span class="dialog-input readonly-value">{{ item.activityType }}</span>
+            </div>
+            <div class="form-group">
+              <label>مقدم الطلب</label>
+              <span class="dialog-input readonly-value">{{ item.applicantName }}</span>
+            </div>
+            <div class="form-group">
+              <label>حالة الارتجاع</label>
+              <span class="dialog-input readonly-value">{{
+                getReturnStateLabel(d.isReturned)
+              }}</span>
+            </div>
           </div>
+        </section>
 
-          <div class="attachment-item" *ngFor="let file of group.files">
-            <a [href]="getFileUrl(file.filePath)" target="_blank">
-              <img
-                *ngIf="
-                  isImageFile(file.fileName) && !hasImageError(file.filePath)
-                "
-                [src]="getFileUrl(file.filePath)"
-                [alt]="file.fileName"
-                (error)="onImageError(file.filePath)"
+        <!-- 2) ملاحظات الإرجاع: تظهر فقط لو المعاملة مرتجعة -->
+        <section class="attachments-section" *ngIf="d.isReturned && d.notes && d.notes.length > 0">
+          <h3 class="section-title">ملاحظات الإرجاع</h3>
+
+          <div class="file-list">
+            <div class="attachment-field" *ngFor="let note of d.notes">
+              <p class="note-content">{{ note.content }}</p>
+              <div class="file-size">
+                <span class="file-badge">{{ getStepLabel(note.processStep) }}</span>
+                <span>{{ note.createdByUserName }}</span>
+                <span>•</span>
+                <span>{{ formatDateTime(note.createdAt) }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3) المرفقات السابقة -->
+        <section class="attachments-section">
+          <h3 class="section-title">المرفقات السابقة</h3>
+
+          <p class="empty-files" *ngIf="!hasAnyAttachments(d)">لا توجد مرفقات سابقة</p>
+
+          <div class="attachments-grid" *ngIf="hasAnyAttachments(d)">
+            <ng-container *ngFor="let group of getAttachmentGroups(d)">
+              <div class="attachment-field" *ngIf="group.files.length > 0">
+                <span class="attachment-label">{{ group.title }}</span>
+
+                <div class="file-list">
+                  <div
+                    class="file-item"
+                    *ngFor="let file of group.files"
+                    [class.marked-delete]="pendingDeleteIds.has(file.id)"
+                  >
+                    <button type="button" class="file-thumb" (click)="openFile(file.filePath)">
+                      <img
+                        *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
+                        [src]="getFileUrl(file.filePath)"
+                        [alt]="file.fileName"
+                        (error)="onImageError(file.filePath)"
+                      />
+                      <mat-icon *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
+                        {{ iconByName(file.fileName) }}
+                      </mat-icon>
+                    </button>
+
+                    <div class="file-meta">
+                      <span class="file-name" [title]="file.fileName">{{ file.fileName }}</span>
+                      <div class="file-size">
+                        <span class="file-badge">{{ getStepLabel(file.uploadedAtStep) }}</span>
+                        <span>{{ formatDateTime(file.uploadedAt) }}</span>
+                        <span class="file-badge danger" *ngIf="pendingDeleteIds.has(file.id)">
+                          سيتم الحذف عند الحفظ
+                        </span>
+                      </div>
+                    </div>
+
+                    <!-- الحذف متاح للمرفقات اللي اترفعت في خطوة المعاينة بس -->
+                    <button
+                      *ngIf="canDelete(file)"
+                      type="button"
+                      class="file-remove"
+                      (click)="toggleDelete(file)"
+                      [disabled]="saving"
+                      [attr.aria-label]="pendingDeleteIds.has(file.id) ? 'تراجع' : 'حذف'"
+                    >
+                      <mat-icon>{{ pendingDeleteIds.has(file.id) ? 'undo' : 'delete' }}</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </section>
+
+        <!-- 4) فورم إجراء المعاينة -->
+        <form [formGroup]="form" novalidate>
+          <section class="attachments-section">
+            <h3 class="section-title">بيانات المعاينة الجديدة</h3>
+
+            <div class="form-grid">
+              <mat-form-field appearance="outline" class="form-group">
+                <mat-label>القائم بالمعاينة</mat-label>
+                <input matInput formControlName="inspectorName" placeholder="اسم المعاين" />
+                <mat-error *ngIf="form.get('inspectorName')?.hasError('required')">
+                  القائم بالمعاينة مطلوب
+                </mat-error>
+                <mat-error *ngIf="form.get('inspectorName')?.hasError('maxlength')">
+                  الاسم طويل جدًا (200 حرف كحد أقصى)
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-group">
+                <mat-label>الرأي</mat-label>
+                <mat-select formControlName="opinion">
+                  <mat-option *ngFor="let opt of opinionOptions" [value]="opt.value">
+                    {{ opt.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.get('opinion')?.hasError('required')">
+                  الرأي مطلوب
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-group form-group-wide">
+                <mat-label>الملاحظات{{ isNoteRequired ? ' *' : '' }}</mat-label>
+                <textarea
+                  matInput
+                  rows="4"
+                  formControlName="inspectionNote"
+                  placeholder="اكتب ملاحظات المعاينة..."
+                ></textarea>
+
+                <mat-error *ngIf="form.get('inspectionNote')?.hasError('required')">
+                  {{ noteRequiredMessage }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </section>
+        </form>
+
+        <!-- 5) رفع مرفقات جديدة -->
+        <section class="attachments-section">
+          <h3 class="section-title">إضافة مرفقات جديدة</h3>
+
+          <div class="attachments-grid">
+            <div class="attachment-field" *ngFor="let field of uploadFields">
+              <label class="attachment-label">{{ field.label }}</label>
+
+              <input
+                type="file"
+                multiple
+                [accept]="fileAccept"
+                class="file-input"
+                [disabled]="saving"
+                (change)="onFilesSelected($event, field.type)"
               />
 
+              <!-- الملفات المرفوضة: تحت خانتها على طول -->
+              <div class="file-errors" *ngIf="fileErrors[field.type].length">
+                <span class="file-error" *ngFor="let msg of fileErrors[field.type]">
+                  <mat-icon>error_outline</mat-icon>
+                  {{ msg }}
+                </span>
+              </div>
+
               <span
-                *ngIf="
-                  !isImageFile(file.fileName) || hasImageError(file.filePath)
-                "
+                class="empty-files"
+                *ngIf="!selectedFiles[field.type].length && !fileErrors[field.type].length"
               >
-                📎 {{ 'common.openFile' | t }}
+                لا توجد مرفقات
               </span>
-            </a>
 
-            <small>{{ file.fileName }}</small>
+              <div class="file-list" *ngIf="selectedFiles[field.type].length">
+                <div
+                  class="file-item"
+                  *ngFor="let file of selectedFiles[field.type]; let i = index"
+                >
+                  <div class="file-thumb static">
+                    <img
+                      *ngIf="previewOf(file) as url; else fileIcon"
+                      [src]="url"
+                      [alt]="file.name"
+                    />
+                    <ng-template #fileIcon>
+                      <mat-icon>{{ iconByName(file.name) }}</mat-icon>
+                    </ng-template>
+                  </div>
+
+                  <div class="file-meta">
+                    <span class="file-name" [title]="file.name">{{ file.name }}</span>
+                    <span class="file-size">{{ formatSize(file.size) }}</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="file-remove"
+                    (click)="removeFile(field.type, i)"
+                    [disabled]="saving"
+                    aria-label="إزالة"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </details>
+        </section>
+      </ng-container>
+    </div>
 
-    <!-- ===== فورم إجراء المعاينة ===== -->
-    <div class="form-section">
-      <div class="section-title">
-        <span>✍️</span>
-        <h3>{{ 'inspection.newData' | t }}</h3>
-      </div>
-
-      <div class="form-grid">
-        <div class="form-group">
-          <label>{{ 'common.inspector' | t }}</label>
-          <input
-            type="text"
-            [(ngModel)]="formModel.inspectorName"
-            [placeholder]="'inspection.inspectorPlaceholder' | t"
-          />
-        </div>
-
-        <div class="form-group">
-          <label>{{ 'common.opinion' | t }}</label>
-          <select [(ngModel)]="formModel.opinion">
-            <option value="Compliant">{{ 'opinion.compliant' | t }}</option>
-            <option value="NonCompliant">{{ 'opinion.nonCompliant' | t }}</option>
-          </select>
-        </div>
-
-        <div class="form-group full-width">
-          <label>
-            {{ 'inspection.notesLabel' | t }}
-            <span *ngIf="formModel.opinion === 'NonCompliant'" class="required"
-              >*</span
-            >
-          </label>
-
-          <textarea
-            rows="4"
-            [(ngModel)]="formModel.inspectionNote"
-            [placeholder]="'inspection.notePlaceholder' | t"
-          ></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>{{ 'common.entityLetters' | t }}</label>
-          <input
-            type="file"
-            multiple
-            (change)="onFilesSelected($event, 'entityLetters')"
-          />
-
-          <ul class="file-list" *ngIf="entityLetters.length > 0">
-            <li *ngFor="let file of entityLetters; let i = index">
-              <span>{{ file.name }}</span>
-              <button type="button" (click)="removeFile('entityLetters', i)">
-                ×
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        <div class="form-group">
-          <label>{{ 'common.proofDocuments' | t }}</label>
-          <input
-            type="file"
-            multiple
-            (change)="onFilesSelected($event, 'proofDocuments')"
-          />
-
-          <ul class="file-list" *ngIf="proofDocuments.length > 0">
-            <li *ngFor="let file of proofDocuments; let i = index">
-              <span>{{ file.name }}</span>
-              <button type="button" (click)="removeFile('proofDocuments', i)">
-                ×
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        <div class="form-group">
-          <label>{{ 'common.engineeringReports' | t }}</label>
-          <input
-            type="file"
-            multiple
-            (change)="onFilesSelected($event, 'engineeringReports')"
-          />
-
-          <ul class="file-list" *ngIf="engineeringReports.length > 0">
-            <li *ngFor="let file of engineeringReports; let i = index">
-              <span>{{ file.name }}</span>
-              <button
-                type="button"
-                (click)="removeFile('engineeringReports', i)"
-              >
-                ×
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        <div class="form-group">
-          <label>{{ 'common.inspectionReports' | t }}</label>
-          <input
-            type="file"
-            multiple
-            (change)="onFilesSelected($event, 'inspectionReports')"
-          />
-
-          <ul class="file-list" *ngIf="inspectionReports.length > 0">
-            <li *ngFor="let file of inspectionReports; let i = index">
-              <span>{{ file.name }}</span>
-              <button
-                type="button"
-                (click)="removeFile('inspectionReports', i)"
-              >
-                ×
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        <div class="form-group full-width">
-          <label>{{ 'common.otherAttachments' | t }}</label>
-          <input
-            type="file"
-            multiple
-            (change)="onFilesSelected($event, 'otherAttachments')"
-          />
-
-          <ul class="file-list" *ngIf="otherAttachments.length > 0">
-            <li *ngFor="let file of otherAttachments; let i = index">
-              <span>{{ file.name }}</span>
-              <button type="button" (click)="removeFile('otherAttachments', i)">
-                ×
-              </button>
-            </li>
-          </ul>
-        </div>
+    <!-- رسائل الفورم -->
+    <div class="form-feedback" *ngIf="formErrorMessage || successMessage">
+      <div class="message-banner error" *ngIf="formErrorMessage">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ formErrorMessage }}</span>
       </div>
 
-      <div class="message error" *ngIf="formErrorMessage">
-        {{ formErrorMessage }}
-      </div>
-
-      <div class="message success" *ngIf="successMessage">
-        {{ successMessage }}
-      </div>
-
-      <div class="form-actions">
-        <button
-          type="button"
-          class="save-btn"
-          (click)="save()"
-          [disabled]="saving"
-        >
-          {{ saving ? ('common.saving' | t) : ('inspection.save' | t) }}
-        </button>
-
-        <button type="button" class="cancel-btn" (click)="close()">
-          {{ 'common.cancel' | t }}
-        </button>
+      <div class="message-banner success" *ngIf="successMessage">
+        <mat-icon>check_circle_outline</mat-icon>
+        <span>{{ successMessage }}</span>
       </div>
     </div>
-  </ng-container>
+
+    <!-- Footer -->
+    <div class="dialog-actions">
+      <span class="form-invalid-hint" *ngIf="attemptedSave && form.invalid && !saving">
+        لا يمكن الحفظ، يرجى مراجعة البيانات
+      </span>
+
+      <button type="button" class="btn-reset" [disabled]="saving" (click)="close()">إلغاء</button>
+
+      <button
+        type="button"
+        class="btn-save"
+        (click)="save()"
+        [disabled]="saving || loading || !details"
+      >
+        {{ saving && !movingToFinalApproval ? 'جاري الحفظ...' : 'حفظ المعاينة' }}
+      </button>
+
+      <button
+        *ngIf="canMoveToFinalApproval"
+        type="button"
+        class="btn-save"
+        (click)="save(true)"
+        [disabled]="saving || loading || !details"
+      >
+        {{ movingToFinalApproval ? 'جاري النقل...' : 'حفظ ونقل للموافقة النهائية' }}
+      </button>
+    </div>
+  </div>
 </div>

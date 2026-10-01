@@ -7,6 +7,7 @@ import { APPLICANT_ROLE_LABELS, ApplicantRole } from '../../../Shared/Enums/enum
 import { ApiResponse } from '../../../Shared/Models/ApiResponse';
 import { AttachmentGroup, NewLicenseDetails } from '../../Models/new-license';
 import { NewLicenseService } from '../../Services/new-license.service';
+import { buildFileUrl } from '../../../Shared/Utils/file-url';
 
 export interface DetailsDialogData {
   id: string;
@@ -71,7 +72,7 @@ export class DetailsComponent implements OnInit {
   }
 
   getFileUrl(filePath: string): string {
-    return this.newLicenseService.buildFileUrl(filePath);
+    return buildFileUrl(filePath);
   }
 
   isImageFile(fileName: string): boolean {
@@ -96,24 +97,10 @@ export class DetailsComponent implements OnInit {
   getAttachmentGroups(details: NewLicenseDetails): AttachmentGroup[] {
     return [
       { title: 'خطابات الجهة', files: details.entityLetters || [] },
-      { title: 'مستندات الإثبات', files: details.proofDocuments || [] },
+      { title: 'أوراق الثبوت', files: details.proofDocuments || [] },
       { title: 'التقارير الهندسية', files: details.engineeringReports || [] },
       { title: 'مرفقات أخرى', files: details.otherAttachments || [] },
     ];
-  }
-
-  formatDate(date: string | null | undefined): string {
-    if (!date) {
-      return '-';
-    }
-
-    return new Date(date).toLocaleString('ar-EG', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
   }
 
   getApplicantRoleLabel(role: string): string {

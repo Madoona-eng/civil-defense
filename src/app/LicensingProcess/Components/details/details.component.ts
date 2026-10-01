@@ -1,18 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import {
-  ApiResponse,
-  LicensingProcessDetails
-} from '../../Models/licensing-process';
-import { LicensingProcessService } from '../../Services/licensing-process.service';
 import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { buildFileUrl } from '../../../Shared/Utils/file-url';
+import { ApiResponse, LicensingProcessDetails } from '../../Models/licensing-process';
+import { LicensingProcessService } from '../../Services/licensing-process.service';
 
 @Component({
   selector: 'app-licensing-process-details',
   standalone: true,
   imports: [CommonModule, SiteTranslationPipe],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  styleUrl: './details.component.scss',
 })
 export class DetailsComponent implements OnChanges {
   @Input() processId: string | null = null;
@@ -25,9 +23,7 @@ export class DetailsComponent implements OnChanges {
 
   failedImages = new Set<string>();
 
-  constructor(
-    private readonly licensingProcessService: LicensingProcessService
-  ) {}
+  constructor(private readonly licensingProcessService: LicensingProcessService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['processId'] && this.processId) {
@@ -61,7 +57,7 @@ export class DetailsComponent implements OnChanges {
           err?.error?.Message ||
           err?.message ||
           SITE_TRANSLATIONS['licensing.loadError'];
-      }
+      },
     });
   }
 
@@ -102,14 +98,14 @@ export class DetailsComponent implements OnChanges {
   }
 
   getFileUrl(filePath: string): string {
-    return this.licensingProcessService.buildFileUrl(filePath);
+    return buildFileUrl(filePath);
   }
 
   isImageFile(fileName: string): boolean {
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
+    const imageExtensions = ['.jpg', '.jpeg', '.png'];
     const lowerName = fileName.toLowerCase();
 
-    return imageExtensions.some(extension => lowerName.endsWith(extension));
+    return imageExtensions.some((extension) => lowerName.endsWith(extension));
   }
 
   hasImageError(filePath: string): boolean {

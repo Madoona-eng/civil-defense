@@ -1,28 +1,25 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { BaseAPI } from '../../Shared/Env/env';
 import {
   ApiResponse,
-  InspectionStepDetails,
   InspectionItem,
   InspectionList,
+  InspectionStepDetails,
   PagedResult,
 } from '../Models/inspection';
-import { BaseAPI } from '../../Shared/Env/env';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InspectionService {
   private readonly apiUrl = `${BaseAPI}/api/InspectionStep/`;
-  private readonly processUrl = `${BaseAPI}/api/LicensingProcess`;
 
   constructor(private readonly http: HttpClient) {}
 
-  getAll(
-    query: InspectionList,
-  ): Observable<ApiResponse<PagedResult<InspectionItem>>> {
+  getAll(query: InspectionList): Observable<ApiResponse<PagedResult<InspectionItem>>> {
     let params = new HttpParams()
       .set('pageNumber', query.pageNumber.toString())
       .set('pageSize', query.pageSize.toString());
@@ -55,42 +52,29 @@ export class InspectionService {
       params = params.set('searchTerm', query.searchTerm);
     }
 
-    return this.http.get<ApiResponse<PagedResult<InspectionItem>>>(
-      `${this.apiUrl}inspection`,
-      { params },
-    );
+    return this.http.get<ApiResponse<PagedResult<InspectionItem>>>(`${this.apiUrl}inspection`, {
+      params,
+    });
   }
 
   getById(id: string): Observable<ApiResponse<InspectionStepDetails>> {
-    return this.http.get<ApiResponse<InspectionStepDetails>>(
-      `${this.processUrl}/${id}/inspection`,
-    );
+    return this.http.get<ApiResponse<InspectionStepDetails>>(`${this.apiUrl}${id}/inspection`);
   }
 
-  updateInspection(
-    id: string,
-    formData: FormData,
-  ): Observable<ApiResponse<boolean>> {
-    return this.http.put<ApiResponse<boolean>>(
-      `${this.processUrl}/${id}/inspection`,
-      formData,
-    );
-  }
-
-  delete(id: string): Observable<ApiResponse<boolean>> {
-    return this.http.delete<ApiResponse<boolean>>(`${this.processUrl}/${id}`);
+  updateInspection(id: string, formData: FormData): Observable<ApiResponse<boolean>> {
+    return this.http.put<ApiResponse<boolean>>(`${this.apiUrl}${id}/inspection`, formData);
   }
 
   moveToFinalApproval(id: string): Observable<ApiResponse<boolean>> {
-    return this.http.put<ApiResponse<boolean>>(
-      `${this.apiUrl}${id}/move-to-final-approval`,
-      {},
-    );
+    return this.http.put<ApiResponse<boolean>>(`${this.apiUrl}${id}/move-to-final-approval`, {});
   }
 
-  buildFileUrl(filePath: string): string {
-    const cleanPath = filePath.replace(/^\/+/, '').replace(/\\/g, '/');
+  deleteAttachment(attachmentId: string, type: string): Observable<ApiResponse<boolean>> {
+    const params = new HttpParams().set('type', type);
 
-    return encodeURI(`/${cleanPath}`);
+    return this.http.delete<ApiResponse<boolean>>(
+      `${BaseAPI}/api/LicensingProcess/attachments/${attachmentId}`,
+      { params },
+    );
   }
 }

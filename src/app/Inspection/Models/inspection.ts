@@ -1,3 +1,5 @@
+import { InspectionOpinion } from "../../Shared/Enums/enums";
+
 export interface ApiResponse<T> {
   data: T;
   isSuccess: boolean;
@@ -18,6 +20,14 @@ export interface InspectionItem {
   isReturned: boolean;
 }
 
+export const ATTACHMENT_API_TYPES: Record<AttachmentType, string> = {
+  entityLetters: 'EntityLetter',
+  proofDocuments: 'ProofDocument',
+  engineeringReports: 'EngineeringReport',
+  inspectionReports: 'InspectionReport',
+  otherAttachments: 'OtherAttachment',
+};
+
 export interface PagedResult<T> {
   items: T[];
   pageNumber: number;
@@ -33,7 +43,7 @@ export interface InspectionList {
   requestingEntityId?: string;
   activityTypeId?: string;
   isReturned?: boolean;
-  opinion?: string;
+  opinion?: InspectionOpinion;
   submissionDateFrom?: string;
   submissionDateTo?: string;
   searchTerm?: string;
@@ -67,7 +77,7 @@ export interface InspectionStepDetails {
   transactionCode: string;
 
   inspectorName?: string | null;
-  opinion?: string | null;
+  opinion?: InspectionOpinion | null;
   isReturned?: boolean;
 
   entityLetters?: InspectionAttachment[];
@@ -81,7 +91,7 @@ export interface InspectionStepDetails {
 
 export interface InspectionFormModel {
   inspectorName: string;
-  opinion: 'Compliant' | 'NonCompliant';
+  opinion: InspectionOpinion;
   inspectionNote: string;
 }
 

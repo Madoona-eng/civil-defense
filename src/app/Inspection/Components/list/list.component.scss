@@ -344,3 +344,25 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+
+.bulk-actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  flex-direction: row-reverse;
+
+  .move-all-to-next {
+    &:disabled,
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+      filter: grayscale(0.6);
+    }
+  }
+}

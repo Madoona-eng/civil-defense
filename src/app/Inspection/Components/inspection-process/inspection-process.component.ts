@@ -4,72 +4,173 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { Observable, catchError, concatMap, from, map, throwError, toArray } from 'rxjs';
 
 import {
   ApiResponse,
-  InspectionStepDetails,
-  InspectionFormModel,
-  InspectionItem,
-  AttachmentType,
+  ATTACHMENT_API_TYPES,
   AttachmentGroup,
+  AttachmentType,
+  InspectionAttachment,
+  InspectionItem,
+  InspectionStepDetails,
 } from '../../Models/inspection';
 
 import { InspectionService } from '../../Services/inspection.service';
 
 import {
-  PROCESS_STEP_LABELS,
   INSPECTION_OPINION_LABELS,
-  ProcessStep,
   InspectionOpinion,
+  PROCESS_STEP_LABELS,
+  ProcessStep,
+  RETURN_STATE_LABELS,
+  ReturnState,
 } from '../../../Shared/Enums/enums';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { formatDateTime } from '../../../Shared/Helpers/date.helper';
+import {
+  FILE_ACCEPT,
+  formatSize,
+  iconByName,
+  isImageFile,
+  openFile,
+  validateFile,
+} from '../../../Shared/Helpers/file.helper';
+import { buildFileUrl } from '../../../Shared/Utils/file-url';
+import { AuthService } from '../../../auth/services/auth.service';
 
+// ============================================================
+// Types & constants
+// ============================================================
 
+interface SelectOption {
+  value: string;
+  label: string;
+}
 
+interface UploadField {
+  type: AttachmentType;
+  label: string;
+}
 
+type DeleteOperation = () => Observable<unknown>;
+
+const FINAL_APPROVAL_ROLES = ['Inspector', 'SuperAdmin'];
+const INSPECTOR_NAME_MAX_LENGTH = 200;
+const SUCCESS_CLOSE_DELAY_MS = 900;
+
+// فاضي أو مسافات بس = مش مقبول
+function notBlank(control: AbstractControl): ValidationErrors | null {
+  return String(control.value ?? '').trim() ? null : { required: true };
+}
+
+// بيطلّع أنسب رسالة خطأ من response الباك أو من الـ Error نفسه
+function extractErrorMessage(err: any, fallback: string): string {
+  return err?.error?.message || err?.error?.Message || err?.message || fallback;
+}
+
+// ============================================================
+// Component
+// ============================================================
 
 @Component({
   selector: 'app-inspection-process',
   standalone: true,
-  imports: [CommonModule, FormsModule, SiteTranslationPipe],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatIconModule,
+  ],
   templateUrl: './inspection-process.component.html',
   styleUrl: './inspection-process.component.scss',
 })
-export class InspectionProcessComponent implements OnChanges {
-  // ===== Input جديد: بديل processId و item القدامى، ده اللي هيوصل من الصفحة الأب =====
+export class InspectionProcessComponent implements OnChanges, OnDestroy {
   @Input() item: InspectionItem | null = null;
 
   @Output() saved = new EventEmitter<void>();
   @Output() cancelled = new EventEmitter<void>();
 
-  // ===== حالة تحميل بيانات السياق (details) =====
+  // ===== إعدادات ثابتة =====
+  readonly opinionOptions: SelectOption[] = Object.values(InspectionOpinion).map((value) => ({
+    value,
+    label: INSPECTION_OPINION_LABELS[value],
+  }));
+
+  // بتستخدم في الرفع، وفي عناوين مجموعات المرفقات السابقة
+  readonly uploadFields: UploadField[] = [
+    { type: 'entityLetters', label: 'خطابات الجهة' },
+    { type: 'proofDocuments', label: 'أوراق الثبوت' },
+    { type: 'engineeringReports', label: 'التقارير الهندسية' },
+    { type: 'inspectionReports', label: 'تقارير المعاينة' },
+    { type: 'otherAttachments', label: 'مرفقات أخرى' },
+  ];
+
+  // helpers متاحة للـ template
+  readonly formatDateTime = formatDateTime;
+  readonly isImageFile = isImageFile;
+  readonly openFile = openFile;
+  readonly getFileUrl = buildFileUrl;
+  readonly formatSize = formatSize;
+  readonly iconByName = iconByName;
+  readonly fileAccept = FILE_ACCEPT;
+
+  // ===== بيانات المعاملة =====
   details: InspectionStepDetails | null = null;
   loading = false;
   errorMessage = '';
-  failedImages = new Set<string>();
 
-  // ===== حالة الفورم (منقولة زي ما هي من EditComponent) =====
-  saving = false;
+  // ===== الفورم =====
+  form: FormGroup;
+  attemptedSave = false;
   formErrorMessage = '';
   successMessage = '';
 
-  formModel: InspectionFormModel = {
-    inspectorName: '',
-    opinion: 'Compliant',
-    inspectionNote: '',
-  };
+  // ===== حالة الحفظ =====
+  saving = false;
+  movingToFinalApproval = false;
 
-  entityLetters: File[] = [];
-  proofDocuments: File[] = [];
-  engineeringReports: File[] = [];
-  inspectionReports: File[] = [];
-  otherAttachments: File[] = [];
+  // ===== المرفقات =====
+  selectedFiles: Record<AttachmentType, File[]> = this.createEmptyRecord<File>();
 
-  constructor(private readonly inspectionService: InspectionService) { }
+  // رسائل الملفات المرفوضة، لكل خانة رفع على حدة
+  fileErrors: Record<AttachmentType, string[]> = this.createEmptyRecord<string>();
+
+  // مرفقات سابقة معلّم عليها للحذف، بتتنفذ عند الحفظ بس
+  pendingDeleteIds = new Set<string>();
+
+  failedImages = new Set<string>();
+  private previews = new Map<File, string>();
+
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly inspectionService: InspectionService,
+    private readonly authService: AuthService,
+  ) {
+    this.form = this.buildForm();
+    this.listenToOpinionChanges();
+  }
+
+  // ============================================================
+  // Lifecycle
+  // ============================================================
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['item'] && this.item?.id) {
@@ -78,19 +179,112 @@ export class InspectionProcessComponent implements OnChanges {
     }
   }
 
-  // ===== تحميل بيانات السياق: بتحل محل استدعاءين منفصلين كانوا في details و edit =====
+  ngOnDestroy(): void {
+    this.clearPreviews();
+  }
+
+  close(): void {
+    this.cancelled.emit();
+  }
+
+  // ============================================================
+  // Permissions
+  // ============================================================
+
+  get canMoveToFinalApproval(): boolean {
+    const role = this.authService.getRole();
+    return !!role && FINAL_APPROVAL_ROLES.includes(role);
+  }
+
+  // الباك بيسمح بحذف مرفق اترفع في الخطوة الحالية بس
+  canDelete(file: InspectionAttachment): boolean {
+    return file.uploadedAtStep === ProcessStep.Inspection;
+  }
+
+  // ============================================================
+  // Form setup & note validation
+  // ============================================================
+
+  private buildForm(): FormGroup {
+    return this.fb.group({
+      inspectorName: ['', [notBlank, Validators.maxLength(INSPECTOR_NAME_MAX_LENGTH)]],
+      opinion: [null as InspectionOpinion | null, Validators.required],
+      inspectionNote: [''],
+    });
+  }
+
+  private listenToOpinionChanges(): void {
+    this.form.controls['opinion'].valueChanges.subscribe(() => this.updateNoteValidators());
+  }
+
+  get isNonCompliant(): boolean {
+    return this.form.controls['opinion'].value === InspectionOpinion.NonCompliant;
+  }
+
+  // الملاحظة مطلوبة لو غير مستوفي أو المعاملة مرتجعة
+  get isNoteRequired(): boolean {
+    return this.isNonCompliant || !!this.details?.isReturned;
+  }
+
+  get noteRequiredMessage(): string {
+    return this.isNonCompliant
+      ? 'يجب إدخال السبب عند عدم الاستيفاء'
+      : 'الملاحظة مطلوبة لأن المعاملة مرتجعة';
+  }
+
+  private updateNoteValidators(): void {
+    const note = this.form.controls['inspectionNote'];
+
+    if (this.isNoteRequired) {
+      note.addValidators(notBlank);
+    } else {
+      note.removeValidators(notBlank);
+    }
+
+    note.updateValueAndValidity({ emitEvent: false });
+  }
+
+  resetForm(): void {
+    this.details = null;
+    this.attemptedSave = false;
+    this.formErrorMessage = '';
+    this.successMessage = '';
+
+    this.form.enable({ emitEvent: false });
+    this.form.reset({ inspectorName: '', opinion: null, inspectionNote: '' });
+
+    this.resetAttachmentSelection();
+    this.pendingDeleteIds.clear();
+  }
+
+  fillForm(details: InspectionStepDetails): void {
+    this.form.patchValue({
+      inspectorName: details.inspectorName || '',
+      opinion: details.opinion ?? null,
+      inspectionNote: '',
+    });
+
+    // details اتحمّلت، فشرط "مرتجعة" ممكن يكون اتغير
+    this.updateNoteValidators();
+  }
+
+  // ============================================================
+  // Loading
+  // ============================================================
+
   loadDetails(id: string): void {
     this.loading = true;
     this.errorMessage = '';
     this.details = null;
     this.failedImages.clear();
+    this.pendingDeleteIds.clear();
 
     this.inspectionService.getById(id).subscribe({
       next: (response: ApiResponse<InspectionStepDetails>) => {
         this.loading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || SITE_TRANSLATIONS['inspection.loadFailed'];
+          this.errorMessage = response.message || 'تعذر تحميل بيانات المعاينة';
           return;
         }
 
@@ -100,183 +294,300 @@ export class InspectionProcessComponent implements OnChanges {
       error: (err) => {
         this.loading = false;
         console.error('Inspection process GET error:', err);
-
-        this.errorMessage =
-          err?.error?.message ||
-          err?.error?.Message ||
-          err?.message ||
-          SITE_TRANSLATIONS['inspection.loadError'];
+        this.errorMessage = extractErrorMessage(err, 'حدث خطأ أثناء تحميل بيانات المعاينة');
       },
     });
   }
 
-  close(): void {
-    this.cancelled.emit();
-  }
-
   // ============================================================
-  // منطق الفورم — منقول من EditComponent زي ما هو
+  // New attachments (upload selection)
   // ============================================================
 
-  resetForm(): void {
-    this.formErrorMessage = '';
-    this.successMessage = '';
-
-    this.formModel = {
-      inspectorName: '',
-      opinion: 'Compliant',
-      inspectionNote: '',
-    };
-
-    this.entityLetters = [];
-    this.proofDocuments = [];
-    this.engineeringReports = [];
-    this.inspectionReports = [];
-    this.otherAttachments = [];
-  }
-
-  fillForm(details: InspectionStepDetails): void {
-    this.formModel = {
-      inspectorName: details.inspectorName || '',
-      opinion:
-        details.opinion === 'NonCompliant' ? 'NonCompliant' : 'Compliant',
-      inspectionNote: '',
+  private createEmptyRecord<T>(): Record<AttachmentType, T[]> {
+    return {
+      entityLetters: [],
+      proofDocuments: [],
+      engineeringReports: [],
+      inspectionReports: [],
+      otherAttachments: [],
     };
   }
+
+  private resetAttachmentSelection(): void {
+    this.clearPreviews();
+    this.selectedFiles = this.createEmptyRecord<File>();
+    this.fileErrors = this.createEmptyRecord<string>();
+  }
+
+  // الملف الغلط ما بيتضافش، وسبب رفضه بيظهر تحت خانته
   onFilesSelected(event: Event, type: AttachmentType): void {
     const input = event.target as HTMLInputElement;
-    const newFiles = Array.from(input.files || []);
-
-    this.getFileArray(type).push(...newFiles);
+    const files = input.files ? Array.from(input.files) : [];
     input.value = '';
+
+    const accepted: File[] = [];
+    const errors: string[] = [];
+
+    for (const file of files) {
+      const reason = validateFile(file);
+      if (reason) errors.push(`"${file.name}": ${reason}`);
+      else accepted.push(file);
+    }
+
+    this.fileErrors[type] = errors;
+    this.selectedFiles[type] = [...this.selectedFiles[type], ...accepted];
   }
 
   removeFile(type: AttachmentType, index: number): void {
-    this.getFileArray(type).splice(index, 1);
+    const [file] = this.selectedFiles[type].splice(index, 1);
+
+    const url = file ? this.previews.get(file) : undefined;
+    if (url) {
+      URL.revokeObjectURL(url);
+      this.previews.delete(file);
+    }
   }
 
-  private getFileArray(type: AttachmentType): File[] {
-    if (type === 'entityLetters') return this.entityLetters;
-    if (type === 'proofDocuments') return this.proofDocuments;
-    if (type === 'engineeringReports') return this.engineeringReports;
-    if (type === 'inspectionReports') return this.inspectionReports;
-    return this.otherAttachments;
+  // معاينة مصغّرة للصور بس، والباقي بياخد أيقونة
+  previewOf(file: File): string | null {
+    if (!file.type.startsWith('image/')) return null;
+    if (!this.previews.has(file)) this.previews.set(file, URL.createObjectURL(file));
+    return this.previews.get(file)!;
   }
 
-  save(): void {
+  private clearPreviews(): void {
+    this.previews.forEach((url) => URL.revokeObjectURL(url));
+    this.previews.clear();
+  }
+
+  // ============================================================
+  // Existing attachments (display + mark for delete)
+  // ============================================================
+
+  getAttachmentGroups(details: InspectionStepDetails): AttachmentGroup[] {
+    return this.uploadFields.map(({ type, label }) => ({
+      title: label,
+      files: details[type] || [],
+    }));
+  }
+
+  hasAnyAttachments(details: InspectionStepDetails): boolean {
+    return this.getAttachmentGroups(details).some((group) => group.files.length > 0);
+  }
+
+  // علّم للحذف، أو تراجع (التنفيذ الفعلي عند الحفظ)
+  toggleDelete(file: InspectionAttachment): void {
+    if (this.pendingDeleteIds.has(file.id)) {
+      this.pendingDeleteIds.delete(file.id);
+    } else {
+      this.pendingDeleteIds.add(file.id);
+    }
+  }
+
+  // ============================================================
+  // Save flow: save + upload → delete marked → move (optional)
+  // ============================================================
+
+  save(moveToFinalApproval = false): void {
+    this.attemptedSave = true;
     this.formErrorMessage = '';
     this.successMessage = '';
 
     if (!this.item?.id) {
-      this.formErrorMessage = SITE_TRANSLATIONS['inspection.formNotSelected'];
+      this.formErrorMessage = 'لم يتم اختيار معاينة';
       return;
     }
 
-    if (!this.validateForm()) {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
 
-    const formData = new FormData();
+    const id = this.item.id;
+    const formData = this.buildFormData();
 
-    formData.append('InspectorName', this.formModel.inspectorName.trim());
-    formData.append('Opinion', this.formModel.opinion);
-    formData.append('InspectionNote', this.formModel.inspectionNote.trim());
+    this.startSaving(moveToFinalApproval);
 
-    this.entityLetters.forEach((file) =>
-      formData.append('EntityLetters', file, file.name),
-    );
-    this.proofDocuments.forEach((file) =>
-      formData.append('ProofDocuments', file, file.name),
-    );
-    this.engineeringReports.forEach((file) =>
-      formData.append('EngineeringReports', file, file.name),
-    );
-    this.inspectionReports.forEach((file) =>
-      formData.append('InspectionReports', file, file.name),
-    );
-    this.otherAttachments.forEach((file) =>
-      formData.append('OtherAttachments', file, file.name),
-    );
-
-    this.saving = true;
-
-    this.inspectionService.updateInspection(this.item.id, formData).subscribe({
+    this.inspectionService.updateInspection(id, formData).subscribe({
       next: (response: ApiResponse<boolean>) => {
-        this.saving = false;
-
         if (!response.isSuccess) {
-          this.formErrorMessage = response.message || SITE_TRANSLATIONS['inspection.saveFailed'];
+          this.stopSaving();
+          this.formErrorMessage = response.message || 'تعذر حفظ المعاينة';
           return;
         }
 
-        this.successMessage = response.message || SITE_TRANSLATIONS['inspection.saved'];
-
-        setTimeout(() => {
-          this.saved.emit();
-        }, 900);
+        this.applyDeletes(id, moveToFinalApproval);
       },
       error: (err) => {
-        this.saving = false;
         console.error('Inspection PUT error:', err);
-
-        this.formErrorMessage =
-          err?.error?.message ||
-          err?.error?.Message ||
-          err?.message ||
-          SITE_TRANSLATIONS['inspection.saveError'];
+        this.stopSaving();
+        this.formErrorMessage = extractErrorMessage(err, 'حدث خطأ أثناء حفظ المعاينة');
       },
     });
   }
 
-  validateForm(): boolean {
-    if (!this.formModel.inspectorName.trim()) {
-      this.formErrorMessage = SITE_TRANSLATIONS['inspection.inspectorRequired'];
-      return false;
+  private buildFormData(): FormData {
+    const raw = this.form.getRawValue();
+    const formData = new FormData();
+
+    formData.append('InspectorName', String(raw.inspectorName).trim());
+    formData.append('Opinion', raw.opinion);
+    formData.append('InspectionNote', String(raw.inspectionNote ?? '').trim());
+
+    // أسماء الحقول في الباك: EntityLetters, ProofDocuments, ...
+    this.uploadFields.forEach(({ type }) => {
+      const fieldName = type.charAt(0).toUpperCase() + type.slice(1);
+      this.selectedFiles[type].forEach((file) => formData.append(fieldName, file, file.name));
+    });
+
+    return formData;
+  }
+
+  private startSaving(moveToFinalApproval: boolean): void {
+    this.saving = true;
+    this.movingToFinalApproval = moveToFinalApproval;
+    this.form.disable({ emitEvent: false });
+  }
+
+  private stopSaving(): void {
+    this.saving = false;
+    this.movingToFinalApproval = false;
+    this.form.enable({ emitEvent: false });
+  }
+
+  // ---------- حذف المرفقات المعلّمة ----------
+
+  // واحدة ورا التانية، وبيقف عند أول فشل
+  private applyDeletes(id: string, moveToFinalApproval: boolean): void {
+    const ops = this.buildDeleteOps();
+
+    if (!ops.length) {
+      this.afterSave(id, moveToFinalApproval);
+      return;
     }
 
-    if (!this.formModel.opinion) {
-      this.formErrorMessage = SITE_TRANSLATIONS['inspection.opinionRequired'];
-      return false;
+    from(ops)
+      .pipe(
+        concatMap((op) => op()),
+        toArray(),
+      )
+      .subscribe({
+        next: () => this.afterSave(id, moveToFinalApproval),
+        error: (err: Error) => this.onDeleteFailed(id, err.message),
+      });
+  }
+
+  private buildDeleteOps(): DeleteOperation[] {
+    const details = this.details;
+    if (!details) return [];
+
+    const ops: DeleteOperation[] = [];
+
+    for (const { type } of this.uploadFields) {
+      for (const attachment of details[type] ?? []) {
+        if (this.pendingDeleteIds.has(attachment.id)) {
+          ops.push(() => this.deleteAttachment(attachment, type));
+        }
+      }
     }
 
-    if (this.details?.isReturned && !this.formModel.inspectionNote.trim()) {
-      this.formErrorMessage = SITE_TRANSLATIONS['inspection.returnNoteRequired'];
-      return false;
-    }
+    return ops;
+  }
 
-    if (
-      this.formModel.opinion === 'NonCompliant' &&
-      !this.formModel.inspectionNote.trim()
-    ) {
-      this.formErrorMessage = SITE_TRANSLATIONS['inspection.nonCompliantReasonRequired'];
-      return false;
-    }
+  private deleteAttachment(
+    attachment: InspectionAttachment,
+    type: AttachmentType,
+  ): Observable<void> {
+    const fallback = 'تعذر حذف المرفق';
 
-    return true;
+    return this.inspectionService
+      .deleteAttachment(attachment.id, ATTACHMENT_API_TYPES[type])
+      .pipe(
+        map((res) => {
+          if (!res.isSuccess) {
+            throw new Error(`حذف "${attachment.fileName}": ${res.message || fallback}`);
+          }
+          this.pendingDeleteIds.delete(attachment.id);
+        }),
+        catchError((err) => {
+          // الـ Error اللي فوق مجهّزة بالفعل، أي حاجة تانية (HTTP error) بنجهّز لها رسالة
+          const message =
+            err instanceof Error
+              ? err.message
+              : `حذف "${attachment.fileName}": ${extractErrorMessage(err, fallback)}`;
+
+          return throwError(() => new Error(message));
+        }),
+      );
+  }
+
+  // ---------- بعد الحفظ والحذف ----------
+
+  private afterSave(id: string, moveToFinalApproval: boolean): void {
+    if (moveToFinalApproval) {
+      this.moveToFinalApproval(id);
+      return;
+    }
+    this.finishSuccess('تم حفظ المعاينة بنجاح');
+  }
+
+  private moveToFinalApproval(id: string): void {
+    this.inspectionService.moveToFinalApproval(id).subscribe({
+      next: (res: ApiResponse<boolean>) => {
+        if (!res.isSuccess) {
+          this.onMoveFailed(id, res.message);
+          return;
+        }
+        this.finishSuccess('تم حفظ المعاينة ونقلها للموافقة النهائية بنجاح');
+      },
+      error: (err) => {
+        console.error('Inspection move-to-final-approval error:', err);
+        this.onMoveFailed(id, extractErrorMessage(err, ''));
+      },
+    });
+  }
+
+  private finishSuccess(message: string): void {
+    this.saving = false;
+    this.movingToFinalApproval = false;
+    this.successMessage = message;
+
+    setTimeout(() => this.saved.emit(), SUCCESS_CLOSE_DELAY_MS);
+  }
+
+  // ---------- فشل جزئي (الحفظ نجح فعلًا) ----------
+
+  // المعاينة اتحفظت فعلاً، لكن الحذف فشل
+  private onDeleteFailed(id: string, reason: string): void {
+    this.reloadAfterPartialSave(id);
+    this.formErrorMessage = `تم حفظ المعاينة، لكن تعذر حذف بعض المرفقات: ${reason}`;
+  }
+
+  // الحفظ نجح فعلاً لكن النقل اترفض (مثلاً مرفقات ناقصة)
+  private onMoveFailed(id: string, reason?: string): void {
+    this.reloadAfterPartialSave(id);
+    this.formErrorMessage = `تم حفظ المعاينة، لكن تعذر النقل للموافقة النهائية: ${
+      reason || 'حدث خطأ غير متوقع'
+    }`;
+  }
+
+  // الملفات الجديدة اترفعت خلاص، فنفضّيها ونحمّل من جديد عشان متترفعش مرتين
+  private reloadAfterPartialSave(id: string): void {
+    this.stopSaving();
+    this.resetAttachmentSelection();
+    this.loadDetails(id);
   }
 
   // ============================================================
-  // helpers العرض — منقولة من DetailsComponent زي ما هي
+  // Display helpers
   // ============================================================
 
   getStepLabel(step: string | null | undefined): string {
     return PROCESS_STEP_LABELS[step as ProcessStep] || step || '-';
   }
 
-  getOpinionLabel(opinion: string | null | undefined): string {
-    return (
-      INSPECTION_OPINION_LABELS[opinion as InspectionOpinion] || opinion || '-'
-    );
-  }
-
-  getFileUrl(filePath: string): string {
-    return this.inspectionService.buildFileUrl(filePath);
-  }
-
-  isImageFile(fileName: string): boolean {
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
-    const lowerName = fileName.toLowerCase();
-    return imageExtensions.some((extension) => lowerName.endsWith(extension));
+  getReturnStateLabel(isReturned: boolean | undefined): string {
+    return RETURN_STATE_LABELS[isReturned ? ReturnState.Returned : ReturnState.NotReturned];
   }
 
   hasImageError(filePath: string): boolean {
@@ -285,29 +596,5 @@ export class InspectionProcessComponent implements OnChanges {
 
   onImageError(filePath: string): void {
     this.failedImages.add(filePath);
-  }
-
-  getAttachmentGroups(details: InspectionStepDetails): AttachmentGroup[] {
-    return [
-      { title: SITE_TRANSLATIONS['common.entityLetters'], files: details.entityLetters || [] },
-      { title: SITE_TRANSLATIONS['common.proofDocuments'], files: details.proofDocuments || [] },
-      { title: SITE_TRANSLATIONS['common.engineeringReports'], files: details.engineeringReports || [] },
-      { title: SITE_TRANSLATIONS['common.inspectionReports'], files: details.inspectionReports || [] },
-      { title: SITE_TRANSLATIONS['common.otherAttachments'], files: details.otherAttachments || [] },
-    ];
-  }
-
-  formatDate(date: string | null | undefined): string {
-    if (!date) {
-      return '-';
-    }
-
-    return new Date(date).toLocaleString('ar-EG', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
   }
 }

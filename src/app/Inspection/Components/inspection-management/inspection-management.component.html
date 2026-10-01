@@ -4,18 +4,11 @@
     (editRequested)="openEditPopup($event)"
   ></app-inspection-list>
 
-  <div
-    class="popup-backdrop"
+  <app-inspection-process
     *ngIf="isEditPopupOpen"
-    (click)="closeEditPopup()"
-  >
-    <div class="popup-card process-popup-card" (click)="$event.stopPropagation()">
-      <app-inspection-process
-        [item]="selectedInspectionItem"
-        (saved)="onEditSaved()"
-        (cancelled)="closeEditPopup()"
-      ></app-inspection-process>
-    </div>
-  </div>
+    [item]="selectedInspectionItem"
+    (saved)="onEditSaved()"
+    (cancelled)="closeEditPopup()"
+  ></app-inspection-process>
 
 </div>

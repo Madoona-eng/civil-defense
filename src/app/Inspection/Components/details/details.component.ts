@@ -23,6 +23,7 @@ import {
   InspectionOpinion,
 } from '../../../Shared/Enums/enums';
 import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { buildFileUrl } from '../../../Shared/Utils/file-url';
 
 interface AttachmentGroup {
   title: string;
@@ -98,7 +99,7 @@ export class DetailsComponent implements OnChanges {
   }
 
   getFileUrl(filePath: string): string {
-    return this.inspectionService.buildFileUrl(filePath);
+      return buildFileUrl(filePath);
   }
 
   isImageFile(fileName: string): boolean {
@@ -126,17 +127,4 @@ export class DetailsComponent implements OnChanges {
     ];
   }
 
-  formatDate(date: string | null | undefined): string {
-    if (!date) {
-      return '-';
-    }
-
-    return new Date(date).toLocaleString('ar-EG', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  }
 }

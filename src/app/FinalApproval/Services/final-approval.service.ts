@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { BaseAPI } from '../../Shared/Env/env';
 import {
   ApiResponse,
   FinalApprovalDetails,
@@ -9,7 +10,6 @@ import {
   FinalApprovalQuery,
   PagedResult,
 } from '../Models/final-approval';
-import { BaseAPI } from '../../Shared/Env/env';
 
 @Injectable({
   providedIn: 'root',
@@ -20,9 +20,7 @@ export class FinalApprovalService {
 
   constructor(private readonly http: HttpClient) {}
 
-  getAll(
-    query: FinalApprovalQuery,
-  ): Observable<ApiResponse<PagedResult<FinalApprovalItem>>> {
+  getAll(query: FinalApprovalQuery): Observable<ApiResponse<PagedResult<FinalApprovalItem>>> {
     let params = new HttpParams()
       .set('pageNumber', query.pageNumber.toString())
       .set('pageSize', query.pageSize.toString());
@@ -54,47 +52,24 @@ export class FinalApprovalService {
   }
 
   getById(id: string): Observable<ApiResponse<FinalApprovalDetails>> {
-    return this.http.get<ApiResponse<FinalApprovalDetails>>(
-      `${this.processUrl}/${id}`,
-    );
+    return this.http.get<ApiResponse<FinalApprovalDetails>>(`${this.processUrl}/${id}`);
   }
 
-  saveFinalApproval(
-    id: string,
-    formData: FormData,
-  ): Observable<ApiResponse<boolean>> {
-    return this.http.put<ApiResponse<boolean>>(
-      `${this.processUrl}/${id}/final-approval`,
-      formData,
-    );
+  saveFinalApproval(id: string, formData: FormData): Observable<ApiResponse<boolean>> {
+    return this.http.put<ApiResponse<boolean>>(`${this.processUrl}/${id}/final-approval`, formData);
   }
 
-  returnToInspection(
-    id: string,
-    noteContent: string,
-  ): Observable<ApiResponse<boolean>> {
-    return this.http.put<ApiResponse<boolean>>(
-      `${this.apiUrl}${id}/return-to-inspection`,
-      {
-        noteContent: noteContent,
-      },
-    );
+  returnToInspection(id: string, noteContent: string): Observable<ApiResponse<boolean>> {
+    return this.http.put<ApiResponse<boolean>>(`${this.apiUrl}${id}/return-to-inspection`, {
+      noteContent: noteContent,
+    });
   }
 
   moveToArchive(id: string): Observable<ApiResponse<boolean>> {
-    return this.http.put<ApiResponse<boolean>>(
-      `${this.apiUrl}${id}/move-to-archive`,
-      {},
-    );
+    return this.http.put<ApiResponse<boolean>>(`${this.apiUrl}${id}/move-to-archive`, {});
   }
 
   delete(id: string): Observable<ApiResponse<boolean>> {
     return this.http.delete<ApiResponse<boolean>>(`${this.processUrl}/${id}`);
-  }
-
-  buildFileUrl(filePath: string): string {
-    const cleanPath = filePath.replace(/^\/+/, '').replace(/\\/g, '/');
-
-    return encodeURI(`/${cleanPath}`);
   }
 }

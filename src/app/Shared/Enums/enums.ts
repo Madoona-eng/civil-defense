@@ -68,3 +68,16 @@ export const APPLICANT_ROLE_LABELS: Record<ApplicantRole, string> = {
   [ApplicantRole.Owner]: 'مالك',
   [ApplicantRole.Proxy]: 'توكيل',
 };
+
+// ============================
+// Return State
+// ============================
+export enum ReturnState {
+  Returned = 'true',
+  NotReturned = 'false',
+}
+
+export const RETURN_STATE_LABELS: Record<ReturnState, string> = {
+  [ReturnState.Returned]: 'مرتجعة',
+  [ReturnState.NotReturned]: 'غير مرتجعة',
+};

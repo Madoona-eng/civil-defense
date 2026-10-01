@@ -78,10 +78,6 @@ export class NewLicenseService {
     return this.http.get<ApiResponse<NewLicenseDetails>>(`${this.baseUrl}/new-license/${id}`);
   }
 
-  buildFileUrl(filePath: string): string {
-    return `${BaseAPI}/${filePath}`;
-  }
-
   update(id: string, dto: UpdateProcessDto): Observable<ApiResponse<boolean>> {
     return this.http.put<ApiResponse<boolean>>(`${this.baseUrl}/${id}/edit-new-license`, dto);
   }

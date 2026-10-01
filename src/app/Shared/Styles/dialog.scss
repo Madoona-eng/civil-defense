@@ -374,3 +374,38 @@
 .dialog-body .mat-mdc-form-field .mat-mdc-form-field-subscript-wrapper {
   padding-inline: 16px;
 }
+
+/* ============================================================
+   read-only info (dialogs التفاصيل)
+   ============================================================ */
+.dialog-card.wide-dialog {
+  max-width: 800px;
+}
+
+.dialog-body .info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .dialog-body .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.readonly-value {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  height: auto;
+  padding-block: 10px;
+  background: #f3f1f8;
+  border-color: transparent;
+  cursor: default;
+  word-break: break-word;
+}
+
+.info-section .section-title {
+  margin-top: 0;
+}
