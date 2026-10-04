@@ -18,23 +18,6 @@
   margin-right: 8px;
 }
 
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 700;
-  background-color: #F0FDF4;
-  color: #166534;
-
-  &.returned {
-    background-color: #FFF1F2;
-    color: #9F1239;
-    border: 1px solid #FECDD3;
-  }
-}
 
 .loading-box,
 .empty-box {

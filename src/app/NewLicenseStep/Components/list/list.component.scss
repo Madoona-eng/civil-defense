@@ -1,38 +1,5 @@
 @import '../../../Shared/Styles/tablesstyle.scss';
 
-::ng-deep .mat-mdc-menu-panel {
-  border-radius: 14px !important;
-  min-width: 190px !important;
-}
-::ng-deep .mat-mdc-menu-item {
-  display: flex !important;
-  align-items: center;
-  gap: 8px;
-  font-size: 13.5px !important;
-  font-weight: 600 !important;
-  color: var(--color-text-primary) !important;
-
-  .mat-mdc-menu-item-text,
-  .mdc-list-item__content {
-    display: flex !important;
-    align-items: center;
-    gap: 6px;
-    width: 100%;
-  }
-
-  &:hover {
-    background: var(--color-sidebar-bg) !important;
-  }
-
-  &.danger {
-    color: #e11d48 !important;
-
-    &:hover {
-      background: #fff1f2 !important;
-    }
-  }
-}
-
 .bulk-actions {
   display: flex;
   justify-content: flex-start;

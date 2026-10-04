@@ -81,3 +81,16 @@ export const RETURN_STATE_LABELS: Record<ReturnState, string> = {
   [ReturnState.Returned]: 'مرتجعة',
   [ReturnState.NotReturned]: 'غير مرتجعة',
 };
+
+// ============================
+// Payment State
+// ============================
+export enum PaymentState {
+  Paid = 'true',
+  NotPaid = 'false',
+}
+
+export const PAYMENT_STATE_LABELS: Record<PaymentState, string> = {
+  [PaymentState.Paid]: 'مسدد',
+  [PaymentState.NotPaid]: 'غير مسدد',
+};

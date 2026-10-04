@@ -8,14 +8,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -23,24 +16,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { Observable, catchError, concatMap, from, map, throwError, toArray } from 'rxjs';
 
 import {
-  ApiResponse,
-  ATTACHMENT_API_TYPES,
-  AttachmentGroup,
-  AttachmentType,
-  InspectionAttachment,
-  InspectionItem,
-  InspectionStepDetails,
-} from '../../Models/inspection';
-
-import { InspectionService } from '../../Services/inspection.service';
-
-import {
+  APPLICATION_STATUS_LABELS,
+  ApplicationStatus,
   INSPECTION_OPINION_LABELS,
   InspectionOpinion,
+  PAYMENT_STATE_LABELS,
   PROCESS_STEP_LABELS,
+  PaymentState,
   ProcessStep,
-  RETURN_STATE_LABELS,
-  ReturnState,
+  REVIEW_STATUS_LABELS,
+  ReviewStatus,
 } from '../../../Shared/Enums/enums';
 import { formatDateTime } from '../../../Shared/Helpers/date.helper';
 import {
@@ -51,13 +36,23 @@ import {
   openFile,
   validateFile,
 } from '../../../Shared/Helpers/file.helper';
-import { buildFileUrl } from '../../../Shared/Utils/file-url';
-import { AuthService } from '../../../auth/services/auth.service';
 import { SelectOption } from '../../../Shared/Models/SelectOption';
+import { buildFileUrl } from '../../../Shared/Utils/file-url';
+
+import {
+  ATTACHMENT_API_TYPES,
+  AttachmentGroup,
+  AttachmentType,
+  FinalApprovalAttachment,
+  FinalApprovalItem,
+  FinalApprovalStepDetails,
+} from '../../Models/final-approval';
+import { FinalApprovalService } from '../../Services/final-approval.service';
 
 // ============================================================
 // Types & constants
 // ============================================================
+
 interface UploadField {
   type: AttachmentType;
   label: string;
@@ -65,14 +60,7 @@ interface UploadField {
 
 type DeleteOperation = () => Observable<unknown>;
 
-const FINAL_APPROVAL_ROLES = ['Inspector', 'SuperAdmin'];
-const INSPECTOR_NAME_MAX_LENGTH = 200;
 const SUCCESS_CLOSE_DELAY_MS = 900;
-
-// فاضي أو مسافات بس = مش مقبول
-function notBlank(control: AbstractControl): ValidationErrors | null {
-  return String(control.value ?? '').trim() ? null : { required: true };
-}
 
 // بيطلّع أنسب رسالة خطأ من response الباك أو من الـ Error نفسه
 function extractErrorMessage(err: any, fallback: string): string {
@@ -84,7 +72,7 @@ function extractErrorMessage(err: any, fallback: string): string {
 // ============================================================
 
 @Component({
-  selector: 'app-inspection-process',
+  selector: 'app-final-approval-process',
   standalone: true,
   imports: [
     CommonModule,
@@ -94,22 +82,26 @@ function extractErrorMessage(err: any, fallback: string): string {
     MatSelectModule,
     MatIconModule,
   ],
-  templateUrl: './inspection-process.component.html',
-  styleUrl: './inspection-process.component.scss',
+  templateUrl: './final-approval-process.component.html',
+  styleUrl: './final-approval-process.component.scss',
 })
-export class InspectionProcessComponent implements OnChanges, OnDestroy {
-  @Input() item: InspectionItem | null = null;
+export class FinalApprovalProcessComponent implements OnChanges, OnDestroy {
+  @Input() item: FinalApprovalItem | null = null;
 
   @Output() saved = new EventEmitter<void>();
   @Output() cancelled = new EventEmitter<void>();
 
   // ===== إعدادات ثابتة =====
-  readonly opinionOptions: SelectOption[] = Object.values(InspectionOpinion).map((value) => ({
+  readonly reviewStatusOptions: SelectOption[] = Object.values(ReviewStatus).map((value) => ({
     value,
-    label: INSPECTION_OPINION_LABELS[value],
+    label: REVIEW_STATUS_LABELS[value],
   }));
 
-  // بتستخدم في الرفع، وفي عناوين مجموعات المرفقات السابقة
+  readonly paymentOptions: SelectOption[] = Object.values(PaymentState).map((value) => ({
+    value,
+    label: PAYMENT_STATE_LABELS[value],
+  }));
+
   readonly uploadFields: UploadField[] = [
     { type: 'entityLetters', label: 'خطابات الجهة' },
     { type: 'proofDocuments', label: 'أوراق الثبوت' },
@@ -128,7 +120,7 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
   readonly fileAccept = FILE_ACCEPT;
 
   // ===== بيانات المعاملة =====
-  details: InspectionStepDetails | null = null;
+  details: FinalApprovalStepDetails | null = null;
   loading = false;
   errorMessage = '';
 
@@ -140,7 +132,7 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
 
   // ===== حالة الحفظ =====
   saving = false;
-  movingToFinalApproval = false;
+  movingToArchive = false;
 
   // ===== المرفقات =====
   selectedFiles: Record<AttachmentType, File[]> = this.createEmptyRecord<File>();
@@ -156,11 +148,9 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly inspectionService: InspectionService,
-    private readonly authService: AuthService,
+    private readonly finalApprovalService: FinalApprovalService,
   ) {
     this.form = this.buildForm();
-    this.listenToOpinionChanges();
   }
 
   // ============================================================
@@ -186,59 +176,22 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
   // Permissions
   // ============================================================
 
-  get canMoveToFinalApproval(): boolean {
-    const role = this.authService.getRole();
-    return !!role && FINAL_APPROVAL_ROLES.includes(role);
-  }
-
   // الباك بيسمح بحذف مرفق اترفع في الخطوة الحالية بس
-  canDelete(file: InspectionAttachment): boolean {
-    return file.uploadedAtStep === ProcessStep.Inspection;
+  canDelete(file: FinalApprovalAttachment): boolean {
+    return file.uploadedAtStep === ProcessStep.FinalApproval;
   }
 
   // ============================================================
-  // Form setup & note validation
+  // Form setup
   // ============================================================
 
   private buildForm(): FormGroup {
     return this.fb.group({
-      inspectorName: ['', [notBlank, Validators.maxLength(INSPECTOR_NAME_MAX_LENGTH)]],
-      opinion: [null as InspectionOpinion | null, Validators.required],
-      inspectionNote: [''],
+      reviewStatus: [null as ReviewStatus | null, Validators.required],
+      isPaid: [null as PaymentState | null, Validators.required],
+      note: [''],
     });
   }
-
-  private listenToOpinionChanges(): void {
-    this.form.controls['opinion'].valueChanges.subscribe(() => this.updateNoteValidators());
-  }
-
-  get isNonCompliant(): boolean {
-    return this.form.controls['opinion'].value === InspectionOpinion.NonCompliant;
-  }
-
-  // الملاحظة مطلوبة لو غير مستوفي أو المعاملة مرتجعة
-  get isNoteRequired(): boolean {
-    return this.isNonCompliant || !!this.details?.isReturned;
-  }
-
-  get noteRequiredMessage(): string {
-    return this.isNonCompliant
-      ? 'يجب إدخال السبب عند عدم الاستيفاء'
-      : 'الملاحظة مطلوبة لأن المعاملة مرتجعة';
-  }
-
-  private updateNoteValidators(): void {
-    const note = this.form.controls['inspectionNote'];
-
-    if (this.isNoteRequired) {
-      note.addValidators(notBlank);
-    } else {
-      note.removeValidators(notBlank);
-    }
-
-    note.updateValueAndValidity({ emitEvent: false });
-  }
-
   resetForm(): void {
     this.details = null;
     this.attemptedSave = false;
@@ -246,21 +199,21 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
     this.successMessage = '';
 
     this.form.enable({ emitEvent: false });
-    this.form.reset({ inspectorName: '', opinion: null, inspectionNote: '' });
+    this.form.reset({ reviewStatus: null, isPaid: null, note: '' });
 
     this.resetAttachmentSelection();
     this.pendingDeleteIds.clear();
   }
 
-  fillForm(details: InspectionStepDetails): void {
-    this.form.patchValue({
-      inspectorName: details.inspectorName || '',
-      opinion: details.opinion ?? null,
-      inspectionNote: '',
-    });
+  // الباك بيرجّع السجل مترتب، وأول عنصر هو آخر قرار
+  fillForm(details: FinalApprovalStepDetails): void {
+    const last = details.reviews?.[0];
 
-    // details اتحمّلت، فشرط "مرتجعة" ممكن يكون اتغير
-    this.updateNoteValidators();
+    this.form.patchValue({
+      reviewStatus: last?.reviewStatus ?? null,
+      isPaid: last ? (last.isPaid ? PaymentState.Paid : PaymentState.NotPaid) : null,
+      note: '',
+    });
   }
 
   // ============================================================
@@ -274,12 +227,12 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
     this.failedImages.clear();
     this.pendingDeleteIds.clear();
 
-    this.inspectionService.getById(id).subscribe({
-      next: (response: ApiResponse<InspectionStepDetails>) => {
+    this.finalApprovalService.getFinalApprovalDetails(id).subscribe({
+      next: (response) => {
         this.loading = false;
 
-        if (!response.isSuccess) {
-          this.errorMessage = response.message || 'تعذر تحميل بيانات المعاينة';
+        if (!response.isSuccess || !response.data) {
+          this.errorMessage = response.message || 'تعذر تحميل بيانات الموافقة النهائية';
           return;
         }
 
@@ -288,8 +241,11 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
       },
       error: (err) => {
         this.loading = false;
-        console.error('Inspection process GET error:', err);
-        this.errorMessage = extractErrorMessage(err, 'حدث خطأ أثناء تحميل بيانات المعاينة');
+        console.error('FinalApproval process GET error:', err);
+        this.errorMessage = extractErrorMessage(
+          err,
+          'حدث خطأ أثناء تحميل بيانات الموافقة النهائية',
+        );
       },
     });
   }
@@ -359,19 +315,19 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
   // Existing attachments (display + mark for delete)
   // ============================================================
 
-  getAttachmentGroups(details: InspectionStepDetails): AttachmentGroup[] {
+  getAttachmentGroups(details: FinalApprovalStepDetails): AttachmentGroup[] {
     return this.uploadFields.map(({ type, label }) => ({
       title: label,
       files: details[type] || [],
     }));
   }
 
-  hasAnyAttachments(details: InspectionStepDetails): boolean {
+  hasAnyAttachments(details: FinalApprovalStepDetails): boolean {
     return this.getAttachmentGroups(details).some((group) => group.files.length > 0);
   }
 
   // علّم للحذف، أو تراجع (التنفيذ الفعلي عند الحفظ)
-  toggleDelete(file: InspectionAttachment): void {
+  toggleDelete(file: FinalApprovalAttachment): void {
     if (this.pendingDeleteIds.has(file.id)) {
       this.pendingDeleteIds.delete(file.id);
     } else {
@@ -380,16 +336,16 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
   }
 
   // ============================================================
-  // Save flow: save + upload → delete marked → move (optional)
+  // Save flow: save + upload → delete marked → move to archive (optional)
   // ============================================================
 
-  save(moveToFinalApproval = false): void {
+  save(moveToArchive = false): void {
     this.attemptedSave = true;
     this.formErrorMessage = '';
     this.successMessage = '';
 
     if (!this.item?.id) {
-      this.formErrorMessage = 'لم يتم اختيار معاينة';
+      this.formErrorMessage = 'لم يتم اختيار معاملة';
       return;
     }
 
@@ -401,22 +357,25 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
     const id = this.item.id;
     const formData = this.buildFormData();
 
-    this.startSaving(moveToFinalApproval);
+    this.startSaving(moveToArchive);
 
-    this.inspectionService.updateInspection(id, formData).subscribe({
-      next: (response: ApiResponse<boolean>) => {
+    this.finalApprovalService.saveFinalApproval(id, formData).subscribe({
+      next: (response) => {
         if (!response.isSuccess) {
           this.stopSaving();
-          this.formErrorMessage = response.message || 'تعذر حفظ المعاينة';
+          this.formErrorMessage = response.message || 'تعذر حفظ قرار الموافقة النهائية';
           return;
         }
 
-        this.applyDeletes(id, moveToFinalApproval);
+        this.applyDeletes(id, moveToArchive);
       },
       error: (err) => {
-        console.error('Inspection PUT error:', err);
+        console.error('FinalApproval PUT error:', err);
         this.stopSaving();
-        this.formErrorMessage = extractErrorMessage(err, 'حدث خطأ أثناء حفظ المعاينة');
+        this.formErrorMessage = extractErrorMessage(
+          err,
+          'حدث خطأ أثناء حفظ قرار الموافقة النهائية',
+        );
       },
     });
   }
@@ -425,9 +384,9 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
     const raw = this.form.getRawValue();
     const formData = new FormData();
 
-    formData.append('InspectorName', String(raw.inspectorName).trim());
-    formData.append('Opinion', raw.opinion);
-    formData.append('InspectionNote', String(raw.inspectionNote ?? '').trim());
+    formData.append('ReviewStatus', raw.reviewStatus);
+    formData.append('IsPaid', raw.isPaid);
+    formData.append('Note', String(raw.note ?? '').trim());
 
     // أسماء الحقول في الباك: EntityLetters, ProofDocuments, ...
     this.uploadFields.forEach(({ type }) => {
@@ -438,26 +397,26 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
     return formData;
   }
 
-  private startSaving(moveToFinalApproval: boolean): void {
+  private startSaving(moveToArchive: boolean): void {
     this.saving = true;
-    this.movingToFinalApproval = moveToFinalApproval;
+    this.movingToArchive = moveToArchive;
     this.form.disable({ emitEvent: false });
   }
 
   private stopSaving(): void {
     this.saving = false;
-    this.movingToFinalApproval = false;
+    this.movingToArchive = false;
     this.form.enable({ emitEvent: false });
   }
 
   // ---------- حذف المرفقات المعلّمة ----------
 
   // واحدة ورا التانية، وبيقف عند أول فشل
-  private applyDeletes(id: string, moveToFinalApproval: boolean): void {
+  private applyDeletes(id: string, moveToArchive: boolean): void {
     const ops = this.buildDeleteOps();
 
     if (!ops.length) {
-      this.afterSave(id, moveToFinalApproval);
+      this.afterSave(id, moveToArchive);
       return;
     }
 
@@ -467,7 +426,7 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
         toArray(),
       )
       .subscribe({
-        next: () => this.afterSave(id, moveToFinalApproval),
+        next: () => this.afterSave(id, moveToArchive),
         error: (err: Error) => this.onDeleteFailed(id, err.message),
       });
   }
@@ -490,12 +449,12 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
   }
 
   private deleteAttachment(
-    attachment: InspectionAttachment,
+    attachment: FinalApprovalAttachment,
     type: AttachmentType,
   ): Observable<void> {
     const fallback = 'تعذر حذف المرفق';
 
-    return this.inspectionService
+    return this.finalApprovalService
       .deleteAttachment(attachment.id, ATTACHMENT_API_TYPES[type])
       .pipe(
         map((res) => {
@@ -518,25 +477,25 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
 
   // ---------- بعد الحفظ والحذف ----------
 
-  private afterSave(id: string, moveToFinalApproval: boolean): void {
-    if (moveToFinalApproval) {
-      this.moveToFinalApproval(id);
+  private afterSave(id: string, moveToArchive: boolean): void {
+    if (moveToArchive) {
+      this.moveToArchive(id);
       return;
     }
-    this.finishSuccess('تم حفظ المعاينة بنجاح');
+    this.finishSuccess('تم حفظ قرار الموافقة النهائية بنجاح');
   }
 
-  private moveToFinalApproval(id: string): void {
-    this.inspectionService.moveToFinalApproval(id).subscribe({
-      next: (res: ApiResponse<boolean>) => {
+  private moveToArchive(id: string): void {
+    this.finalApprovalService.moveToArchive(id).subscribe({
+      next: (res) => {
         if (!res.isSuccess) {
           this.onMoveFailed(id, res.message);
           return;
         }
-        this.finishSuccess('تم حفظ المعاينة ونقلها للموافقة النهائية بنجاح');
+        this.finishSuccess('تم حفظ القرار ونقل المعاملة للأرشيف بنجاح');
       },
       error: (err) => {
-        console.error('Inspection move-to-final-approval error:', err);
+        console.error('FinalApproval move-to-archive error:', err);
         this.onMoveFailed(id, extractErrorMessage(err, ''));
       },
     });
@@ -544,7 +503,7 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
 
   private finishSuccess(message: string): void {
     this.saving = false;
-    this.movingToFinalApproval = false;
+    this.movingToArchive = false;
     this.successMessage = message;
 
     setTimeout(() => this.saved.emit(), SUCCESS_CLOSE_DELAY_MS);
@@ -552,16 +511,16 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
 
   // ---------- فشل جزئي (الحفظ نجح فعلًا) ----------
 
-  // المعاينة اتحفظت فعلاً، لكن الحذف فشل
+  // القرار اتحفظ فعلاً، لكن الحذف فشل
   private onDeleteFailed(id: string, reason: string): void {
     this.reloadAfterPartialSave(id);
-    this.formErrorMessage = `تم حفظ المعاينة، لكن تعذر حذف بعض المرفقات: ${reason}`;
+    this.formErrorMessage = `تم حفظ القرار، لكن تعذر حذف بعض المرفقات: ${reason}`;
   }
 
-  // الحفظ نجح فعلاً لكن النقل اترفض (مثلاً مرفقات ناقصة)
+  // القرار اتحفظ فعلاً لكن النقل للأرشيف اترفض
   private onMoveFailed(id: string, reason?: string): void {
     this.reloadAfterPartialSave(id);
-    this.formErrorMessage = `تم حفظ المعاينة، لكن تعذر النقل للموافقة النهائية: ${
+    this.formErrorMessage = `تم حفظ القرار، لكن تعذر النقل للأرشيف: ${
       reason || 'حدث خطأ غير متوقع'
     }`;
   }
@@ -581,8 +540,12 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
     return PROCESS_STEP_LABELS[step as ProcessStep] || step || '-';
   }
 
-  getReturnStateLabel(isReturned: boolean | undefined): string {
-    return RETURN_STATE_LABELS[isReturned ? ReturnState.Returned : ReturnState.NotReturned];
+  getOpinionLabel(opinion: InspectionOpinion | null | undefined): string {
+    return opinion ? INSPECTION_OPINION_LABELS[opinion] || opinion : '-';
+  }
+
+  getFinalStatusLabel(status: ApplicationStatus | null | undefined): string {
+    return status ? APPLICATION_STATUS_LABELS[status] || status : 'لم يتم اتخاذ قرار';
   }
 
   hasImageError(filePath: string): boolean {
@@ -591,5 +554,12 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
 
   onImageError(filePath: string): void {
     this.failedImages.add(filePath);
+  }
+  getReviewStatusLabel(status: ReviewStatus): string {
+    return REVIEW_STATUS_LABELS[status] || status;
+  }
+
+  getPaymentLabel(isPaid: boolean): string {
+    return PAYMENT_STATE_LABELS[isPaid ? PaymentState.Paid : PaymentState.NotPaid];
   }
 }

@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { BaseAPI } from '../../Shared/Env/env';
+import { ApiResponse } from '../../Shared/Models/ApiResponse';
+import { PagedResult } from '../../Shared/Models/PagedResult';
 import {
-  ApiResponse,
-  FinalApprovalDetails,
+  FinalApprovalFilter,
   FinalApprovalItem,
-  FinalApprovalQuery,
-  PagedResult,
+  FinalApprovalStepDetails,
 } from '../Models/final-approval';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class FinalApprovalService {
 
   constructor(private readonly http: HttpClient) {}
 
-  getAll(query: FinalApprovalQuery): Observable<ApiResponse<PagedResult<FinalApprovalItem>>> {
+  getAll(query: FinalApprovalFilter): Observable<ApiResponse<PagedResult<FinalApprovalItem>>> {
     let params = new HttpParams()
       .set('pageNumber', query.pageNumber.toString())
       .set('pageSize', query.pageSize.toString());
@@ -41,6 +41,18 @@ export class FinalApprovalService {
       params = params.set('opinion', query.opinion);
     }
 
+    if (query.finalStatus) {
+      params = params.set('finalStatus', query.finalStatus);
+    }
+
+    if (query.submissionDateFrom) {
+      params = params.set('submissionDateFrom', query.submissionDateFrom);
+    }
+
+    if (query.submissionDateTo) {
+      params = params.set('submissionDateTo', query.submissionDateTo);
+    }
+
     if (query.searchTerm) {
       params = params.set('searchTerm', query.searchTerm);
     }
@@ -51,12 +63,23 @@ export class FinalApprovalService {
     );
   }
 
-  getById(id: string): Observable<ApiResponse<FinalApprovalDetails>> {
-    return this.http.get<ApiResponse<FinalApprovalDetails>>(`${this.processUrl}/${id}`);
+  getFinalApprovalDetails(id: string): Observable<ApiResponse<FinalApprovalStepDetails>> {
+    return this.http.get<ApiResponse<FinalApprovalStepDetails>>(
+      `${this.apiUrl}${id}/final-approval`,
+    );
   }
 
   saveFinalApproval(id: string, formData: FormData): Observable<ApiResponse<boolean>> {
-    return this.http.put<ApiResponse<boolean>>(`${this.processUrl}/${id}/final-approval`, formData);
+    return this.http.put<ApiResponse<boolean>>(`${this.apiUrl}${id}/final-approval`, formData);
+  }
+
+  deleteAttachment(attachmentId: string, type: string): Observable<ApiResponse<boolean>> {
+    const params = new HttpParams().set('type', type);
+
+    return this.http.delete<ApiResponse<boolean>>(
+      `${this.processUrl}/attachments/${attachmentId}`,
+      { params },
+    );
   }
 
   returnToInspection(id: string, noteContent: string): Observable<ApiResponse<boolean>> {

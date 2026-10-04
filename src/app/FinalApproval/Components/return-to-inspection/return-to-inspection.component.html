@@ -1,49 +1,42 @@
-<div class="return-popup" dir="rtl">
-  <button type="button" class="close-btn" (click)="cancel()">
-    ×
-  </button>
-
-  <div class="return-icon">↩️</div>
-
-  <h2>{{ 'final.returnTitle' | t }}</h2>
-
-  <p>
-    {{ 'final.returnPrompt' | t }}
-    <strong>{{ item?.establishmentName }}</strong>
-    {{ 'common.step.inspection' | t }}؟
-  </p>
-
-  <div class="transaction-card" *ngIf="item">
-    <span>{{ 'common.requestCode' | t }}</span>
-    <strong>{{ item.transactionCode }}</strong>
+<div class="confirm-dialog" dir="rtl">
+  <div class="dialog-icon icon-move">
+    <lucide-angular [img]="Undo2" [size]="28"></lucide-angular>
   </div>
 
-  <div class="note-box">
-    <label>{{ 'final.returnReason' | t }}</label>
+  <mat-dialog-content>
+    <h2 class="dialog-title">إرجاع المعاملة للمعاينة</h2>
 
-    <textarea
-      rows="4"
-      [(ngModel)]="noteContent"
-      [placeholder]="'final.returnReasonPlaceholder' | t"
-    ></textarea>
-  </div>
+    <p>
+      هل أنت متأكد من إرجاع معاملة
+      <strong>{{ data.item.establishmentName }}</strong>
+      إلى خطوة إجراء المعاينة؟
+    </p>
 
-  <div class="message error" *ngIf="errorMessage">
-    {{ errorMessage }}
-  </div>
+    <div class="transaction-card">
+      <span>كود المعاملة</span>
+      <strong dir="ltr">{{ data.item.transactionCode }}</strong>
+    </div>
 
-  <div class="actions">
-    <button
-      type="button"
-      class="return-action-btn"
-      (click)="confirmReturn()"
-      [disabled]="processing"
-    >
-      {{ processing ? ('final.processingReturn' | t) : ('final.confirmReturn' | t) }}
+    <mat-form-field appearance="outline" class="reason-field">
+      <mat-label>سبب الإرجاع *</mat-label>
+      <textarea
+        matInput
+        rows="4"
+        [formControl]="noteContent"
+        placeholder="اكتب سبب الإرجاع لخطوة المعاينة..."
+      ></textarea>
+      <mat-error *ngIf="noteContent.hasError('required')">
+        يجب إدخال السبب عند الإرجاع لخطوة المعاينة
+      </mat-error>
+    </mat-form-field>
+
+    <div class="message error" *ngIf="errorMessage">{{ errorMessage }}</div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-stroked-button (click)="onCancel()" [disabled]="processing">إلغاء</button>
+    <button mat-flat-button class="btn-save" (click)="onConfirm()" [disabled]="processing">
+      {{ processing ? 'جاري الإرجاع...' : 'إرجاع للمعاينة' }}
     </button>
-
-    <button type="button" class="cancel-btn" (click)="cancel()">
-      {{ 'common.cancel' | t }}
-    </button>
-  </div>
+  </mat-dialog-actions>
 </div>

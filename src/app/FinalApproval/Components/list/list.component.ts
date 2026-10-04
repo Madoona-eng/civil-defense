@@ -1,192 +1,84 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { forkJoin } from 'rxjs';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
 import {
-  ApiResponse,
-  FinalApprovalItem,
-  FinalApprovalQuery,
-  LookupItem,
-  PagedResult
-} from '../../Models/final-approval';
+  Archive,
+  EllipsisVertical,
+  FileCheck,
+  LucideAngularModule,
+  RotateCcw,
+  Trash2,
+} from 'lucide-angular';
 
-import { FinalApprovalService } from '../../Services/final-approval.service';
-
-import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
-import { DistrictService } from '../../../District/Services/district.service';
-import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
 import { AuthService } from '../../../auth/services/auth.service';
-import { ConfirmDialogComponent } from '../../../Shared/Components/confirm-dialog/confirm-dialog.component';
+import { RETURN_STATE_LABELS, ReturnState } from '../../../Shared/Enums/enums';
+import { FinalApprovalItem } from '../../Models/final-approval';
 
 @Component({
   selector: 'app-final-approval-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MatMenuModule, MatDialogModule, MatSnackBarModule],
+  imports: [
+    CommonModule,
+    LucideAngularModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatTableModule,
+  ],
   templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  styleUrl: './list.component.scss',
 })
-export class ListComponent implements OnInit {
-  @Output() detailsRequested = new EventEmitter<string>();
+export class ListComponent {
+  @Input() items: FinalApprovalItem[] = [];
+  @Input() isLoading = false;
+  @Input() errorMessage = '';
+  @Input() pageNumber = 1;
+  @Input() pageSize = 10;
+  @Input() totalCount = 0;
+  @Input() archivingItemId: string | null = null;
+
+  @Output() pageChanged = new EventEmitter<PageEvent>();
   @Output() editRequested = new EventEmitter<FinalApprovalItem>();
   @Output() deleteRequested = new EventEmitter<FinalApprovalItem>();
   @Output() returnRequested = new EventEmitter<FinalApprovalItem>();
+  @Output() archiveRequested = new EventEmitter<FinalApprovalItem>();
 
-  items: FinalApprovalItem[] = [];
+  readonly displayedColumns: string[] = [
+    'transactionCode',
+    'submissionDate',
+    'establishmentName',
+    'establishmentAddress',
+    'requestingEntity',
+    'district',
+    'activityType',
+    'applicantName',
+    'actions',
+  ];
 
-  requestingEntities: LookupItem[] = [];
-  districts: LookupItem[] = [];
-  activityTypes: LookupItem[] = [];
+  readonly EllipsisVertical = EllipsisVertical;
+  readonly FileCheck = FileCheck;
+  readonly RotateCcw = RotateCcw;
+  readonly Archive = Archive;
+  readonly Trash2 = Trash2;
 
-  isLoading = false;
-  loadingLookups = false;
-  errorMessage = '';
+  constructor(private readonly authService: AuthService) {}
 
-  districtId = '';
-  requestingEntityId = '';
-  activityTypeId = '';
-  opinion = '';
-  searchTerm = '';
-
-  pageNumber = 1;
-  pageSize = 10;
-  totalCount = 0;
-  totalPages = 0;
-  hasNextPage = false;
-  hasPreviousPage = false;
-  archivingItemId: string | null = null;
-
-  constructor(
-    private readonly finalApprovalService: FinalApprovalService,
-    private readonly requestingEntityService: RequestingEntityService,
-    private readonly districtService: DistrictService,
-    private readonly activityTypeService: ActivityTypeService,
-    private readonly authService: AuthService,
-    private readonly dialog: MatDialog,
-    private readonly snackBar: MatSnackBar,
-  ) {}
-
-  ngOnInit(): void {
-    this.loadLookups();
-    this.loadFinalApprovals();
+  get canManageFinalApproval(): boolean {
+    const role = this.authService.getRole();
+    return role === 'FinalApprover' || role === 'SuperAdmin';
   }
 
-  loadLookups(): void {
-    this.loadingLookups = true;
-
-    forkJoin({
-      requestingEntities: this.requestingEntityService.getAll(),
-      districts: this.districtService.getAll(),
-      activityTypes: this.activityTypeService.getAll()
-    }).subscribe({
-      next: result => {
-        this.loadingLookups = false;
-
-        if (result.requestingEntities.isSuccess) {
-          this.requestingEntities = result.requestingEntities.data || [];
-        }
-
-        if (result.districts.isSuccess) {
-          this.districts = result.districts.data || [];
-        }
-
-        if (result.activityTypes.isSuccess) {
-          this.activityTypes = result.activityTypes.data || [];
-        }
-      },
-      error: err => {
-        this.loadingLookups = false;
-        console.error('Final approval lookups error:', err);
-      }
-    });
+  getReturnStateLabel(isReturned: boolean): string {
+    return RETURN_STATE_LABELS[isReturned ? ReturnState.Returned : ReturnState.NotReturned];
   }
 
-  loadFinalApprovals(): void {
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    const query: FinalApprovalQuery = {
-      districtId: this.districtId,
-      requestingEntityId: this.requestingEntityId,
-      activityTypeId: this.activityTypeId,
-      opinion: this.opinion,
-      searchTerm: this.searchTerm.trim(),
-      pageNumber: this.pageNumber,
-      pageSize: this.pageSize
-    };
-
-    this.finalApprovalService.getAll(query).subscribe({
-      next: (response: ApiResponse<PagedResult<FinalApprovalItem>>) => {
-        this.isLoading = false;
-
-        if (!response.isSuccess) {
-          this.errorMessage = response.message || 'Failed to load list';
-          return;
-        }
-
-        this.items = response.data.items || [];
-        this.pageNumber = response.data.pageNumber;
-        this.pageSize = response.data.pageSize;
-        this.totalCount = response.data.totalCount;
-        this.totalPages = response.data.totalPages;
-        this.hasNextPage = response.data.hasNextPage;
-        this.hasPreviousPage = response.data.hasPreviousPage;
-      },
-      error: err => {
-        this.isLoading = false;
-        console.error('Final approval GET error:', err);
-
-        this.errorMessage =
-          err?.error?.message ||
-          err?.error?.Message ||
-          err?.message ||
-          'Error loading list';
-      }
-    });
-  }
-
-  search(): void {
-    this.pageNumber = 1;
-    this.loadFinalApprovals();
-  }
-
-  resetFilters(): void {
-    this.districtId = '';
-    this.requestingEntityId = '';
-    this.activityTypeId = '';
-    this.opinion = '';
-    this.searchTerm = '';
-    this.pageNumber = 1;
-    this.loadFinalApprovals();
-  }
-
-  nextPage(): void {
-    if (!this.hasNextPage) {
-      return;
-    }
-
-    this.pageNumber++;
-    this.loadFinalApprovals();
-  }
-
-  previousPage(): void {
-    if (!this.hasPreviousPage) {
-      return;
-    }
-
-    this.pageNumber--;
-    this.loadFinalApprovals();
-  }
-
-  requestDetails(id: string): void {
-    this.detailsRequested.emit(id);
+  onPageChange(event: PageEvent): void {
+    this.pageChanged.emit(event);
   }
 
   requestEdit(item: FinalApprovalItem): void {
@@ -201,79 +93,7 @@ export class ListComponent implements OnInit {
     this.returnRequested.emit(item);
   }
 
-  get canManageFinalApproval(): boolean {
-    const role = this.authService.getRole();
-    return role === 'FinalApprover' || role === 'SuperAdmin';
-  }
-
-  moveToArchive(item: FinalApprovalItem): void {
-    if (!this.canManageFinalApproval || !item.id || this.archivingItemId === item.id) {
-      return;
-    }
-
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '360px',
-      data: {
-        message: `Are you sure you want to move "${item.establishmentName}" to archive?`,
-        confirmText: 'Move to Archive',
-        cancelText: 'Cancel',
-        confirmClass: 'btn-save',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (!confirmed) return;
-
-      this.archivingItemId = item.id;
-      this.finalApprovalService.moveToArchive(item.id).subscribe({
-        next: response => {
-          this.archivingItemId = null;
-
-          if (!response.isSuccess) {
-            this.snackBar.open(
-              response.message || 'Failed to move to archive',
-              'Close',
-              { duration: 3000 },
-            );
-            return;
-          }
-
-          this.snackBar.open(
-            'Archived successfully',
-            'Close',
-            { duration: 2500 },
-          );
-          this.loadFinalApprovals();
-        },
-        error: error => {
-          this.archivingItemId = null;
-          this.snackBar.open(
-            error?.error?.message || error?.message || 'Error occurred while archiving',
-            'Close',
-            { duration: 3000 },
-          );
-        },
-      });
-    });
-  }
-
-  getStepLabel(step: string): string {
-    if (step === 'FinalApproval') {
-      return 'Final Approval';
-    }
-
-    if (step === 'Archive') {
-      return 'Archive';
-    }
-
-    if (step === 'Inspection') {
-      return 'Inspection';
-    }
-
-    if (step === 'NewLicense') {
-      return 'New License';
-    }
-
-    return step || '-';
+  requestArchive(item: FinalApprovalItem): void {
+    this.archiveRequested.emit(item);
   }
 }

@@ -1,76 +1,97 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-
+import { Component, Inject } from '@angular/core';
 import {
-  ApiResponse,
-  FinalApprovalItem
-} from '../../Models/final-approval';
+  AbstractControl,
+  FormControl,
+  ReactiveFormsModule,
+  ValidationErrors,
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { LucideAngularModule, Undo2 } from 'lucide-angular';
 
+import { FinalApprovalItem } from '../../Models/final-approval';
 import { FinalApprovalService } from '../../Services/final-approval.service';
-import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+
+export interface ReturnToInspectionDialogData {
+  item: FinalApprovalItem;
+}
+
+function notBlank(control: AbstractControl): ValidationErrors | null {
+  return String(control.value ?? '').trim() ? null : { required: true };
+}
 
 @Component({
   selector: 'app-final-approval-return-to-inspection',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    LucideAngularModule,
+  ],
   templateUrl: './return-to-inspection.component.html',
-  styleUrl: './return-to-inspection.component.scss'
+  styleUrl: './return-to-inspection.component.scss',
 })
 export class ReturnToInspectionComponent {
-  @Input() item: FinalApprovalItem | null = null;
+  readonly Undo2 = Undo2;
 
-  @Output() returned = new EventEmitter<void>();
-  @Output() cancelled = new EventEmitter<void>();
+  readonly noteContent = new FormControl('', { nonNullable: true, validators: [notBlank] });
 
   processing = false;
   errorMessage = '';
-  noteContent = '';
 
-  constructor(private readonly finalApprovalService: FinalApprovalService) {}
+  constructor(
+    private readonly dialogRef: MatDialogRef<ReturnToInspectionComponent, boolean>,
+    private readonly finalApprovalService: FinalApprovalService,
+    @Inject(MAT_DIALOG_DATA) public data: ReturnToInspectionDialogData,
+  ) {}
 
-  confirmReturn(): void {
+  onConfirm(): void {
     this.errorMessage = '';
 
-    if (!this.item?.id) {
-      this.errorMessage = 'لم يتم تحديد العنصر المراد إعادته للمعاينة';
-      return;
-    }
-
-    if (!this.noteContent.trim()) {
-      this.errorMessage = 'يرجى إدخال سبب الإعادة للمعاينة';
+    if (this.noteContent.invalid) {
+      this.noteContent.markAsTouched();
       return;
     }
 
     this.processing = true;
+    this.dialogRef.disableClose = true;
 
     this.finalApprovalService
-      .returnToInspection(this.item.id, this.noteContent.trim())
+      .returnToInspection(this.data.item.id, this.noteContent.value.trim())
       .subscribe({
-        next: (response: ApiResponse<boolean>) => {
-          this.processing = false;
-
-          if (!response.isSuccess) {
-            this.errorMessage = response.message || 'فشل إرجاع الطلب إلى مرحلة المعاينة';
+        next: (res) => {
+          this.stopProcessing();
+          if (!res.isSuccess) {
+            this.errorMessage = res.message || 'فشل إرجاع الطلب إلى مرحلة المعاينة';
             return;
           }
-
-          this.returned.emit();
+          this.dialogRef.close(true);
         },
-        error: err => {
-          this.processing = false;
+        error: (err) => {
+          this.stopProcessing();
           console.error('Return to inspection error:', err);
-
           this.errorMessage =
             err?.error?.message ||
             err?.error?.Message ||
             err?.message ||
             'حدث خطأ أثناء إرجاع الطلب إلى مرحلة المعاينة';
-        }
+        },
       });
   }
 
-  cancel(): void {
-    this.cancelled.emit();
+  onCancel(): void {
+    this.dialogRef.close(false);
+  }
+
+  private stopProcessing(): void {
+    this.processing = false;
+    this.dialogRef.disableClose = false;
   }
 }

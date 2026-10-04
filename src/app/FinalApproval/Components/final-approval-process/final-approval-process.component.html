@@ -1,0 +1,354 @@
+<div class="modal-overlay">
+  <div class="dialog-card form-dialog wide-dialog">
+    <!-- Header -->
+    <div class="dialog-header">
+      <div class="header-content-group">
+        <div class="dialog-icon primary">
+          <mat-icon>fact_check</mat-icon>
+        </div>
+        <div class="header-text">
+          <span class="eyebrow">خطوة الموافقة النهائية</span>
+          <h2>الموافقة النهائية</h2>
+        </div>
+      </div>
+
+      <button type="button" class="btn-dialog-close" (click)="close()" aria-label="إغلاق">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="dialog-body">
+      <div class="loading-box" *ngIf="loading">
+        <mat-icon class="spin-icon">sync</mat-icon>
+        <span>جاري التحميل...</span>
+      </div>
+
+      <div class="message-banner error" *ngIf="errorMessage">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <ng-container *ngIf="!loading && details as d">
+        <!-- 1) البيانات الأساسية -->
+        <section class="info-section" *ngIf="item">
+          <h3 class="section-title">البيانات الأساسية</h3>
+
+          <div class="form-grid info-grid">
+            <div class="form-group">
+              <label>كود المعاملة</label>
+              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate">{{
+                item.transactionCode
+              }}</span>
+            </div>
+            <div class="form-group">
+              <label>تاريخ التقديم</label>
+              <span class="dialog-input readonly-value">{{ item.submissionDate }}</span>
+            </div>
+            <div class="form-group">
+              <label>اسم المنشأة</label>
+              <span class="dialog-input readonly-value">{{ item.establishmentName }}</span>
+            </div>
+            <div class="form-group">
+              <label>عنوان المنشأة</label>
+              <span class="dialog-input readonly-value">{{ item.establishmentAddress }}</span>
+            </div>
+            <div class="form-group">
+              <label>الجهة الطالبة</label>
+              <span class="dialog-input readonly-value">{{ item.requestingEntity }}</span>
+            </div>
+            <div class="form-group">
+              <label>المركز</label>
+              <span class="dialog-input readonly-value">{{ item.district }}</span>
+            </div>
+            <div class="form-group">
+              <label>نوع النشاط</label>
+              <span class="dialog-input readonly-value">{{ item.activityType }}</span>
+            </div>
+            <div class="form-group">
+              <label>مقدم الطلب</label>
+              <span class="dialog-input readonly-value">{{ item.applicantName }}</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2) نتيجة المعاينة -->
+        <section class="info-section">
+          <h3 class="section-title">نتيجة المعاينة</h3>
+
+          <div class="form-grid info-grid">
+            <div class="form-group">
+              <label>القائم بالمعاينة</label>
+              <span class="dialog-input readonly-value">{{ d.inspectorName || '-' }}</span>
+            </div>
+            <div class="form-group">
+              <label>الرأي الفني</label>
+              <span class="dialog-input readonly-value">{{ getOpinionLabel(d.opinion) }}</span>
+            </div>
+            <div class="form-group">
+              <label>القرار الحالي</label>
+              <span class="dialog-input readonly-value">{{
+                getFinalStatusLabel(d.finalStatus)
+              }}</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3) الملاحظات السابقة -->
+        <section class="attachments-section" *ngIf="d.notes && d.notes.length > 0">
+          <h3 class="section-title">الملاحظات السابقة</h3>
+
+          <div class="file-list">
+            <div class="attachment-field" *ngFor="let note of d.notes">
+              <div class="file-size">
+                <span class="file-badge">{{ getStepLabel(note.processStep) }}</span>
+                <span>{{ note.createdByUserName }}</span>
+                <span>•</span>
+                <span>{{ formatDateTime(note.createdAt) }}</span>
+              </div>
+              <p class="note-content">{{ note.content }}</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- سجل القرارات -->
+        <section class="attachments-section" *ngIf="d.reviews && d.reviews.length > 0">
+          <h3 class="section-title">سجل القرارات</h3>
+
+          <div class="review-table-wrap">
+            <table class="review-table">
+              <thead>
+                <tr>
+                  <th>القرار</th>
+                  <th>سداد الرسوم</th>
+                  <th>بواسطة</th>
+                  <th>التاريخ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let review of d.reviews; let i = index" [class.latest]="i === 0">
+                  <td>
+                    {{ getReviewStatusLabel(review.reviewStatus) }}
+                    <span class="latest-tag" *ngIf="i === 0">الأحدث</span>
+                  </td>
+                  <td>{{ getPaymentLabel(review.isPaid) }}</td>
+                  <td>{{ review.reviewedBy }}</td>
+                  <td>{{ formatDateTime(review.reviewedAt) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 4) المرفقات السابقة -->
+        <section class="attachments-section">
+          <h3 class="section-title">المرفقات السابقة</h3>
+
+          <p class="empty-files" *ngIf="!hasAnyAttachments(d)">لا توجد مرفقات سابقة</p>
+
+          <div class="attachments-grid" *ngIf="hasAnyAttachments(d)">
+            <ng-container *ngFor="let group of getAttachmentGroups(d)">
+              <div class="attachment-field" *ngIf="group.files.length > 0">
+                <span class="attachment-label">{{ group.title }}</span>
+
+                <div class="file-list">
+                  <div
+                    class="file-item"
+                    *ngFor="let file of group.files"
+                    [class.marked-delete]="pendingDeleteIds.has(file.id)"
+                  >
+                    <button type="button" class="file-thumb" (click)="openFile(file.filePath)">
+                      <img
+                        *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
+                        [src]="getFileUrl(file.filePath)"
+                        [alt]="file.fileName"
+                        (error)="onImageError(file.filePath)"
+                      />
+                      <mat-icon *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
+                        {{ iconByName(file.fileName) }}
+                      </mat-icon>
+                    </button>
+
+                    <div class="file-meta">
+                      <span class="file-name" [title]="file.fileName">{{ file.fileName }}</span>
+                      <div class="file-size">
+                        <span class="file-badge">{{ getStepLabel(file.uploadedAtStep) }}</span>
+                        <span>{{ formatDateTime(file.uploadedAt) }}</span>
+                        <span class="file-badge danger" *ngIf="pendingDeleteIds.has(file.id)">
+                          سيتم الحذف عند الحفظ
+                        </span>
+                      </div>
+                    </div>
+
+                    <!-- الحذف متاح للمرفقات اللي اترفعت في خطوة الموافقة النهائية بس -->
+                    <button
+                      *ngIf="canDelete(file)"
+                      type="button"
+                      class="file-remove"
+                      (click)="toggleDelete(file)"
+                      [disabled]="saving"
+                      [attr.aria-label]="pendingDeleteIds.has(file.id) ? 'تراجع' : 'حذف'"
+                    >
+                      <mat-icon>{{ pendingDeleteIds.has(file.id) ? 'undo' : 'delete' }}</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </section>
+
+        <!-- 5) فورم قرار الموافقة النهائية -->
+        <form [formGroup]="form" novalidate>
+          <section class="attachments-section">
+            <h3 class="section-title">قرار الموافقة النهائية</h3>
+
+            <div class="form-grid">
+              <mat-form-field appearance="outline" class="form-group">
+                <mat-label>القرار</mat-label>
+                <mat-select formControlName="reviewStatus">
+                  <mat-option *ngFor="let opt of reviewStatusOptions" [value]="opt.value">
+                    {{ opt.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.get('reviewStatus')?.hasError('required')">
+                  القرار مطلوب
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-group">
+                <mat-label>سداد الرسوم</mat-label>
+                <mat-select formControlName="isPaid">
+                  <mat-option *ngFor="let opt of paymentOptions" [value]="opt.value">
+                    {{ opt.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.get('isPaid')?.hasError('required')">
+                  سداد الرسوم مطلوب
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-group form-group-wide">
+                <mat-label>ملاحظات</mat-label>
+                <textarea
+                  matInput
+                  rows="4"
+                  formControlName="note"
+                  placeholder="اكتب ملاحظاتك"
+                ></textarea>
+              </mat-form-field>
+            </div>
+          </section>
+        </form>
+
+        <!-- 6) رفع مرفقات جديدة -->
+        <section class="attachments-section">
+          <h3 class="section-title">إضافة مرفقات جديدة</h3>
+
+          <div class="attachments-grid">
+            <div class="attachment-field" *ngFor="let field of uploadFields">
+              <label class="attachment-label">{{ field.label }}</label>
+
+              <input
+                type="file"
+                multiple
+                [accept]="fileAccept"
+                class="file-input"
+                [disabled]="saving"
+                (change)="onFilesSelected($event, field.type)"
+              />
+
+              <!-- الملفات المرفوضة: تحت خانتها على طول -->
+              <div class="file-errors" *ngIf="fileErrors[field.type].length">
+                <span class="file-error" *ngFor="let msg of fileErrors[field.type]">
+                  <mat-icon>error_outline</mat-icon>
+                  {{ msg }}
+                </span>
+              </div>
+
+              <span
+                class="empty-files"
+                *ngIf="!selectedFiles[field.type].length && !fileErrors[field.type].length"
+              >
+                لا توجد مرفقات
+              </span>
+
+              <div class="file-list" *ngIf="selectedFiles[field.type].length">
+                <div
+                  class="file-item"
+                  *ngFor="let file of selectedFiles[field.type]; let i = index"
+                >
+                  <div class="file-thumb static">
+                    <img
+                      *ngIf="previewOf(file) as url; else fileIcon"
+                      [src]="url"
+                      [alt]="file.name"
+                    />
+                    <ng-template #fileIcon>
+                      <mat-icon>{{ iconByName(file.name) }}</mat-icon>
+                    </ng-template>
+                  </div>
+
+                  <div class="file-meta">
+                    <span class="file-name" [title]="file.name">{{ file.name }}</span>
+                    <span class="file-size">{{ formatSize(file.size) }}</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="file-remove"
+                    (click)="removeFile(field.type, i)"
+                    [disabled]="saving"
+                    aria-label="إزالة"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </ng-container>
+    </div>
+
+    <!-- رسائل الفورم -->
+    <div class="form-feedback" *ngIf="formErrorMessage || successMessage">
+      <div class="message-banner error" *ngIf="formErrorMessage">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ formErrorMessage }}</span>
+      </div>
+
+      <div class="message-banner success" *ngIf="successMessage">
+        <mat-icon>check_circle_outline</mat-icon>
+        <span>{{ successMessage }}</span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="dialog-actions">
+      <span class="form-invalid-hint" *ngIf="attemptedSave && form.invalid && !saving">
+        لا يمكن الحفظ، يرجى مراجعة البيانات
+      </span>
+
+      <button type="button" class="btn-reset" [disabled]="saving" (click)="close()">إلغاء</button>
+
+      <button
+        type="button"
+        class="btn-save"
+        (click)="save()"
+        [disabled]="saving || loading || !details"
+      >
+        {{ saving && !movingToArchive ? 'جاري الحفظ...' : 'حفظ القرار' }}
+      </button>
+
+      <button
+        type="button"
+        class="btn-save"
+        (click)="save(true)"
+        [disabled]="saving || loading || !details"
+      >
+        {{ movingToArchive ? 'جاري النقل...' : 'حفظ ونقل للأرشيف' }}
+      </button>
+    </div>
+  </div>
+</div>

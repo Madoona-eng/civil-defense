@@ -1,9 +1,4 @@
-export interface ApiResponse<T> {
-  data: T;
-  isSuccess: boolean;
-  errorCode: string;
-  message: string;
-}
+import { ApplicationStatus, InspectionOpinion, ReviewStatus } from '../../Shared/Enums/enums';
 
 export interface FinalApprovalItem {
   id: string;
@@ -12,42 +7,46 @@ export interface FinalApprovalItem {
   establishmentName: string;
   establishmentAddress: string;
   requestingEntity: string;
+  isReturned: boolean;
   district: string;
   activityType: string;
   applicantName: string;
   currentStep: string;
 }
 
-export interface PagedResult<T> {
-  items: T[];
-  pageNumber: number;
-  pageSize: number;
-  totalCount: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-}
-
-export interface FinalApprovalQuery {
+export interface FinalApprovalFilter {
   districtId?: string;
   requestingEntityId?: string;
   activityTypeId?: string;
-  opinion?: string;
+  opinion?: InspectionOpinion;
+  finalStatus?: ApplicationStatus;
+  submissionDateFrom?: string;
+  submissionDateTo?: string;
   searchTerm?: string;
   pageNumber: number;
   pageSize: number;
 }
 
-export interface LookupItem {
-  id: string;
-  name: string;
-  code?: number;
-}
 
-export interface FinalApprovalFormModel {
-  reviewStatus: 'Accepted' | 'Rejected';
-  rejectionNote: string;
-  isPaid: boolean;
+export type AttachmentType =
+  | 'entityLetters'
+  | 'proofDocuments'
+  | 'engineeringReports'
+  | 'inspectionReports'
+  | 'otherAttachments';
+
+// قيم الـ query param `type` في DELETE /api/LicensingProcess/attachments/{id}
+export const ATTACHMENT_API_TYPES: Record<AttachmentType, string> = {
+  entityLetters: 'EntityLetter',
+  proofDocuments: 'ProofDocument',
+  engineeringReports: 'EngineeringReport',
+  inspectionReports: 'InspectionReport',
+  otherAttachments: 'OtherAttachment',
+};
+
+export interface AttachmentGroup {
+  title: string;
+  files: FinalApprovalAttachment[];
 }
 
 export interface FinalApprovalAttachment {
@@ -66,39 +65,25 @@ export interface FinalApprovalNote {
 }
 
 export interface FinalApprovalReview {
-  content?: string;
-  reviewedBy?: string;
-  reviewedAt?: string;
+  reviewStatus: ReviewStatus;
+  isPaid: boolean;
+  reviewedBy: string;
+  reviewedAt: string;
 }
 
-export interface FinalApprovalDetails {
-  id: string;
-  transactionCode: string;
-  currentStep: string;
-  createdBy: string;
+export interface FinalApprovalStepNote {
+  content: string;
+  createdByUserName: string;
+  processStep: string;
   createdAt: string;
-  isReturned: boolean;
+}
 
+export interface FinalApprovalStepDetails {
+  transactionCode: string;
   submissionDate: string;
-  establishmentName: string;
-  establishmentAddress: string;
-  requestingEntity: string;
-  district: string;
-  activityType: string;
-
-  applicantName: string;
-  applicantRole: string;
-  nationalId: string;
-  responsibleManager: string;
-  phone: string;
-
   inspectorName: string | null;
-  opinion: string | null;
-  inspectedBy: string | null;
-
-  finalStatus: string | null;
-  approvedBy: string | null;
-  archivedBy: string | null;
+  opinion: InspectionOpinion | null;
+  finalStatus: ApplicationStatus | null;
 
   entityLetters: FinalApprovalAttachment[];
   proofDocuments: FinalApprovalAttachment[];
@@ -106,6 +91,6 @@ export interface FinalApprovalDetails {
   inspectionReports: FinalApprovalAttachment[];
   otherAttachments: FinalApprovalAttachment[];
 
-  notes: FinalApprovalNote[];
+  notes: FinalApprovalStepNote[];
   reviews: FinalApprovalReview[];
 }
