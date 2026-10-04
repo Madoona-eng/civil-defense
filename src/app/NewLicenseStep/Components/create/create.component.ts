@@ -65,9 +65,8 @@ export interface CreateDialogData {
 export class CreateComponent implements OnDestroy {
   form: FormGroup;
   saving = false;
-  errorMessage: string | string[] = '';
+  errorMessage = '';
   attemptedSave = false;
-  private readonly translate = new LocalTranslateService();
 
   private readonly moveToInspectionFallbackError =
     'تم حفظ المعاملة بنجاح، لكن حدث خطأ أثناء نقلها لمرحلة المعاينة. حاول النقل مرة أخرى من صفحة القائمة';
@@ -108,7 +107,7 @@ export class CreateComponent implements OnDestroy {
     this.activityTypes = data.activityTypes;
 
     this.form = this.fb.group({
-      submissionDate: [null, [Validators.required, this.notFutureDateValidator.bind(this)]],
+      submissionDate: [null, [Validators.required, this.notFutureDateValidator]],
       requestingEntityId: ['', Validators.required],
       establishmentName: ['', [Validators.required, Validators.maxLength(200)]],
       establishmentAddress: ['', [Validators.required, Validators.maxLength(500)]],
@@ -216,6 +215,7 @@ export class CreateComponent implements OnDestroy {
           return;
         }
 
+        // المستخدم عايز ينقل على طول لمرحلة المعاينة
         this.newLicenseService.moveToInspection(processId).subscribe({
           next: (moveRes: ApiResponse<boolean>) => {
             this.saving = false;
@@ -234,7 +234,7 @@ export class CreateComponent implements OnDestroy {
           error: (err) => {
             this.saving = false;
             this.errorMessage =
-              err?.error?.message || err?.message || this.translate.instant(this.moveToInspectionFallbackError);
+              err?.error?.message || err?.message || this.moveToInspectionFallbackError;
             console.error('NewLicense moveToInspection error:', err);
           },
         });
@@ -245,12 +245,6 @@ export class CreateComponent implements OnDestroy {
         console.error('NewLicense CREATE error:', err);
       },
     });
-  }
-
-  private showSnackBar(messageKey: string): void {
-    const message = this.translate.instant(messageKey);
-    const closeAction = this.translate.instant('common.close');
-    this.snackBar.open(message, closeAction, { duration: 6000 });
   }
 
   cancel(): void {

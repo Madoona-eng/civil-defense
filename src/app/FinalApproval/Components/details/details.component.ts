@@ -7,7 +7,6 @@ import {
   FinalApprovalDetails,
 } from '../../Models/final-approval';
 
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 import { buildFileUrl } from '../../../Shared/Utils/file-url';
 import { FinalApprovalService } from '../../Services/final-approval.service';
 
@@ -19,7 +18,7 @@ interface AttachmentGroup {
 @Component({
   selector: 'app-final-approval-details',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })

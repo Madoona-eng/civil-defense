@@ -1,96 +1,93 @@
 <!-- كارت الفلاتر والبحث -->
 <section class="filters-card" dir="rtl">
   <div class="filters-row-primary">
-    <div class="form-group search-group">
-      <label>بحث</label>
-      <div class="search-input-wrapper">
-        <mat-icon>search</mat-icon>
-        <input
-          type="text"
-          [(ngModel)]="searchTerm"
-          placeholder="ابحث بكود المعاملة، اسم المنشأة، اسم مقدم الطلب..."
-          (keyup.enter)="search()"
-        />
-      </div>
-    </div>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>بحث</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="ابحث برقم الطلب أو اسم المنشأة..."
+        (keyup.enter)="search()"
+      />
+    </mat-form-field>
 
-    <div class="form-group">
-      <label>التاريخ من</label>
-      <input type="date" [(ngModel)]="submissionDateFrom" />
-    </div>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>من تاريخ</mat-label>
+      <input matInput type="date" [(ngModel)]="submissionDateFrom" />
+    </mat-form-field>
 
-    <div class="form-group">
-      <label>التاريخ إلى</label>
-      <input type="date" [(ngModel)]="submissionDateTo" />
-    </div>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>إلى تاريخ</mat-label>
+      <input matInput type="date" [(ngModel)]="submissionDateTo" />
+    </mat-form-field>
   </div>
 
   <div class="filters-row-secondary">
-    <div class="form-group">
-      <label>الجهة الطالبة</label>
-      <select [(ngModel)]="requestingEntityId">
-        <option value="">كل الجهات</option>
-        <option *ngFor="let entity of requestingEntities" [value]="entity.id">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>الجهة الطالبة</mat-label>
+      <mat-select [(ngModel)]="requestingEntityId">
+        <mat-option value="">جميع الجهات</mat-option>
+        <mat-option *ngFor="let entity of requestingEntities" [value]="entity.id">
           {{ entity.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
-    <div class="form-group">
-      <label>المركز</label>
-      <select [(ngModel)]="districtId" [disabled]="isDistrictLocked">
-        <option value="">كل المراكز</option>
-        <option *ngFor="let district of districts" [value]="district.id">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>الحي / المنطقة</mat-label>
+      <mat-select [(ngModel)]="districtId" [disabled]="isDistrictLocked">
+        <mat-option value="">جميع الأحياء</mat-option>
+        <mat-option *ngFor="let district of districts" [value]="district.id">
           {{ district.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
-    <div class="form-group">
-      <label>نوع النشاط</label>
-      <select [(ngModel)]="activityTypeId">
-        <option value="">كل الأنشطة</option>
-        <option *ngFor="let activity of activityTypes" [value]="activity.id">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>النشاط</mat-label>
+      <mat-select [(ngModel)]="activityTypeId">
+        <mat-option value="">جميع الأنشطة</mat-option>
+        <mat-option *ngFor="let activity of activityTypes" [value]="activity.id">
           {{ activity.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
-    <div class="form-group">
-      <label>حالة الارتجاع</label>
-      <select [(ngModel)]="isReturned">
-        <option value="">الكل</option>
-        <option *ngFor="let opt of returnStateOptions" [value]="opt.value">
-          {{ opt.label }}
-        </option>
-      </select>
-    </div>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>حالة الإعادة</mat-label>
+      <mat-select [(ngModel)]="isReturned">
+        <mat-option value="">الكل</mat-option>
+        <mat-option value="true">معاد</mat-option>
+        <mat-option value="false">غير معاد</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-    <div class="form-group">
-      <label>الرأي الفني للمعاينة</label>
-      <select [(ngModel)]="opinion">
-        <option value="">كل الحالات</option>
-        <option *ngFor="let opt of opinionOptions" [value]="opt.value">
-          {{ opt.label }}
-        </option>
-      </select>
-    </div>
+    <!-- الفلتر المضاف: الرأي الفني للمعاينة -->
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>الرأي الفني للمعاينة</mat-label>
+      <mat-select [(ngModel)]="opinion">
+        <mat-option value="">جميع الحالات</mat-option>
+        <mat-option value="Compliant">مطابق للمواصفات</mat-option>
+        <mat-option value="NonCompliant">غير مطابق للمواصفات</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 
   <div class="filter-actions">
     <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
       <mat-icon>search</mat-icon>
       <span>بحث</span>
-      <span>بحث</span>
     </button>
 
     <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
       <mat-icon>refresh</mat-icon>
       <span>إعادة ضبط</span>
-      <span>إعادة ضبط</span>
     </button>
   </div>
 </section>
+
 
 <!-- كارت الجدول -->
 <section class="mat-table-container" dir="rtl">
@@ -165,7 +162,6 @@
               <button mat-menu-item (click)="requestEdit(item)">
                 <mat-icon class="menu-icon edit-icon">assignment_turned_in</mat-icon>
                 <span>إجراء المعاينة</span>
-                <span>إجراء المعاينة</span>
               </button>
               <button
                 mat-menu-item
@@ -174,7 +170,6 @@
                 [disabled]="movingToFinalApprovalId === item.id"
               >
                 <mat-icon class="menu-icon">arrow_forward</mat-icon>
-                <span>نقل للموافقة النهائية</span>
                 <span>نقل للموافقة النهائية</span>
               </button>
             </mat-menu>

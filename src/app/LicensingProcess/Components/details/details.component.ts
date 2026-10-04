@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
 import { buildFileUrl } from '../../../Shared/Utils/file-url';
 import { ApiResponse, LicensingProcessDetails } from '../../Models/licensing-process';
 import { LicensingProcessService } from '../../Services/licensing-process.service';
@@ -8,7 +7,7 @@ import { LicensingProcessService } from '../../Services/licensing-process.servic
 @Component({
   selector: 'app-licensing-process-details',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
