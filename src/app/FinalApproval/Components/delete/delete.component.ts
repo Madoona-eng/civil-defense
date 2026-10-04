@@ -7,12 +7,12 @@ import {
 } from '../../Models/final-approval';
 
 import { FinalApprovalService } from '../../Services/final-approval.service';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 @Component({
   selector: 'app-final-approval-delete',
   standalone: true,
-  imports: [CommonModule, SiteTranslationPipe],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './delete.component.html',
   styleUrl: './delete.component.scss'
 })
@@ -31,7 +31,7 @@ export class DeleteComponent {
     this.errorMessage = '';
 
     if (!this.item?.id) {
-      this.errorMessage = SITE_TRANSLATIONS['final.notSelected'];
+      this.errorMessage = 'لم يتم تحديد العنصر المراد حذفه';
       return;
     }
 
@@ -42,7 +42,7 @@ export class DeleteComponent {
         this.deleting = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || SITE_TRANSLATIONS['final.deleteFailed'];
+          this.errorMessage = response.message || 'فشل حذف طلب الموافقة النهائية';
           return;
         }
 
@@ -56,7 +56,7 @@ export class DeleteComponent {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['final.deleteError'];
+          'حدث خطأ أثناء حذف طلب الموافقة النهائية';
       }
     });
   }

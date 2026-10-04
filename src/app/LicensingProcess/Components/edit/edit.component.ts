@@ -14,12 +14,12 @@ import { LicensingProcessService } from '../../Services/licensing-process.servic
 import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
 import { DistrictService } from '../../../District/Services/district.service';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 @Component({
   selector: 'app-licensing-process-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule, SiteTranslationPipe],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.scss'
 })
@@ -97,7 +97,7 @@ export class EditComponent implements OnChanges {
         }
 
         if (!result.details.isSuccess) {
-          this.errorMessage = result.details.message || SITE_TRANSLATIONS['licensing.loadEditFailed'];
+          this.errorMessage = result.details.message || 'فشل تحميل بيانات الترخيص للتعديل';
           return;
         }
 
@@ -111,7 +111,7 @@ export class EditComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['licensing.loadEditError'];
+          'حدث خطأ أثناء تحميل بيانات الترخيص للتعديل';
       }
     });
   }
@@ -166,7 +166,7 @@ export class EditComponent implements OnChanges {
     this.successMessage = '';
 
     if (!this.processId) {
-      this.errorMessage = SITE_TRANSLATIONS['licensing.editNotSelected'];
+      this.errorMessage = 'لم يتم تحديد طلب الترخيص المراد تعديله';
       return;
     }
 
@@ -211,11 +211,11 @@ export class EditComponent implements OnChanges {
         this.saving = false;
 
         if (!res.isSuccess) {
-          this.errorMessage = res.message || SITE_TRANSLATIONS['licensing.updateFailed'];
+          this.errorMessage = res.message || 'فشل تحديث بيانات طلب الترخيص';
           return;
         }
 
-        this.successMessage = res.message || SITE_TRANSLATIONS['licensing.updateSucceeded'];
+        this.successMessage = res.message || 'تم تحديث بيانات طلب الترخيص بنجاح';
 
         setTimeout(() => {
           this.saved.emit();
@@ -229,64 +229,64 @@ export class EditComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['licensing.updateError'];
+          'حدث خطأ أثناء تحديث بيانات طلب الترخيص';
       }
     });
   }
 
   validateForm(): boolean {
     if (!this.formModel.submissionDate) {
-      this.errorMessage = SITE_TRANSLATIONS['licensing.dateRequired'];
+      this.errorMessage = 'يرجى إدخال تاريخ التقديم';
       return false;
     }
 
     if (!this.formModel.requestingEntityId) {
-      this.errorMessage = SITE_TRANSLATIONS['licensing.entityRequired'];
+      this.errorMessage = 'يرجى اختيار الجهة الطالبة';
       return false;
     }
 
     if (!this.formModel.establishmentName.trim()) {
-      this.errorMessage = SITE_TRANSLATIONS['licensing.establishmentRequired'];
+      this.errorMessage = 'يرجى إدخال اسم المنشأة';
       return false;
     }
 
     if (!this.formModel.establishmentAddress.trim()) {
-      this.errorMessage = SITE_TRANSLATIONS['licensing.addressRequired'];
+      this.errorMessage = 'يرجى إدخال عنوان المنشأة';
       return false;
     }
 
     if (!this.formModel.districtId) {
-      this.errorMessage = SITE_TRANSLATIONS['licensing.districtRequired'];
+      this.errorMessage = 'يرجى اختيار المركز / الحي';
       return false;
     }
 
     if (!this.formModel.activityTypeId) {
-      this.errorMessage = SITE_TRANSLATIONS['licensing.activityRequired'];
+      this.errorMessage = 'يرجى اختيار نوع النشاط';
       return false;
     }
 
     if (!this.formModel.applicantName.trim()) {
-      this.errorMessage = SITE_TRANSLATIONS['licensing.applicantRequired'];
+      this.errorMessage = 'يرجى إدخال اسم مقدم الطلب';
       return false;
     }
 
     if (!this.formModel.applicantRole.trim()) {
-      this.errorMessage = SITE_TRANSLATIONS['licensing.roleRequired'];
+      this.errorMessage = 'يرجى إدخال صفة مقدم الطلب';
       return false;
     }
 
     if (!this.formModel.nationalId.trim()) {
-      this.errorMessage = SITE_TRANSLATIONS['licensing.nationalIdRequired'];
+      this.errorMessage = 'يرجى إدخال الرقم القومي';
       return false;
     }
 
     if (!this.formModel.responsibleManager.trim()) {
-      this.errorMessage = SITE_TRANSLATIONS['licensing.managerRequired'];
+      this.errorMessage = 'يرجى إدخال اسم المدير المسؤول';
       return false;
     }
 
     if (!this.formModel.phone.trim()) {
-      this.errorMessage = SITE_TRANSLATIONS['licensing.phoneRequired'];
+      this.errorMessage = 'يرجى إدخال رقم الهاتف';
       return false;
     }
 

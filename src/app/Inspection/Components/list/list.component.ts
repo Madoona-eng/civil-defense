@@ -13,7 +13,12 @@ import {
 
 import { InspectionService } from '../../Services/inspection.service';
 
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -40,6 +45,19 @@ interface SelectOption {
 @Component({
   selector: 'app-inspection-list',
   standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatDialogModule,
+    MatSnackBarModule,
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -103,6 +121,7 @@ export class ListComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly snackBar: MatSnackBar,
   ) {}
+  ) {}
 
   ngOnInit(): void {
     this.loadLookups();
@@ -149,6 +168,9 @@ export class ListComponent implements OnInit {
       activityTypeId: this.activityTypeId || undefined,
       isReturned: this.isReturned === '' ? undefined : this.isReturned === ReturnState.Returned,
       opinion: this.opinion || undefined,
+      isReturned:
+        this.isReturned === '' ? undefined : this.isReturned === 'true',
+      opinion: this.opinion || undefined,
       submissionDateFrom: this.submissionDateFrom || undefined,
       submissionDateTo: this.submissionDateTo || undefined,
       searchTerm: this.searchTerm.trim() || undefined,
@@ -162,6 +184,7 @@ export class ListComponent implements OnInit {
 
         if (!response.isSuccess) {
           this.errorMessage = response.message || 'تعذر تحميل قائمة المعاينات';
+          this.errorMessage = response.message || 'فشل في تحميل قائمة المعاينات.';
           return;
         }
 
@@ -197,6 +220,7 @@ export class ListComponent implements OnInit {
     this.opinion = '';
     this.submissionDateFrom = '';
     this.submissionDateTo = '';
+    this.opinion = '';
     this.pageNumber = 1;
     this.loadInspections();
   }
@@ -241,6 +265,7 @@ export class ListComponent implements OnInit {
       this.movingToFinalApprovalId = item.id;
       this.inspectionService.moveToFinalApproval(item.id).subscribe({
         next: (response) => {
+        next: (response) => {
           this.movingToFinalApprovalId = null;
 
           if (!response.isSuccess) {
@@ -253,6 +278,7 @@ export class ListComponent implements OnInit {
           this.snackBar.open('تم النقل بنجاح', 'إغلاق', { duration: 2500 });
           this.loadInspections();
         },
+        error: (error) => {
         error: (error) => {
           this.movingToFinalApprovalId = null;
           this.snackBar.open(

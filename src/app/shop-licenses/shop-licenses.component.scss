@@ -1,3 +1,19 @@
+@import '../Shared/Styles/filters.scss';
+
+.shop-license-filter-row {
+  grid-template-columns: 2fr 1fr;
+}
+
+.shop-license-filters .filter-actions {
+  justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+  .shop-license-filter-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 .list-card {
   background: #ffffff;
   border-radius: 12px;
@@ -35,76 +51,6 @@
 
       &:hover {
         background-color: #cbd5e1;
-      }
-    }
-  }
-
-  .filters {
-    display: flex;
-    align-items: flex-end;
-    gap: 16px;
-    background: #f8fafc;
-    padding: 16px;
-    border-radius: 10px;
-    margin-bottom: 24px;
-    border: 1px solid #f1f5f9;
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex: 1;
-
-      label {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #475569;
-      }
-
-      input, select {
-        height: 40px;
-        padding: 0 12px;
-        border: 1px solid #cbd5e1;
-        border-radius: 8px;
-        outline: none;
-        font-size: 0.9rem;
-
-        &:focus {
-          border-color: #2563eb;
-        }
-      }
-    }
-
-    .filter-actions {
-      display: flex;
-      gap: 8px;
-
-      button {
-        height: 40px;
-        padding: 0 20px;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        border: none;
-        transition: all 0.2s ease;
-      }
-
-      .search-btn {
-        background-color: #2563eb;
-        color: #ffffff;
-
-        &:hover {
-          background-color: #1d4ed8;
-        }
-      }
-
-      .reset-btn {
-        background-color: #f1f5f9;
-        color: #64748b;
-
-        &:hover {
-          background-color: #e2e8f0;
-        }
       }
     }
   }

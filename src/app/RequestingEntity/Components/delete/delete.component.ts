@@ -2,12 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ApiResponse, RequestingEntity } from '../../Models/requesting-entity';
 import { RequestingEntityService } from '../../Services/requesting-entity.service';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+
 
 @Component({
   selector: 'app-requesting-entity-delete',
   standalone: true,
-  imports: [CommonModule, SiteTranslationPipe],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './delete.component.html',
   styleUrl: './delete.component.scss'
 })
@@ -24,7 +25,7 @@ export class DeleteComponent {
 
   confirmDelete(): void {
     if (!this.requestingEntity?.id) {
-      this.errorMessage = SITE_TRANSLATIONS['entity.notSelected'];
+      this.errorMessage = 'entity.notSelected';
       return;
     }
 
@@ -36,7 +37,7 @@ export class DeleteComponent {
         this.deleting = false;
 
         if (!res.isSuccess) {
-          this.errorMessage = res.message || SITE_TRANSLATIONS['entity.deleteFailed'];
+          this.errorMessage = res.message || 'entity.deleteFailed';
           return;
         }
 
@@ -50,7 +51,7 @@ export class DeleteComponent {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['entity.deleteError'];
+          'entity.deleteError';
       }
     });
   }

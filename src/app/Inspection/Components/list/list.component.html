@@ -32,9 +32,9 @@
         <option value="">كل الجهات</option>
         <option *ngFor="let entity of requestingEntities" [value]="entity.id">
           {{ entity.name }}
-        </option>
-      </select>
-    </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
     <div class="form-group">
       <label>المركز</label>
@@ -42,9 +42,9 @@
         <option value="">كل المراكز</option>
         <option *ngFor="let district of districts" [value]="district.id">
           {{ district.name }}
-        </option>
-      </select>
-    </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
     <div class="form-group">
       <label>نوع النشاط</label>
@@ -52,9 +52,9 @@
         <option value="">كل الأنشطة</option>
         <option *ngFor="let activity of activityTypes" [value]="activity.id">
           {{ activity.name }}
-        </option>
-      </select>
-    </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
     <div class="form-group">
       <label>حالة الارتجاع</label>
@@ -78,13 +78,15 @@
   </div>
 
   <div class="filter-actions">
-    <button type="button" class="btn-search" (click)="search()">
+    <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
       <mat-icon>search</mat-icon>
+      <span>بحث</span>
       <span>بحث</span>
     </button>
 
-    <button type="button" class="btn-reset" (click)="resetFilters()">
+    <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
       <mat-icon>refresh</mat-icon>
+      <span>إعادة ضبط</span>
       <span>إعادة ضبط</span>
     </button>
   </div>
@@ -163,6 +165,7 @@
               <button mat-menu-item (click)="requestEdit(item)">
                 <mat-icon class="menu-icon edit-icon">assignment_turned_in</mat-icon>
                 <span>إجراء المعاينة</span>
+                <span>إجراء المعاينة</span>
               </button>
               <button
                 mat-menu-item
@@ -171,6 +174,7 @@
                 [disabled]="movingToFinalApprovalId === item.id"
               >
                 <mat-icon class="menu-icon">arrow_forward</mat-icon>
+                <span>نقل للموافقة النهائية</span>
                 <span>نقل للموافقة النهائية</span>
               </button>
             </mat-menu>

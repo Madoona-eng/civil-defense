@@ -7,14 +7,15 @@ import {
   UpdateRequestingEntityRequest
 } from '../../Models/requesting-entity';
 import { RequestingEntityService } from '../../Services/requesting-entity.service';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+
 /* داخل ملف edit.component.scss الخاص بك */
 
 
 @Component({
   selector: 'app-requesting-entity-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule, SiteTranslationPipe],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.scss'
 })
@@ -52,7 +53,7 @@ export class EditComponent implements OnChanges {
         this.loading = false;
 
         if (!res.isSuccess || !res.data) {
-          this.errorMessage = res.message || SITE_TRANSLATIONS['entity.loadFailed'];
+          this.errorMessage = res.message || 'entity.loadFailed';
           return;
         }
 
@@ -69,14 +70,14 @@ export class EditComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['entity.loadError'];
+          ['entity.loadError'];
       }
     });
   }
 
   save(): void {
     if (!this.requestingEntityId) {
-      this.errorMessage = SITE_TRANSLATIONS['entity.notSelected'];
+      this.errorMessage = 'entity.notSelected';
       return;
     }
 
@@ -87,7 +88,7 @@ export class EditComponent implements OnChanges {
     const name = this.formModel.name.trim();
 
     if (!name) {
-      this.errorMessage = SITE_TRANSLATIONS['entity.nameRequired'];
+      this.errorMessage = 'entity.nameRequired';
       return;
     }
 
@@ -103,11 +104,11 @@ export class EditComponent implements OnChanges {
         this.saving = false;
 
         if (!res.isSuccess) {
-          this.errorMessage = res.message || SITE_TRANSLATIONS['entity.updateFailed'];
+          this.errorMessage = res.message || 'entity.updateFailed';
           return;
         }
 
-        this.successMessage = res.message || SITE_TRANSLATIONS['entity.updateSucceeded'];
+        this.successMessage = res.message || 'entity.updateSucceeded';
 
         setTimeout(() => {
           this.saved.emit();
@@ -121,7 +122,7 @@ export class EditComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['entity.updateError'];
+          ['entity.updateError'];
       }
     });
   }

@@ -8,7 +8,6 @@ import {
   PagedResult
 } from '../../Models/licensing-process';
 import { LicensingProcessService } from '../../Services/licensing-process.service';
-import { SITE_TRANSLATIONS } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-licensing-process-list',
@@ -38,10 +37,10 @@ export class ListComponent implements OnInit {
   hasPreviousPage = false;
 
   processSteps = [
-    { value: '', label: SITE_TRANSLATIONS['shop.allStages'] },
-    { value: 'Inspection', label: SITE_TRANSLATIONS['step.inspection'] },
-    { value: 'FinalApproval', label: SITE_TRANSLATIONS['step.finalApproval'] },
-    { value: 'Archive', label: SITE_TRANSLATIONS['step.archive'] }
+    { value: '', label: 'جميع المراحل' },
+    { value: 'Inspection', label: 'المعاينة' },
+    { value: 'FinalApproval', label: 'الموافقة النهائية' },
+    { value: 'Archive', label: 'الأرشيف' }
   ];
 
   constructor(private readonly licensingProcessService: LicensingProcessService) {}
@@ -66,7 +65,7 @@ export class ListComponent implements OnInit {
         this.isLoading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || SITE_TRANSLATIONS['licensing.listLoadFailed'];
+          this.errorMessage = response.message || 'فشل تحميل قائمة التراخيص';
           return;
         }
 
@@ -86,7 +85,7 @@ export class ListComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['licensing.listLoadError'];
+          'حدث خطأ أثناء تحميل القائمة';
       }
     });
   }
@@ -135,15 +134,15 @@ export class ListComponent implements OnInit {
 
   getStepLabel(step: string): string {
     if (step === 'Inspection') {
-      return SITE_TRANSLATIONS['step.inspection'];
+      return 'المعاينة';
     }
 
     if (step === 'FinalApproval') {
-      return SITE_TRANSLATIONS['step.finalApproval'];
+      return 'الموافقة النهائية';
     }
 
     if (step === 'Archive') {
-      return SITE_TRANSLATIONS['step.archive'];
+      return 'الأرشيف';
     }
 
     return step || '-';

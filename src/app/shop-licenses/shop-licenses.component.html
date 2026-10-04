@@ -1,56 +1,62 @@
 <div class="list-card" dir="rtl">
   <div class="list-header">
     <div>
-      <h3>{{ 'shop.list' | t }}</h3>
-      <p>{{ 'shop.description' | t }}</p>
+      <h3>قائمة تراخيص المحال</h3>
+      <p>إدارة واستعراض جميع طلبات تراخيص المحال التجارية</p>
     </div>
 
     <button type="button" class="refresh-btn" (click)="loadLicensingProcesses()">
-      {{ 'common.refresh' | t }}
+      تحديث
     </button>
   </div>
 
-  <div class="filters">
-    <div class="field">
-      <label>{{ 'shop.search' | t }}</label>
-      <input
-        type="text"
-        [(ngModel)]="searchTerm"
-        name="searchTerm"
-        [placeholder]="'shop.searchPlaceholder' | t"
-      />
-    </div>
+  <section class="filters-card shop-license-filters" dir="rtl">
+    <div class="filters-row-primary shop-license-filter-row">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>بحث</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="searchTerm"
+          name="searchTerm"
+          placeholder="ابحث برقم الطلب أو اسم المنشأة..."
+        />
+      </mat-form-field>
 
-    <div class="field">
-      <label>{{ 'shop.stage' | t }}</label>
-      <select [(ngModel)]="processStep" name="processStep">
-        <option *ngFor="let step of processSteps" [value]="step.value">
-          {{ step.label }}
-        </option>
-      </select>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>المرحلة</mat-label>
+        <mat-select [(ngModel)]="processStep" name="processStep">
+          <mat-option *ngFor="let step of processSteps" [value]="step.value">
+            {{ step.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
     <div class="filter-actions">
-      <button type="button" class="search-btn" (click)="search()">
-        {{ 'shop.search' | t }}
+      <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
+        <mat-icon>search</mat-icon>
+        <span>بحث</span>
       </button>
 
-      <button type="button" class="reset-btn" (click)="resetFilters()">
-        {{ 'shop.clearFilter' | t }}
+      <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
+        <mat-icon>refresh</mat-icon>
+        <span>مسح الفلاتر</span>
       </button>
     </div>
-  </div>
+  </section>
 
   <div class="message error" *ngIf="errorMessage">
     {{ errorMessage }}
   </div>
 
   <div class="loading-box" *ngIf="isLoading">
-    {{ 'common.loadingDataWithEllipsis' | t }}
+    جاري تحميل البيانات...
   </div>
 
   <div class="empty-box" *ngIf="!isLoading && items.length === 0">
-    {{ 'shop.empty' | t }}
+    لا توجد تراخيص متاحة
   </div>
 
   <div class="table-wrap" *ngIf="!isLoading && items.length > 0">
@@ -58,16 +64,16 @@
       <thead>
         <tr>
           <th style="width: 40px;">#</th>
-          <th>{{ 'common.requestCode' | t }}</th>
-          <th>{{ 'common.submissionDate' | t }}</th>
-          <th>{{ 'common.establishment' | t }}</th>
-          <th>{{ 'common.address' | t }}</th>
-          <th>{{ 'common.requestingEntity' | t }}</th>
-          <th>{{ 'district.name' | t }}</th>
-          <th>{{ 'common.activity' | t }}</th>
-          <th>{{ 'common.applicant' | t }}</th>
-          <th>{{ 'shop.currentStage' | t }}</th>
-          <th style="width: 70px;">{{ 'common.actions' | t }}</th>
+          <th>رقم الطلب</th>
+          <th>تاريخ التقديم</th>
+          <th>المنشأة</th>
+          <th>العنوان</th>
+          <th>الجهة الطالبة</th>
+          <th>الحي</th>
+          <th>النشاط</th>
+          <th>مقدم الطلب</th>
+          <th>المرحلة الحالية</th>
+          <th style="width: 70px;">الإجراءات</th>
         </tr>
       </thead>
 
@@ -89,46 +95,46 @@
             </span>
           </td>
 
-         <td class="actions-cell">
-  <div class="menu-container">
-    <!-- زر النقاط الثلاث -->
-    <button 
-      type="button" 
-      class="dots-btn" 
-      (click)="toggleDropdown(item.id, $event)" 
-      [title]="'shop.actionTitle' | t">
-      ⋮
-    </button>
+          <td class="actions-cell">
+            <div class="menu-container">
+              <!-- زر النقاط الثلاث -->
+              <button 
+                type="button" 
+                class="dots-btn" 
+                (click)="toggleDropdown(item.id, $event)" 
+                title="خيارات الإجراءات">
+                ⋮
+              </button>
 
-    <!-- القائمة المنسدلة -->
-    <div class="dropdown-menu" *ngIf="activeDropdownId === item.id" (click)="$event.stopPropagation()">
-      <button type="button" class="menu-item view" (click)="requestDetails(item.id)">
-        <span class="icon">👁️</span>
-        <span>{{ 'shop.viewDetails' | t }}</span>
-      </button>
+              <!-- القائمة المنسدلة -->
+              <div class="dropdown-menu" *ngIf="activeDropdownId === item.id" (click)="$event.stopPropagation()">
+                <button type="button" class="menu-item view" (click)="requestDetails(item.id)">
+                  <span class="icon">👁️️</span>
+                  <span>عرض التفاصيل</span>
+                </button>
 
-      <button
-        *ngIf="canMoveToInspection && isNewLicenseStep(item.currentStep)"
-        type="button"
-        class="menu-item edit"
-        (click)="moveToInspection(item)"
-        [disabled]="movingToInspectionId === item.id">
-        <span class="icon">↪</span>
-        <span>{{ 'newLicense.nextStep' | t }}</span>
-      </button>
+                <button
+                  *ngIf="canMoveToInspection && isNewLicenseStep(item.currentStep)"
+                  type="button"
+                  class="menu-item edit"
+                  (click)="moveToInspection(item)"
+                  [disabled]="movingToInspectionId === item.id">
+                  <span class="icon">↪</span>
+                  <span>المرحلة التالية</span>
+                </button>
 
-      <button type="button" class="menu-item edit" (click)="requestEdit(item.id)">
-        <span class="icon">✏️</span>
-        <span>{{ 'common.edit' | t }}</span>
-      </button>
+                <button type="button" class="menu-item edit" (click)="requestEdit(item.id)">
+                  <span class="icon">✏️</span>
+                  <span>تعديل</span>
+                </button>
 
-      <button type="button" class="menu-item delete" (click)="requestDelete(item)">
-        <span class="icon">🗑️</span>
-        <span>{{ 'common.delete' | t }}</span>
-      </button>
-    </div>
-  </div>
-</td>
+                <button type="button" class="menu-item delete" (click)="requestDelete(item)">
+                  <span class="icon">🗑️</span>
+                  <span>حذف</span>
+                </button>
+              </div>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -136,15 +142,15 @@
 
   <div class="pagination" *ngIf="!isLoading && totalCount > 0">
     <button type="button" (click)="previousPage()" [disabled]="!hasPreviousPage">
-      {{ 'common.previous' | t }}
+      السابق
     </button>
 
     <span>
-      {{ 'shop.pageInfo' | t: { page: pageNumber, pages: totalPages, count: totalCount } }}
+      صفحة {{ pageNumber }} من {{ totalPages }} (الإجمالي: {{ totalCount }})
     </span>
 
     <button type="button" (click)="nextPage()" [disabled]="!hasNextPage">
-      {{ 'common.next' | t }}
+      التالي
     </button>
   </div>
 

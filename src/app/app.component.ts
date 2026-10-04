@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { SITE_TRANSLATIONS } from './Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +11,6 @@ import { SITE_TRANSLATIONS } from './Shared/Enums/site-translations';
 })
 export class AppComponent {
   constructor(title: Title) {
-    title.setTitle(SITE_TRANSLATIONS['app.civilDefense']);
+    title.setTitle('الحماية المدنية'); // كتابة اسم النظام مباشرة
   }
 }

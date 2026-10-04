@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivityType, ApiResponse } from '../../Models/activity-type';
 import { ActivityTypeService } from '../../Services/activity-type.service';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 @Component({
   selector: 'app-delete',
   standalone: true,
-  imports: [CommonModule, SiteTranslationPipe],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './delete.component.html',
   styleUrl: './delete.component.scss'
 })
@@ -24,7 +24,7 @@ export class DeleteComponent {
 
   confirmDelete(): void {
     if (!this.activityType?.id) {
-      this.errorMessage = SITE_TRANSLATIONS['activity.notSelected'];
+      this.errorMessage = 'لم يتم تحديد نوع النشاط';
       return;
     }
 
@@ -36,7 +36,7 @@ export class DeleteComponent {
         this.deleting = false;
 
         if (!res.isSuccess) {
-          this.errorMessage = res.message || SITE_TRANSLATIONS['activity.deleteFailed'];
+          this.errorMessage = res.message || 'فشل حذف نوع النشاط';
           return;
         }
 
@@ -50,7 +50,7 @@ export class DeleteComponent {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['activity.deleteError'];
+          'حدث خطأ أثناء حذف النشاط';
       }
     });
   }

@@ -13,13 +13,27 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 @Component({
   selector: 'app-district-list',
   standalone: true,
-  imports: [CommonModule,MatIconModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatSelectModule,
-    MatTableModule, MatPaginatorModule, MatSortModule, FormsModule, ReactiveFormsModule, MatMenuModule, SiteTranslationPipe],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatMenuModule,
+    TranslatePipe
+  ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
@@ -47,7 +61,7 @@ export class ListComponent implements OnInit {
         this.isLoading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || SITE_TRANSLATIONS['district.loadFailed'];
+          this.errorMessage = response.message || 'فشل تحميل قائمة الأحياء / المراكز';
           return;
         }
 
@@ -61,7 +75,7 @@ export class ListComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['district.loadError'];
+          'حدث خطأ أثناء تحميل قائمة الأحياء / المراكز';
       }
     });
   }

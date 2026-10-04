@@ -9,18 +9,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+
 
 @Component({
   selector: 'app-requesting-entity-management',
   standalone: true,
   imports: [
     CommonModule,
-    SiteTranslationPipe,
+    
     AddComponent,
     ListComponent,
     EditComponent,
-    DeleteComponent , MatIconModule, MatMenuModule, MatButtonModule, MatProgressSpinnerModule
+    DeleteComponent , MatIconModule, MatMenuModule, MatButtonModule, MatProgressSpinnerModule,
+    TranslatePipe
   ],
   templateUrl: './requesting-entity-management.component.html',
   styleUrl: './requesting-entity-management.component.scss'

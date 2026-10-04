@@ -33,6 +33,7 @@ import {
 } from '../../Models/inspection';
 
 import { InspectionService } from '../../Services/inspection.service';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 import {
   INSPECTION_OPINION_LABELS,
@@ -420,8 +421,12 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
       },
       error: (err) => {
         console.error('Inspection PUT error:', err);
-        this.stopSaving();
-        this.formErrorMessage = extractErrorMessage(err, 'حدث خطأ أثناء حفظ المعاينة');
+
+        this.formErrorMessage =
+          err?.error?.message ||
+          err?.error?.Message ||
+          err?.message ||
+          SITE_TRANSLATIONS['inspection.saveError'];
       },
     });
   }

@@ -3,8 +3,11 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import {
@@ -22,12 +25,11 @@ import { DistrictService } from '../../../District/Services/district.service';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
 import { AuthService } from '../../../auth/services/auth.service';
 import { ConfirmDialogComponent } from '../../../Shared/Components/confirm-dialog/confirm-dialog.component';
-import { SITE_TRANSLATIONS, SiteTranslationPipe, translateSiteText } from '../../../Shared/Enums/site-translations';
 
 @Component({
   selector: 'app-final-approval-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, SiteTranslationPipe, MatIconModule, MatMenuModule, MatDialogModule, MatSnackBarModule],
+  imports: [CommonModule, FormsModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MatMenuModule, MatDialogModule, MatSnackBarModule],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
@@ -125,7 +127,7 @@ export class ListComponent implements OnInit {
         this.isLoading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || SITE_TRANSLATIONS['final.listLoadFailed'];
+          this.errorMessage = response.message || 'Failed to load list';
           return;
         }
 
@@ -145,7 +147,7 @@ export class ListComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['final.listLoadError'];
+          'Error loading list';
       }
     });
   }
@@ -212,11 +214,9 @@ export class ListComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '360px',
       data: {
-        message: translateSiteText('final.archivePrompt', {
-          establishmentName: item.establishmentName,
-        }),
-        confirmText: SITE_TRANSLATIONS['final.moveArchive'],
-        cancelText: SITE_TRANSLATIONS['common.cancel'],
+        message: `Are you sure you want to move "${item.establishmentName}" to archive?`,
+        confirmText: 'Move to Archive',
+        cancelText: 'Cancel',
         confirmClass: 'btn-save',
       },
     });
@@ -231,16 +231,16 @@ export class ListComponent implements OnInit {
 
           if (!response.isSuccess) {
             this.snackBar.open(
-              response.message || SITE_TRANSLATIONS['final.archiveFailed'],
-              SITE_TRANSLATIONS['common.close'],
+              response.message || 'Failed to move to archive',
+              'Close',
               { duration: 3000 },
             );
             return;
           }
 
           this.snackBar.open(
-            SITE_TRANSLATIONS['final.archived'],
-            SITE_TRANSLATIONS['common.close'],
+            'Archived successfully',
+            'Close',
             { duration: 2500 },
           );
           this.loadFinalApprovals();
@@ -248,8 +248,8 @@ export class ListComponent implements OnInit {
         error: error => {
           this.archivingItemId = null;
           this.snackBar.open(
-            error?.error?.message || error?.message || SITE_TRANSLATIONS['final.archiveError'],
-            SITE_TRANSLATIONS['common.close'],
+            error?.error?.message || error?.message || 'Error occurred while archiving',
+            'Close',
             { duration: 3000 },
           );
         },
@@ -259,19 +259,19 @@ export class ListComponent implements OnInit {
 
   getStepLabel(step: string): string {
     if (step === 'FinalApproval') {
-      return SITE_TRANSLATIONS['step.finalApproval'];
+      return 'Final Approval';
     }
 
     if (step === 'Archive') {
-      return SITE_TRANSLATIONS['step.archive'];
+      return 'Archive';
     }
 
     if (step === 'Inspection') {
-      return SITE_TRANSLATIONS['step.inspection'];
+      return 'Inspection';
     }
 
     if (step === 'NewLicense') {
-      return SITE_TRANSLATIONS['step.newLicense'];
+      return 'New License';
     }
 
     return step || '-';

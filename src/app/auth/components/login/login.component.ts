@@ -3,12 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SiteTranslationPipe],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -53,11 +53,11 @@ export class LoginComponent implements OnInit {
         // التعامل مع استجابة الخادم
         const isSuccess = result.isSuccess ?? result.success;
         if (!isSuccess) {
-          this.errorMessage = result.message || SITE_TRANSLATIONS['login.failed'];
+          this.errorMessage = result.message || 'فشل تسجيل الدخول';
           return;
         }
 
-        this.successMessage = result.message || SITE_TRANSLATIONS['login.succeeded'];
+        this.successMessage = result.message || 'تم تسجيل الدخول بنجاح';
 
         // استخراج الـ Role سواء كان في Root أو داخل object اسمه data
         const userRole = result.data?.role || result.role;
@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = SITE_TRANSLATIONS['login.connectionError'];
+        this.errorMessage = 'حدث خطأ في الاتصال بالسيرفر';
         console.error('Login API error:', err);
       }
     });

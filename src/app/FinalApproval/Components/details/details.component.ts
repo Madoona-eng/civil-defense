@@ -19,7 +19,7 @@ interface AttachmentGroup {
 @Component({
   selector: 'app-final-approval-details',
   standalone: true,
-  imports: [CommonModule, SiteTranslationPipe],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
@@ -52,7 +52,7 @@ export class DetailsComponent implements OnChanges {
         this.loading = false;
 
         if (!response.isSuccess) {
-          this.errorMessage = response.message || SITE_TRANSLATIONS['final.loadFailed'];
+          this.errorMessage = response.message || 'فشل تحميل التفاصيل';
           return;
         }
 
@@ -66,8 +66,8 @@ export class DetailsComponent implements OnChanges {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['final.loadError'];
-      },
+          'حدث خطأ أثناء تحميل التفاصيل';
+      }
     });
   }
 
@@ -77,19 +77,19 @@ export class DetailsComponent implements OnChanges {
 
   getStepLabel(step: string | null | undefined): string {
     if (step === 'Inspection') {
-      return SITE_TRANSLATIONS['step.inspection'];
+      return 'التفتيش / المعاينة';
     }
 
     if (step === 'FinalApproval') {
-      return SITE_TRANSLATIONS['step.finalApproval'];
+      return 'الموافقة النهائية';
     }
 
     if (step === 'Archive') {
-      return SITE_TRANSLATIONS['step.archive'];
+      return 'الأرشيف';
     }
 
     if (step === 'NewLicense') {
-      return SITE_TRANSLATIONS['step.newLicense'];
+      return 'ترخيص جديد';
     }
 
     return step || '-';
@@ -97,11 +97,11 @@ export class DetailsComponent implements OnChanges {
 
   getOpinionLabel(opinion: string | null | undefined): string {
     if (opinion === 'Compliant') {
-      return SITE_TRANSLATIONS['final.opinionCompliant'];
+      return 'مطابق';
     }
 
     if (opinion === 'NonCompliant') {
-      return SITE_TRANSLATIONS['final.opinionNonCompliant'];
+      return 'غير مطابق';
     }
 
     return opinion || '-';
@@ -109,11 +109,11 @@ export class DetailsComponent implements OnChanges {
 
   getFinalStatusLabel(status: string | null | undefined): string {
     if (status === 'Accepted') {
-      return SITE_TRANSLATIONS['review.accepted'];
+      return 'مقبول';
     }
 
     if (status === 'Rejected') {
-      return SITE_TRANSLATIONS['review.rejected'];
+      return 'مرفوض';
     }
 
     return status || '-';
@@ -141,25 +141,25 @@ export class DetailsComponent implements OnChanges {
   getAttachmentGroups(details: FinalApprovalDetails): AttachmentGroup[] {
     return [
       {
-        title: SITE_TRANSLATIONS['common.entityLetters'],
-        files: details.entityLetters || [],
+        title: 'خطابات الجهات',
+        files: details.entityLetters || []
       },
       {
-        title: SITE_TRANSLATIONS['common.proofDocuments'],
-        files: details.proofDocuments || [],
+        title: 'مستندات الإثبات',
+        files: details.proofDocuments || []
       },
       {
-        title: SITE_TRANSLATIONS['common.engineeringReports'],
-        files: details.engineeringReports || [],
+        title: 'التقارير الهندسية',
+        files: details.engineeringReports || []
       },
       {
-        title: SITE_TRANSLATIONS['common.inspectionReports'],
-        files: details.inspectionReports || [],
+        title: 'تقارير المعاينة',
+        files: details.inspectionReports || []
       },
       {
-        title: SITE_TRANSLATIONS['common.otherAttachments'],
-        files: details.otherAttachments || [],
-      },
+        title: 'مرفقات أخرى',
+        files: details.otherAttachments || []
+      }
     ];
   }
 }

@@ -6,19 +6,21 @@ import { DetailsComponent } from '../details/details.component';
 import { EditComponent } from '../edit/edit.component';
 import { DeleteComponent } from '../delete/delete.component';
 import { LicensingProcessItem } from '../../Models/licensing-process';
-import { SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+
 
 @Component({
   selector: 'app-licensing-process-management',
   standalone: true,
   imports: [
     CommonModule,
-    SiteTranslationPipe,
+  
     AddComponent,
     ListComponent,
     DetailsComponent,
     EditComponent,
-    DeleteComponent
+    DeleteComponent,
+    TranslatePipe
   ],
   templateUrl: './licensing-process-management.component.html',
   styleUrl: './licensing-process-management.component.scss'

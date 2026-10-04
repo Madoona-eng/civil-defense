@@ -26,6 +26,7 @@ import { formatDateForApi } from '../../../Shared/Helpers/date.helper';
 import { ApiResponse } from '../../../Shared/Models/ApiResponse';
 import { LookupItem } from '../../../Shared/Models/LookupItem';
 import { PagedResult } from '../../../Shared/Models/PagedResult';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 import { CreateComponent, CreateDialogData } from '../create/create.component';
 import { DetailsComponent, DetailsDialogData } from '../details/details.component';
 import { EditComponent, EditDialogData } from '../edit/edit.component';
@@ -87,6 +88,14 @@ export class NewLicenseManagementComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly snackBar: MatSnackBar,
   ) {}
+
+  private snackMessage(message: string | string[] | undefined, fallback: string): string {
+    if (Array.isArray(message)) {
+      return message.join(' ');
+    }
+
+    return message || fallback;
+  }
 
   ngOnInit(): void {
     this.loadLookups();

@@ -2,12 +2,12 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ArchivedService } from '../../Services/archived.service';
 import { Archived, ArchivedFilter } from '../../Models/archived';
 import { CommonModule } from '@angular/common';
-import { SITE_TRANSLATIONS, SiteTranslationPipe } from '../../../Shared/Enums/site-translations';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [CommonModule, SiteTranslationPipe],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
@@ -43,7 +43,7 @@ export class ListComponent implements OnInit {
       next: (res) => {
         this.isLoading = false;
         if (!res.isSuccess) {
-          this.errorMessage = res.message || SITE_TRANSLATIONS['archive.dataLoadFailed'];
+          this.errorMessage = res.message || 'فشل تحميل بيانات الأرشيف';
           return;
         }
         this.items = res.data.items;
@@ -58,7 +58,7 @@ export class ListComponent implements OnInit {
           err?.error?.message ||
           err?.error?.Message ||
           err?.message ||
-          SITE_TRANSLATIONS['archive.dataLoadError'];
+          'حدث خطأ أثناء تحميل بيانات الأرشيف';
       }
     });
   }

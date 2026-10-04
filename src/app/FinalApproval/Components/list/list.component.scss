@@ -1,6 +1,7 @@
 /* ==========================================
    لوحة التحكم - قائمة الموافقات النهائية
    ========================================== */
+@import '../../../Shared/Styles/filters.scss';
 
 // متغيرات الألوان الرئيسية
 $primary-gradient: linear-gradient(135deg, #154c59 0%, #00717e 100%);
@@ -9,110 +10,6 @@ $bg-light: #f8fafc;
 $border-color: #e2e8f0;
 $text-dark: #0f172a;
 $text-muted: #64748b;
-
-// ------------------------------------------
-// 1. كارت الفلاتر (Filters Section)
-// ------------------------------------------
-.filters-card {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 24px;
-  margin-bottom: 24px;
-  border: 1px solid $border-color;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-
-  .filters-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-
-    /* جعل حقل البحث يأخذ مساحة أكبر */
-    .search-group {
-      grid-column: span 2;
-
-      @media (max-width: 992px) {
-        grid-column: span 1;
-      }
-    }
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-
-    label {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #334155;
-    }
-
-    input[type='text'],
-    select {
-      height: 42px;
-      padding: 0 14px;
-      border: 1px solid #cbd5e1;
-      border-radius: 10px;
-      background-color: #ffffff;
-      font-size: 0.85rem;
-      color: $text-dark;
-      outline: none;
-      transition: all 0.2s ease;
-
-      &:focus {
-        border-color: #00717e;
-        box-shadow: 0 0 0 3px rgba(0, 113, 126, 0.12);
-      }
-    }
-
-    select {
-      cursor: pointer;
-    }
-  }
-
-  .filter-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 20px;
-
-    button {
-      height: 40px;
-      padding: 0 24px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-
-      &.search-btn {
-        background: $primary-gradient;
-        color: #ffffff;
-        border: none;
-        box-shadow: 0 4px 10px rgba(0, 113, 126, 0.2);
-
-        &:hover {
-          background: $primary-hover;
-          transform: translateY(-1px);
-        }
-      }
-
-      &.reset-btn {
-        background-color: #ffffff;
-        color: $text-muted;
-        border: 1px solid #cbd5e1;
-
-        &:hover {
-          background-color: $bg-light;
-          color: $text-dark;
-        }
-      }
-    }
-  }
-}
 
 // ------------------------------------------
 // 2. كارت الجدول (Table Section)
