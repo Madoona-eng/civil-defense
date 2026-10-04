@@ -15,7 +15,9 @@
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <mat-label>من تاريخ</mat-label>
-      <input matInput type="date" [(ngModel)]="submissionDateFrom" />
+      <input matInput [matDatepicker]="submissionDateFromPicker" [(ngModel)]="submissionDateFrom" />
+      <mat-datepicker-toggle matIconSuffix [for]="submissionDateFromPicker"></mat-datepicker-toggle>
+      <mat-datepicker #submissionDateFromPicker></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
@@ -135,7 +137,7 @@
           <td class="mat-mdc-cell">
             <span class="transaction-code-pill">{{ item.transactionCode }}</span>
           </td>
-          <td class="mat-mdc-cell date-cell">{{ item.submissionDate }}</td>
+          <td class="mat-mdc-cell date-cell">{{ formatDate(item.submissionDate) }}</td>
           <td class="mat-mdc-cell font-medium">{{ item.establishmentName }}</td>
           <td class="mat-mdc-cell">{{ item.establishmentAddress }}</td>
           <td class="mat-mdc-cell">{{ item.requestingEntity }}</td>

@@ -39,6 +39,8 @@ export interface ArchivedFilter {
   requestingEntityId?: string;
   activityTypeId?: string;
   reviewStatus?: 'Accepted' | 'Rejected';
+  submissionDateFrom?: string;
+  submissionDateTo?: string;
   searchTerm?: string;
   pageNumber: number;
   pageSize: number;

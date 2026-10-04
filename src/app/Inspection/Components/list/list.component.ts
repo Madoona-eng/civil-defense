@@ -17,6 +17,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -34,6 +36,7 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { formatDate, formatDateForApi } from '../../../Shared/Helpers/date.helper';
 
 interface SelectOption {
   value: string;
@@ -50,6 +53,8 @@ imports: [
   MatFormFieldModule,
   MatInputModule,
   MatSelectModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
   MatMenuModule,
   MatButtonModule,
   MatTooltipModule,
@@ -61,6 +66,8 @@ imports: [
   styleUrl: './list.component.scss',
 })
 export class ListComponent implements OnInit {
+  readonly formatDate = formatDate;
+
   @Output() editRequested = new EventEmitter<InspectionItem>();
 
   items: InspectionItem[] = [];
@@ -90,7 +97,7 @@ export class ListComponent implements OnInit {
   activityTypeId = '';
   searchTerm = '';
   isReturned = '';
-  submissionDateFrom = '';
+  submissionDateFrom: Date | null = null;
   submissionDateTo = '';
   opinion: InspectionOpinion | '' = '';
   isDistrictLocked = false;
@@ -155,7 +162,7 @@ export class ListComponent implements OnInit {
       activityTypeId: this.activityTypeId || undefined,
       isReturned: this.isReturned === '' ? undefined : this.isReturned === ReturnState.Returned,
       opinion: this.opinion || undefined,
-      submissionDateFrom: this.submissionDateFrom || undefined,
+      submissionDateFrom: formatDateForApi(this.submissionDateFrom),
       submissionDateTo: this.submissionDateTo || undefined,
       searchTerm: this.searchTerm.trim() || undefined,
       pageNumber: this.pageNumber,
@@ -201,7 +208,7 @@ export class ListComponent implements OnInit {
     this.searchTerm = '';
     this.isReturned = '';
     this.opinion = '';
-    this.submissionDateFrom = '';
+    this.submissionDateFrom = null;
     this.submissionDateTo = '';
     this.pageNumber = 1;
     this.loadInspections();

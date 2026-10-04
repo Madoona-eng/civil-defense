@@ -19,6 +19,19 @@ export interface LicensingProcessCreateRequest {
   phone: string;
 }
 
+export interface LicensingProcessUpdateRequest {
+  establishmentName: string;
+  establishmentAddress: string;
+  requestingEntityId: string;
+  districtId: string;
+  activityTypeId: string;
+  applicantName: string;
+  applicantRole: 'Owner' | 'Proxy';
+  nationalId: string;
+  responsibleManager: string;
+  phone: string;
+}
+
 export interface LookupItem {
   id: string;
   name: string;
@@ -53,6 +66,8 @@ export interface LicensingProcessQuery {
   requestingEntityId?: string;
   activityTypeId?: string;
   processStep?: string;
+  submissionDateFrom?: string;
+  submissionDateTo?: string;
   searchTerm?: string;
   pageNumber: number;
   pageSize: number;

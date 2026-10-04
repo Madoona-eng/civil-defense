@@ -7,11 +7,29 @@ import { Archived, ArchivedFilter, LookupItem } from '../../Models/archived';
 import { ArchivedService } from '../../Services/archived.service';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+import { BaseAPI } from '../../../Shared/Env/env';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { formatDateForApi } from '../../../Shared/Helpers/date.helper';
 
 @Component({
   selector: 'app-archived-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, ListComponent, DetailsComponent, TranslatePipe],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ListComponent,
+    DetailsComponent,
+    TranslatePipe,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+  ],
   templateUrl: './archived-management.component.html',
   styleUrl: './archived-management.component.scss'
 })
@@ -26,6 +44,8 @@ export class ArchivedManagementComponent implements OnInit {
   districts: LookupItem[] = [];
   requestingEntities: LookupItem[] = [];
   activityTypes: LookupItem[] = [];
+  submissionDateFrom: Date | null = null;
+  submissionDateTo: Date | null = null;
 
   filter: ArchivedFilter = {
     pageNumber: 1,
@@ -42,24 +62,28 @@ export class ArchivedManagementComponent implements OnInit {
   }
 
   loadLookups(): void {
-    this.http.get<any>('/api/District').subscribe({
+    this.http.get<any>(`${BaseAPI}/api/District`).subscribe({
       next: (res) => { if (res.isSuccess) this.districts = res.data; }
     });
-    this.http.get<any>('/api/RequestingEntity').subscribe({
+    this.http.get<any>(`${BaseAPI}/api/RequestingEntity`).subscribe({
       next: (res) => { if (res.isSuccess) this.requestingEntities = res.data; }
     });
-    this.http.get<any>('/api/ActivityType').subscribe({
+    this.http.get<any>(`${BaseAPI}/api/ActivityType`).subscribe({
       next: (res) => { if (res.isSuccess) this.activityTypes = res.data; }
     });
   }
 
   search(): void {
     this.filter.pageNumber = 1;
+    this.filter.submissionDateFrom = formatDateForApi(this.submissionDateFrom);
+    this.filter.submissionDateTo = formatDateForApi(this.submissionDateTo);
     this.listComponent?.applyFilter(this.filter);
   }
 
   resetFilters(): void {
     this.filter = { pageNumber: 1, pageSize: 10 };
+    this.submissionDateFrom = null;
+    this.submissionDateTo = null;
     this.listComponent?.applyFilter(this.filter);
   }
 

@@ -7,6 +7,7 @@ import {
   LicensingProcessDetails,
   LicensingProcessItem,
   LicensingProcessQuery,
+  LicensingProcessUpdateRequest,
   PagedResult,
 } from '../Models/licensing-process';
 
@@ -22,8 +23,8 @@ export class LicensingProcessService {
     return this.http.post<ApiResponse<boolean>>(this.apiUrl, formData);
   }
 
-  update(id: string, formData: FormData): Observable<ApiResponse<boolean>> {
-    return this.http.put<ApiResponse<boolean>>(`${this.apiUrl}/${id}`, formData);
+  update(id: string, request: LicensingProcessUpdateRequest): Observable<ApiResponse<boolean>> {
+    return this.http.put<ApiResponse<boolean>>(`${this.apiUrl}/${id}`, request);
   }
 
   delete(id: string): Observable<ApiResponse<boolean>> {
@@ -53,6 +54,14 @@ export class LicensingProcessService {
 
     if (query.processStep) {
       params = params.set('processStep', query.processStep);
+    }
+
+    if (query.submissionDateFrom) {
+      params = params.set('submissionDateFrom', query.submissionDateFrom);
+    }
+
+    if (query.submissionDateTo) {
+      params = params.set('submissionDateTo', query.submissionDateTo);
     }
 
     if (query.searchTerm) {

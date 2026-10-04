@@ -5,9 +5,9 @@ import { forkJoin } from 'rxjs';
 
 import {
   ApiResponse,
-  LicensingProcessCreateRequest,
   LicensingProcessDetails,
-  LookupItem
+  LicensingProcessUpdateRequest,
+  LookupItem,
 } from '../../Models/licensing-process';
 
 import { LicensingProcessService } from '../../Services/licensing-process.service';
@@ -15,6 +15,7 @@ import { RequestingEntityService } from '../../../RequestingEntity/Services/requ
 import { DistrictService } from '../../../District/Services/district.service';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+import { ApplicantRole } from '../../../Shared/Enums/enums';
 
 @Component({
   selector: 'app-licensing-process-edit',
@@ -38,24 +39,23 @@ export class EditComponent implements OnChanges {
   districts: LookupItem[] = [];
   activityTypes: LookupItem[] = [];
 
-  formModel: LicensingProcessCreateRequest = {
-    submissionDate: '',
+  readonly applicantRoleOptions = [
+    { value: ApplicantRole.Owner, label: 'مالك' },
+    { value: ApplicantRole.Proxy, label: 'وكيل' },
+  ];
+
+  formModel: LicensingProcessUpdateRequest = {
     requestingEntityId: '',
     establishmentName: '',
     establishmentAddress: '',
     districtId: '',
     activityTypeId: '',
     applicantName: '',
-    applicantRole: '',
+    applicantRole: ApplicantRole.Owner,
     nationalId: '',
     responsibleManager: '',
     phone: ''
   };
-
-  entityLetters: File[] = [];
-  proofDocuments: File[] = [];
-  engineeringReports: File[] = [];
-  otherAttachments: File[] = [];
 
   constructor(
     private readonly licensingProcessService: LicensingProcessService,
@@ -118,14 +118,15 @@ export class EditComponent implements OnChanges {
 
   fillForm(details: LicensingProcessDetails): void {
     this.formModel = {
-      submissionDate: details.submissionDate || '',
       requestingEntityId: this.findLookupId(this.requestingEntities, details.requestingEntity),
       establishmentName: details.establishmentName || '',
       establishmentAddress: details.establishmentAddress || '',
       districtId: this.findLookupId(this.districts, details.district),
       activityTypeId: this.findLookupId(this.activityTypes, details.activityType),
       applicantName: details.applicantName || '',
-      applicantRole: details.applicantRole || '',
+      applicantRole: details.applicantRole === ApplicantRole.Proxy || details.applicantRole === 'Agent'
+        ? ApplicantRole.Proxy
+        : ApplicantRole.Owner,
       nationalId: details.nationalId || '',
       responsibleManager: details.responsibleManager || '',
       phone: details.phone || ''
@@ -135,30 +136,6 @@ export class EditComponent implements OnChanges {
   findLookupId(list: LookupItem[], name: string): string {
     const item = list.find(x => x.name === name);
     return item?.id || '';
-  }
-
-  onFilesSelected(
-    event: Event,
-    type: 'entityLetters' | 'proofDocuments' | 'engineeringReports' | 'otherAttachments'
-  ): void {
-    const input = event.target as HTMLInputElement;
-    const files = Array.from(input.files || []);
-
-    if (type === 'entityLetters') {
-      this.entityLetters = files;
-    }
-
-    if (type === 'proofDocuments') {
-      this.proofDocuments = files;
-    }
-
-    if (type === 'engineeringReports') {
-      this.engineeringReports = files;
-    }
-
-    if (type === 'otherAttachments') {
-      this.otherAttachments = files;
-    }
   }
 
   save(): void {
@@ -174,39 +151,22 @@ export class EditComponent implements OnChanges {
       return;
     }
 
-    const formData = new FormData();
-
-    formData.append('SubmissionDate', this.formModel.submissionDate);
-    formData.append('RequestingEntityId', this.formModel.requestingEntityId);
-    formData.append('EstablishmentName', this.formModel.establishmentName.trim());
-    formData.append('EstablishmentAddress', this.formModel.establishmentAddress.trim());
-    formData.append('DistrictId', this.formModel.districtId);
-    formData.append('ActivityTypeId', this.formModel.activityTypeId);
-    formData.append('ApplicantName', this.formModel.applicantName.trim());
-    formData.append('ApplicantRole', this.formModel.applicantRole.trim());
-    formData.append('NationalId', this.formModel.nationalId.trim());
-    formData.append('ResponsibleManager', this.formModel.responsibleManager.trim());
-    formData.append('Phone', this.formModel.phone.trim());
-
-    this.entityLetters.forEach(file => {
-      formData.append('EntityLetters', file, file.name);
-    });
-
-    this.proofDocuments.forEach(file => {
-      formData.append('ProofDocuments', file, file.name);
-    });
-
-    this.engineeringReports.forEach(file => {
-      formData.append('EngineeringReports', file, file.name);
-    });
-
-    this.otherAttachments.forEach(file => {
-      formData.append('OtherAttachments', file, file.name);
-    });
+    const request: LicensingProcessUpdateRequest = {
+      establishmentName: this.formModel.establishmentName.trim(),
+      establishmentAddress: this.formModel.establishmentAddress.trim(),
+      requestingEntityId: this.formModel.requestingEntityId,
+      districtId: this.formModel.districtId,
+      activityTypeId: this.formModel.activityTypeId,
+      applicantName: this.formModel.applicantName.trim(),
+      applicantRole: this.formModel.applicantRole,
+      nationalId: this.formModel.nationalId.trim(),
+      responsibleManager: this.formModel.responsibleManager.trim(),
+      phone: this.formModel.phone.trim(),
+    };
 
     this.saving = true;
 
-    this.licensingProcessService.update(this.processId, formData).subscribe({
+    this.licensingProcessService.update(this.processId, request).subscribe({
       next: (res: ApiResponse<boolean>) => {
         this.saving = false;
 
@@ -235,11 +195,6 @@ export class EditComponent implements OnChanges {
   }
 
   validateForm(): boolean {
-    if (!this.formModel.submissionDate) {
-      this.errorMessage = 'يرجى إدخال تاريخ التقديم';
-      return false;
-    }
-
     if (!this.formModel.requestingEntityId) {
       this.errorMessage = 'يرجى اختيار الجهة الطالبة';
       return false;
@@ -270,7 +225,10 @@ export class EditComponent implements OnChanges {
       return false;
     }
 
-    if (!this.formModel.applicantRole.trim()) {
+    if (
+      this.formModel.applicantRole !== ApplicantRole.Owner &&
+      this.formModel.applicantRole !== ApplicantRole.Proxy
+    ) {
       this.errorMessage = 'يرجى إدخال صفة مقدم الطلب';
       return false;
     }

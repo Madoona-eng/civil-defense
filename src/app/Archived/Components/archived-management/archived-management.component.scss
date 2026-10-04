@@ -1,3 +1,5 @@
+@import '../../../Shared/Styles/filters.scss';
+
 .archived-page {
   display: flex;
   flex-direction: column;
@@ -20,105 +22,6 @@
     margin: 8px 0 0;
     color: #64748b;
   }
-}
-
-.filters-card {
-  background: #ffffff;
-  border-radius: 24px;
-  padding: 24px;
-  box-shadow: 0 12px 35px rgba(15, 61, 94, 0.08);
-}
-
-.filters-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.search-group input {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  font-family: inherit;
-  font-size: 14px;
-  outline: none;
-  background: #f8fafc;
-  box-sizing: border-box;
-
-  &:focus {
-    border-color: #0f3d5e;
-    background: #fff;
-  }
-}
-
-.filters-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  label {
-    font-size: 13px;
-    font-weight: 700;
-    color: #475569;
-  }
-
-  select {
-    padding: 10px 14px;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    font-family: inherit;
-    font-size: 14px;
-    outline: none;
-    background: #f8fafc;
-    cursor: pointer;
-
-    &:focus {
-      border-color: #0f3d5e;
-      background: #fff;
-    }
-  }
-}
-
-.filter-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
-.search-btn {
-  border: none;
-  border-radius: 12px;
-  padding: 10px 28px;
-  background: linear-gradient(135deg, #0f3d5e, #0d7e80);
-  color: #fff;
-  font-family: inherit;
-  font-weight: 900;
-  cursor: pointer;
-  transition: 0.25s ease;
-
-  &:hover { opacity: 0.9; }
-}
-
-.reset-btn {
-  border: none;
-  border-radius: 12px;
-  padding: 10px 28px;
-  background: #e0f2fe;
-  color: #0f3d5e;
-  font-family: inherit;
-  font-weight: 900;
-  cursor: pointer;
-  transition: 0.25s ease;
-
-  &:hover { background: #bae6fd; }
 }
 
 .popup-backdrop {
@@ -211,16 +114,4 @@
 @keyframes popupIn {
   from { opacity: 0; transform: translateY(20px) scale(0.96); }
   to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@media (max-width: 900px) {
-  .filters-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 500px) {
-  .filters-row {
-    grid-template-columns: 1fr;
-  }
 }

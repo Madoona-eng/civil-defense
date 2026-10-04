@@ -14,11 +14,6 @@
     <ng-container *ngIf="!loading">
       <div class="form-grid">
         <div class="field">
-          <label>{{ 'common.submissionDate' | t }}</label>
-          <input type="date" [(ngModel)]="formModel.submissionDate" name="submissionDate" />
-        </div>
-
-        <div class="field">
           <label>{{ 'common.entity' | t }}</label>
           <select [(ngModel)]="formModel.requestingEntityId" name="requestingEntityId">
             <option value="">{{ 'common.chooseEntity' | t }}</option>
@@ -65,7 +60,11 @@
 
         <div class="field">
           <label>{{ 'common.applicantRole' | t }}</label>
-          <input type="text" [(ngModel)]="formModel.applicantRole" name="applicantRole" />
+          <select [(ngModel)]="formModel.applicantRole" name="applicantRole">
+            <option *ngFor="let role of applicantRoleOptions" [value]="role.value">
+              {{ role.label }}
+            </option>
+          </select>
         </div>
 
         <div class="field">
@@ -83,25 +82,6 @@
           <input type="text" [(ngModel)]="formModel.phone" name="phone" />
         </div>
 
-        <div class="field">
-          <label>{{ 'common.entityLetters' | t }}</label>
-          <input type="file" multiple (change)="onFilesSelected($event, 'entityLetters')" />
-        </div>
-
-        <div class="field">
-          <label>{{ 'common.proofDocuments' | t }}</label>
-          <input type="file" multiple (change)="onFilesSelected($event, 'proofDocuments')" />
-        </div>
-
-        <div class="field">
-          <label>{{ 'common.engineeringReports' | t }}</label>
-          <input type="file" multiple (change)="onFilesSelected($event, 'engineeringReports')" />
-        </div>
-
-        <div class="field">
-          <label>{{ 'common.otherAttachments' | t }}</label>
-          <input type="file" multiple (change)="onFilesSelected($event, 'otherAttachments')" />
-        </div>
       </div>
 
       <div class="message success" *ngIf="successMessage">

@@ -42,7 +42,7 @@ import {
   RETURN_STATE_LABELS,
   ReturnState,
 } from '../../../Shared/Enums/enums';
-import { formatDateTime } from '../../../Shared/Helpers/date.helper';
+import { formatDate, formatDateTime } from '../../../Shared/Helpers/date.helper';
 import {
   FILE_ACCEPT,
   formatSize,
@@ -119,6 +119,7 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
   ];
 
   // helpers متاحة للـ template
+  readonly formatDate = formatDate;
   readonly formatDateTime = formatDateTime;
   readonly isImageFile = isImageFile;
   readonly openFile = openFile;

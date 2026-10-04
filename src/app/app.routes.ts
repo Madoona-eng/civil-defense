@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './auth/guards/auth.guard';
+import { superAdminGuard } from './auth/guards/super-admin.guard';
 
 export const routes: Routes = [
   {
@@ -30,11 +31,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
-      {
-        path: 'shop-licenses',
-        loadComponent: () =>
-          import('./shop-licenses/shop-licenses.component').then((m) => m.ShopLicensesComponent),
-      },
+     
       {
         path: 'activity-types/add',
         loadComponent: () =>
@@ -69,7 +66,8 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'licensing-processes',
+        path: 'all-licensing-processes',
+        canActivate: [superAdminGuard],
         loadComponent: () =>
           import('./LicensingProcess/Components/licensing-process-management/licensing-process-management.component').then(
             (m) => m.LicensingProcessManagementComponent,
@@ -92,7 +90,9 @@ export const routes: Routes = [
       {
         path: 'archive',
         loadComponent: () =>
-          import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+          import('./Archived/Components/archived-management/archived-management.component').then(
+            (m) => m.ArchivedManagementComponent,
+          ),
       },
     ],
   },

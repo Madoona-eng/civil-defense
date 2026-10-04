@@ -3,11 +3,14 @@ import { ArchivedService } from '../../Services/archived.service';
 import { Archived, ArchivedFilter } from '../../Models/archived';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule, TranslatePipe, MatButtonModule, MatIconModule, MatMenuModule],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })

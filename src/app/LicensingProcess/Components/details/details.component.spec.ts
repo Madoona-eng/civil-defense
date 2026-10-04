@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { of } from 'rxjs';
+import { LicensingProcessService } from '../../Services/licensing-process.service';
 import { DetailsComponent } from './details.component';
 
 describe('DetailsComponent', () => {
@@ -8,10 +9,15 @@ describe('DetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DetailsComponent]
-    })
-    .compileComponents();
-    
+      imports: [DetailsComponent],
+      providers: [
+        {
+          provide: LicensingProcessService,
+          useValue: { getById: () => of({ isSuccess: true, data: {}, message: '' }) },
+        },
+      ],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(DetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -6,58 +6,93 @@
     </div>
   </div>
 
-  <section class="filters-card">
-    <div class="filters-grid">
-      <div class="form-group search-group">
+  <section class="filters-card archive-filters-card">
+    <div class="filters-row-primary">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'archive.searchPlaceholder' | t }}</mat-label>
         <input
+          matInput
           type="text"
           [(ngModel)]="filter.searchTerm"
-          [placeholder]="'archive.searchPlaceholder' | t"
           (keyup.enter)="search()"
         />
-      </div>
+      </mat-form-field>
 
-      <div class="filters-row">
-        <div class="form-group">
-          <label>{{ 'common.requestingEntity' | t }}</label>
-          <select [(ngModel)]="filter.requestingEntityId">
-            @for (item of requestingEntities; track item.id) {
-              <option [value]="item.id">{{ item.name }}</option>
-            }
-          </select>
-        </div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'common.dateFrom' | t }}</mat-label>
+        <input
+          matInput
+          [matDatepicker]="submissionDateFromPicker"
+          [(ngModel)]="submissionDateFrom"
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="submissionDateFromPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #submissionDateFromPicker></mat-datepicker>
+      </mat-form-field>
 
-        <div class="form-group">
-          <label>{{ 'common.district' | t }}</label>
-          <select [(ngModel)]="filter.districtId">
-            @for (item of districts; track item.id) {
-              <option [value]="item.id">{{ item.name }}</option>
-            }
-          </select>
-        </div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'common.dateTo' | t }}</mat-label>
+        <input
+          matInput
+          [matDatepicker]="submissionDateToPicker"
+          [(ngModel)]="submissionDateTo"
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="submissionDateToPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #submissionDateToPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
 
-        <div class="form-group">
-          <label>{{ 'common.activity' | t }}</label>
-          <select [(ngModel)]="filter.activityTypeId">
-            @for (item of activityTypes; track item.id) {
-              <option [value]="item.id">{{ item.name }}</option>
-            }
-          </select>
-        </div>
+    <div class="filters-row-secondary">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'common.requestingEntity' | t }}</mat-label>
+        <mat-select [(ngModel)]="filter.requestingEntityId">
+          <mat-option value="">{{ 'archive.all' | t }}</mat-option>
+          @for (item of requestingEntities; track item.id) {
+            <mat-option [value]="item.id">{{ item.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-        <div class="form-group">
-          <label>{{ 'archive.reviewStatus' | t }}</label>
-          <select [(ngModel)]="filter.reviewStatus">
-            <option value="Accepted">{{ 'review.accepted' | t }}</option>
-            <option value="Rejected">{{ 'review.rejected' | t }}</option>
-          </select>
-        </div>
-      </div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'common.district' | t }}</mat-label>
+        <mat-select [(ngModel)]="filter.districtId">
+          <mat-option value="">{{ 'archive.all' | t }}</mat-option>
+          @for (item of districts; track item.id) {
+            <mat-option [value]="item.id">{{ item.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'common.activity' | t }}</mat-label>
+        <mat-select [(ngModel)]="filter.activityTypeId">
+          <mat-option value="">{{ 'archive.all' | t }}</mat-option>
+          @for (item of activityTypes; track item.id) {
+            <mat-option [value]="item.id">{{ item.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'archive.reviewStatus' | t }}</mat-label>
+        <mat-select [(ngModel)]="filter.reviewStatus">
+          <mat-option value="">{{ 'archive.all' | t }}</mat-option>
+          <mat-option value="Accepted">{{ 'review.accepted' | t }}</mat-option>
+          <mat-option value="Rejected">{{ 'review.rejected' | t }}</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
     <div class="filter-actions">
-      <button type="button" class="search-btn" (click)="search()">{{ 'common.search' | t }}</button>
-      <button type="button" class="reset-btn" (click)="resetFilters()">
+      <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
+        {{ 'common.search' | t }}
+      </button>
+      <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
         {{ 'archive.reset' | t }}
       </button>
     </div>
