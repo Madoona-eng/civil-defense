@@ -31,11 +31,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
-      {
-        path: 'shop-licenses',
-        loadComponent: () =>
-          import('./shop-licenses/shop-licenses.component').then((m) => m.ShopLicensesComponent),
-      },
+     
       {
         path: 'activity-types/add',
         loadComponent: () =>

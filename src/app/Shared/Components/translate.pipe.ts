@@ -196,6 +196,7 @@ const translations: Record<string, string> = {
   'archive.reviewedBy': 'تمت المراجعة بواسطة',
   'archive.reviewDate': 'تاريخ المراجعة',
   'archive.list': 'الطلبات المؤرشفة',
+  'archive.results': 'نتائج الأرشيف',
   'archive.totalRecords': 'إجمالي السجلات: {{ count }}',
   'archive.empty': 'لا توجد طلبات مؤرشفة',
   'archive.details': 'التفاصيل',

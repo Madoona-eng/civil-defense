@@ -59,16 +59,7 @@
         <span class="label">{{ 'app.shopLicenses' | t }}</span>
       </a>
 
-      <a
-        *ngIf="userRole === 'SuperAdmin'"
-        routerLink="/civil-defense/all-licensing-processes"
-        routerLinkActive="active"
-        [matTooltip]="isCollapsed ? ('app.allProcesses' | t) : ''"
-        matTooltipPosition="left"
-      >
-        <lucide-angular class="icon" [img]="ClipboardList" [size]="18"></lucide-angular>
-        <span class="label">{{ 'app.allProcesses' | t }}</span>
-      </a>
+     
 
       <a
         *ngIf="hasRole(['Inspector'])"
@@ -102,15 +93,15 @@
         <lucide-angular class="icon" [img]="Archive" [size]="18"></lucide-angular>
         <span class="label">{{ 'app.archive' | t }}</span>
       </a>
-        <a
-        *ngIf="hasRole(['Admin'])"
-        routerLink="/civil-defense/shop-licenses"
+       <a
+        *ngIf="userRole === 'SuperAdmin'"
+        routerLink="/civil-defense/all-licensing-processes"
         routerLinkActive="active"
-        [matTooltip]="isCollapsed ? ('app.licenses' | t) : ''"
+        [matTooltip]="isCollapsed ? ('app.allProcesses' | t) : ''"
         matTooltipPosition="left"
       >
-        <lucide-angular class="icon" [img]="FileCheck" [size]="18"></lucide-angular>
-        <span class="label">{{ 'app.licenses' | t }}</span>
+        <lucide-angular class="icon" [img]="ClipboardList" [size]="18"></lucide-angular>
+        <span class="label">{{ 'app.allProcesses' | t }}</span>
       </a>
 
     </nav>

@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { forkJoin } from 'rxjs';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
 import { DistrictService } from '../../../District/Services/district.service';
@@ -17,7 +23,16 @@ import { LicensingProcessService } from '../../Services/licensing-process.servic
 @Component({
   selector: 'app-licensing-process-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+  ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
