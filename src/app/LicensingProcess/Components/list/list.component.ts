@@ -1,10 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
+import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
+import { DistrictService } from '../../../District/Services/district.service';
+import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
 import {
   ApiResponse,
   LicensingProcessItem,
   LicensingProcessQuery,
+  LookupItem,
   PagedResult
 } from '../../Models/licensing-process';
 import { LicensingProcessService } from '../../Services/licensing-process.service';
@@ -22,12 +27,22 @@ export class ListComponent implements OnInit {
   @Output() deleteRequested = new EventEmitter<LicensingProcessItem>();
 
   items: LicensingProcessItem[] = [];
+  districts: LookupItem[] = [];
+  requestingEntities: LookupItem[] = [];
+  activityTypes: LookupItem[] = [];
 
   isLoading = false;
+  isLoadingLookups = false;
   errorMessage = '';
+  lookupErrorMessage = '';
 
   searchTerm = '';
   processStep = '';
+  districtId = '';
+  requestingEntityId = '';
+  activityTypeId = '';
+  submissionDateFrom = '';
+  submissionDateTo = '';
 
   pageNumber = 1;
   pageSize = 10;
@@ -38,15 +53,58 @@ export class ListComponent implements OnInit {
 
   processSteps = [
     { value: '', label: 'جميع المراحل' },
+    { value: 'NewLicense', label: 'ترخيص جديد' },
     { value: 'Inspection', label: 'المعاينة' },
     { value: 'FinalApproval', label: 'الموافقة النهائية' },
     { value: 'Archive', label: 'الأرشيف' }
   ];
 
-  constructor(private readonly licensingProcessService: LicensingProcessService) {}
+  constructor(
+    private readonly licensingProcessService: LicensingProcessService,
+    private readonly districtService: DistrictService,
+    private readonly requestingEntityService: RequestingEntityService,
+    private readonly activityTypeService: ActivityTypeService
+  ) {}
 
   ngOnInit(): void {
+    this.loadLookups();
     this.loadLicensingProcesses();
+  }
+
+  loadLookups(): void {
+    this.isLoadingLookups = true;
+    this.lookupErrorMessage = '';
+
+    forkJoin({
+      districts: this.districtService.getAll(),
+      requestingEntities: this.requestingEntityService.getAll(),
+      activityTypes: this.activityTypeService.getAll()
+    }).subscribe({
+      next: (result) => {
+        this.isLoadingLookups = false;
+        this.districts = result.districts.isSuccess ? result.districts.data ?? [] : [];
+        this.requestingEntities = result.requestingEntities.isSuccess
+          ? result.requestingEntities.data ?? []
+          : [];
+        this.activityTypes = result.activityTypes.isSuccess
+          ? result.activityTypes.data ?? []
+          : [];
+
+        if (
+          !result.districts.isSuccess ||
+          !result.requestingEntities.isSuccess ||
+          !result.activityTypes.isSuccess
+        ) {
+          this.lookupErrorMessage = 'تعذر تحميل بعض خيارات التصفية';
+        }
+      },
+      error: (err) => {
+        this.isLoadingLookups = false;
+        this.lookupErrorMessage =
+          err?.error?.message || err?.message || 'حدث خطأ أثناء تحميل خيارات التصفية';
+        console.error('LicensingProcess lookups error:', err);
+      }
+    });
   }
 
   loadLicensingProcesses(): void {
@@ -56,8 +114,13 @@ export class ListComponent implements OnInit {
     const query: LicensingProcessQuery = {
       pageNumber: this.pageNumber,
       pageSize: this.pageSize,
+      districtId: this.districtId || undefined,
+      requestingEntityId: this.requestingEntityId || undefined,
+      activityTypeId: this.activityTypeId || undefined,
       searchTerm: this.searchTerm.trim(),
-      processStep: this.processStep
+      processStep: this.processStep || undefined,
+      submissionDateFrom: this.submissionDateFrom || undefined,
+      submissionDateTo: this.submissionDateTo || undefined
     };
 
     this.licensingProcessService.getAll(query).subscribe({
@@ -110,6 +173,11 @@ export class ListComponent implements OnInit {
   resetFilters(): void {
     this.searchTerm = '';
     this.processStep = '';
+    this.districtId = '';
+    this.requestingEntityId = '';
+    this.activityTypeId = '';
+    this.submissionDateFrom = '';
+    this.submissionDateTo = '';
     this.pageNumber = 1;
     this.loadLicensingProcesses();
   }
@@ -133,6 +201,10 @@ export class ListComponent implements OnInit {
   }
 
   getStepLabel(step: string): string {
+    if (step === 'NewLicense') {
+      return 'ترخيص جديد';
+    }
+
     if (step === 'Inspection') {
       return 'المعاينة';
     }

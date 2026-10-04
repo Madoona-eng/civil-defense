@@ -1,4 +1,4 @@
-<!-- <div class="details-page" dir="rtl">
+<div class="details-page" dir="rtl">
   <div class="details-header">
     <div>
       <h2>{{ 'licensing.detailsTitle' | t }}</h2>
@@ -39,6 +39,16 @@
         <div>
           <span>{{ 'common.createdBy' | t }}</span>
           <strong>{{ d.createdBy }}</strong>
+        </div>
+
+        <div>
+          <span>{{ 'archive.createdAt' | t }}</span>
+          <strong>{{ d.createdAt }}</strong>
+        </div>
+
+        <div>
+          <span>{{ 'common.returnState' | t }}</span>
+          <strong>{{ d.isReturned ? ('common.yes' | t) : ('common.no' | t) }}</strong>
         </div>
       </div>
     </section>
@@ -123,6 +133,43 @@
           <span>{{ 'archive.inspectedBy' | t }}</span>
           <strong>{{ d.inspectedBy || '-' }}</strong>
         </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <h3>{{ 'common.finalApprovalData' | t }}</h3>
+
+      <div class="info-grid">
+        <div>
+          <span>{{ 'common.finalDecisionState' | t }}</span>
+          <strong>{{ d.finalStatus || '-' }}</strong>
+        </div>
+
+        <div>
+          <span>{{ 'common.approvedBy' | t }}</span>
+          <strong>{{ d.approvedBy || '-' }}</strong>
+        </div>
+
+        <div>
+          <span>{{ 'common.archivedBy' | t }}</span>
+          <strong>{{ d.archivedBy || '-' }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card">
+      <h3>{{ 'archive.reviews' | t }}</h3>
+
+      <div class="empty-box" *ngIf="!d.reviews || d.reviews.length === 0">
+        {{ 'common.empty' | t }}
+      </div>
+
+      <div class="note-card" *ngFor="let review of d.reviews || []">
+        <strong>{{ review.content || '-' }}</strong>
+        <span>
+          {{ review.reviewedBy || '-' }}
+          <ng-container *ngIf="review.reviewedAt"> - {{ review.reviewedAt }}</ng-container>
+        </span>
       </div>
     </section>
 
@@ -270,4 +317,4 @@
       </div>
     </section>
   </ng-container>
-</div> -->
+</div>

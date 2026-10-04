@@ -59,7 +59,17 @@
         <span class="label">{{ 'app.shopLicenses' | t }}</span>
       </a>
 
-    
+      <a
+        *ngIf="userRole === 'SuperAdmin'"
+        routerLink="/civil-defense/all-licensing-processes"
+        routerLinkActive="active"
+        [matTooltip]="isCollapsed ? ('app.allProcesses' | t) : ''"
+        matTooltipPosition="left"
+      >
+        <lucide-angular class="icon" [img]="ClipboardList" [size]="18"></lucide-angular>
+        <span class="label">{{ 'app.allProcesses' | t }}</span>
+      </a>
+
       <a
         *ngIf="hasRole(['Inspector'])"
         routerLink="/civil-defense/inspection"

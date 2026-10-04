@@ -1,0 +1,161 @@
+<section class="list-card" dir="rtl">
+  <div class="list-header">
+    <div>
+      <h3>جميع المعاملات</h3>
+      <p>إجمالي السجلات: {{ totalCount }}</p>
+    </div>
+    <button type="button" class="refresh-btn" (click)="loadLicensingProcesses()">
+      تحديث
+    </button>
+  </div>
+
+  <div class="filters">
+    <div class="field">
+      <label for="process-search">بحث</label>
+      <input
+        id="process-search"
+        type="search"
+        [(ngModel)]="searchTerm"
+        placeholder="كود المعاملة أو المنشأة أو مقدم الطلب..."
+        (keyup.enter)="search()"
+      />
+    </div>
+
+    <div class="field">
+      <label for="process-district">المركز</label>
+      <select id="process-district" [(ngModel)]="districtId" [disabled]="isLoadingLookups">
+        <option value="">كل المراكز</option>
+        @for (district of districts; track district.id) {
+          <option [value]="district.id">{{ district.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="process-entity">الجهة الطالبة</label>
+      <select id="process-entity" [(ngModel)]="requestingEntityId" [disabled]="isLoadingLookups">
+        <option value="">كل الجهات</option>
+        @for (entity of requestingEntities; track entity.id) {
+          <option [value]="entity.id">{{ entity.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="process-activity">نوع النشاط</label>
+      <select id="process-activity" [(ngModel)]="activityTypeId" [disabled]="isLoadingLookups">
+        <option value="">كل الأنشطة</option>
+        @for (activity of activityTypes; track activity.id) {
+          <option [value]="activity.id">{{ activity.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="process-step">الخطوة الحالية</label>
+      <select id="process-step" [(ngModel)]="processStep">
+        @for (step of processSteps; track step.value) {
+          <option [value]="step.value">{{ step.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="process-date-from">من تاريخ التقديم</label>
+      <input id="process-date-from" type="date" [(ngModel)]="submissionDateFrom" />
+    </div>
+
+    <div class="field">
+      <label for="process-date-to">إلى تاريخ التقديم</label>
+      <input id="process-date-to" type="date" [(ngModel)]="submissionDateTo" />
+    </div>
+
+    <div class="filter-actions">
+      <button type="button" class="search-btn" (click)="search()">بحث</button>
+      <button type="button" class="reset-btn" (click)="resetFilters()">إعادة تعيين</button>
+    </div>
+  </div>
+
+  @if (lookupErrorMessage) {
+    <div class="message error">{{ lookupErrorMessage }}</div>
+  }
+
+  @if (errorMessage) {
+    <div class="message error">{{ errorMessage }}</div>
+  }
+
+  @if (isLoading) {
+    <div class="loading-box">جارٍ تحميل المعاملات...</div>
+  } @else if (items.length === 0) {
+    <div class="empty-box">لا توجد معاملات مطابقة لعوامل التصفية</div>
+  } @else {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>كود المعاملة</th>
+            <th>المنشأة</th>
+            <th>مقدم الطلب</th>
+            <th>الجهة الطالبة</th>
+            <th>المركز</th>
+            <th>النشاط</th>
+            <th>تاريخ التقديم</th>
+            <th>الخطوة الحالية</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of items; track item.id; let i = $index) {
+            <tr>
+              <td>{{ (pageNumber - 1) * pageSize + i + 1 }}</td>
+              <td class="code-cell">{{ item.transactionCode }}</td>
+              <td>{{ item.establishmentName }}</td>
+              <td>{{ item.applicantName }}</td>
+              <td>{{ item.requestingEntity }}</td>
+              <td>{{ item.district }}</td>
+              <td>{{ item.activityType }}</td>
+              <td>{{ item.submissionDate }}</td>
+              <td><span class="status-badge">{{ getStepLabel(item.currentStep) }}</span></td>
+              <td class="actions-cell">
+                <div class="row-actions">
+                  <button
+                    type="button"
+                    class="action-btn view-btn"
+                    (click)="requestDetails(item.id)"
+                  >
+                    التفاصيل
+                  </button>
+                  <button
+                    type="button"
+                    class="action-btn edit-btn"
+                    (click)="requestEdit(item.id)"
+                  >
+                    تعديل
+                  </button>
+                  <button
+                    type="button"
+                    class="action-btn delete-btn"
+                    (click)="requestDelete(item)"
+                  >
+                    حذف
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <button type="button" (click)="previousPage()" [disabled]="!hasPreviousPage">
+        السابقة
+      </button>
+      <span>صفحة {{ pageNumber }} من {{ totalPages }} (الإجمالي: {{ totalCount }})</span>
+      <button type="button" (click)="nextPage()" [disabled]="!hasNextPage">
+        التالية
+      </button>
+    </div>
+  }
+</section>

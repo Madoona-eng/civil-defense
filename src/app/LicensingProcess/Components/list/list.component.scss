@@ -71,7 +71,7 @@
 
 .filters {
   display: grid;
-  grid-template-columns: 1fr 260px auto;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
   gap: 14px;
   align-items: end;
   margin-bottom: 18px;
@@ -408,15 +408,21 @@ td:nth-child(11),
 
 @media (max-width: 900px) {
   .filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  table {
+    min-width: 1260px;
+  }
+}
+
+@media (max-width: 560px) {
+  .filters {
     grid-template-columns: 1fr;
   }
 
   .filter-actions {
     flex-direction: column;
-  }
-
-  table {
-    min-width: 1260px;
   }
 }
 th:nth-child(11),

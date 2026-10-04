@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiResponse, PagedResult, Archived, ArchivedDetails, ArchivedFilter } from '../Models/archived';
+import { BaseAPI } from '../../Shared/Env/env';
 
 @Injectable({ providedIn: 'root' })
 export class ArchivedService {
-  private url = '/api/LicensingProcess';
+  private readonly url = `${BaseAPI}/api/ArchiveStep`;
 
   constructor(private readonly http: HttpClient) {}
 
@@ -18,6 +19,10 @@ export class ArchivedService {
     if (filter.requestingEntityId) params = params.set('requestingEntityId', filter.requestingEntityId);
     if (filter.activityTypeId) params = params.set('activityTypeId', filter.activityTypeId);
     if (filter.reviewStatus) params = params.set('reviewStatus', filter.reviewStatus);
+    if (filter.submissionDateFrom)
+      params = params.set('submissionDateFrom', filter.submissionDateFrom);
+    if (filter.submissionDateTo)
+      params = params.set('submissionDateTo', filter.submissionDateTo);
     if (filter.searchTerm) params = params.set('searchTerm', filter.searchTerm);
 
     return this.http.get<ApiResponse<PagedResult<Archived>>>(`${this.url}/archive`, { params });
@@ -28,6 +33,6 @@ export class ArchivedService {
   }
 
   delete(id: string): Observable<ApiResponse<boolean>> {
-    return this.http.delete<ApiResponse<boolean>>(`${this.url}/${id}`);
+    return this.http.delete<ApiResponse<boolean>>(`${BaseAPI}/api/LicensingProcess/${id}`);
   }
 }

@@ -56,10 +56,10 @@ export class ShopLicensesComponent implements OnInit {
   processStep = '';
   processSteps = [
     { label: 'جميع المراحل', value: '' },
-    { label: 'تقديم الطلب', value: 'APPLICATION' },
-    { label: 'المعاينة', value: 'INSPECTION' },
-    { label: 'الموافقة النهائية', value: 'FINAL_APPROVAL' },
-    { label: 'الأرشيف', value: 'ARCHIVE' },
+    { label: 'تقديم الطلب', value: 'NewLicense' },
+    { label: 'المعاينة', value: 'Inspection' },
+    { label: 'الموافقة النهائية', value: 'FinalApproval' },
+    { label: 'الأرشيف', value: 'Archive' },
   ];
 
   pageNumber = 1;
