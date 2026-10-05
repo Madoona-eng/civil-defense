@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { ApiResponse, CreateActivityTypeRequest } from '../../Models/activity-type';
 import { ActivityTypeService } from '../../Services/activity-type.service';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
@@ -8,7 +9,7 @@ import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 @Component({
   selector: 'app-add',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, MatIconModule, TranslatePipe],
   templateUrl: './add.component.html',
   styleUrl: './add.component.scss'
 })

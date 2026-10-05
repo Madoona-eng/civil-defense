@@ -22,82 +22,39 @@
   </header>
 
   <!-- =====================================================
-        MAIN CONTENT (Mat-Table Container)
+        MAIN CONTENT
   ====================================================== -->
   <main class="page-content">
     <section class="mat-table-container">
 
-      <!-- تم استبدال الكلاس القديم بـ table-header-row من TABLESTYLE.SCSS -->
       <div class="table-header-row">
         <h3>{{ 'activity.list' | t }}</h3>
       </div>
 
-      <!-- غلاف التمرير السلس لحماية الجدول من الانضغاط -->
       <div class="table-scroll">
-        <app-list
-          (editRequested)="openEditPopup($event)">
-        </app-list>
+        <app-list (editRequested)="openEditPopup($event)"></app-list>
       </div>
 
     </section>
   </main>
 
   <!-- =====================================================
-        ADD MODAL
+        ADD DIALOG
   ====================================================== -->
-  <div class="popup-backdrop" *ngIf="isAddPopupOpen" (click)="closeAddPopup()">
-    <div class="popup-card" (click)="$event.stopPropagation()">
-      <div class="popup-header">
-        <div class="popup-title">
-          <div class="popup-icon add-icon">
-            <mat-icon>add</mat-icon>
-          </div>
-          <div class="popup-title-text">
-            <span>{{ 'activity.manage' | t }}</span>
-            <h2>{{ 'activity.add' | t }}</h2>
-          </div>
-        </div>
-
-        <button type="button" class="popup-close" (click)="closeAddPopup()" [attr.aria-label]="'common.close' | t">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-
-      <div class="popup-body">
-        <app-add (saved)="onAddSaved()" (cancelled)="closeAddPopup()"></app-add>
-      </div>
-    </div>
-  </div>
+  <app-add
+    *ngIf="isAddPopupOpen"
+    (saved)="onAddSaved()"
+    (cancelled)="closeAddPopup()">
+  </app-add>
 
   <!-- =====================================================
-        EDIT MODAL
+        EDIT DIALOG
   ====================================================== -->
-  <div class="popup-backdrop" *ngIf="isEditPopupOpen" (click)="closeEditPopup()">
-    <div class="popup-card" (click)="$event.stopPropagation()">
-      <div class="popup-header">
-        <div class="popup-title">
-          <div class="popup-icon edit-icon">
-            <mat-icon>edit</mat-icon>
-          </div>
-          <div class="popup-title-text">
-            <span>{{ 'activity.manage' | t }}</span>
-            <h2>{{ 'activity.edit' | t }}</h2>
-          </div>
-        </div>
-
-        <button type="button" class="popup-close" (click)="closeEditPopup()" [attr.aria-label]="'common.close' | t">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-
-      <div class="popup-body">
-        <app-edit
-          [activityTypeId]="selectedActivityTypeId"
-          (saved)="onEditSaved()"
-          (cancelled)="closeEditPopup()">
-        </app-edit>
-      </div>
-    </div>
-  </div>
+  <app-edit
+    *ngIf="isEditPopupOpen"
+    [activityTypeId]="selectedActivityTypeId"
+    (saved)="onEditSaved()"
+    (cancelled)="closeEditPopup()">
+  </app-edit>
 
 </div>

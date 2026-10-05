@@ -1,4 +1,5 @@
 <div class="archived-page" dir="rtl">
+
   <div class="page-header">
     <div>
       <h2>{{ 'archive.title' | t }}</h2>
@@ -6,49 +7,33 @@
     </div>
   </div>
 
+  <!-- ================= FILTERS ================= -->
   <section class="filters-card archive-filters-card">
+
     <div class="filters-row-primary">
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
         <mat-label>{{ 'archive.searchPlaceholder' | t }}</mat-label>
-        <input
-          matInput
-          type="text"
-          [(ngModel)]="filter.searchTerm"
-          (keyup.enter)="search()"
-        />
+        <mat-icon matPrefix class="field-prefix-icon">search</mat-icon>
+        <input matInput type="text" [(ngModel)]="filter.searchTerm" (keyup.enter)="search()" />
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
         <mat-label>{{ 'common.dateFrom' | t }}</mat-label>
-        <input
-          matInput
-          [matDatepicker]="submissionDateFromPicker"
-          [(ngModel)]="submissionDateFrom"
-        />
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="submissionDateFromPicker"
-        ></mat-datepicker-toggle>
+        <input matInput [matDatepicker]="submissionDateFromPicker" [(ngModel)]="submissionDateFrom" />
+        <mat-datepicker-toggle matIconSuffix [for]="submissionDateFromPicker"></mat-datepicker-toggle>
         <mat-datepicker #submissionDateFromPicker></mat-datepicker>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
         <mat-label>{{ 'common.dateTo' | t }}</mat-label>
-        <input
-          matInput
-          [matDatepicker]="submissionDateToPicker"
-          [(ngModel)]="submissionDateTo"
-        />
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="submissionDateToPicker"
-        ></mat-datepicker-toggle>
+        <input matInput [matDatepicker]="submissionDateToPicker" [(ngModel)]="submissionDateTo" />
+        <mat-datepicker-toggle matIconSuffix [for]="submissionDateToPicker"></mat-datepicker-toggle>
         <mat-datepicker #submissionDateToPicker></mat-datepicker>
       </mat-form-field>
     </div>
 
     <div class="filters-row-secondary">
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
         <mat-label>{{ 'common.requestingEntity' | t }}</mat-label>
         <mat-select [(ngModel)]="filter.requestingEntityId">
           <mat-option value="">{{ 'archive.all' | t }}</mat-option>
@@ -58,7 +43,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
         <mat-label>{{ 'common.district' | t }}</mat-label>
         <mat-select [(ngModel)]="filter.districtId">
           <mat-option value="">{{ 'archive.all' | t }}</mat-option>
@@ -68,7 +53,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
         <mat-label>{{ 'common.activity' | t }}</mat-label>
         <mat-select [(ngModel)]="filter.activityTypeId">
           <mat-option value="">{{ 'archive.all' | t }}</mat-option>
@@ -78,7 +63,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
         <mat-label>{{ 'archive.reviewStatus' | t }}</mat-label>
         <mat-select [(ngModel)]="filter.reviewStatus">
           <mat-option value="">{{ 'archive.all' | t }}</mat-option>
@@ -90,58 +75,88 @@
 
     <div class="filter-actions">
       <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
-        {{ 'common.search' | t }}
+        <mat-icon>search</mat-icon>
+        <span>{{ 'common.search' | t }}</span>
       </button>
       <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
-        {{ 'archive.reset' | t }}
+        <mat-icon>restart_alt</mat-icon>
+        <span>{{ 'archive.reset' | t }}</span>
       </button>
     </div>
+
   </section>
 
   <app-list
     (viewRequested)="openDetailsPopup($event)"
-    (deleteRequested)="openDeletePopup($event)"
-  >
+    (deleteRequested)="openDeletePopup($event)">
   </app-list>
 
+  <!-- ================= DETAILS DIALOG ================= -->
   @if (isDetailsPopupOpen) {
-    <div class="popup-backdrop" (click)="closeDetailsPopup()">
-      <div class="popup-card" (click)="$event.stopPropagation()">
-        <button type="button" class="popup-close" (click)="closeDetailsPopup()">
-          ×
-        </button>
-        <app-details [id]="selectedId!"></app-details>
+    <div class="modal-overlay" dir="rtl" (click)="closeDetailsPopup()">
+      <div class="dialog-card wide-dialog" (click)="$event.stopPropagation()">
+
+        <div class="dialog-header">
+          <div class="header-content-group">
+            <div class="dialog-icon primary">
+              <mat-icon>visibility</mat-icon>
+            </div>
+            <div class="header-text">
+              <span class="eyebrow">{{ 'archive.title' | t }}</span>
+              <h2>{{ 'archive.details' | t }}</h2>
+            </div>
+          </div>
+          <button type="button" class="btn-dialog-close" (click)="closeDetailsPopup()" [attr.aria-label]="'common.close' | t">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="dialog-body">
+          <app-details [id]="selectedId!"></app-details>
+        </div>
+
       </div>
     </div>
   }
 
+  <!-- ================= DELETE DIALOG ================= -->
   @if (isDeletePopupOpen) {
-    <div class="popup-backdrop" (click)="closeDeletePopup()">
-      <div class="popup-card delete-card" (click)="$event.stopPropagation()">
-        <button type="button" class="popup-close" (click)="closeDeletePopup()">
-          ×
-        </button>
-        <div class="delete-confirm">
-          <h3>{{ 'archive.confirmDelete' | t }}</h3>
+    <div class="modal-overlay" dir="rtl" (click)="closeDeletePopup()">
+      <div class="dialog-card danger-dialog" (click)="$event.stopPropagation()">
+
+        <div class="dialog-header">
+          <div class="header-content-group">
+            <div class="dialog-icon danger">
+              <mat-icon>delete_outline</mat-icon>
+            </div>
+            <div class="header-text">
+              <span class="eyebrow">{{ 'archive.title' | t }}</span>
+              <h2>{{ 'archive.confirmDelete' | t }}</h2>
+            </div>
+          </div>
+          <button type="button" class="btn-dialog-close" (click)="closeDeletePopup()" [attr.aria-label]="'common.close' | t">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="dialog-body">
           <p>
             {{ 'archive.deletePrompt' | t }}
-            <strong>{{ selectedItem?.establishmentName }}</strong
-            >؟
+            <strong>{{ selectedItem?.establishmentName }}</strong>؟
           </p>
-          <div class="delete-actions">
-            <button type="button" class="delete-btn" (click)="confirmDelete()">
-              {{ 'common.delete' | t }}
-            </button>
-            <button
-              type="button"
-              class="cancel-btn"
-              (click)="closeDeletePopup()"
-            >
-              {{ 'common.cancel' | t }}
-            </button>
-          </div>
         </div>
+
+        <div class="dialog-actions">
+          <button type="button" class="btn-save btn-danger" (click)="confirmDelete()">
+            {{ 'common.delete' | t }}
+          </button>
+          <button type="button" class="btn-reset" (click)="closeDeletePopup()">
+            {{ 'common.cancel' | t }}
+          </button>
+        </div>
+
       </div>
     </div>
   }
+
 </div>

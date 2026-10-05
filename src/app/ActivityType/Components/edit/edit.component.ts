@@ -1,20 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  ActivityType,
-  ApiResponse,
-  UpdateActivityTypeRequest
-} from '../../Models/activity-type';
-import { ActivityTypeService } from '../../Services/activity-type.service';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+import { ActivityType, ApiResponse, UpdateActivityTypeRequest } from '../../Models/activity-type';
+import { ActivityTypeService } from '../../Services/activity-type.service';
+
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, MatIconModule, TranslatePipe],
   templateUrl: './edit.component.html',
-  styleUrl: './edit.component.scss'
+  styleUrl: './edit.component.scss',
 })
 export class EditComponent implements OnChanges {
   @Input() activityTypeId: string | null = null;
@@ -29,7 +27,7 @@ export class EditComponent implements OnChanges {
 
   formModel: { code: number | null; name: string } = {
     code: null,
-    name: ''
+    name: '',
   };
 
   constructor(private readonly activityTypeService: ActivityTypeService) {}
@@ -56,10 +54,10 @@ export class EditComponent implements OnChanges {
 
         this.formModel = {
           code: res.data.code ?? null,
-          name: res.data.name || ''
+          name: res.data.name || '',
         };
       },
-      error: err => {
+      error: (err) => {
         this.loading = false;
         console.error('ActivityType GET BY ID error:', err);
 
@@ -68,7 +66,7 @@ export class EditComponent implements OnChanges {
           err?.error?.Message ||
           err?.message ||
           'حدث خطأ أثناء تحميل البيانات';
-      }
+      },
     });
   }
 
@@ -96,7 +94,7 @@ export class EditComponent implements OnChanges {
 
     const payload: UpdateActivityTypeRequest = {
       code,
-      name
+      name,
     };
 
     this.saving = true;
@@ -116,7 +114,7 @@ export class EditComponent implements OnChanges {
           this.saved.emit();
         }, 700);
       },
-      error: err => {
+      error: (err) => {
         this.saving = false;
         console.error('ActivityType PUT error:', err);
 
@@ -125,7 +123,7 @@ export class EditComponent implements OnChanges {
           err?.error?.Message ||
           err?.message ||
           'حدث خطأ أثناء حفظ التحديثات';
-      }
+      },
     });
   }
 

@@ -1,109 +1,79 @@
-<div class="dialog-body" dir="rtl">
+<div class="modal-overlay" dir="rtl" (click)="cancel()">
 
-  <!-- =====================================================
-        FORM FIELDS
-  ====================================================== -->
+  <div class="dialog-card" (click)="$event.stopPropagation()">
 
-  <div class="form-grid">
+    <!-- ========== HEADER ========== -->
+    <div class="dialog-header">
+      <div class="header-content-group">
+        <div class="dialog-icon primary">
+          <mat-icon>category</mat-icon>
+        </div>
 
-    <!-- CODE -->
+        <div class="header-text">
+          <span class="eyebrow">{{ 'activity.eyebrow' | t }}</span>
+          <h2>{{ 'activity.title' | t }}</h2>
+        </div>
+      </div>
 
-    <div class="form-group">
+      <button type="button" class="btn-dialog-close" (click)="cancel()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
 
-      <label for="activity-code">
-        {{ 'activity.code' | t }}
-      </label>
+    <!-- ========== BODY ========== -->
+    <div class="dialog-body">
 
-      <input
-        id="activity-code"
-        type="number"
-        class="dialog-input"
-        [(ngModel)]="formModel.code"
-        name="code"
-        [placeholder]="'common.exampleCode' | t"
-      />
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label for="activity-code">{{ 'activity.code' | t }}</label>
+          <input
+            id="activity-code"
+            type="number"
+            class="dialog-input"
+            [(ngModel)]="formModel.code"
+            name="code"
+            [placeholder]="'common.exampleCode' | t"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="activity-name">{{ 'activity.name' | t }}</label>
+          <input
+            id="activity-name"
+            type="text"
+            class="dialog-input"
+            [(ngModel)]="formModel.name"
+            name="name"
+            [placeholder]="'common.exampleActivity' | t"
+          />
+        </div>
+
+      </div>
+
+      <div class="message-banner success" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <div class="message-banner error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
 
     </div>
 
+    <!-- ========== ACTIONS ========== -->
+    <div class="dialog-actions">
 
-    <!-- NAME -->
+      <button type="button" class="btn-save" (click)="save()" [disabled]="saving">
+        <span *ngIf="!saving">{{ 'activity.save' | t }}</span>
+        <span *ngIf="saving">{{ 'common.saving' | t }}</span>
+      </button>
 
-    <div class="form-group">
-
-      <label for="activity-name">
-        {{ 'activity.name' | t }}
-      </label>
-
-      <input
-        id="activity-name"
-        type="text"
-        class="dialog-input"
-        [(ngModel)]="formModel.name"
-        name="name"
-        [placeholder]="'common.exampleActivity' | t"
-      />
+      <button type="button" class="btn-reset" (click)="cancel()">
+        {{ 'common.cancel' | t }}
+      </button>
 
     </div>
 
   </div>
-
-
-  <!-- =====================================================
-        SUCCESS MESSAGE
-  ====================================================== -->
-
-  <div
-    class="message-banner success"
-    *ngIf="successMessage"
-  >
-    {{ successMessage }}
-  </div>
-
-
-  <!-- =====================================================
-        ERROR MESSAGE
-  ====================================================== -->
-
-  <div
-    class="message-banner error"
-    *ngIf="errorMessage"
-  >
-    {{ errorMessage }}
-  </div>
-
-
-  <!-- =====================================================
-        ACTIONS
-  ====================================================== -->
-
-  <div class="dialog-actions">
-
-    <button
-      type="button"
-      class="btn-save"
-      (click)="save()"
-      [disabled]="saving"
-    >
-
-      <span *ngIf="!saving">
-        {{ 'activity.save' | t }}
-      </span>
-
-      <span *ngIf="saving">
-        {{ 'common.saving' | t }}
-      </span>
-
-    </button>
-
-
-    <button
-      type="button"
-      class="btn-reset"
-      (click)="cancel()"
-    >
-      {{ 'common.cancel' | t }}
-    </button>
-
-  </div>
-
 </div>

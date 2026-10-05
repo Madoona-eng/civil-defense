@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { formatDateForApi } from '../../../Shared/Helpers/date.helper';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-archived-management',
@@ -29,6 +30,7 @@ import { formatDateForApi } from '../../../Shared/Helpers/date.helper';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatIconModule
   ],
   templateUrl: './archived-management.component.html',
   styleUrl: './archived-management.component.scss'

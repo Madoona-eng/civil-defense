@@ -22,7 +22,7 @@
   </header>
 
   <!-- =====================================================
-        MAIN CONTENT (Mat-Table Container)
+        MAIN CONTENT
   ====================================================== -->
   <main class="page-content">
     <section class="mat-table-container">
@@ -32,58 +32,29 @@
       </div>
 
       <div class="table-scroll">
-        <app-district-list
-          (editRequested)="openEditPopup($event)">
-        </app-district-list>
+        <app-district-list (editRequested)="openEditPopup($event)"></app-district-list>
       </div>
 
     </section>
   </main>
 
   <!-- =====================================================
-        ADD MODAL
+        ADD DIALOG
   ====================================================== -->
-  <div class="popup-backdrop" *ngIf="isAddPopupOpen" (click)="closeAddPopup()">
-  <div (click)="$event.stopPropagation()">
-    <app-district-add
-      (saved)="onAddSaved()"
-      (cancelled)="closeAddPopup()">
-    </app-district-add>
-  </div>
-</div>
+  <app-district-add
+    *ngIf="isAddPopupOpen"
+    (saved)="onAddSaved()"
+    (cancelled)="closeAddPopup()">
+  </app-district-add>
 
-<!-- =====================================================
-      EDIT MODAL
-====================================================== -->
   <!-- =====================================================
-        EDIT MODAL
+        EDIT DIALOG
   ====================================================== -->
-  <div class="popup-backdrop" *ngIf="isEditPopupOpen" (click)="closeEditPopup()">
-    <div class="popup-card" (click)="$event.stopPropagation()">
-      <div class="popup-header">
-        <div class="popup-title">
-          <div class="popup-icon edit-icon">
-            <mat-icon>edit_location_alt</mat-icon>
-          </div>
-          <div class="popup-title-text">
-            <span>{{ 'district.manageLabel' | t }}</span>
-            <h2>{{ 'district.editName' | t }}</h2>
-          </div>
-        </div>
-
-        <button type="button" class="popup-close" (click)="closeEditPopup()" [attr.aria-label]="'common.close' | t">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-
-      <div class="popup-body">
-        <app-district-edit
-          [districtId]="selectedDistrictId"
-          (saved)="onEditSaved()"
-          (cancelled)="closeEditPopup()">
-        </app-district-edit>
-      </div>
-    </div>
-  </div>
+  <app-district-edit
+    *ngIf="isEditPopupOpen"
+    [districtId]="selectedDistrictId"
+    (saved)="onEditSaved()"
+    (cancelled)="closeEditPopup()">
+  </app-district-edit>
 
 </div>
