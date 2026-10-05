@@ -33,8 +33,7 @@
 
       <div class="table-scroll">
         <app-district-list
-          (editRequested)="openEditPopup($event)"
-          (deleteRequested)="openDeletePopup($event)">
+          (editRequested)="openEditPopup($event)">
         </app-district-list>
       </div>
 
@@ -45,32 +44,17 @@
         ADD MODAL
   ====================================================== -->
   <div class="popup-backdrop" *ngIf="isAddPopupOpen" (click)="closeAddPopup()">
-    <div class="popup-card" (click)="$event.stopPropagation()">
-      <div class="popup-header">
-        <div class="popup-title">
-          <div class="popup-icon add-icon">
-            <mat-icon>add_location_alt</mat-icon>
-          </div>
-          <div class="popup-title-text">
-            <span>{{ 'district.manageLabel' | t }}</span>
-            <h2>{{ 'district.addNew' | t }}</h2>
-          </div>
-        </div>
-
-        <button type="button" class="popup-close" (click)="closeAddPopup()" [attr.aria-label]="'common.close' | t">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-
-      <div class="popup-body">
-        <app-district-add
-          (saved)="onAddSaved()"
-          (cancelled)="closeAddPopup()">
-        </app-district-add>
-      </div>
-    </div>
+  <div (click)="$event.stopPropagation()">
+    <app-district-add
+      (saved)="onAddSaved()"
+      (cancelled)="closeAddPopup()">
+    </app-district-add>
   </div>
+</div>
 
+<!-- =====================================================
+      EDIT MODAL
+====================================================== -->
   <!-- =====================================================
         EDIT MODAL
   ====================================================== -->
@@ -98,37 +82,6 @@
           (saved)="onEditSaved()"
           (cancelled)="closeEditPopup()">
         </app-district-edit>
-      </div>
-    </div>
-  </div>
-
-  <!-- =====================================================
-        DELETE MODAL
-  ====================================================== -->
-  <div class="popup-backdrop" *ngIf="isDeletePopupOpen" (click)="closeDeletePopup()">
-    <div class="popup-card delete-card" (click)="$event.stopPropagation()">
-      <div class="popup-header delete-header">
-        <div class="popup-title">
-          <div class="popup-icon delete-icon">
-            <mat-icon>priority_high</mat-icon>
-          </div>
-          <div class="popup-title-text">
-            <span>{{ 'common.actionConfirmation' | t }}</span>
-            <h2>{{ 'district.delete' | t }}</h2>
-          </div>
-        </div>
-
-        <button type="button" class="popup-close" (click)="closeDeletePopup()" [attr.aria-label]="'common.close' | t">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-
-      <div class="popup-body">
-        <app-district-delete
-          [district]="selectedDistrict"
-          (deleted)="onDeleteDone()"
-          (cancelled)="closeDeletePopup()">
-        </app-district-delete>
       </div>
     </div>
   </div>

@@ -7,7 +7,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { forkJoin } from 'rxjs';
+import { formatDate, formatDateForApi } from '../../../Shared/Helpers/date.helper';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
 import { DistrictService } from '../../../District/Services/district.service';
 import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
@@ -32,11 +35,15 @@ import { LicensingProcessService } from '../../Services/licensing-process.servic
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
 export class ListComponent implements OnInit {
+  readonly formatDate = formatDate;
+
   @Output() detailsRequested = new EventEmitter<string>();
   @Output() editRequested = new EventEmitter<string>();
   @Output() deleteRequested = new EventEmitter<LicensingProcessItem>();
@@ -56,8 +63,8 @@ export class ListComponent implements OnInit {
   districtId = '';
   requestingEntityId = '';
   activityTypeId = '';
-  submissionDateFrom = '';
-  submissionDateTo = '';
+  submissionDateFrom: Date | null = null;
+  submissionDateTo: Date | null = null;
 
   pageNumber = 1;
   pageSize = 10;
@@ -134,8 +141,8 @@ export class ListComponent implements OnInit {
       activityTypeId: this.activityTypeId || undefined,
       searchTerm: this.searchTerm.trim(),
       processStep: this.processStep || undefined,
-      submissionDateFrom: this.submissionDateFrom || undefined,
-      submissionDateTo: this.submissionDateTo || undefined
+      submissionDateFrom: formatDateForApi(this.submissionDateFrom),
+      submissionDateTo: formatDateForApi(this.submissionDateTo)
     };
 
     this.licensingProcessService.getAll(query).subscribe({
@@ -191,8 +198,8 @@ export class ListComponent implements OnInit {
     this.districtId = '';
     this.requestingEntityId = '';
     this.activityTypeId = '';
-    this.submissionDateFrom = '';
-    this.submissionDateTo = '';
+    this.submissionDateFrom = null;
+    this.submissionDateTo = null;
     this.pageNumber = 1;
     this.loadLicensingProcesses();
   }

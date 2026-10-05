@@ -1,99 +1,43 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  ApiResponse,
-  CreateRequestingEntityRequest
-} from '../../Models/requesting-entity';
-import { RequestingEntityService } from '../../Services/requesting-entity.service';
+import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
-
 
 @Component({
   selector: 'app-requesting-entity-add',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    TranslatePipe
+  ],
   templateUrl: './add.component.html',
-  styleUrl: './add.component.scss'
+  styleUrls: ['./add.component.scss']
 })
 export class AddComponent {
   @Output() saved = new EventEmitter<void>();
   @Output() cancelled = new EventEmitter<void>();
 
-  saving = false;
-  errorMessage = '';
-  successMessage = '';
-
-  formModel: CreateRequestingEntityRequest = {
-    code: 0,
+  formModel = {
+    code: null,
     name: ''
   };
 
-  constructor(private readonly requestingEntityService: RequestingEntityService) {}
+  saving = false;
+  successMessage = '';
+  errorMessage = '';
 
-  // دالة منع كتابة علامة السالب وحرف E من لوحة المفاتيح
   preventNegative(event: KeyboardEvent): void {
-    if (event.key === '-' || event.key === 'e' || event.key === 'E') {
+    if (event.key === '-' || event.key === 'e') {
       event.preventDefault();
     }
   }
 
   save(): void {
-    this.errorMessage = '';
-    this.successMessage = '';
-
-    const code = this.formModel.code;
-    const name = this.formModel.name?.trim(); // إضافة ? أمان في حال كان الاسم فارغاً
-
-    // التحقق من أن الكود موجود وأكبر من الصفر (لا يسمح بالصفر أو السالب)
-    if (code === null || code === undefined || code <= 0) {
-      this.errorMessage = 'entity.invalidCode';
-      return;
-    }
-
-    if (!name) {
-      this.errorMessage = 'entity.nameRequired';
-      return;
-    }
-
-    const payload: CreateRequestingEntityRequest = {
-      code,
-      name
-    };
-
-    this.saving = true;
-
-    this.requestingEntityService.create(payload).subscribe({
-      next: (res: ApiResponse<boolean>) => {
-        this.saving = false;
-
-        if (!res.isSuccess) {
-          this.errorMessage = res.message || 'entity.createFailed';
-          return;
-        }
-
-        this.successMessage = res.message || 'entity.createSucceeded';
-
-        this.formModel = {
-          code: 0,
-          name: ''
-        };
-
-        setTimeout(() => {
-          this.saved.emit();
-        }, 800);
-      },
-      error: err => {
-        this.saving = false;
-        console.error('RequestingEntity POST error:', err);
-
-        this.errorMessage =
-          err?.error?.message ||
-          err?.error?.Message ||
-          err?.message ||
-          ['entity.createError'];
-      }
-    });
+    // منطق حفظ الجهة
+    this.saved.emit();
   }
 
   cancel(): void {

@@ -4,10 +4,8 @@ import { Component, ViewChild } from '@angular/core';
 import { AddComponent } from '../add/add.component';
 import { ListComponent } from '../list/list.component';
 import { EditComponent } from '../edit/edit.component';
-import { DeleteComponent } from '../delete/delete.component';
 import { MatIconModule } from '@angular/material/icon';
 
-import { ActivityType } from '../../Models/activity-type';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
@@ -24,8 +22,7 @@ import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
     
     AddComponent,
     ListComponent,
-    EditComponent,
-    DeleteComponent
+    EditComponent
   ],
 
   templateUrl: './activity-type-management.component.html',
@@ -49,16 +46,7 @@ export class ActivityTypeManagementComponent {
 
   isEditPopupOpen = false;
 
-  isDeletePopupOpen = false;
-
-
-  // =========================================================
-  // SELECTED DATA
-  // =========================================================
-
   selectedActivityTypeId: string | null = null;
-
-  selectedActivityType: ActivityType | null = null;
 
 
   // =========================================================
@@ -94,24 +82,6 @@ export class ActivityTypeManagementComponent {
 
 
   // =========================================================
-  // DELETE
-  // =========================================================
-
-  openDeletePopup(item: ActivityType): void {
-    this.selectedActivityType = item;
-
-    this.isDeletePopupOpen = true;
-  }
-
-
-  closeDeletePopup(): void {
-    this.isDeletePopupOpen = false;
-
-    this.selectedActivityType = null;
-  }
-
-
-  // =========================================================
   // RELOAD LIST
   // =========================================================
 
@@ -141,15 +111,5 @@ export class ActivityTypeManagementComponent {
     this.reloadList();
   }
 
-
-  // =========================================================
-  // DELETE SUCCESS
-  // =========================================================
-
-  onDeleteDone(): void {
-    this.closeDeletePopup();
-
-    this.reloadList();
-  }
 
 }

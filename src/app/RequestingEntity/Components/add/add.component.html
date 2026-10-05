@@ -1,33 +1,46 @@
-<div class="popup-container" dir="rtl">
-  <div class="popup-header">
-    <div class="header-right">
-      <div class="header-icon">+</div>
-      <div class="header-titles">
-        <span class="sub-title">{{ 'entity.manage' | t }}</span>
-        <h2>{{ 'entity.add' | t }}</h2>
+<div class="dialog-card">
+  <!-- HEADER -->
+  <div class="dialog-header">
+    <div class="header-content-group">
+      <div class="dialog-icon primary">
+        <mat-icon>add</mat-icon>
+      </div>
+      <div class="header-text">
+        <span class="eyebrow">{{ 'entity.manage' | t }}</span>
+        <h2>{{ 'entity.addNew' | t }}</h2>
       </div>
     </div>
-    <button type="button" class="close-btn" (click)="cancel()">✕</button>
+
+    <button type="button" class="btn-dialog-close" (click)="cancel()" [attr.aria-label]="'common.close' | t">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
 
-  <div class="form-body">
+  <!-- BODY -->
+  <div class="dialog-body">
     <div class="form-grid">
-     <div class="field">
-  <label>{{ 'entity.code' | t }}</label>
-  <input
-    type="number"
-    min="1"
-    (keydown)="preventNegative($event)"
-    [(ngModel)]="formModel.code"
-    name="code"
-    [placeholder]="'entity.exampleCode' | t"
-  />
-</div>
-
-      <div class="field">
-        <label>{{ 'entity.name' | t }}</label>
+      <!-- CODE -->
+      <div class="form-group">
+        <label for="entity-code">{{ 'entity.code' | t }}</label>
         <input
+          id="entity-code"
+          type="number"
+          min="1"
+          class="dialog-input"
+          (keydown)="preventNegative($event)"
+          [(ngModel)]="formModel.code"
+          name="code"
+          [placeholder]="'entity.exampleCode' | t"
+        />
+      </div>
+
+      <!-- NAME -->
+      <div class="form-group">
+        <label for="entity-name">{{ 'entity.name' | t }}</label>
+        <input
+          id="entity-name"
           type="text"
+          class="dialog-input"
           [(ngModel)]="formModel.name"
           name="name"
           [placeholder]="'entity.exampleName' | t"
@@ -35,22 +48,33 @@
       </div>
     </div>
 
-    <div class="message success" *ngIf="successMessage">
+    <!-- MESSAGES -->
+    <div class="message-banner success" *ngIf="successMessage">
       {{ successMessage }}
     </div>
 
-    <div class="message error" *ngIf="errorMessage">
+    <div class="message-banner error" *ngIf="errorMessage">
       {{ errorMessage }}
     </div>
+  </div>
 
-    <div class="actions">
-      <button type="button" class="save-btn" (click)="save()" [disabled]="saving">
-        {{ saving ? ('common.saving' | t) : ('entity.save' | t) }}
-      </button>
+  <!-- ACTIONS -->
+  <div class="dialog-actions">
+    <button
+      type="button"
+      class="btn-save"
+      (click)="save()"
+      [disabled]="saving"
+    >
+      {{ saving ? ('common.saving' | t) : ('entity.save' | t) }}
+    </button>
 
-      <button type="button" class="cancel-btn" (click)="cancel()">
-        {{ 'common.cancel' | t }}
-      </button>
-    </div>
+    <button
+      type="button"
+      class="btn-reset"
+      (click)="cancel()"
+    >
+      {{ 'common.cancel' | t }}
+    </button>
   </div>
 </div>

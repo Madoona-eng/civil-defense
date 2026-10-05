@@ -6,24 +6,40 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+import { ConfirmDialogComponent } from '../../../Shared/Components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatMenuModule, MatButtonModule, MatProgressSpinnerModule, TranslatePipe],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    TranslatePipe
+  ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
 export class ListComponent implements OnInit {
   @Output() editRequested = new EventEmitter<string>();
-  @Output() deleteRequested = new EventEmitter<ActivityType>();
 
   activityTypes: ActivityType[] = [];
+  private readonly deletingActivityTypeIds = new Set<string>();
   isLoading = false;
   errorMessage = '';
 
-  constructor(private readonly activityTypeService: ActivityTypeService) {}
+  constructor(
+    private readonly activityTypeService: ActivityTypeService,
+    private readonly dialog: MatDialog,
+    private readonly snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.loadActivityTypes();
@@ -62,6 +78,49 @@ export class ListComponent implements OnInit {
   }
 
   requestDelete(item: ActivityType): void {
-    this.deleteRequested.emit(item);
+    if (!item.id || this.deletingActivityTypeIds.has(item.id)) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '360px',
+      data: {
+        message: `هل أنت متأكد من حذف النشاط "${item.name}"؟`,
+        confirmText: 'حذف',
+        cancelText: 'إلغاء',
+        confirmClass: 'btn-danger'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed || this.deletingActivityTypeIds.has(item.id)) return;
+
+      this.deletingActivityTypeIds.add(item.id);
+      this.activityTypeService.delete(item.id).subscribe({
+        next: response => {
+          this.deletingActivityTypeIds.delete(item.id);
+
+          if (!response.isSuccess) {
+            this.snackBar.open(response.message || 'فشل حذف نوع النشاط', 'إغلاق', {
+              duration: 3000
+            });
+            return;
+          }
+
+          this.snackBar.open('تم حذف نوع النشاط بنجاح', 'إغلاق', { duration: 2500 });
+          this.loadActivityTypes();
+        },
+        error: err => {
+          this.deletingActivityTypeIds.delete(item.id);
+          console.error('ActivityType DELETE error:', err);
+          this.snackBar.open(
+            err?.error?.message ||
+              err?.error?.Message ||
+              err?.message ||
+              'حدث خطأ أثناء حذف النشاط',
+            'إغلاق',
+            { duration: 3000 }
+          );
+        }
+      });
+    });
   }
 }
