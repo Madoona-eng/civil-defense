@@ -104,11 +104,9 @@ export class FinalApprovalManagementComponent implements OnInit {
 
   // ---------- Popups ----------
   isEditPopupOpen = false;
-  isDeletePopupOpen = false;
 
   selectedApprovalItem: FinalApprovalItem | null = null;
-  selectedDeleteItem: FinalApprovalItem | null = null;
-
+  
   constructor(
     private readonly finalApprovalService: FinalApprovalService,
     private readonly requestingEntityService: RequestingEntityService,

@@ -1,62 +1,151 @@
 <div class="licensing-page" dir="rtl">
   <div class="page-header">
     <div>
-      <h2>{{ 'licensing.managementTitle' | t }}</h2>
-      <p>{{ 'licensing.managementDescription' | t }}</p>
+      <h2>إدارة المعاملات</h2>
     </div>
 
-    <button type="button" class="add-btn" (click)="openAddPopup()">
-      + {{ 'licensing.addAction' | t }}
-    </button>
+    <!-- <button type="button" class="add-btn" (click)="openAddPopup()">+ إضافة معاملة</button> -->
   </div>
 
+  <!-- كارت الفلاتر والبحث -->
+  <section class="filters-card" dir="rtl">
+    <div class="filters-row-primary">
+      <mat-form-field
+        appearance="outline"
+        subscriptSizing="dynamic"
+        class="form-group search-field"
+      >
+        <mat-label>بحث</mat-label>
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="ابحث بكود المعاملة، اسم المنشأة، اسم مقدم الطلب..."
+          (keyup.enter)="search()"
+        />
+        <lucide-angular
+          matPrefix
+          [img]="Search"
+          [size]="16"
+          class="field-prefix-icon"
+        ></lucide-angular>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group date-field">
+        <mat-label>التاريخ من</mat-label>
+        <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="submissionDateFrom" />
+        <mat-datepicker-toggle matIconSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+        <mat-datepicker #pickerFrom></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group date-field">
+        <mat-label>التاريخ إلى</mat-label>
+        <input matInput [matDatepicker]="pickerTo" [(ngModel)]="submissionDateTo" />
+        <mat-datepicker-toggle matIconSuffix [for]="pickerTo"></mat-datepicker-toggle>
+        <mat-datepicker #pickerTo></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="filters-row-secondary">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group">
+        <mat-label>الجهة الطالبة</mat-label>
+        <mat-select [(ngModel)]="requestingEntityId" [disabled]="loadingLookups">
+          <mat-option value="">كل الجهات</mat-option>
+          @for (entity of requestingEntities; track entity.id) {
+            <mat-option [value]="entity.id">{{ entity.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group">
+        <mat-label>المركز</mat-label>
+        <mat-select [(ngModel)]="districtId" [disabled]="loadingLookups">
+          <mat-option value="">كل المراكز</mat-option>
+          @for (district of districts; track district.id) {
+            <mat-option [value]="district.id">{{ district.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group">
+        <mat-label>نوع النشاط</mat-label>
+        <mat-select [(ngModel)]="activityTypeId" [disabled]="loadingLookups">
+          <mat-option value="">كل الأنشطة</mat-option>
+          @for (activity of activityTypes; track activity.id) {
+            <mat-option [value]="activity.id">{{ activity.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group">
+        <mat-label>الخطوة الحالية</mat-label>
+        <mat-select [(ngModel)]="processStep">
+          <mat-option value="">كل الخطوات</mat-option>
+          @for (opt of processStepOptions; track opt.value) {
+            <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="filter-actions">
+      <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
+        <lucide-angular [img]="Search" [size]="18"></lucide-angular>
+        <span>بحث</span>
+      </button>
+
+      <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
+        <lucide-angular [img]="RotateCcw" [size]="16"></lucide-angular>
+        <span>إعادة ضبط</span>
+      </button>
+    </div>
+  </section>
+
+  @if (lookupErrorMessage) {
+    <div class="message error">{{ lookupErrorMessage }}</div>
+  }
+
+  <!-- الجدول -->
   <app-licensing-process-list
+    [items]="items"
+    [isLoading]="isLoading"
+    [errorMessage]="errorMessage"
+    [pageNumber]="pageNumber"
+    [pageSize]="pageSize"
+    [totalCount]="totalCount"
+    (pageChanged)="onPageChange($event)"
     (detailsRequested)="openDetailsPopup($event)"
     (editRequested)="openEditPopup($event)"
-    (deleteRequested)="openDeletePopup($event)"
+    (deleteRequested)="onDelete($event)"
   ></app-licensing-process-list>
 
-  <div class="popup-backdrop" *ngIf="isAddPopupOpen" (click)="closeAddPopup()">
-    <div class="popup-card" (click)="$event.stopPropagation()">
-      <button type="button" class="popup-close" (click)="closeAddPopup()">×</button>
+  <!-- Popups -->
+  <!-- @if (isAddPopupOpen) {
+    <div class="popup-backdrop" (click)="closeAddPopup()">
+      <div class="popup-card" (click)="$event.stopPropagation()">
+        <button type="button" class="popup-close" (click)="closeAddPopup()">×</button>
 
-      <app-licensing-process-add
-        (saved)="onAddSaved()"
-        (cancelled)="closeAddPopup()"
-      ></app-licensing-process-add>
+        <app-licensing-process-add
+          (saved)="onAddSaved()"
+          (cancelled)="closeAddPopup()"
+        ></app-licensing-process-add>
+      </div>
     </div>
-  </div>
+  } -->
 
-  <div class="popup-backdrop" *ngIf="isDetailsPopupOpen" (click)="closeDetailsPopup()">
-    <div class="popup-card details-card" (click)="$event.stopPropagation()">
-      <app-licensing-process-details
-        [processId]="selectedProcessId"
-        (closed)="closeDetailsPopup()"
-      ></app-licensing-process-details>
-    </div>
-  </div>
+  @if (isDetailsPopupOpen) {
+    <app-licensing-process-details
+      [processId]="selectedProcessId"
+      (closed)="closeDetailsPopup()"
+    ></app-licensing-process-details>
+  }
 
-  <div class="popup-backdrop" *ngIf="isEditPopupOpen" (click)="closeEditPopup()">
-    <div class="popup-card edit-card" (click)="$event.stopPropagation()">
-      <button type="button" class="popup-close" (click)="closeEditPopup()">×</button>
-
-      <app-licensing-process-edit
-        [processId]="selectedProcessId"
-        (saved)="onEditSaved()"
-        (cancelled)="closeEditPopup()"
-      ></app-licensing-process-edit>
-    </div>
-  </div>
-
-  <div class="popup-backdrop" *ngIf="isDeletePopupOpen" (click)="closeDeletePopup()">
-    <div class="popup-card delete-card" (click)="$event.stopPropagation()">
-      <button type="button" class="popup-close" (click)="closeDeletePopup()">×</button>
-
-      <app-licensing-process-delete
-        [item]="selectedProcessItem"
-        (deleted)="onDeleteDone()"
-        (cancelled)="closeDeletePopup()"
-      ></app-licensing-process-delete>
-    </div>
-  </div>
+  @if (isEditPopupOpen) {
+    <app-licensing-process-edit
+      [processId]="selectedProcessId"
+      (saved)="onEditSaved()"
+      (cancelled)="closeEditPopup()"
+    ></app-licensing-process-edit>
+ 
+  }
 </div>

@@ -3,9 +3,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import {
-  ApiResponse,
   LicensingProcessCreateRequest,
-  LookupItem
 } from '../../Models/licensing-process';
 
 import { LicensingProcessService } from '../../Services/licensing-process.service';
@@ -13,6 +11,9 @@ import { RequestingEntityService } from '../../../RequestingEntity/Services/requ
 import { DistrictService } from '../../../District/Services/district.service';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+import { LookupItem } from '../../../Shared/Models/LookupItem';
+import { ApiResponse } from '../../../Shared/Models/ApiResponse';
+import { ApplicantRole } from '../../../Shared/Enums/enums';
 
 
 @Component({
@@ -43,7 +44,7 @@ export class AddComponent implements OnInit {
     districtId: '',
     activityTypeId: '',
     applicantName: '',
-    applicantRole: 'Owner',
+   applicantRole: ApplicantRole.Owner,
     nationalId: '',
     responsibleManager: '',
     phone: ''
@@ -93,7 +94,7 @@ export class AddComponent implements OnInit {
       },
       error: err => {
         console.error('Districts loading error:', err);
-        this.errorMessage = 'حدث خطأ أثناء تحميل المراكز / المناطق';
+        this.errorMessage = 'حدث خطأ أثناء تحميل المراكز';
       }
     });
 

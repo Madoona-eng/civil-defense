@@ -1,320 +1,279 @@
-<div class="details-page" dir="rtl">
-  <div class="details-header">
-    <div>
-      <h2>{{ 'licensing.detailsTitle' | t }}</h2>
-      <p *ngIf="details">{{ 'common.requestCode' | t }}: {{ details.transactionCode }}</p>
+<div class="modal-overlay">
+  <div class="dialog-card form-dialog wide-dialog">
+    <!-- Header -->
+    <div class="dialog-header">
+      <div class="header-content-group">
+        <div class="dialog-icon primary">
+          <mat-icon>description</mat-icon>
+        </div>
+        <div class="header-text">
+          <h2>تفاصيل المعاملة</h2>
+        </div>
+      </div>
+
+      <button type="button" class="btn-dialog-close" (click)="close()" aria-label="إغلاق">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
 
-    <button type="button" class="close-btn" (click)="close()">×</button>
+    <!-- Body -->
+    <div class="dialog-body">
+      @if (loading) {
+        <div class="loading-box">
+          <mat-icon class="spin-icon">sync</mat-icon>
+          <span>جاري التحميل...</span>
+        </div>
+      }
+
+      @if (errorMessage) {
+        <div class="message-banner error">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
+
+      @if (details; as d) {
+        <!-- الخطوة 1: ترخيص جديد -->
+        <section class="info-section">
+          <h3 class="section-title">الخطوة 1: ترخيص جديد</h3>
+          <div class="form-grid info-grid">
+            <div class="form-group">
+              <label>كود المعاملة</label>
+              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate">{{
+                d.transactionCode
+              }}</span>
+            </div>
+            <div class="form-group">
+              <label>تاريخ تقديم الطلب</label>
+              <span class="dialog-input readonly-value">{{ d.submissionDate }}</span>
+            </div>
+            <div class="form-group">
+              <label>الجهة الطالبة</label>
+              <span class="dialog-input readonly-value">{{ d.requestingEntity }}</span>
+            </div>
+            <div class="form-group">
+              <label>اسم المنشأة</label>
+              <span class="dialog-input readonly-value">{{ d.establishmentName }}</span>
+            </div>
+            <div class="form-group">
+              <label>المركز</label>
+              <span class="dialog-input readonly-value">{{ d.district }}</span>
+            </div>
+            <div class="form-group">
+              <label>عنوان المنشأة</label>
+              <span class="dialog-input readonly-value">{{ d.establishmentAddress }}</span>
+            </div>
+            <div class="form-group">
+              <label>طبيعة الأشغال</label>
+              <span class="dialog-input readonly-value">{{ d.activityType }}</span>
+            </div>
+            <div class="form-group">
+              <label>الاسم</label>
+              <span class="dialog-input readonly-value">{{ d.applicantName }}</span>
+            </div>
+            <div class="form-group">
+              <label>الرقم القومي</label>
+              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate">{{
+                d.nationalId
+              }}</span>
+            </div>
+            <div class="form-group">
+              <label>المدير المسؤول</label>
+              <span class="dialog-input readonly-value">{{ d.responsibleManager }}</span>
+            </div>
+            <div class="form-group">
+              <label>الصفة</label>
+              <span class="dialog-input readonly-value">{{ getRoleLabel(d.applicantRole) }}</span>
+            </div>
+            <div class="form-group">
+              <label>تليفون</label>
+              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate">{{
+                d.phone
+              }}</span>
+            </div>
+            <div class="form-group">
+              <label>أنشأها</label>
+              <span class="dialog-input readonly-value">{{ d.createdBy || '-' }}</span>
+            </div>
+            <div class="form-group">
+              <label>تاريخ الإنشاء</label>
+              <span class="dialog-input readonly-value">{{ formatDateTime(d.createdAt) }}</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- الخطوة 2: المعاينة -->
+        <section class="info-section">
+          <h3 class="section-title">الخطوة 2: المعاينة</h3>
+          <div class="form-grid info-grid">
+            <div class="form-group">
+              <label>القائم بالمعاينة</label>
+              <span class="dialog-input readonly-value">{{ d.inspectorName || '-' }}</span>
+            </div>
+            <div class="form-group">
+              <label>الرأي</label>
+              <span class="dialog-input readonly-value">{{ getOpinionLabel(d.opinion) }}</span>
+            </div>
+            <div class="form-group">
+              <label>تمت المعاينة بواسطة</label>
+              <span class="dialog-input readonly-value">{{ d.inspectedBy || '-' }}</span>
+            </div>
+            <div class="form-group">
+              <label>الإرجاع</label>
+              <span class="dialog-input readonly-value">{{ getReturnLabel(d.isReturned) }}</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- الخطوة 3: الموافقة النهائية -->
+        <section class="info-section">
+          <h3 class="section-title">الخطوة 3: الموافقة النهائية</h3>
+          <div class="form-grid info-grid">
+            <div class="form-group">
+              <label>المراجعة</label>
+              <span class="dialog-input readonly-value">{{
+                d.reviews.length ? getReviewStatusLabel(d.reviews[0].reviewStatus) : '-'
+              }}</span>
+            </div>
+            <div class="form-group">
+              <label>الرسوم</label>
+              <span class="dialog-input readonly-value">{{
+                d.reviews.length ? getPaymentLabel(d.reviews[0].isPaid) : '-'
+              }}</span>
+            </div>
+            <div class="form-group">
+              <label>الموقف</label>
+              <span class="dialog-input readonly-value">{{
+                getFinalStatusLabel(d.finalStatus)
+              }}</span>
+            </div>
+            <div class="form-group">
+              <label>تمت الموافقة بواسطة</label>
+              <span class="dialog-input readonly-value">{{ d.approvedBy || '-' }}</span>
+            </div>
+            <div class="form-group">
+              <label>تمت الأرشفة بواسطة</label>
+              <span class="dialog-input readonly-value">{{ d.archivedBy || '-' }}</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- المرفقات (كلها مع الخطوة والتاريخ) -->
+        <section class="attachments-section">
+          <h3 class="section-title">المرفقات</h3>
+
+          @if (!hasAnyAttachments(d)) {
+            <p class="empty-files">لا توجد مرفقات</p>
+          } @else {
+            <div class="attachments-grid">
+              @for (group of getAttachmentGroups(d); track group.title) {
+                @if (group.files.length > 0) {
+                  <div class="attachment-field">
+                    <span class="attachment-label">{{ group.title }}</span>
+
+                    <div class="file-list">
+                      @for (file of group.files; track file.id) {
+                        <div class="file-item">
+                          <button
+                            type="button"
+                            class="file-thumb"
+                            (click)="openFile(file.filePath)"
+                          >
+                            @if (isImageFile(file.fileName) && !hasImageError(file.filePath)) {
+                              <img
+                                [src]="getFileUrl(file.filePath)"
+                                [alt]="file.fileName"
+                                (error)="onImageError(file.filePath)"
+                              />
+                            } @else {
+                              <mat-icon>{{ iconByName(file.fileName) }}</mat-icon>
+                            }
+                          </button>
+
+                          <div class="file-meta">
+                            <span class="file-name" [title]="file.fileName">{{
+                              file.fileName
+                            }}</span>
+                            <div class="file-size">
+                              <span class="file-badge">{{ getStepLabel(file.uploadedAtStep) }}</span>
+                              <span>{{ formatDateTime(file.uploadedAt) }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          }
+        </section>
+
+        <!-- الملاحظات (كلها مع الخطوة والكاتب والتاريخ) -->
+        <section class="attachments-section">
+          <h3 class="section-title">الملاحظات</h3>
+
+          @if (!d.notes || d.notes.length === 0) {
+            <p class="empty-files">لا توجد ملاحظات</p>
+          } @else {
+            <div class="file-list">
+              @for (note of d.notes; track note.createdAt) {
+                <div class="attachment-field">
+                  <div class="file-size">
+                    <span class="file-badge">{{ getStepLabel(note.processStep) }}</span>
+                    <span>{{ note.createdByUserName }}</span>
+                    <span>•</span>
+                    <span>{{ formatDateTime(note.createdAt) }}</span>
+                  </div>
+                  <p class="note-content">{{ note.content }}</p>
+                </div>
+              }
+            </div>
+          }
+        </section>
+
+        <!-- سجل القرارات -->
+        <section class="attachments-section">
+          <h3 class="section-title">سجل القرارات</h3>
+
+          @if (!d.reviews || d.reviews.length === 0) {
+            <p class="empty-files">لا توجد قرارات</p>
+          } @else {
+            <div class="review-table-wrap">
+              <table class="review-table">
+                <thead>
+                  <tr>
+                    <th>القرار</th>
+                    <th>سداد الرسوم</th>
+                    <th>بواسطة</th>
+                    <th>التاريخ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (review of d.reviews; track review.reviewedAt; let i = $index) {
+                    <tr [class.latest]="i === 0">
+                      <td>
+                        {{ getReviewStatusLabel(review.reviewStatus) }}
+                        @if (i === 0) {
+                          <span class="latest-tag">الأحدث</span>
+                        }
+                      </td>
+                      <td>{{ getPaymentLabel(review.isPaid) }}</td>
+                      <td>{{ review.reviewedBy || '-' }}</td>
+                      <td>{{ formatDateTime(review.reviewedAt) }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </section>
+      }
+    </div>
+
+    <!-- Footer -->
+    <div class="dialog-actions">
+      <button type="button" class="btn-reset" (click)="close()">إغلاق</button>
+    </div>
   </div>
-
-  <div class="loading-box" *ngIf="loading">
-    {{ 'common.loadingDataWithEllipsis' | t }}
-  </div>
-
-  <div class="message error" *ngIf="errorMessage">
-    {{ errorMessage }}
-  </div>
-
-  <ng-container *ngIf="!loading && details as d">
-    <section class="section-card">
-      <h3>{{ 'archive.transactionData' | t }}</h3>
-
-      <div class="info-grid">
-        <div>
-          <span>{{ 'common.requestCode' | t }}</span>
-          <strong>{{ d.transactionCode }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'common.currentStep' | t }}</span>
-          <strong>{{ getStepLabel(d.currentStep) }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'common.submissionDate' | t }}</span>
-          <strong>{{ d.submissionDate }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'common.createdBy' | t }}</span>
-          <strong>{{ d.createdBy }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'archive.createdAt' | t }}</span>
-          <strong>{{ d.createdAt }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'common.returnState' | t }}</span>
-          <strong>{{ d.isReturned ? ('common.yes' | t) : ('common.no' | t) }}</strong>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-card">
-      <h3>{{ 'common.establishmentData' | t }}</h3>
-
-      <div class="info-grid">
-        <div>
-          <span>{{ 'common.establishment' | t }}</span>
-          <strong>{{ d.establishmentName }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'common.address' | t }}</span>
-          <strong>{{ d.establishmentAddress }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'common.entity' | t }}</span>
-          <strong>{{ d.requestingEntity }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'district.name' | t }}</span>
-          <strong>{{ d.district }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'common.activity' | t }}</span>
-          <strong>{{ d.activityType }}</strong>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-card">
-      <h3>{{ 'common.applicantData' | t }}</h3>
-
-      <div class="info-grid">
-        <div>
-          <span>{{ 'common.applicantName' | t }}</span>
-          <strong>{{ d.applicantName }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'common.applicantRole' | t }}</span>
-          <strong>{{ d.applicantRole }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'common.nationalId' | t }}</span>
-          <strong>{{ d.nationalId }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'common.responsibleManager' | t }}</span>
-          <strong>{{ d.responsibleManager }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'common.phone' | t }}</span>
-          <strong>{{ d.phone }}</strong>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-card">
-      <h3>{{ 'common.inspectionData' | t }}</h3>
-
-      <div class="info-grid">
-        <div>
-          <span>{{ 'common.inspectorName' | t }}</span>
-          <strong>{{ d.inspectorName || '-' }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'common.opinion' | t }}</span>
-          <strong>{{ getOpinionLabel(d.opinion) }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'archive.inspectedBy' | t }}</span>
-          <strong>{{ d.inspectedBy || '-' }}</strong>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-card">
-      <h3>{{ 'common.finalApprovalData' | t }}</h3>
-
-      <div class="info-grid">
-        <div>
-          <span>{{ 'common.finalDecisionState' | t }}</span>
-          <strong>{{ d.finalStatus || '-' }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'common.approvedBy' | t }}</span>
-          <strong>{{ d.approvedBy || '-' }}</strong>
-        </div>
-
-        <div>
-          <span>{{ 'common.archivedBy' | t }}</span>
-          <strong>{{ d.archivedBy || '-' }}</strong>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-card">
-      <h3>{{ 'archive.reviews' | t }}</h3>
-
-      <div class="empty-box" *ngIf="!d.reviews || d.reviews.length === 0">
-        {{ 'common.empty' | t }}
-      </div>
-
-      <div class="note-card" *ngFor="let review of d.reviews || []">
-        <strong>{{ review.content || '-' }}</strong>
-        <span>
-          {{ review.reviewedBy || '-' }}
-          <ng-container *ngIf="review.reviewedAt"> - {{ review.reviewedAt }}</ng-container>
-        </span>
-      </div>
-    </section>
-
-    <section class="section-card">
-      <h3>{{ 'common.notes' | t }}</h3>
-
-      <div class="empty-box" *ngIf="!d.notes || d.notes.length === 0">
-        {{ 'common.noNotes' | t }}
-      </div>
-
-      <div class="note-card" *ngFor="let note of d.notes || []">
-        <strong>{{ note.content }}</strong>
-        <span>{{ note.writtenBy }} - {{ getStepLabel(note.processStep) }}</span>
-      </div>
-    </section>
-
-    <section class="section-card">
-      <h3>{{ 'common.attachments' | t }}</h3>
-
-      <div class="attachments-grid">
-        <div class="attachment-group">
-          <h4>{{ 'common.entityLetters' | t }}</h4>
-
-          <div class="empty-attachment" *ngIf="!d.entityLetters || d.entityLetters.length === 0">
-            {{ 'common.noFiles' | t }}
-          </div>
-
-          <div class="attachment-item" *ngFor="let file of d.entityLetters || []">
-            <a [href]="getFileUrl(file.filePath)" target="_blank">
-              <img
-                *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
-                [src]="getFileUrl(file.filePath)"
-                [alt]="file.fileName"
-                (error)="onImageError(file.filePath)"
-              />
-
-              <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
-                📎 {{ 'common.openFile' | t }}
-              </span>
-            </a>
-
-            <small>{{ file.fileName }}</small>
-          </div>
-        </div>
-
-        <div class="attachment-group">
-          <h4>{{ 'common.proofDocuments' | t }}</h4>
-
-          <div class="empty-attachment" *ngIf="!d.proofDocuments || d.proofDocuments.length === 0">
-            {{ 'common.noFiles' | t }}
-          </div>
-
-          <div class="attachment-item" *ngFor="let file of d.proofDocuments || []">
-            <a [href]="getFileUrl(file.filePath)" target="_blank">
-              <img
-                *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
-                [src]="getFileUrl(file.filePath)"
-                [alt]="file.fileName"
-                (error)="onImageError(file.filePath)"
-              />
-
-              <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
-                📎 {{ 'common.openFile' | t }}
-              </span>
-            </a>
-
-            <small>{{ file.fileName }}</small>
-          </div>
-        </div>
-
-        <div class="attachment-group">
-          <h4>{{ 'common.engineeringReports' | t }}</h4>
-
-          <div class="empty-attachment" *ngIf="!d.engineeringReports || d.engineeringReports.length === 0">
-            {{ 'common.noFiles' | t }}
-          </div>
-
-          <div class="attachment-item" *ngFor="let file of d.engineeringReports || []">
-            <a [href]="getFileUrl(file.filePath)" target="_blank">
-              <img
-                *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
-                [src]="getFileUrl(file.filePath)"
-                [alt]="file.fileName"
-                (error)="onImageError(file.filePath)"
-              />
-
-              <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
-                📎 {{ 'common.openFile' | t }}
-              </span>
-            </a>
-
-            <small>{{ file.fileName }}</small>
-          </div>
-        </div>
-
-        <div class="attachment-group">
-          <h4>{{ 'common.inspectionReports' | t }}</h4>
-
-          <div class="empty-attachment" *ngIf="!d.inspectionReports || d.inspectionReports.length === 0">
-            {{ 'common.noFiles' | t }}
-          </div>
-
-          <div class="attachment-item" *ngFor="let file of d.inspectionReports || []">
-            <a [href]="getFileUrl(file.filePath)" target="_blank">
-              <img
-                *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
-                [src]="getFileUrl(file.filePath)"
-                [alt]="file.fileName"
-                (error)="onImageError(file.filePath)"
-              />
-
-              <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
-                📎 {{ 'common.openFile' | t }}
-              </span>
-            </a>
-
-            <small>{{ file.fileName }}</small>
-          </div>
-        </div>
-
-        <div class="attachment-group">
-          <h4>{{ 'common.otherAttachments' | t }}</h4>
-
-          <div class="empty-attachment" *ngIf="!d.otherAttachments || d.otherAttachments.length === 0">
-            {{ 'common.noFiles' | t }}
-          </div>
-
-          <div class="attachment-item" *ngFor="let file of d.otherAttachments || []">
-            <a [href]="getFileUrl(file.filePath)" target="_blank">
-              <img
-                *ngIf="isImageFile(file.fileName) && !hasImageError(file.filePath)"
-                [src]="getFileUrl(file.filePath)"
-                [alt]="file.fileName"
-                (error)="onImageError(file.filePath)"
-              />
-
-              <span *ngIf="!isImageFile(file.fileName) || hasImageError(file.filePath)">
-                📎 {{ 'common.openFile' | t }}
-              </span>
-            </a>
-
-            <small>{{ file.fileName }}</small>
-          </div>
-        </div>
-      </div>
-    </section>
-  </ng-container>
 </div>

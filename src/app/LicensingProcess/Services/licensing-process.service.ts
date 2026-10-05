@@ -2,13 +2,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseAPI } from '../../Shared/Env/env';
+import { ApiResponse } from '../../Shared/Models/ApiResponse';
+import { PagedResult } from '../../Shared/Models/PagedResult';
 import {
-  ApiResponse,
   LicensingProcessDetails,
   LicensingProcessItem,
   LicensingProcessQuery,
   LicensingProcessUpdateRequest,
-  PagedResult,
 } from '../Models/licensing-process';
 
 @Injectable({

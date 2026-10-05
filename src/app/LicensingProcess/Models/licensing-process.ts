@@ -1,9 +1,4 @@
-export interface ApiResponse<T> {
-  data: T;
-  isSuccess: boolean;
-  errorCode: string;
-  message: string;
-}
+import { ApplicantRole, ProcessStep } from '../../Shared/Enums/enums';
 
 export interface LicensingProcessCreateRequest {
   submissionDate: string;
@@ -13,7 +8,7 @@ export interface LicensingProcessCreateRequest {
   districtId: string;
   activityTypeId: string;
   applicantName: string;
-  applicantRole: string;
+  applicantRole: ApplicantRole;
   nationalId: string;
   responsibleManager: string;
   phone: string;
@@ -26,16 +21,10 @@ export interface LicensingProcessUpdateRequest {
   districtId: string;
   activityTypeId: string;
   applicantName: string;
-  applicantRole: 'Owner' | 'Proxy';
+  applicantRole: ApplicantRole;
   nationalId: string;
   responsibleManager: string;
   phone: string;
-}
-
-export interface LookupItem {
-  id: string;
-  name: string;
-  code?: number;
 }
 
 export interface LicensingProcessItem {
@@ -49,23 +38,13 @@ export interface LicensingProcessItem {
   activityType: string;
   applicantName: string;
   currentStep: string;
+  isReturned: boolean;
 }
-
-export interface PagedResult<T> {
-  items: T[];
-  pageNumber: number;
-  pageSize: number;
-  totalCount: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-}
-
 export interface LicensingProcessQuery {
   districtId?: string;
   requestingEntityId?: string;
   activityTypeId?: string;
-  processStep?: string;
+  processStep?: ProcessStep;
   submissionDateFrom?: string;
   submissionDateTo?: string;
   searchTerm?: string;
@@ -83,15 +62,16 @@ export interface LicensingAttachment {
 
 export interface LicensingNote {
   content: string;
-  writtenBy: string;
+  createdByUserName: string;
   processStep: string;
-  writtenAt: string;
+  createdAt: string;
 }
 
 export interface LicensingReview {
-  content?: string;
-  reviewedBy?: string;
-  reviewedAt?: string;
+  reviewStatus: string;
+  isPaid: boolean;
+  reviewedBy: string;
+  reviewedAt: string;
 }
 
 export interface LicensingProcessDetails {

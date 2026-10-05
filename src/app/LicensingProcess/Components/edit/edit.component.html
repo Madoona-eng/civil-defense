@@ -1,106 +1,168 @@
-<div class="licensing-edit" dir="rtl">
-  <div class="page-header">
-    <div>
-      <h2>{{ 'licensing.editTitle' | t }}</h2>
-      <p>{{ 'licensing.editDescription' | t }}</p>
+<div class="modal-overlay" dir="rtl">
+  <div class="dialog-card form-dialog">
+    <!-- Header -->
+    <div class="dialog-header">
+      <div class="header-content-group">
+        <div class="dialog-icon primary">
+          <mat-icon>edit_document</mat-icon>
+        </div>
+
+        <div class="header-text">
+          <h2>تعديل بيانات المعاملة</h2>
+        </div>
+      </div>
+
+      <button type="button" class="btn-dialog-close" (click)="cancel()" aria-label="إغلاق">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
-  </div>
 
-  <div class="form-card">
-    <div class="loading-box" *ngIf="loading">
-      {{ 'common.loadingDataWithEllipsis' | t }}
+    <!-- Body -->
+    <form [formGroup]="form" class="dialog-body" novalidate>
+      @if (loading) {
+        <div class="loading-box">
+          <mat-icon class="spin-icon">sync</mat-icon>
+          <span>جاري التحميل...</span>
+        </div>
+      } @else {
+        <div class="form-grid">
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>اسم المنشأة</mat-label>
+            <input matInput formControlName="establishmentName" />
+            @if (form.get('establishmentName')?.hasError('required')) {
+              <mat-error>اسم المنشأة مطلوب</mat-error>
+            }
+            @if (form.get('establishmentName')?.hasError('maxlength')) {
+              <mat-error>اسم المنشأة طويل جدًا (200 حرف كحد أقصى)</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="form-row-triple">
+            <mat-form-field appearance="outline" class="form-group">
+              <mat-label>الجهة الطالبة</mat-label>
+              <mat-select formControlName="requestingEntityId">
+                @for (entity of requestingEntities; track entity.id) {
+                  <mat-option [value]="entity.id">{{ entity.name }}</mat-option>
+                }
+              </mat-select>
+              @if (form.get('requestingEntityId')?.hasError('required')) {
+                <mat-error>الجهة الطالبة مطلوبة</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-group">
+              <mat-label>المركز</mat-label>
+              <mat-select formControlName="districtId">
+                @for (district of districts; track district.id) {
+                  <mat-option [value]="district.id">{{ district.name }}</mat-option>
+                }
+              </mat-select>
+              @if (form.get('districtId')?.hasError('required')) {
+                <mat-error>المركز مطلوب</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-group">
+              <mat-label>نوع النشاط</mat-label>
+              <mat-select formControlName="activityTypeId">
+                @for (activity of activityTypes; track activity.id) {
+                  <mat-option [value]="activity.id">{{ activity.name }}</mat-option>
+                }
+              </mat-select>
+              @if (form.get('activityTypeId')?.hasError('required')) {
+                <mat-error>نوع النشاط مطلوب</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>عنوان المنشأة</mat-label>
+            <input matInput formControlName="establishmentAddress" />
+            @if (form.get('establishmentAddress')?.hasError('required')) {
+              <mat-error>عنوان المنشأة مطلوب</mat-error>
+            }
+            @if (form.get('establishmentAddress')?.hasError('maxlength')) {
+              <mat-error>العنوان طويل جدًا (500 حرف كحد أقصى)</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>رقم الموبايل</mat-label>
+            <input matInput formControlName="phone" maxlength="11" placeholder="01xxxxxxxxx" />
+            @if (form.get('phone')?.hasError('required')) {
+              <mat-error>رقم الموبايل مطلوب</mat-error>
+            }
+            @if (form.get('phone')?.hasError('pattern')) {
+              <mat-error>رقم الموبايل غير صحيح</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>اسم مقدم الطلب</mat-label>
+            <input matInput formControlName="applicantName" />
+            @if (form.get('applicantName')?.hasError('required')) {
+              <mat-error>اسم مقدم الطلب مطلوب</mat-error>
+            }
+            @if (form.get('applicantName')?.hasError('maxlength')) {
+              <mat-error>الاسم طويل جدًا (200 حرف كحد أقصى)</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>صفة مقدم الطلب</mat-label>
+            <mat-select formControlName="applicantRole">
+              @for (opt of applicantRoleOptions; track opt.value) {
+                <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+              }
+            </mat-select>
+            @if (form.get('applicantRole')?.hasError('required')) {
+              <mat-error>صفة مقدم الطلب مطلوبة</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>الرقم القومي</mat-label>
+            <input matInput formControlName="nationalId" maxlength="14" placeholder="14 رقم" />
+            @if (form.get('nationalId')?.hasError('required')) {
+              <mat-error>الرقم القومي مطلوب</mat-error>
+            }
+            @if (form.get('nationalId')?.hasError('pattern')) {
+              <mat-error>الرقم القومي يجب أن يتكون من 14 رقم</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>المدير المسؤول</mat-label>
+            <input matInput formControlName="responsibleManager" />
+            @if (form.get('responsibleManager')?.hasError('required')) {
+              <mat-error>اسم المدير المسؤول مطلوب</mat-error>
+            }
+            @if (form.get('responsibleManager')?.hasError('maxlength')) {
+              <mat-error>الاسم طويل جدًا (200 حرف كحد أقصى)</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      }
+
+      @if (errorMessage) {
+        <div class="message-banner error">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
+    </form>
+
+    <!-- Actions -->
+    <div class="dialog-actions">
+      @if (attemptedSave && form.invalid && !saving) {
+        <span class="form-invalid-hint">لا يمكن الحفظ، يرجى مراجعة البيانات</span>
+      }
+
+      <button type="button" class="btn-reset" (click)="cancel()" [disabled]="saving">إلغاء</button>
+
+      <button type="button" class="btn-save" (click)="save()" [disabled]="saving || loading">
+        {{ saving ? 'جاري الحفظ...' : 'حفظ التعديلات' }}
+      </button>
     </div>
-
-    <ng-container *ngIf="!loading">
-      <div class="form-grid">
-        <div class="field">
-          <label>{{ 'common.entity' | t }}</label>
-          <select [(ngModel)]="formModel.requestingEntityId" name="requestingEntityId">
-            <option value="">{{ 'common.chooseEntity' | t }}</option>
-            <option *ngFor="let item of requestingEntities" [value]="item.id">
-              {{ item.name }}
-            </option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>{{ 'common.establishmentName' | t }}</label>
-          <input type="text" [(ngModel)]="formModel.establishmentName" name="establishmentName" />
-        </div>
-
-        <div class="field">
-          <label>{{ 'common.establishmentAddress' | t }}</label>
-          <input type="text" [(ngModel)]="formModel.establishmentAddress" name="establishmentAddress" />
-        </div>
-
-        <div class="field">
-          <label>{{ 'common.district' | t }}</label>
-          <select [(ngModel)]="formModel.districtId" name="districtId">
-            <option value="">{{ 'common.chooseDistrict' | t }}</option>
-            <option *ngFor="let item of districts" [value]="item.id">
-              {{ item.name }}
-            </option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>{{ 'common.activity' | t }}</label>
-          <select [(ngModel)]="formModel.activityTypeId" name="activityTypeId">
-            <option value="">{{ 'common.chooseActivity' | t }}</option>
-            <option *ngFor="let item of activityTypes" [value]="item.id">
-              {{ item.name }}
-            </option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>{{ 'common.applicantName' | t }}</label>
-          <input type="text" [(ngModel)]="formModel.applicantName" name="applicantName" />
-        </div>
-
-        <div class="field">
-          <label>{{ 'common.applicantRole' | t }}</label>
-          <select [(ngModel)]="formModel.applicantRole" name="applicantRole">
-            <option *ngFor="let role of applicantRoleOptions" [value]="role.value">
-              {{ role.label }}
-            </option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>{{ 'common.nationalId' | t }}</label>
-          <input type="text" [(ngModel)]="formModel.nationalId" name="nationalId" />
-        </div>
-
-        <div class="field">
-          <label>{{ 'common.responsibleManager' | t }}</label>
-          <input type="text" [(ngModel)]="formModel.responsibleManager" name="responsibleManager" />
-        </div>
-
-        <div class="field">
-          <label>{{ 'common.phone' | t }}</label>
-          <input type="text" [(ngModel)]="formModel.phone" name="phone" />
-        </div>
-
-      </div>
-
-      <div class="message success" *ngIf="successMessage">
-        {{ successMessage }}
-      </div>
-
-      <div class="message error" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </div>
-
-      <div class="actions">
-        <button type="button" class="save-btn" (click)="save()" [disabled]="saving">
-          {{ saving ? ('common.saving' | t) : ('common.saveEdit' | t) }}
-        </button>
-
-        <button type="button" class="cancel-btn" (click)="cancel()">
-          {{ 'common.cancel' | t }}
-        </button>
-      </div>
-    </ng-container>
   </div>
 </div>
