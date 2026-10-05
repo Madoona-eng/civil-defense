@@ -1,14 +1,14 @@
-<div class="add-form" dir="rtl">
+<div class="dialog-body" dir="rtl">
 
   <!-- =====================================================
-       FORM FIELDS
+        FORM FIELDS
   ====================================================== -->
 
   <div class="form-grid">
 
     <!-- CODE -->
 
-    <div class="field">
+    <div class="form-group">
 
       <label for="activity-code">
         {{ 'activity.code' | t }}
@@ -17,6 +17,7 @@
       <input
         id="activity-code"
         type="number"
+        class="dialog-input"
         [(ngModel)]="formModel.code"
         name="code"
         [placeholder]="'common.exampleCode' | t"
@@ -27,7 +28,7 @@
 
     <!-- NAME -->
 
-    <div class="field">
+    <div class="form-group">
 
       <label for="activity-name">
         {{ 'activity.name' | t }}
@@ -36,6 +37,7 @@
       <input
         id="activity-name"
         type="text"
+        class="dialog-input"
         [(ngModel)]="formModel.name"
         name="name"
         [placeholder]="'common.exampleActivity' | t"
@@ -47,11 +49,11 @@
 
 
   <!-- =====================================================
-       SUCCESS MESSAGE
+        SUCCESS MESSAGE
   ====================================================== -->
 
   <div
-    class="message success"
+    class="message-banner success"
     *ngIf="successMessage"
   >
     {{ successMessage }}
@@ -59,11 +61,11 @@
 
 
   <!-- =====================================================
-       ERROR MESSAGE
+        ERROR MESSAGE
   ====================================================== -->
 
   <div
-    class="message error"
+    class="message-banner error"
     *ngIf="errorMessage"
   >
     {{ errorMessage }}
@@ -71,14 +73,14 @@
 
 
   <!-- =====================================================
-       ACTIONS
+        ACTIONS
   ====================================================== -->
 
-  <div class="actions">
+  <div class="dialog-actions">
 
     <button
       type="button"
-      class="save-btn"
+      class="btn-save"
       (click)="save()"
       [disabled]="saving"
     >
@@ -96,7 +98,7 @@
 
     <button
       type="button"
-      class="cancel-btn"
+      class="btn-reset"
       (click)="cancel()"
     >
       {{ 'common.cancel' | t }}

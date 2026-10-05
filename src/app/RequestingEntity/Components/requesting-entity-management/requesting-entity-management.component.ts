@@ -1,27 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { AddComponent } from '../add/add.component';
 import { ListComponent } from '../list/list.component';
 import { EditComponent } from '../edit/edit.component';
-import { DeleteComponent } from '../delete/delete.component';
-import { RequestingEntity } from '../../Models/requesting-entity';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
-
 @Component({
   selector: 'app-requesting-entity-management',
   standalone: true,
   imports: [
     CommonModule,
-    
     AddComponent,
     ListComponent,
     EditComponent,
-    DeleteComponent , MatIconModule, MatMenuModule, MatButtonModule, MatProgressSpinnerModule,
+    MatIconModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
     TranslatePipe
   ],
   templateUrl: './requesting-entity-management.component.html',
@@ -32,37 +31,32 @@ export class RequestingEntityManagementComponent {
 
   isAddPopupOpen = false;
   isEditPopupOpen = false;
-  isDeletePopupOpen = false;
 
   selectedRequestingEntityId: string | null = null;
-  selectedRequestingEntity: RequestingEntity | null = null;
+
+  constructor(private readonly cdr: ChangeDetectorRef) {}
 
   openAddPopup(): void {
+    console.log('Open Add Popup Triggered'); // للتأكد عبر הـ Console
     this.isAddPopupOpen = true;
+    this.cdr.detectChanges(); // إجبار Angular على إعادة رسم الـ DOM
   }
 
   closeAddPopup(): void {
     this.isAddPopupOpen = false;
+    this.cdr.detectChanges();
   }
 
   openEditPopup(id: string): void {
     this.selectedRequestingEntityId = id;
     this.isEditPopupOpen = true;
+    this.cdr.detectChanges();
   }
 
   closeEditPopup(): void {
     this.isEditPopupOpen = false;
     this.selectedRequestingEntityId = null;
-  }
-
-  openDeletePopup(item: RequestingEntity): void {
-    this.selectedRequestingEntity = item;
-    this.isDeletePopupOpen = true;
-  }
-
-  closeDeletePopup(): void {
-    this.isDeletePopupOpen = false;
-    this.selectedRequestingEntity = null;
+    this.cdr.detectChanges();
   }
 
   reloadList(): void {
@@ -79,8 +73,4 @@ export class RequestingEntityManagementComponent {
     this.reloadList();
   }
 
-  onDeleteDone(): void {
-    this.closeDeletePopup();
-    this.reloadList();
-  }
 }

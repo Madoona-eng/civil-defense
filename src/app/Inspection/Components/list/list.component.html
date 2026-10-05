@@ -22,7 +22,9 @@
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <mat-label>إلى تاريخ</mat-label>
-      <input matInput type="date" [(ngModel)]="submissionDateTo" />
+      <input matInput [matDatepicker]="submissionDateToPicker" [(ngModel)]="submissionDateTo" />
+      <mat-datepicker-toggle matIconSuffix [for]="submissionDateToPicker"></mat-datepicker-toggle>
+      <mat-datepicker #submissionDateToPicker></mat-datepicker>
     </mat-form-field>
   </div>
 

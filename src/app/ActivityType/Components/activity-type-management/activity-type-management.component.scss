@@ -161,10 +161,6 @@
   border: 1px solid rgba(240, 238, 245, 0.9);
   box-shadow: 0 24px 50px rgba(30, 27, 46, 0.18);
   animation: popupIn 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-
-  &.delete-card {
-    width: min(440px, 100%);
-  }
 }
 
 .popup-header {
@@ -178,10 +174,6 @@
   box-sizing: border-box;
   border-bottom: 1px dashed rgba(220, 215, 235, 0.7);
   background: #FAF8FD;
-
-  &.delete-header {
-    border-bottom-color: rgba(251, 207, 232, 0.6);
-  }
 }
 
 .popup-title {
@@ -233,11 +225,6 @@
     color: #7C3AED;
     background: #EDE9FE;
   }
-
-  &.delete-icon {
-    color: #E11D48;
-    background: #FFF1F2;
-  }
 }
 
 .popup-close {
@@ -274,8 +261,7 @@
   background: #ffffff;
 
   app-add,
-  app-edit,
-  app-delete {
+  app-edit {
     display: block;
     width: 100%;
   }

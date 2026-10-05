@@ -4,7 +4,7 @@ import { District } from '../../Models/district';
 import { DistrictService } from '../../Services/district.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -13,6 +13,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ConfirmDialogComponent } from '../../../Shared/Components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 @Component({
@@ -32,6 +34,7 @@ import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
     FormsModule,
     ReactiveFormsModule,
     MatMenuModule,
+    MatSnackBarModule,
     TranslatePipe
   ],
   templateUrl: './list.component.html',
@@ -39,14 +42,18 @@ import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 })
 export class ListComponent implements OnInit {
   @Output() editRequested = new EventEmitter<string>();
-  @Output() deleteRequested = new EventEmitter<District>();
 
   districts: District[] = [];
 
+  private readonly deletingDistrictIds = new Set<string>();
   isLoading = false;
   errorMessage = '';
 
-  constructor(private readonly districtService: DistrictService) {}
+  constructor(
+    private readonly districtService: DistrictService,
+    private readonly dialog: MatDialog,
+    private readonly snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.loadDistricts();
@@ -85,6 +92,49 @@ export class ListComponent implements OnInit {
   }
 
   requestDelete(item: District): void {
-    this.deleteRequested.emit(item);
+    if (!item.id || this.deletingDistrictIds.has(item.id)) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '360px',
+      data: {
+        message: `هل أنت متأكد من حذف الحي / المركز "${item.name}"؟`,
+        confirmText: 'حذف',
+        cancelText: 'إلغاء',
+        confirmClass: 'btn-danger'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed || this.deletingDistrictIds.has(item.id)) return;
+
+      this.deletingDistrictIds.add(item.id);
+      this.districtService.delete(item.id).subscribe({
+        next: response => {
+          this.deletingDistrictIds.delete(item.id);
+
+          if (!response.isSuccess) {
+            this.snackBar.open(response.message || 'فشل حذف الحي / المركز', 'إغلاق', {
+              duration: 3000
+            });
+            return;
+          }
+
+          this.snackBar.open('تم حذف الحي / المركز بنجاح', 'إغلاق', { duration: 2500 });
+          this.loadDistricts();
+        },
+        error: err => {
+          this.deletingDistrictIds.delete(item.id);
+          console.error('District DELETE error:', err);
+          this.snackBar.open(
+            err?.error?.message ||
+              err?.error?.Message ||
+              err?.message ||
+              'حدث خطأ أثناء حذف الحي / المركز',
+            'إغلاق',
+            { duration: 3000 }
+          );
+        }
+      });
+    });
   }
 }
