@@ -6,11 +6,19 @@ import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [CommonModule, TranslatePipe, MatButtonModule, MatIconModule, MatMenuModule],
+  imports: [
+    CommonModule,
+    TranslatePipe,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatPaginatorModule,
+  ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
@@ -28,9 +36,6 @@ export class ListComponent implements OnInit {
   };
 
   totalCount = 0;
-  totalPages = 0;
-  hasNextPage = false;
-  hasPreviousPage = false;
 
   constructor(private readonly archivedService: ArchivedService) {}
 
@@ -51,9 +56,6 @@ export class ListComponent implements OnInit {
         }
         this.items = res.data.items;
         this.totalCount = res.data.totalCount;
-        this.totalPages = res.data.totalPages;
-        this.hasNextPage = res.data.hasNextPage;
-        this.hasPreviousPage = res.data.hasPreviousPage;
       },
       error: (err) => {
         this.isLoading = false;
@@ -79,17 +81,12 @@ export class ListComponent implements OnInit {
     this.deleteRequested.emit(item);
   }
 
-  nextPage(): void {
-    if (this.hasNextPage) {
-      this.filter.pageNumber++;
-      this.loadData();
-    }
-  }
-
-  prevPage(): void {
-    if (this.hasPreviousPage) {
-      this.filter.pageNumber--;
-      this.loadData();
-    }
+  onPageChange(event: PageEvent): void {
+    this.filter = {
+      ...this.filter,
+      pageNumber: event.pageIndex + 1,
+      pageSize: event.pageSize,
+    };
+    this.loadData();
   }
 }

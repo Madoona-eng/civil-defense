@@ -109,16 +109,6 @@
   direction: ltr;
 }
 
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  margin-top: 20px;
-  font-weight: 900;
-  color: #0f3d5e;
-}
-
 @media (max-width: 800px) {
   .list-header {
     flex-direction: column;

@@ -1,5 +1,6 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 
@@ -7,6 +8,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './auth/interceptors/auth.interceptor';
+import { ArabicPaginatorIntl } from './Shared/Components/arabic-paginator-intl';
 
 export const CUSTOM_DATE_FORMATS = {
   parse: {
@@ -29,6 +31,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(MatNativeDateModule),
     { provide: MAT_DATE_LOCALE, useValue: 'ar-EG' },
     { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS },
+    { provide: MatPaginatorIntl, useClass: ArabicPaginatorIntl },
 
     provideAnimationsAsync(),
   ],

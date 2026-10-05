@@ -138,66 +138,6 @@
   }
 }
 
-/* 5. تخصيص الـ Paginator ليتطابق مع اتجاه وترتيب الصورة */
-.mat-mdc-paginator {
-  background: transparent !important;
-  color: #6C6C80 !important;
-  font-size: 13px !important;
-  font-weight: 600;
-  margin-top: 24px;
-  border-top: none !important;
-  direction: rtl; // كان ltr
-
-  .mat-mdc-paginator-container {
-    justify-content: flex-start !important; // في RTL بقت يمين
-    padding: 0 !important;
-  }
-
-  /* تنسيق حقل اختيار عدد الصفوف 10 */
-  .mat-mdc-paginator-page-size {
-    align-items: center;
-
-    .mat-mdc-paginator-page-size-label {
-      color: #6C6C80;
-      font-size: 13px;
-      font-weight: 600;
-      margin: 0 4px;
-    }
-
-    .mat-mdc-paginator-page-size-select {
-      margin: 0 8px;
-
-      .mat-mdc-select-trigger {
-        border: 1px solid #D9D2E9;
-        border-radius: 8px;
-        padding: 4px 8px;
-        background: #FFFFFF;
-      }
-    }
-  }
-
-  .mat-mdc-paginator-range-label {
-    color: #2D2D3F;
-    font-weight: 700;
-    margin: 0 16px;
-  }
-
-  /* أزرار الأسهم للتنقل */
-  .mat-mdc-paginator-navigation-first,
-  .mat-mdc-paginator-navigation-previous,
-  .mat-mdc-paginator-navigation-next,
-  .mat-mdc-paginator-navigation-last {
-    color: #7B7B8F;
-
-    &:not(:disabled) {
-      color: #5D3A99;
-
-      &:hover {
-        background-color: #F4EFFC;
-      }
-    }
-  }
-}
 /* ============================================================
    TABLE STATES
    ============================================================ */
