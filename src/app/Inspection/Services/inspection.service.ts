@@ -40,6 +40,10 @@ export class InspectionService {
       params = params.set('isReturned', query.isReturned.toString());
     }
 
+    if (query.opinion) {
+      params = params.set('opinion', query.opinion);
+    }
+
     if (query.submissionDateFrom) {
       params = params.set('submissionDateFrom', query.submissionDateFrom);
     }

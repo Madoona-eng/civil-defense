@@ -1,73 +1,75 @@
-<div class="popup-container" dir="rtl">
-  <!-- هيدر النافذة العلوي -->
-
-  <!-- هيدر النافذة العلوي -->
-  <div class="popup-header">
-    <div class="header-right">
-      <div class="header-icon">
-        <!-- أيقونة قلم SVG مباشرة لضمان الظهور -->
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a16207" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-        </svg>
-      </div>
-      <div class="header-titles">
-        <span class="sub-title">{{ 'entity.manage' | t }}</span>
-        <h2>{{ 'entity.edit' | t }}</h2>
-      </div>
-    </div>
-    <button type="button" class="close-btn" (click)="cancel()">✕</button>
-  </div>
-
-  <!-- باقي الكود كما هو بدون تغيير... -->
-
-  <!-- جسم النموذج والمدخلات -->
-  <div class="form-body">
-    <div class="loading-box" *ngIf="loading">
-      {{ 'common.loadingDataWithEllipsis' | t }}
-    </div>
-
-    <ng-container *ngIf="!loading">
-      <div class="form-grid">
-        <div class="field">
-          <label>{{ 'entity.code' | t }}</label>
-          <input
-            type="number"
-            [(ngModel)]="formModel.code"
-            name="code"
-            [placeholder]="'entity.code' | t"
-            disabled
-          />
+<div class="modal-overlay" dir="rtl" (click)="cancel()">
+  <div class="dialog-card" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <div class="header-content-group">
+        <div class="dialog-icon primary">
+          <mat-icon>edit</mat-icon>
         </div>
 
-        <div class="field">
-          <label>{{ 'entity.name' | t }}</label>
-          <input
-            type="text"
-            [(ngModel)]="formModel.name"
-            name="name"
-            [placeholder]="'entity.exampleLocalUnit' | t"
-          />
+        <div class="header-text">
+          <span class="eyebrow">{{ 'entity.manage' | t }}</span>
+          <h2>{{ 'entity.edit' | t }}</h2>
         </div>
       </div>
 
-      <div class="message success" *ngIf="successMessage">
-        {{ successMessage }}
+      <button type="button" class="btn-dialog-close" (click)="cancel()" [attr.aria-label]="'common.close' | t">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="dialog-body">
+      <div class="loading-box" *ngIf="loading">
+        <mat-icon class="spin-icon">sync</mat-icon>
+        <span>{{ 'common.loadingDataWithEllipsis' | t }}</span>
       </div>
 
-      <div class="message error" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </div>
+      <ng-container *ngIf="!loading">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="entity-code">{{ 'entity.code' | t }}</label>
+            <input
+              id="entity-code"
+              type="number"
+              class="dialog-input"
+              [(ngModel)]="formModel.code"
+              name="code"
+              [placeholder]="'entity.code' | t"
+              disabled
+            />
+          </div>
 
-      <div class="actions">
-        <button type="button" class="save-btn" (click)="save()" [disabled]="saving">
-          {{ saving ? ('common.saving' | t) : ('common.saveEdit' | t) }}
-        </button>
+          <div class="form-group">
+            <label for="entity-name">{{ 'entity.name' | t }}</label>
+            <input
+              id="entity-name"
+              type="text"
+              class="dialog-input"
+              [(ngModel)]="formModel.name"
+              name="name"
+              [placeholder]="'entity.exampleLocalUnit' | t"
+            />
+          </div>
+        </div>
 
-        <button type="button" class="cancel-btn" (click)="cancel()">
-          {{ 'common.cancel' | t }}
-        </button>
-      </div>
-    </ng-container>
+        <div class="message-banner success" *ngIf="successMessage">
+          {{ successMessage }}
+        </div>
+
+        <div class="message-banner error" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="dialog-actions" *ngIf="!loading">
+      <button type="button" class="btn-save" (click)="save()" [disabled]="saving">
+        <span *ngIf="!saving">{{ 'common.saveEdit' | t }}</span>
+        <span *ngIf="saving">{{ 'common.saving' | t }}</span>
+      </button>
+
+      <button type="button" class="btn-reset" (click)="cancel()">
+        {{ 'common.cancel' | t }}
+      </button>
+    </div>
   </div>
 </div>

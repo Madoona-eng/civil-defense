@@ -45,14 +45,11 @@
   </div>
 
   <!-- EDIT MODAL OVERLAY -->
-  <div class="popup-backdrop" *ngIf="isEditPopupOpen" (click)="closeEditPopup()">
-    <div (click)="$event.stopPropagation()" style="width: 100%; max-width: 520px;">
-      <app-requesting-entity-edit
-        [requestingEntityId]="selectedRequestingEntityId"
-        (saved)="onEditSaved()"
-        (cancelled)="closeEditPopup()">
-      </app-requesting-entity-edit>
-    </div>
-  </div>
+  <app-requesting-entity-edit
+    *ngIf="isEditPopupOpen"
+    [requestingEntityId]="selectedRequestingEntityId"
+    (saved)="onEditSaved()"
+    (cancelled)="closeEditPopup()">
+  </app-requesting-entity-edit>
 
 </div>

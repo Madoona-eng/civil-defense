@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import {
   ApiResponse,
   RequestingEntity,
@@ -15,7 +16,7 @@ import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 @Component({
   selector: 'app-requesting-entity-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, MatIconModule, TranslatePipe],
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.scss'
 })

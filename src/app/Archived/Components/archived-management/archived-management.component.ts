@@ -15,6 +15,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { formatDateForApi } from '../../../Shared/Helpers/date.helper';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../Shared/Components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-archived-management',
@@ -30,7 +32,9 @@ import { MatIconModule } from '@angular/material/icon';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule,
+    ConfirmDialogComponent,
   ],
   templateUrl: './archived-management.component.html',
   styleUrl: './archived-management.component.scss'
@@ -39,7 +43,6 @@ export class ArchivedManagementComponent implements OnInit {
   @ViewChild(ListComponent) listComponent?: ListComponent;
 
   isDetailsPopupOpen = false;
-  isDeletePopupOpen = false;
   selectedId: string | null = null;
   selectedItem: Archived | null = null;
 
@@ -56,7 +59,8 @@ export class ArchivedManagementComponent implements OnInit {
 
   constructor(
     private readonly http: HttpClient,
-    private readonly archivedService: ArchivedService
+    private readonly archivedService: ArchivedService,
+    private readonly dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -101,12 +105,22 @@ export class ArchivedManagementComponent implements OnInit {
 
   openDeletePopup(item: Archived): void {
     this.selectedItem = item;
-    this.isDeletePopupOpen = true;
-  }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '360px',
+      data: {
+        message: `هل أنت متأكد من حذف الطلب "${item.establishmentName}"؟`,
+        confirmText: 'حذف',
+        cancelText: 'إلغاء',
+        confirmClass: 'btn-danger',
+      },
+    });
 
-  closeDeletePopup(): void {
-    this.isDeletePopupOpen = false;
-    this.selectedItem = null;
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.confirmDelete();
+      }
+      this.selectedItem = null;
+    });
   }
 
   confirmDelete(): void {
@@ -115,7 +129,6 @@ export class ArchivedManagementComponent implements OnInit {
     this.archivedService.delete(this.selectedItem.id).subscribe({
       next: (res) => {
         if (res.isSuccess) {
-          this.closeDeletePopup();
           this.listComponent?.loadData();
         } else {
           alert(res.message);

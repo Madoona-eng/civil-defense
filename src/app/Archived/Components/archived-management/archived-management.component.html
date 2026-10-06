@@ -118,45 +118,4 @@
       </div>
     </div>
   }
-
-  <!-- ================= DELETE DIALOG ================= -->
-  @if (isDeletePopupOpen) {
-    <div class="modal-overlay" dir="rtl" (click)="closeDeletePopup()">
-      <div class="dialog-card danger-dialog" (click)="$event.stopPropagation()">
-
-        <div class="dialog-header">
-          <div class="header-content-group">
-            <div class="dialog-icon danger">
-              <mat-icon>delete_outline</mat-icon>
-            </div>
-            <div class="header-text">
-              <span class="eyebrow">{{ 'archive.title' | t }}</span>
-              <h2>{{ 'archive.confirmDelete' | t }}</h2>
-            </div>
-          </div>
-          <button type="button" class="btn-dialog-close" (click)="closeDeletePopup()" [attr.aria-label]="'common.close' | t">
-            <mat-icon>close</mat-icon>
-          </button>
-        </div>
-
-        <div class="dialog-body">
-          <p>
-            {{ 'archive.deletePrompt' | t }}
-            <strong>{{ selectedItem?.establishmentName }}</strong>؟
-          </p>
-        </div>
-
-        <div class="dialog-actions">
-          <button type="button" class="btn-save btn-danger" (click)="confirmDelete()">
-            {{ 'common.delete' | t }}
-          </button>
-          <button type="button" class="btn-reset" (click)="closeDeletePopup()">
-            {{ 'common.cancel' | t }}
-          </button>
-        </div>
-
-      </div>
-    </div>
-  }
-
 </div>
