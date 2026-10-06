@@ -24,7 +24,7 @@
 
 /* 2. بطاقة النافذة */
 .dialog-card {
-  background: var(--color-bg-card, #FFFFFF);
+  background: var(--color-bg-card, #ffffff);
   width: 100%;
   max-width: 520px;
   max-height: calc(100vh - 40px);
@@ -51,8 +51,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  border-bottom: 1px dashed var(--color-border, #F3E8FF);
-  background: var(--color-bg-filters, #F7F4F9);
+  border-bottom: 1px dashed var(--color-border, #f3e8ff);
+  background: var(--color-bg-filters, #f7f4f9);
 
   .header-content-group {
     display: flex;
@@ -75,18 +75,18 @@
       }
 
       &.primary {
-        background: var(--color-sidebar-bg, #E8DFF5);
-        color: var(--color-primary, #5D3A99);
+        background: var(--color-sidebar-bg, #e8dff5);
+        color: var(--color-primary, #5d3a99);
       }
 
       &.warning {
-        background: var(--color-status-focus, #FEF08A);
-        color: #854D0E;
+        background: var(--color-status-focus, #fef08a);
+        color: #854d0e;
       }
 
       &.danger {
-        background: #FFF1F2;
-        color: #E11D48;
+        background: #fff1f2;
+        color: #e11d48;
       }
     }
 
@@ -98,14 +98,14 @@
       .eyebrow {
         font-size: 12px;
         font-weight: 700;
-        color: var(--color-text-secondary, #8E8EA9);
+        color: var(--color-text-secondary, #8e8ea9);
       }
 
       h2 {
         margin: 0;
         font-size: 17px;
         font-weight: 800;
-        color: var(--color-text-primary, #2D2D3F);
+        color: var(--color-text-primary, #2d2d3f);
       }
     }
   }
@@ -116,8 +116,8 @@
     flex-shrink: 0;
     border: none;
     border-radius: 10px;
-    background: #FFFFFF;
-    color: var(--color-text-secondary, #8E8EA9);
+    background: #ffffff;
+    color: var(--color-text-secondary, #8e8ea9);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -132,8 +132,8 @@
     }
 
     &:hover {
-      background: #EDE4F8;
-      color: var(--color-primary, #5D3A99);
+      background: #ede4f8;
+      color: var(--color-primary, #5d3a99);
       transform: rotate(90deg);
     }
   }
@@ -144,7 +144,7 @@
   flex: 1;
   overflow-y: auto;
   padding: 24px;
-  background: var(--color-bg-card, #FFFFFF);
+  background: var(--color-bg-card, #ffffff);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -162,39 +162,39 @@
       label {
         font-size: 13px;
         font-weight: 700;
-        color: var(--color-text-primary, #2D2D3F);
+        color: var(--color-text-primary, #2d2d3f);
       }
 
       .dialog-input {
         width: 100%;
         height: 44px;
         padding: 0 14px;
-        border: 1px solid var(--color-border, #F3E8FF);
+        border: 1px solid var(--color-border, #f3e8ff);
         border-radius: 12px;
-        background: #FAF8FD;
+        background: #faf8fd;
         font-size: 13.5px;
         font-family: inherit;
         font-weight: 600;
-        color: var(--color-text-primary, #2D2D3F);
+        color: var(--color-text-primary, #2d2d3f);
         box-sizing: border-box;
         outline: none;
         transition: all 0.2s ease;
 
         &:focus {
-          border-color: var(--color-primary-light, #8B5CF6);
-          background: #FFFFFF;
+          border-color: var(--color-primary-light, #8b5cf6);
+          background: #ffffff;
           box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
         }
 
         &:disabled {
-          background: #F3F1F8;
-          color: var(--color-text-secondary, #8E8EA9);
+          background: #f3f1f8;
+          color: var(--color-text-secondary, #8e8ea9);
           cursor: not-allowed;
           border-color: transparent;
         }
 
         &::placeholder {
-          color: #B5B5CA;
+          color: #b5b5ca;
           font-weight: 500;
         }
       }
@@ -204,7 +204,7 @@
   .loading-box {
     padding: 30px;
     text-align: center;
-    color: var(--color-text-secondary, #8E8EA9);
+    color: var(--color-text-secondary, #8e8ea9);
     font-weight: 700;
     font-size: 13.5px;
     display: flex;
@@ -227,20 +227,18 @@
     gap: 8px;
 
     &.success {
-      background: #F0FDF4;
+      background: #f0fdf4;
       color: #166534;
-      border: 1px solid #BBF7D0;
+      border: 1px solid #bbf7d0;
     }
 
     &.error {
-      background: #FFF1F2;
-      color: #9F1239;
-      border: 1px solid #FECDD3;
+      background: #fff1f2;
+      color: #9f1239;
+      border: 1px solid #fecdd3;
     }
   }
 }
-
-
 
 /* ============================================================
    DIALOG.SCSS - Shared Modern Lavender & Purple Dialog Theme
@@ -255,8 +253,8 @@
   justify-content: flex-end;
   gap: 12px;
   padding: 16px 24px;
-  border-top: 1px solid var(--color-border, #F3E8FF);
-  background: var(--color-bg-filters, #F7F4F9);
+  border-top: 1px solid var(--color-border, #f3e8ff);
+  background: var(--color-bg-filters, #f7f4f9);
 
   /* زر الحفظ الأساسي الموحد */
   .btn-save {
@@ -309,19 +307,30 @@
 
 /* Animations */
 @keyframes dialogFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes dialogScaleUp {
-  from { opacity: 0; transform: translateY(12px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @keyframes dialogSpin {
-  100% { transform: rotate(360deg); }
+  100% {
+    transform: rotate(360deg);
+  }
 }
-
 
 /* ============================================================
                           form-dialog-

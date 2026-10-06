@@ -85,8 +85,13 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="table-row-hover"></tr>
-
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        class="table-row-hover"
+        [class.last-opened]="row.id === lastOpenedId"
+      ></tr>
+      
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" [attr.colspan]="displayedColumns.length">
           <div class="empty-state" *ngIf="!isLoading">

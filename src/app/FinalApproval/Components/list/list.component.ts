@@ -53,6 +53,7 @@ export class ListComponent {
     'actions',
   ];
   readonly formatDate = formatDate;
+  lastOpenedId: string | null = null;
 
   constructor(private readonly authService: AuthService) {}
 
@@ -68,16 +69,17 @@ export class ListComponent {
   onPageChange(event: PageEvent): void {
     this.pageChanged.emit(event);
   }
-
   requestEdit(item: FinalApprovalItem): void {
+    this.lastOpenedId = item.id;
     this.editRequested.emit(item);
   }
 
+  // UNUSED
   requestDelete(item: FinalApprovalItem): void {
     this.deleteRequested.emit(item);
   }
-
   requestReturn(item: FinalApprovalItem): void {
+    this.lastOpenedId = item.id;
     this.returnRequested.emit(item);
   }
 

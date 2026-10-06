@@ -3,7 +3,7 @@
   <div class="filters-row-primary">
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <mat-label>بحث</mat-label>
-      <mat-icon matPrefix>search</mat-icon>
+      <app-icon matPrefix name="Search" class="field-prefix-icon" />
       <input
         matInput
         type="text"
@@ -102,18 +102,18 @@
     </div>
   </div>
 
-  <div class="loading-box" *ngIf="isLoading">
-    <mat-icon class="spin-icon">sync</mat-icon>
-    <span>جاري تحميل المعاينات...</span>
+  <div class="loading-box" *ngIf="isLoading || isMovingAll">
+    <app-icon class="spin-icon" name="RefreshCw" />
+    <span>{{ isMovingAll ? 'جاري نقل المعاملات...' : 'جاري تحميل المعاينات...' }}</span>
   </div>
 
   <div class="message-banner error" *ngIf="errorMessage">
-    <mat-icon>error_outline</mat-icon>
+    <app-icon name="CircleAlert" />
     <span>{{ errorMessage }}</span>
   </div>
 
   <div class="empty-box" *ngIf="!isLoading && items.length === 0 && !errorMessage">
-    <mat-icon>inbox</mat-icon>
+    <app-icon name="Inbox" variant="lg" />
     <span>لا توجد معاينات</span>
   </div>
 
@@ -135,7 +135,11 @@
       </thead>
 
       <tbody>
-        <tr class="mat-mdc-row" *ngFor="let item of items">
+        <tr
+          class="mat-mdc-row"
+          *ngFor="let item of items"
+          [class.last-opened]="item.id === lastOpenedId"
+        >
           <td class="mat-mdc-cell">
             <span class="transaction-code-pill">{{ item.transactionCode }}</span>
           </td>
@@ -187,12 +191,8 @@
       (click)="moveAllToFinalApproval()"
     >
       <span>{{ isMovingAll ? 'جاري النقل...' : 'نقل الكل للموافقة النهائية' }}</span>
-      <mat-icon>keyboard_double_arrow_left</mat-icon>
+      <app-icon name="ChevronsLeft" />
     </button>
-  </div>
-  <div class="loading-box" *ngIf="isLoading || isMovingAll">
-    <mat-icon class="spin-icon">sync</mat-icon>
-    <span>{{ isMovingAll ? 'جاري نقل المعاملات...' : 'جاري تحميل المعاينات...' }}</span>
   </div>
 
   <!-- الترقيم السفلي -->

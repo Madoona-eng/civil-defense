@@ -32,6 +32,7 @@ export class ListComponent implements OnInit {
   items: Archived[] = [];
   isLoading = false;
   errorMessage = '';
+  lastOpenedId: string | null = null;
 
   filter: ArchivedFilter = {
     pageNumber: 1,
@@ -76,12 +77,13 @@ export class ListComponent implements OnInit {
     this.filter = { ...filter };
     this.loadData();
   }
-
   requestView(id: string): void {
+    this.lastOpenedId = id;
     this.viewRequested.emit(id);
   }
 
   requestDelete(item: Archived): void {
+    this.lastOpenedId = item.id;
     this.deleteRequested.emit(item);
   }
 

@@ -45,7 +45,7 @@
 
         <tbody>
           @for (item of items; track item.id) {
-            <tr class="mat-mdc-row">
+            <tr class="mat-mdc-row" [class.last-opened]="item.id === lastOpenedId">
               <td class="mat-mdc-cell">
                 <span class="transaction-code-pill">{{ item.transactionCode }}</span>
               </td>

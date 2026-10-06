@@ -223,3 +223,11 @@
     }
   }
 }
+
+/* ============================================================
+   تمييز آخر صف اتفتح (Last Opened Row)
+   ============================================================ */
+.mat-mdc-row.last-opened {
+  background-color: #f4effc !important;
+  box-shadow: inset -4px 0 0 var(--color-primary);
+}

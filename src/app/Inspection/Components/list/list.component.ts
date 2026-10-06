@@ -18,7 +18,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -37,11 +36,8 @@ import {
   ReturnState,
 } from '../../../Shared/Enums/enums';
 import { formatDate, formatDateForApi } from '../../../Shared/Helpers/date.helper';
+import { SelectOption } from '../../../Shared/Models/SelectOption';
 import { AuthService } from '../../../auth/services/auth.service';
-interface SelectOption {
-  value: string;
-  label: string;
-}
 
 @Component({
   selector: 'app-inspection-list',
@@ -49,7 +45,6 @@ interface SelectOption {
   imports: [
     CommonModule,
     FormsModule,
-    MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -68,6 +63,7 @@ interface SelectOption {
 })
 export class ListComponent implements OnInit {
   readonly formatDate = formatDate;
+  lastOpenedId: string | null = null;
 
   @Output() editRequested = new EventEmitter<InspectionItem>();
 
@@ -77,7 +73,6 @@ export class ListComponent implements OnInit {
   districts: LookupItem[] = [];
   activityTypes: LookupItem[] = [];
 
-  // خيارات الفلاتر متولدة من نفس الـ enums والـ labels
   readonly returnStateOptions: SelectOption[] = Object.values(ReturnState).map((value) => ({
     value,
     label: RETURN_STATE_LABELS[value],
@@ -99,7 +94,7 @@ export class ListComponent implements OnInit {
   searchTerm = '';
   isReturned = '';
   submissionDateFrom: Date | null = null;
-  submissionDateTo = '';
+  submissionDateTo: Date | null = null;
   opinion: InspectionOpinion | '' = '';
   isDistrictLocked = false;
 
@@ -164,7 +159,7 @@ export class ListComponent implements OnInit {
       isReturned: this.isReturned === '' ? undefined : this.isReturned === ReturnState.Returned,
       opinion: this.opinion || undefined,
       submissionDateFrom: formatDateForApi(this.submissionDateFrom),
-      submissionDateTo: this.submissionDateTo || undefined,
+      submissionDateTo: formatDateForApi(this.submissionDateTo),
       searchTerm: this.searchTerm.trim() || undefined,
       pageNumber: this.pageNumber,
       pageSize: this.pageSize,
@@ -210,7 +205,7 @@ export class ListComponent implements OnInit {
     this.isReturned = '';
     this.opinion = '';
     this.submissionDateFrom = null;
-    this.submissionDateTo = '';
+    this.submissionDateTo = null;
     this.pageNumber = 1;
     this.loadInspections();
   }
@@ -226,6 +221,7 @@ export class ListComponent implements OnInit {
   }
 
   requestEdit(item: InspectionItem): void {
+    this.lastOpenedId = item.id;
     this.editRequested.emit(item);
   }
 
@@ -239,6 +235,7 @@ export class ListComponent implements OnInit {
       return;
     }
 
+    this.lastOpenedId = item.id;
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '360px',
       data: {
