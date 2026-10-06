@@ -94,7 +94,7 @@
   <!-- ================= DETAILS DIALOG ================= -->
   @if (isDetailsPopupOpen) {
     <div class="modal-overlay" dir="rtl" (click)="closeDetailsPopup()">
-      <div class="dialog-card wide-dialog" (click)="$event.stopPropagation()">
+      <div class="dialog-card form-dialog wide-dialog" (click)="$event.stopPropagation()">
 
         <div class="dialog-header">
           <div class="header-content-group">
@@ -115,6 +115,11 @@
           <app-details [id]="selectedId!"></app-details>
         </div>
 
+        <div class="dialog-actions">
+          <button type="button" class="btn-reset" (click)="closeDetailsPopup()">
+            {{ 'common.close' | t }}
+          </button>
+        </div>
       </div>
     </div>
   }

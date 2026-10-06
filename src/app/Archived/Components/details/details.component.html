@@ -1,182 +1,199 @@
 <div class="details-wrap" dir="rtl">
   @if (isLoading) {
-    <div class="loading-box">{{ 'common.loadingDetails' | t }}</div>
-  } @else if (errorMessage) {
-    <div class="message error">{{ errorMessage }}</div>
-  } @else if (details) {
-    <h3 class="section-title">{{ 'archive.transactionData' | t }}</h3>
-
-    <div class="info-grid">
-      <div class="info-item">
-        <span class="label">{{ 'common.applicant' | t }}</span>
-        <span class="value">{{ details.applicantName }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">{{ 'common.applicantRole' | t }}</span>
-        <span class="value">{{
-          getApplicantRoleLabel(details.applicantRole)
-        }}</span>
-      </div>
-
-      <div class="info-item">
-        <span class="label">{{ 'archive.nationalId' | t }}</span>
-        <span class="value ltr">{{ details.nationalId }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">{{ 'common.responsibleManager' | t }}</span>
-        <span class="value">{{ details.responsibleManager }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">{{ 'common.phone' | t }}</span>
-        <span class="value ltr">{{ details.phone }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">{{ 'common.inspector' | t }}</span>
-        <span class="value">{{ details.inspectorName }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">{{ 'common.opinion' | t }}</span>
-        <span class="value">{{ getOpinionLabel(details.opinion) }}</span>
-      </div>
-
-      <div class="info-item">
-        <span class="label">{{ 'archive.finalStatus' | t }}</span>
-        <span class="value">{{
-          getFinalStatusLabel(details.finalStatus)
-        }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">{{ 'archive.createdAt' | t }}</span>
-        <span class="value ltr">{{
-          details.createdAt | date: "yyyy-MM-dd"
-        }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">{{ 'common.createdBy' | t }}</span>
-        <span class="value">{{ details.createdBy }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">{{ 'archive.inspectedBy' | t }}</span>
-        <span class="value">{{ details.inspectedBy }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">{{ 'archive.approvedBy' | t }}</span>
-        <span class="value">{{ details.approvedBy }}</span>
-      </div>
-      @if (details.archivedBy) {
-        <div class="info-item">
-          <span class="label">{{ 'archive.archivedBy' | t }}</span>
-          <span class="value">{{ details.archivedBy }}</span>
-        </div>
-      }
+    <div class="loading-box">
+      <mat-icon class="spin-icon">sync</mat-icon>
+      <span>{{ 'common.loadingDetails' | t }}</span>
     </div>
+  } @else if (errorMessage) {
+    <div class="message-banner error">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+  } @else {
+    @if (details; as d) {
+      <!-- 1. بيانات المعاملة -->
+      <section class="info-section">
+        <h3 class="section-title">{{ 'archive.transactionData' | t }}</h3>
+        <div class="form-grid info-grid">
+          <div class="form-group">
+            <label>{{ 'common.applicant' | t }}</label>
+            <span class="dialog-input readonly-value">{{ d.applicantName || '-' }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'common.applicantRole' | t }}</label>
+            <span class="dialog-input readonly-value">{{ getApplicantRoleLabel(d.applicantRole) }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'archive.nationalId' | t }}</label>
+            <span class="dialog-input readonly-value" dir="ltr">{{ d.nationalId || '-' }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'common.responsibleManager' | t }}</label>
+            <span class="dialog-input readonly-value">{{ d.responsibleManager || '-' }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'common.phone' | t }}</label>
+            <span class="dialog-input readonly-value" dir="ltr">{{ d.phone || '-' }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'common.createdBy' | t }}</label>
+            <span class="dialog-input readonly-value">{{ d.createdBy || '-' }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'archive.createdAt' | t }}</label>
+            <span class="dialog-input readonly-value">{{ d.createdAt | date: 'yyyy-MM-dd' }}</span>
+          </div>
+        </div>
+      </section>
 
-    @if (details.notes.length > 0) {
-      <h3 class="section-title">{{ 'common.notes' | t }}</h3>
-      <div class="notes-list">
-        @for (note of details.notes; track $index) {
-          <div class="note-card">
-            <div class="note-meta">
-              <span>{{ note.writtenBy }}</span>
-              <span class="step-badge">{{ note.processStep }}</span>
-              <span class="ltr">{{ note.writtenAt | date: "yyyy-MM-dd" }}</span>
+      <!-- 2. بيانات المعاينة -->
+      <section class="info-section">
+        <h3 class="section-title">{{ 'common.inspectionData' | t }}</h3>
+        <div class="form-grid info-grid">
+          <div class="form-group">
+            <label>{{ 'common.inspector' | t }}</label>
+            <span class="dialog-input readonly-value">{{ d.inspectorName || '-' }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'common.opinion' | t }}</label>
+            <span class="dialog-input readonly-value">{{ getOpinionLabel(d.opinion) }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'archive.inspectedBy' | t }}</label>
+            <span class="dialog-input readonly-value">{{ d.inspectedBy || '-' }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'common.returnState' | t }}</label>
+            <span class="dialog-input readonly-value">{{ d.isReturned ? ('common.yes' | t) : ('common.no' | t) }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. بيانات الموافقة النهائية -->
+      <section class="info-section">
+        <h3 class="section-title">{{ 'common.finalApprovalData' | t }}</h3>
+        <div class="form-grid info-grid">
+          <div class="form-group">
+            <label>{{ 'archive.finalStatus' | t }}</label>
+            <span class="dialog-input readonly-value">{{ getFinalStatusLabel(d.finalStatus) }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'archive.approvedBy' | t }}</label>
+            <span class="dialog-input readonly-value">{{ d.approvedBy || '-' }}</span>
+          </div>
+          @if (d.archivedBy) {
+            <div class="form-group">
+              <label>{{ 'archive.archivedBy' | t }}</label>
+              <span class="dialog-input readonly-value">{{ d.archivedBy }}</span>
             </div>
-            <p>{{ note.content }}</p>
-          </div>
-        }
-      </div>
-    }
+          }
+        </div>
+      </section>
 
-    @if (details.reviews.length > 0) {
-      <h3 class="section-title">{{ 'archive.reviews' | t }}</h3>
-      <div class="reviews-list">
-        @for (review of details.reviews; track $index) {
-          <div class="review-card">
-            <div class="info-grid">
-              <div class="info-item">
-                <span class="label">{{ 'archive.reviewState' | t }}</span>
-                <span class="value">{{
-                  getReviewStatusLabel(review.reviewStatus)
-                }}</span>
+      <!-- 4. المرفقات -->
+      <section class="attachments-section">
+        <h3 class="section-title">{{ 'common.attachments' | t }}</h3>
+        @if (!hasAnyAttachments(d)) {
+          <p class="empty-files">{{ 'common.noFiles' | t }}</p>
+        } @else {
+          <div class="attachments-grid">
+            @for (group of getAttachmentGroups(d); track group.title) {
+              <div class="attachment-field">
+                <span class="attachment-label">{{ group.title | t }}</span>
+
+                <div class="file-list">
+                  @for (file of group.files; track file.id) {
+                    <div class="file-item">
+                      <button
+                        type="button"
+                        class="file-thumb"
+                        (click)="openFile(file.filePath)"
+                        [attr.aria-label]="file.fileName"
+                      >
+                        @if (isImageFile(file.fileName) && !hasImageError(file.filePath)) {
+                          <img
+                            [src]="getFileUrl(file.filePath)"
+                            [alt]="file.fileName"
+                            (error)="onImageError(file.filePath)"
+                          />
+                        } @else {
+                          <mat-icon>{{ iconByName(file.fileName) }}</mat-icon>
+                        }
+                      </button>
+
+                      <div class="file-meta">
+                        <span class="file-name" [title]="file.fileName">{{ file.fileName }}</span>
+                        <div class="file-size">
+                          <span class="file-badge">{{ getStepLabel(file.uploadedAtStep) }}</span>
+                          <span>{{ file.uploadedAt | date: 'yyyy-MM-dd' }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
               </div>
-              <div class="info-item">
-                <span class="label">{{ 'archive.paid' | t }}</span>
-                <span class="value">{{ review.isPaid ? ('common.yes' | t) : ('common.no' | t) }}</span>
+            }
+          </div>
+        }
+      </section>
+
+      <!-- 5. الملاحظات -->
+      <section class="attachments-section">
+        <h3 class="section-title">{{ 'common.notes' | t }}</h3>
+        @if (!d.notes.length) {
+          <p class="empty-files">{{ 'common.noNotes' | t }}</p>
+        } @else {
+          <div class="file-list">
+            @for (note of d.notes; track $index) {
+              <div class="attachment-field">
+                <div class="file-size">
+                  <span class="file-badge">{{ getStepLabel(note.processStep) }}</span>
+                  <span>{{ note.writtenBy || '-' }}</span>
+                  <span>•</span>
+                  <span>{{ note.writtenAt | date: 'yyyy-MM-dd' }}</span>
+                </div>
+                <p class="note-content">{{ note.content }}</p>
               </div>
-              <div class="info-item">
-                <span class="label">{{ 'archive.reviewedBy' | t }}</span>
-                <span class="value">{{ review.reviewedBy }}</span>
-              </div>
-              <div class="info-item">
-                <span class="label">{{ 'archive.reviewDate' | t }}</span>
-                <span class="value ltr">{{
-                  review.reviewedAt | date: "yyyy-MM-dd"
-                }}</span>
-              </div>
-            </div>
+            }
           </div>
         }
-      </div>
-    }
+      </section>
 
-    @if (details.entityLetters.length > 0) {
-      <h3 class="section-title">{{ 'common.entityLetters' | t }}</h3>
-      <div class="attachments-list">
-        @for (file of details.entityLetters; track file.id) {
-          <div class="attachment-item">
-            <span class="file-name">{{ file.fileName }}</span>
-            <span class="step-badge">{{ file.uploadedAtStep }}</span>
+      <!-- 6. المراجعات -->
+      <section class="attachments-section">
+        <h3 class="section-title">{{ 'archive.reviews' | t }}</h3>
+        @if (!d.reviews.length) {
+          <p class="empty-files">{{ 'common.empty' | t }}</p>
+        } @else {
+          <div class="review-table-wrap">
+            <table class="review-table">
+              <thead>
+                <tr>
+                  <th>{{ 'archive.reviewState' | t }}</th>
+                  <th>{{ 'archive.paid' | t }}</th>
+                  <th>{{ 'archive.reviewedBy' | t }}</th>
+                  <th>{{ 'archive.reviewDate' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (review of d.reviews; track review.reviewedAt; let i = $index) {
+                  <tr [class.latest]="i === 0">
+                    <td>
+                      {{ getReviewStatusLabel(review.reviewStatus) }}
+                      @if (i === 0) {
+                        <span class="latest-tag">الأحدث</span>
+                      }
+                    </td>
+                    <td>{{ review.isPaid ? ('common.yes' | t) : ('common.no' | t) }}</td>
+                    <td>{{ review.reviewedBy || '-' }}</td>
+                    <td>{{ review.reviewedAt | date: 'yyyy-MM-dd' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
           </div>
         }
-      </div>
-    }
-
-    @if (details.proofDocuments.length > 0) {
-      <h3 class="section-title">{{ 'common.proofDocuments' | t }}</h3>
-      <div class="attachments-list">
-        @for (file of details.proofDocuments; track file.id) {
-          <div class="attachment-item">
-            <span class="file-name">{{ file.fileName }}</span>
-            <span class="step-badge">{{ file.uploadedAtStep }}</span>
-          </div>
-        }
-      </div>
-    }
-
-    @if (details.engineeringReports.length > 0) {
-      <h3 class="section-title">{{ 'common.engineeringReports' | t }}</h3>
-      <div class="attachments-list">
-        @for (file of details.engineeringReports; track file.id) {
-          <div class="attachment-item">
-            <span class="file-name">{{ file.fileName }}</span>
-            <span class="step-badge">{{ file.uploadedAtStep }}</span>
-          </div>
-        }
-      </div>
-    }
-
-    @if (details.inspectionReports.length > 0) {
-      <h3 class="section-title">{{ 'common.inspectionReports' | t }}</h3>
-      <div class="attachments-list">
-        @for (file of details.inspectionReports; track file.id) {
-          <div class="attachment-item">
-            <span class="file-name">{{ file.fileName }}</span>
-            <span class="step-badge">{{ file.uploadedAtStep }}</span>
-          </div>
-        }
-      </div>
-    }
-
-    @if (details.otherAttachments.length > 0) {
-      <h3 class="section-title">{{ 'common.otherAttachments' | t }}</h3>
-      <div class="attachments-list">
-        @for (file of details.otherAttachments; track file.id) {
-          <div class="attachment-item">
-            <span class="file-name">{{ file.fileName }}</span>
-            <span class="step-badge">{{ file.uploadedAtStep }}</span>
-          </div>
-        }
-      </div>
+      </section>
     }
   }
 </div>

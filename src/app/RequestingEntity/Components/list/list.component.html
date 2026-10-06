@@ -31,29 +31,29 @@
     <span>{{ 'entity.empty' | t }}</span>
   </div>
 
-  <!-- جدول البيانات المطور -->
-  <div class="mat-table-container" *ngIf="!isLoading && requestingEntities.length > 0">
+  <!-- جدول البيانات -->
+  <div class="table-scroll-wrapper" *ngIf="!isLoading && requestingEntities.length > 0">
     <table class="mat-mdc-table">
       <thead>
         <tr class="mat-mdc-header-row">
-          <th class="mat-mdc-header-cell">{{ 'common.code' | t }}</th>
-          <th class="mat-mdc-header-cell">{{ 'entity.name' | t }}</th>
-          <th class="mat-mdc-header-cell action-header-cell">{{ 'common.actions' | t }}</th>
+          <th class="mat-mdc-header-cell col-code">{{ 'common.code' | t }}</th>
+          <th class="mat-mdc-header-cell col-name text-center">{{ 'entity.name' | t }}</th>
+          <th class="mat-mdc-header-cell col-actions text-center">{{ 'common.actions' | t }}</th>
         </tr>
       </thead>
 
       <tbody>
         <tr class="mat-mdc-row" *ngFor="let item of requestingEntities">
           <!-- كود الجهة -->
-          <td class="mat-mdc-cell">
+          <td class="mat-mdc-cell col-code">
             <span class="code-badge">{{ item.code }}</span>
           </td>
 
-          <!-- اسم الجهة -->
-          <td class="mat-mdc-cell font-medium">{{ item.name }}</td>
+          <!-- اسم الجهة (في المنتصف) -->
+          <td class="mat-mdc-cell col-name font-medium text-center">{{ item.name }}</td>
 
-          <!-- الإجراءات (زر النقاط الثلاث) -->
-          <td class="mat-mdc-cell action-cell">
+          <!-- الإجراءات -->
+          <td class="mat-mdc-cell col-actions text-center action-cell">
             <button
               type="button"
               class="btn-action-more"
@@ -62,7 +62,6 @@
               <mat-icon>more_vert</mat-icon>
             </button>
 
-            <!-- القائمة المنسدلة للخيارات -->
             <mat-menu #actionMenu="matMenu" xPosition="before" class="custom-action-menu">
               <button mat-menu-item (click)="requestEdit(item.id)">
                 <mat-icon class="menu-icon edit-icon">edit</mat-icon>

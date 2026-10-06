@@ -1,12 +1,13 @@
-/* =========================================================
-   IMPORT SHARED TABLE & DASHBOARD STYLES
-========================================================= */
-@import '../../../Shared/Styles/tablesstyle.scss';
-
 .table-card {
   width: 100%;
   direction: rtl;
   font-family: inherit;
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid rgba(240, 238, 245, 0.9);
+  box-shadow: 0 10px 30px rgba(93, 58, 153, 0.03);
+  padding: 24px;
+  box-sizing: border-box;
 
   /* Header & Refresh Section */
   .list-header {
@@ -14,54 +15,52 @@
     justify-content: space-between;
     align-items: center;
     gap: 12px;
-    margin-bottom: 14px;
-    padding: 0 4px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed rgba(220, 215, 235, 0.6);
 
     h3 {
       margin: 0;
-      color: var(--color-text-primary, #2D2D3F);
-      font-size: 15px;
+      color: #1E1B2E;
+      font-size: 18px;
       font-weight: 800;
       line-height: 1.2;
     }
 
     p {
-      margin: 3px 0 0;
-      color: var(--color-text-secondary, #8E8EA9);
-      font-size: 12px;
-      line-height: 1.3;
+      margin: 4px 0 0;
+      color: #7B7B8F;
+      font-size: 13px;
+      line-height: 1.4;
+      font-weight: 500;
     }
 
     .refresh-btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.95);
-      border-radius: 10px;
-      padding: 6px 14px;
-      height: 34px;
-      background: #FFFFFF;
-      color: var(--color-primary, #5D3A99);
+      border: 1px solid #E8DFF5;
+      border-radius: 12px;
+      padding: 8px 16px;
+      height: 38px;
+      background: #FAF8FD;
+      color: #5D3A99;
       font-family: inherit;
-      font-size: 12.5px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 
-        0 2px 8px rgba(93, 58, 153, 0.06),
-        inset 0 1px 1px #FFFFFF;
       transition: all 0.2s ease;
 
       mat-icon {
-        font-size: 16px;
-        width: 16px;
-        height: 16px;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
       }
 
       &:hover {
-        background: #EFE8FB;
-        color: var(--color-primary, #5D3A99);
+        background: #E8DFF5;
+        color: #4C2D80;
         transform: translateY(-1px);
-        box-shadow: 0 4px 10px rgba(93, 58, 153, 0.12);
       }
 
       &:active {
@@ -70,95 +69,140 @@
     }
   }
 
-  /* تنسيق عمود وزر الإجراءات */
-  .action-header-cell,
-  .action-cell {
-    text-align: center !important;
-    width: 70px;
+  /* Table Wrapper */
+  .table-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
   }
 
-  .action-cell {
-    .btn-action-more {
-      background: transparent;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      color: var(--color-primary, #5D3A99);
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.2s ease, transform 0.15s ease;
+  .mat-mdc-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: transparent;
 
-      mat-icon {
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
-        color: inherit;
+    .mat-mdc-header-row {
+      background: #FAF8FD;
+      height: 48px;
+    }
+
+    .mat-mdc-header-cell {
+      color: #7D7D99;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 12px 20px;
+      border-bottom: 1px solid #E8E5F0;
+      text-align: right;
+
+      &:first-child {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+
+      &:last-child {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+      }
+    }
+
+    .mat-mdc-row {
+      height: 56px;
+      transition: background-color 0.2s ease;
+
+      &:not(:last-child) .mat-mdc-cell {
+        border-bottom: 1px solid #F6F4FA;
       }
 
       &:hover {
-        background-color: #F0EAF8;
-        transform: scale(1.08);
+        background-color: #FAF8FD;
       }
+    }
+
+    .mat-mdc-cell {
+      padding: 12px 20px;
+      color: #2D2D3F;
+      font-size: 14px;
+      vertical-align: middle;
     }
   }
 
-  .font-medium {
-    font-weight: 600;
-    color: var(--color-text-primary, #2D2D3F);
+  /* Actions & Badges */
+  .action-header-cell,
+  .action-cell {
+    text-align: center !important;
+    width: 80px;
   }
 
-  /* كبسولة الكود */
-  .code-badge {
+  .btn-action-more {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #5D3A99;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 34px;
-    height: 32px;
-    padding: 0 12px;
-    background: #F6F2FC;
-    border: 1px solid rgba(255, 255, 255, 0.85);
-    border-radius: 10px;
-    color: var(--color-primary, #5D3A99);
-    font-weight: 800;
-    font-size: 13px;
-    box-shadow: 
-      0 2px 6px rgba(93, 58, 153, 0.05),
-      inset 0 1px 1px #FFFFFF;
-  }
-
-  /* رسائل الخطأ، التحميل، والبيانات الفارغة */
-  .message.error {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 20px;
-    border-radius: 16px;
-    background: #FFF1F2;
-    border: 1px solid #FECDD3;
-    color: #9F1239;
-    font-size: 13.5px;
-    font-weight: 700;
-    margin-bottom: 18px;
-    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.08);
+    transition: all 0.2s ease;
 
     mat-icon {
       font-size: 20px;
       width: 20px;
       height: 20px;
-      color: #E11D48;
+    }
+
+    &:hover {
+      background-color: #E8DFF5;
+    }
+  }
+
+  .font-medium {
+    font-weight: 600;
+    color: #1E1B2E;
+  }
+
+  .code-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 8px;
+    background: #E8DFF5;
+    color: #5D3A99;
+    font-weight: 800;
+    font-size: 13px;
+  }
+
+  /* Statuses */
+  .message.error {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border-radius: 14px;
+    background: #FFF1F2;
+    border: 1px solid #FECDD3;
+    color: #E11D48;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 18px;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
     }
   }
 
   .loading-box,
   .empty-box {
     padding: 40px 20px;
-    border-radius: 20px;
+    border-radius: 16px;
     background: #FAF8FD;
-    color: var(--color-text-secondary, #8E8EA9);
+    color: #7D7D99;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -166,13 +210,12 @@
     gap: 12px;
     font-size: 14px;
     font-weight: 700;
-    border: 2px dashed rgba(216, 180, 254, 0.6);
 
     mat-icon {
       font-size: 30px;
       width: 30px;
       height: 30px;
-      color: var(--color-primary-light, #8B5CF6);
+      color: #5D3A99;
     }
   }
 
@@ -181,7 +224,7 @@
   }
 }
 
-/* تنسيق القائمة المنسدلة للـ Mat-Menu */
+/* Mat-Menu Dropdown Styles */
 ::ng-deep .custom-action-menu.mat-mdc-menu-panel {
   border-radius: 16px !important;
   background: #FFFFFF !important;
@@ -209,13 +252,8 @@
       width: 18px !important;
       height: 18px !important;
 
-      &.edit-icon {
-        color: #7C3AED;
-      }
-
-      &.delete-icon {
-        color: #E11D48;
-      }
+      &.edit-icon { color: #7C3AED; }
+      &.delete-icon { color: #E11D48; }
     }
 
     &:hover {
@@ -225,9 +263,8 @@
 }
 
 @keyframes spin {
-  100% {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 @media (max-width: 768px) {
@@ -239,5 +276,84 @@
       width: 100%;
       justify-content: center;
     }
+  }
+}
+.mat-mdc-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: transparent;
+  table-layout: fixed; /* يضمن توزيع مساحات الأعمدة بدقة */
+
+  .mat-mdc-header-row {
+    background: #FAF8FD;
+    height: 48px;
+  }
+
+  .mat-mdc-header-cell {
+    color: #7D7D99;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 12px 20px;
+    border-bottom: 1px solid #E8E5F0;
+
+    &:first-child {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    &:last-child {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+  }
+
+  .mat-mdc-row {
+    height: 56px;
+    transition: background-color 0.2s ease;
+
+    &:not(:last-child) .mat-mdc-cell {
+      border-bottom: 1px solid #F6F4FA;
+    }
+
+    &:hover {
+      background-color: #FAF8FD;
+    }
+  }
+
+  .mat-mdc-cell {
+    padding: 12px 20px;
+    color: #2D2D3F;
+    font-size: 14px;
+    vertical-align: middle;
+
+    &.font-medium {
+      font-weight: 600;
+    }
+  }
+
+  /* ---------------------------------------------------------
+     تحديد عرض ومحاذاة الأعمدة
+  --------------------------------------------------------- */
+  
+  /* عمود الكود (يمين) */
+  .col-code {
+    width: 120px;
+    text-align: right;
+  }
+
+  /* عمود اسم الجهة (توسيط كامل) */
+  .col-name {
+    width: auto;
+  }
+
+  /* عمود الإجراءات (يسار / منتصف) */
+  .col-actions {
+    width: 120px;
+  }
+
+  /* كلاس التوسيط المباشر */
+  .text-center {
+    text-align: center !important;
   }
 }

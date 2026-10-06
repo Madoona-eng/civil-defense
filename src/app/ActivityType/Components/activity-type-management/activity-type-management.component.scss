@@ -1,10 +1,5 @@
 /* =========================================================
-   IMPORT SHARED TABLE & CLAYMORPHIC STYLES
-========================================================= */
-@import '../../../Shared/Styles/tablesstyle.scss';
-
-/* =========================================================
-   PAGE CONTAINER (RTL & Soft Pastel Theme)
+   PAGE CONTAINER
 ========================================================= */
 .activity-page {
   min-height: 100vh;
@@ -88,7 +83,7 @@
 }
 
 /* =========================================================
-   ADD BUTTON (Purple Clean Pill)
+   ADD BUTTON
 ========================================================= */
 .add-btn {
   min-height: 46px;
@@ -267,25 +262,7 @@
   }
 }
 
-/* =========================================================
-   ANIMATIONS & RESPONSIVE
-========================================================= */
-@keyframes backdropIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes popupIn {
-  from {
-    opacity: 0;
-    transform: translateY(16px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
+/* RESPONSIVE */
 @media (max-width: 900px) {
   .activity-page {
     padding: 20px;
@@ -298,20 +275,5 @@
 
   .add-btn {
     width: 100%;
-  }
-}
-
-@media (max-width: 600px) {
-  .activity-page {
-    padding: 14px;
-  }
-
-  .page-header {
-    padding: 18px;
-    border-radius: 20px;
-  }
-
-  .popup-card {
-    border-radius: 20px;
   }
 }

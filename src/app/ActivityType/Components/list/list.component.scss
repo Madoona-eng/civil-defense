@@ -67,11 +67,9 @@
 /* =========================================================
    MAT TABLE STYLING
 ========================================================= */
-.mat-table-container {
+.table-wrapper {
   width: 100%;
   overflow-x: auto;
-  border-radius: 14px;
-  border: 1px solid #F0EEF5;
 }
 
 .mat-mdc-table {
@@ -93,6 +91,16 @@
     padding: 12px 20px;
     border-bottom: 1px solid #E8E5F0;
     text-align: right;
+
+    &:first-child {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    &:last-child {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
 
     &.action-header-cell {
       text-align: center;
@@ -172,7 +180,7 @@
 }
 
 /* =========================================================
-   STATES (Loading, Error, Empty)
+   STATES
 ========================================================= */
 .loading-box,
 .empty-box,
@@ -217,4 +225,91 @@
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+/* =========================================================
+   MAT TABLE STYLING FIXES
+========================================================= */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.mat-mdc-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: transparent;
+  table-layout: fixed; /* يضمن التزام الأعمدة بالأحجام المحددة */
+
+  /* Header Row */
+  .mat-mdc-header-row {
+    background: #FAF8FD;
+    height: 48px;
+  }
+
+  .mat-mdc-header-cell {
+    color: #7D7D99;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 12px 20px;
+    border-bottom: 1px solid #E8E5F0;
+    text-align: right;
+
+    &:first-child {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    &:last-child {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+  }
+
+  /* Body Rows */
+  .mat-mdc-row {
+    height: 56px;
+    transition: background-color 0.2s ease;
+
+    &:not(:last-child) .mat-mdc-cell {
+      border-bottom: 1px solid #F6F4FA;
+    }
+
+    &:hover {
+      background-color: #FAF8FD;
+    }
+  }
+
+  .mat-mdc-cell {
+    padding: 12px 20px;
+    color: #2D2D3F;
+    font-size: 14px;
+    vertical-align: middle;
+
+    &.font-medium {
+      font-weight: 600;
+    }
+  }
+
+  /* ---------------------------------------------------------
+     تحديد عرض كل عمود لمنع تباعد عمود الإجراءات
+  --------------------------------------------------------- */
+  
+  /* عمود الكود (تحديد عرض ثابت) */
+  .col-code {
+    width: 100px;
+  }
+
+  /* عمود اسم النشاط (يأخذ باقي المساحة) */
+  .col-name {
+    width: auto;
+  }
+
+  /* عمود الإجراءات (تحديد عرض ثابت وتوسيط المحتوى) */
+  .col-actions,
+  .action-header-cell,
+  .action-cell {
+    width: 100px;
+    text-align: center !important;
+  }
 }

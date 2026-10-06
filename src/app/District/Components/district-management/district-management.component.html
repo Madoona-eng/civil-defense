@@ -1,8 +1,6 @@
 <div class="district-page" dir="rtl">
 
-  <!-- =====================================================
-        PAGE HEADER
-  ====================================================== -->
+  <!-- ================= PAGE HEADER ================= -->
   <header class="page-header">
     <div class="header-content">
       <div class="header-icon">
@@ -21,35 +19,22 @@
     </button>
   </header>
 
-  <!-- =====================================================
-        MAIN CONTENT
-  ====================================================== -->
+  <!-- ================= MAIN CONTENT ================= -->
   <main class="page-content">
-    <section class="mat-table-container">
-
-      <div class="table-header-row">
-        <h3>{{ 'district.listRegistered' | t }}</h3>
-      </div>
-
-      <div class="table-scroll">
-        <app-district-list (editRequested)="openEditPopup($event)"></app-district-list>
-      </div>
-
-    </section>
+    <app-district-list (editRequested)="openEditPopup($event)"></app-district-list>
   </main>
 
-  <!-- =====================================================
-        ADD DIALOG
-  ====================================================== -->
-  <app-district-add
-    *ngIf="isAddPopupOpen"
-    (saved)="onAddSaved()"
-    (cancelled)="closeAddPopup()">
-  </app-district-add>
+  <!-- ================= ADD MODAL OVERLAY ================= -->
+  <div class="popup-backdrop" *ngIf="isAddPopupOpen" (click)="closeAddPopup()">
+    <div (click)="$event.stopPropagation()" style="width: 100%; max-width: 520px;">
+      <app-district-add
+        (saved)="onAddSaved()"
+        (cancelled)="closeAddPopup()">
+      </app-district-add>
+    </div>
+  </div>
 
-  <!-- =====================================================
-        EDIT DIALOG
-  ====================================================== -->
+  <!-- ================= EDIT MODAL OVERLAY ================= -->
   <app-district-edit
     *ngIf="isEditPopupOpen"
     [districtId]="selectedDistrictId"

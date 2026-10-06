@@ -26,7 +26,7 @@
     <span>{{ 'activity.empty' | t }}</span>
   </div>
 
-  <div class="mat-table-container" *ngIf="!isLoading && activityTypes.length > 0">
+  <div class="table-wrapper" *ngIf="!isLoading && activityTypes.length > 0">
     <table class="mat-mdc-table">
       <thead>
         <tr class="mat-mdc-header-row">
@@ -44,7 +44,6 @@
           <td class="mat-mdc-cell font-medium">{{ item.name }}</td>
           <td class="mat-mdc-cell action-cell">
             
-            <!-- زر النقاط الثلاث -->
             <button
               type="button"
               class="btn-action-more"
@@ -53,7 +52,6 @@
               <mat-icon>more_vert</mat-icon>
             </button>
 
-            <!-- القائمة المنسدلة للخيارات -->
             <mat-menu #actionMenu="matMenu" xPosition="before" class="custom-action-menu">
               <button mat-menu-item (click)="requestEdit(item.id)">
                 <mat-icon class="menu-icon edit-icon">edit</mat-icon>

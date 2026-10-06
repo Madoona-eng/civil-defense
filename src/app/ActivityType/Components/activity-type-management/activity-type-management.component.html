@@ -1,8 +1,6 @@
 <div class="activity-page" dir="rtl">
 
-  <!-- =====================================================
-        PAGE HEADER
-  ====================================================== -->
+  <!-- ================= PAGE HEADER ================= -->
   <header class="page-header">
     <div class="header-content">
       <div class="header-icon">
@@ -21,35 +19,19 @@
     </button>
   </header>
 
-  <!-- =====================================================
-        MAIN CONTENT
-  ====================================================== -->
+  <!-- ================= MAIN CONTENT ================= -->
   <main class="page-content">
-    <section class="mat-table-container">
-
-      <div class="table-header-row">
-        <h3>{{ 'activity.list' | t }}</h3>
-      </div>
-
-      <div class="table-scroll">
-        <app-list (editRequested)="openEditPopup($event)"></app-list>
-      </div>
-
-    </section>
+    <app-list (editRequested)="openEditPopup($event)"></app-list>
   </main>
 
-  <!-- =====================================================
-        ADD DIALOG
-  ====================================================== -->
+  <!-- ================= ADD DIALOG ================= -->
   <app-add
     *ngIf="isAddPopupOpen"
     (saved)="onAddSaved()"
     (cancelled)="closeAddPopup()">
   </app-add>
 
-  <!-- =====================================================
-        EDIT DIALOG
-  ====================================================== -->
+  <!-- ================= EDIT DIALOG ================= -->
   <app-edit
     *ngIf="isEditPopupOpen"
     [activityTypeId]="selectedActivityTypeId"

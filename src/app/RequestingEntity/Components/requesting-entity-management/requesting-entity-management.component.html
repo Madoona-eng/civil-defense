@@ -1,6 +1,6 @@
 <div class="requesting-page" dir="rtl">
 
-  <!-- PAGE HEADER -->
+  <!-- ================= PAGE HEADER ================= -->
   <header class="page-header">
     <div class="header-content">
       <div class="header-icon">
@@ -19,22 +19,12 @@
     </button>
   </header>
 
-  <!-- MAIN CONTENT -->
+  <!-- ================= MAIN CONTENT ================= -->
   <main class="page-content">
-    <section class="mat-table-container">
-      <div class="table-header-row">
-        <h3>{{ 'entity.listRegistered' | t }}</h3>
-      </div>
-
-      <div class="table-scroll">
-        <app-requesting-entity-list
-          (editRequested)="openEditPopup($event)">
-        </app-requesting-entity-list>
-      </div>
-    </section>
+    <app-requesting-entity-list (editRequested)="openEditPopup($event)"></app-requesting-entity-list>
   </main>
 
-  <!-- ADD MODAL OVERLAY -->
+  <!-- ================= ADD MODAL OVERLAY ================= -->
   <div class="popup-backdrop" *ngIf="isAddPopupOpen" (click)="closeAddPopup()">
     <div (click)="$event.stopPropagation()" style="width: 100%; max-width: 520px;">
       <app-requesting-entity-add
@@ -44,7 +34,7 @@
     </div>
   </div>
 
-  <!-- EDIT MODAL OVERLAY -->
+  <!-- ================= EDIT MODAL OVERLAY ================= -->
   <app-requesting-entity-edit
     *ngIf="isEditPopupOpen"
     [requestingEntityId]="selectedRequestingEntityId"
