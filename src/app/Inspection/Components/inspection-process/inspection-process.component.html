@@ -78,19 +78,19 @@
           </div>
         </section>
 
-        <!-- 2) ملاحظات الإرجاع: تظهر فقط لو المعاملة مرتجعة -->
-        <section class="attachments-section" *ngIf="d.isReturned && d.notes && d.notes.length > 0">
-          <h3 class="section-title">ملاحظات الإرجاع</h3>
-
+        <section class="attachments-section" *ngIf="d.notes && d.notes.length > 0">
+          <h3 class="section-title">
+            {{ d.isReturned ? 'ملاحظات الإرجاع' : 'الملاحظات السابقة' }}
+          </h3>
           <div class="file-list">
             <div class="attachment-field" *ngFor="let note of d.notes">
-              <p class="note-content">{{ note.content }}</p>
               <div class="file-size">
                 <span class="file-badge">{{ getStepLabel(note.processStep) }}</span>
                 <span>{{ note.createdByUserName }}</span>
                 <span>•</span>
                 <span>{{ formatDateTime(note.createdAt) }}</span>
               </div>
+              <p class="note-content">{{ note.content }}</p>
             </div>
           </div>
         </section>

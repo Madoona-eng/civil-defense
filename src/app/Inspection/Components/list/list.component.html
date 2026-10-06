@@ -40,9 +40,9 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
-      <mat-label>الحي / المنطقة</mat-label>
+      <mat-label>المركز</mat-label>
       <mat-select [(ngModel)]="districtId" [disabled]="isDistrictLocked">
-        <mat-option value="">جميع الأحياء</mat-option>
+        <mat-option value="">جميع المراكز</mat-option>
         <mat-option *ngFor="let district of districts" [value]="district.id">
           {{ district.name }}
         </mat-option>
@@ -60,38 +60,38 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
-      <mat-label>حالة الإعادة</mat-label>
+      <mat-label>الحالة</mat-label>
       <mat-select [(ngModel)]="isReturned">
         <mat-option value="">الكل</mat-option>
-        <mat-option value="true">معاد</mat-option>
-        <mat-option value="false">غير معاد</mat-option>
+        <mat-option *ngFor="let opt of returnStateOptions" [value]="opt.value">
+          {{ opt.label }}
+        </mat-option>
       </mat-select>
     </mat-form-field>
 
-    <!-- الفلتر المضاف: الرأي الفني للمعاينة -->
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
-      <mat-label>الرأي الفني للمعاينة</mat-label>
+      <mat-label>الرأي</mat-label>
       <mat-select [(ngModel)]="opinion">
         <mat-option value="">جميع الحالات</mat-option>
-        <mat-option value="Compliant">مطابق للمواصفات</mat-option>
-        <mat-option value="NonCompliant">غير مطابق للمواصفات</mat-option>
+        <mat-option *ngFor="let opt of opinionOptions" [value]="opt.value">
+          {{ opt.label }}
+        </mat-option>
       </mat-select>
     </mat-form-field>
   </div>
 
   <div class="filter-actions">
     <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
-      <mat-icon>search</mat-icon>
+      <app-icon name="Search" />
       <span>بحث</span>
     </button>
 
     <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
-      <mat-icon>refresh</mat-icon>
+      <app-icon name="RotateCcw" />
       <span>إعادة ضبط</span>
     </button>
   </div>
 </section>
-
 
 <!-- كارت الجدول -->
 <section class="mat-table-container" dir="rtl">
@@ -139,7 +139,7 @@
           <td class="mat-mdc-cell">
             <span class="transaction-code-pill">{{ item.transactionCode }}</span>
           </td>
-          <td class="mat-mdc-cell date-cell">{{ formatDate(item.submissionDate) }}</td>
+          <td class="mat-mdc-cell">{{ formatDate(item.submissionDate) }}</td>
           <td class="mat-mdc-cell font-medium">{{ item.establishmentName }}</td>
           <td class="mat-mdc-cell">{{ item.establishmentAddress }}</td>
           <td class="mat-mdc-cell">{{ item.requestingEntity }}</td>
@@ -153,28 +153,24 @@
           </td>
 
           <td class="mat-mdc-cell action-cell">
-            <button
-              type="button"
-              class="btn-action-more"
-              [matMenuTriggerFor]="actionMenu"
-              aria-label="خيارات"
-            >
-              <mat-icon>more_vert</mat-icon>
+            <button mat-icon-button class="table-btn menu-btn" [matMenuTriggerFor]="actionMenu">
+              <app-icon name="EllipsisVertical" />
             </button>
 
-            <mat-menu #actionMenu="matMenu" xPosition="before" class="custom-action-menu">
+            <mat-menu #actionMenu="matMenu" xPosition="before">
               <button mat-menu-item (click)="requestEdit(item)">
-                <mat-icon class="menu-icon edit-icon">assignment_turned_in</mat-icon>
+                <app-icon name="ClipboardCheck" />
                 <span>إجراء المعاينة</span>
               </button>
+
               <button
                 mat-menu-item
                 *ngIf="canMoveToFinalApproval"
                 (click)="moveToFinalApproval(item)"
                 [disabled]="movingToFinalApprovalId === item.id"
               >
-                <mat-icon class="menu-icon">arrow_forward</mat-icon>
-                <span>نقل للموافقة النهائية</span>
+                <app-icon name="CircleArrowLeft" />
+                <span>إنتقال لخطوة الموافقة النهائية</span>
               </button>
             </mat-menu>
           </td>

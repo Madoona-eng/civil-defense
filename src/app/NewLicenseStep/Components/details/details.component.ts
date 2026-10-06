@@ -4,10 +4,12 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatIconModule } from '@angular/material/icon';
 
 import { APPLICANT_ROLE_LABELS, ApplicantRole } from '../../../Shared/Enums/enums';
+import { formatDate } from '../../../Shared/Helpers/date.helper';
 import { ApiResponse } from '../../../Shared/Models/ApiResponse';
+import { ArDigitsPipe } from '../../../Shared/Pipes/ar-digits.pipe';
+import { buildFileUrl } from '../../../Shared/Utils/file-url';
 import { AttachmentGroup, NewLicenseDetails } from '../../Models/new-license';
 import { NewLicenseService } from '../../Services/new-license.service';
-import { buildFileUrl } from '../../../Shared/Utils/file-url';
 
 export interface DetailsDialogData {
   id: string;
@@ -16,7 +18,7 @@ export interface DetailsDialogData {
 @Component({
   selector: 'app-new-license-details',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatIconModule],
+  imports: [CommonModule, MatDialogModule, MatIconModule, ArDigitsPipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
@@ -26,6 +28,8 @@ export class DetailsComponent implements OnInit {
   loading = false;
   errorMessage = '';
   failedImages = new Set<string>();
+
+  readonly formatDate = formatDate;
 
   constructor(
     private readonly newLicenseService: NewLicenseService,

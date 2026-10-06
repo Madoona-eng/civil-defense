@@ -1,89 +1,97 @@
-<div class="list-card" dir="rtl">
-  <div class="list-header">
+<section class="mat-table-container" dir="rtl">
+  <div class="table-header-row">
     <div>
-      <h3>{{ 'archive.list' | t }}</h3>
-      <p>{{ 'archive.totalRecords' | t: { count: totalCount } }}</p>
+      <h3>{{ 'archive.results' | t }}</h3>
+      <span class="results-count">{{ 'archive.totalRecords' | t: { count: totalCount } }}</span>
     </div>
-    <button type="button" class="refresh-btn" (click)="loadData()">{{ 'common.refresh' | t }}</button>
+
+    <!-- <button type="button" class="refresh-btn" (click)="loadData()">
+      <app-icon name="RefreshCw" />
+      <span>{{ 'common.refresh' | t }}</span>
+    </button> -->
   </div>
 
   @if (errorMessage) {
-    <div class="message error">{{ errorMessage }}</div>
+    <div class="message-banner error">
+      <app-icon name="CircleAlert" />
+      <span>{{ errorMessage }}</span>
+    </div>
   }
 
   @if (isLoading) {
-    <div class="loading-shade">{{ 'common.loadingDataWithEllipsis' | t }}</div>
-  } @else if (items.length === 0) {
-    <div class="empty-state">{{ 'archive.empty' | t }}</div>
-  } @else {
-    <section class="mat-table-container archive-table">
-      <div class="table-header-row">
-        <h3>{{ 'archive.results' | t }}</h3>
-      </div>
-      <div class="table-scroll">
-        <table class="mat-mdc-table">
-          <thead>
-            <tr class="mat-mdc-header-row">
-              <th class="mat-mdc-header-cell">#</th>
-              <th class="mat-mdc-header-cell">{{ 'common.requestCode' | t }}</th>
-              <th class="mat-mdc-header-cell">{{ 'common.establishment' | t }}</th>
-              <th class="mat-mdc-header-cell">{{ 'common.requestingEntity' | t }}</th>
-              <th class="mat-mdc-header-cell">{{ 'common.district' | t }}</th>
-              <th class="mat-mdc-header-cell">{{ 'common.activity' | t }}</th>
-              <th class="mat-mdc-header-cell">{{ 'common.submissionDate' | t }}</th>
-              <th class="mat-mdc-header-cell">{{ 'common.actions' | t }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (item of items; track item.id; let i = $index) {
-              <tr class="mat-mdc-row">
-                <td class="mat-mdc-cell">{{ (filter.pageNumber - 1) * filter.pageSize + i + 1 }}</td>
-                <td class="mat-mdc-cell">
-                  <span class="transaction-code-pill">{{ item.transactionCode }}</span>
-                </td>
-                <td class="mat-mdc-cell">{{ item.establishmentName }}</td>
-                <td class="mat-mdc-cell requesting-entity-cell">
-                  <span>{{ item.requestingEntity }}</span>
-                </td>
-                <td class="mat-mdc-cell">{{ item.district }}</td>
-                <td class="mat-mdc-cell">{{ item.activityType }}</td>
-                <td class="mat-mdc-cell date-cell">{{ item.submissionDate }}</td>
-                <td class="mat-mdc-cell action-cell">
-                  <button
-                    type="button"
-                    class="btn-action-more"
-                    [matMenuTriggerFor]="actionsMenu"
-                    [attr.aria-label]="'common.options' | t"
-                  >
-                    <mat-icon>more_vert</mat-icon>
-                  </button>
-                  <mat-menu #actionsMenu="matMenu" xPosition="before">
-                    <button mat-menu-item (click)="requestView(item.id)">
-                      <mat-icon>visibility</mat-icon>
-                      <span>{{ 'archive.details' | t }}</span>
-                    </button>
-                    <button mat-menu-item (click)="requestDelete(item)">
-                      <mat-icon>delete_outline</mat-icon>
-                      <span>{{ 'common.delete' | t }}</span>
-                    </button>
-                  </mat-menu>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+    <div class="loading-box">
+      <app-icon class="spin-icon" name="RefreshCw" />
+      <span>{{ 'common.loadingDataWithEllipsis' | t }}</span>
+    </div>
+  } @else if (items.length === 0 && !errorMessage) {
+    <div class="empty-box">
+      <app-icon name="Inbox" variant="lg" />
+      <span>{{ 'archive.empty' | t }}</span>
+    </div>
+  } @else if (items.length > 0) {
+    <div class="table-scroll">
+      <table class="mat-mdc-table">
+        <thead>
+          <tr class="mat-mdc-header-row">
+            <th class="mat-mdc-header-cell">{{ 'common.requestCode' | t }}</th>
+            <th class="mat-mdc-header-cell">{{ 'common.submissionDate' | t }}</th>
+            <th class="mat-mdc-header-cell">{{ 'common.establishment' | t }}</th>
+            <th class="mat-mdc-header-cell">{{ 'common.requestingEntity' | t }}</th>
+            <th class="mat-mdc-header-cell">{{ 'common.district' | t }}</th>
+            <th class="mat-mdc-header-cell">{{ 'common.activity' | t }}</th>
+            <th class="mat-mdc-header-cell">{{ 'common.actions' | t }}</th>
+          </tr>
+        </thead>
 
-      <mat-paginator
-        dir="rtl"
-        [length]="totalCount"
-        [pageSize]="filter.pageSize"
-        [pageIndex]="filter.pageNumber - 1"
-        [pageSizeOptions]="[10, 25, 50, 100]"
-        (page)="onPageChange($event)"
-        showFirstLastButtons
-      >
-      </mat-paginator>
-    </section>
+        <tbody>
+          @for (item of items; track item.id) {
+            <tr class="mat-mdc-row">
+              <td class="mat-mdc-cell">
+                <span class="transaction-code-pill">{{ item.transactionCode }}</span>
+              </td>
+              <td class="mat-mdc-cell date-cell">{{ formatDate(item.submissionDate) }}</td>
+              <td class="mat-mdc-cell font-medium">{{ item.establishmentName }}</td>
+              <td class="mat-mdc-cell">{{ item.requestingEntity }}</td>
+              <td class="mat-mdc-cell">{{ item.district }}</td>
+              <td class="mat-mdc-cell">{{ item.activityType }}</td>
+
+              <td class="mat-mdc-cell action-cell">
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="table-btn menu-btn"
+                  [matMenuTriggerFor]="actionsMenu"
+                  [attr.aria-label]="'common.options' | t"
+                >
+                  <app-icon name="EllipsisVertical" />
+                </button>
+
+                <mat-menu #actionsMenu="matMenu" xPosition="before">
+                  <button mat-menu-item (click)="requestView(item.id)">
+                    <app-icon name="Eye" />
+                    <span>{{ 'archive.details' | t }}</span>
+                  </button>
+                  <button mat-menu-item class="danger" (click)="requestDelete(item)">
+                    <app-icon name="Trash2" />
+                    <span>{{ 'common.delete' | t }}</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <mat-paginator
+      dir="rtl"
+      [length]="totalCount"
+      [pageSize]="filter.pageSize"
+      [pageIndex]="filter.pageNumber - 1"
+      [pageSizeOptions]="[10, 25, 50, 100]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+    >
+    </mat-paginator>
   }
-</div>
+</section>

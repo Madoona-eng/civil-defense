@@ -27,7 +27,7 @@ import {
   REVIEW_STATUS_LABELS,
   ReviewStatus,
 } from '../../../Shared/Enums/enums';
-import { formatDateTime } from '../../../Shared/Helpers/date.helper';
+import { formatDate, formatDateTime } from '../../../Shared/Helpers/date.helper';
 import {
   FILE_ACCEPT,
   formatSize,
@@ -118,6 +118,7 @@ export class FinalApprovalProcessComponent implements OnChanges, OnDestroy {
   readonly formatSize = formatSize;
   readonly iconByName = iconByName;
   readonly fileAccept = FILE_ACCEPT;
+  readonly formatDate = formatDate;
 
   // ===== بيانات المعاملة =====
   details: FinalApprovalStepDetails | null = null;

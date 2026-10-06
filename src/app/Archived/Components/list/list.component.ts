@@ -1,12 +1,14 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ArchivedService } from '../../Services/archived.service';
-import { Archived, ArchivedFilter } from '../../Models/archived';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { AppIconComponent } from '../../../Shared/Components/app-icon/app-icon.component';
+import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+import { formatDate } from '../../../Shared/Helpers/date.helper';
+import { Archived, ArchivedFilter } from '../../Models/archived';
+import { ArchivedService } from '../../Services/archived.service';
 
 @Component({
   selector: 'app-list',
@@ -18,9 +20,10 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
     MatIconModule,
     MatMenuModule,
     MatPaginatorModule,
+    AppIconComponent,
   ],
   templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  styleUrl: './list.component.scss',
 })
 export class ListComponent implements OnInit {
   @Output() viewRequested = new EventEmitter<string>();
@@ -32,10 +35,11 @@ export class ListComponent implements OnInit {
 
   filter: ArchivedFilter = {
     pageNumber: 1,
-    pageSize: 10
+    pageSize: 10,
   };
 
   totalCount = 0;
+  readonly formatDate = formatDate;
 
   constructor(private readonly archivedService: ArchivedService) {}
 
@@ -64,7 +68,7 @@ export class ListComponent implements OnInit {
           err?.error?.Message ||
           err?.message ||
           'حدث خطأ أثناء تحميل بيانات الأرشيف';
-      }
+      },
     });
   }
 

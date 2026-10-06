@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { formatDate, formatDateForApi } from '../../../Shared/Helpers/date.helper';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
-import { Eye, EllipsisVertical, LucideAngularModule, Pencil, Trash2 } from 'lucide-angular';
+import { EllipsisVertical, Eye, LucideAngularModule, Pencil, Trash2 } from 'lucide-angular';
+import { formatDate } from '../../../Shared/Helpers/date.helper';
 
 import {
   PROCESS_STEP_LABELS,
@@ -64,6 +64,7 @@ export class ListComponent {
   readonly Eye = Eye;
   readonly Pencil = Pencil;
   readonly Trash2 = Trash2;
+  readonly formatDate = formatDate;
 
   getStepLabel(step: string): string {
     return PROCESS_STEP_LABELS[step as ProcessStep] ?? step;

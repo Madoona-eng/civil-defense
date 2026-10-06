@@ -1,17 +1,13 @@
 <div class="page-actions-row" dir="rtl">
   <button class="btn-custom btn-add" (click)="onAddNew()">
-    <lucide-angular [img]="Plus" [size]="18"></lucide-angular>
+    <app-icon name="Plus" />
     <span>إضافة ترخيص جديد</span>
   </button>
 </div>
 
 <section class="filters-card" dir="rtl">
   <div class="filters-row-primary">
-    <mat-form-field
-      appearance="outline"
-      subscriptSizing="dynamic"
-      class="form-group search-field"
-    >
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group search-field">
       <mat-label>بحث</mat-label>
       <input
         matInput
@@ -20,12 +16,7 @@
         placeholder="ابحث بكود المعاملة، اسم المنشأة، اسم مقدم الطلب..."
         (keyup.enter)="search()"
       />
-      <lucide-angular
-        matPrefix
-        [img]="Search"
-        [size]="16"
-        class="field-prefix-icon"
-      ></lucide-angular>
+      <app-icon matPrefix name="Search" class="field-prefix-icon" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group date-field">
@@ -77,12 +68,12 @@
 
   <div class="filter-actions">
     <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
-      <lucide-angular [img]="Search" [size]="18"></lucide-angular>
+      <app-icon name="Search" />
       <span>بحث</span>
     </button>
 
     <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
-      <lucide-angular [img]="RotateCcw" [size]="16"></lucide-angular>
+      <app-icon name="RotateCcw" />
       <span>إعادة ضبط</span>
     </button>
   </div>

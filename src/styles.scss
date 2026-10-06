@@ -23,27 +23,23 @@
   --color-text-primary: #2d2d3f; /* النصوص الرئيسية */
   --color-text-secondary: #8e8ea9; /* النصوص الفرعية والتواريخ */
   --color-border: #f3e8ff; /* الحدود والفواصل */
-
-  --color-bg-page: #fffdf9;
-  
 }
 
-/* مثال بسيط للاستخدام العام لو حبيتي */
-body {
-  background-color: var(--color-bg-page);
-  color: var(--color-text-primary);
-  margin: 0;
-  font-family: 'Cairo', 'Segoe UI', sans-serif; /* عدّلي الخط لو مختلف */
-}
 html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
+  font-family: 'Cairo', 'Segoe UI', sans-serif;
 }
 
+/* ============================================================
+   Paginator
+   ============================================================ */
 .mat-mdc-paginator {
   direction: rtl;
   width: fit-content;
@@ -76,9 +72,13 @@ body {
     .mat-mdc-paginator-page-size-select {
       margin: 0 8px;
 
+      /* حد واحد من Material بلونك */
+      --mdc-outlined-text-field-outline-color: #d9d2e9;
+      --mdc-outlined-text-field-hover-outline-color: #5d3a99;
+      --mdc-outlined-text-field-focus-outline-color: #5d3a99;
+
       .mat-mdc-select-trigger {
         padding: 4px 8px;
-        border: 1px solid #d9d2e9;
         border-radius: 8px;
         background: #fff;
       }

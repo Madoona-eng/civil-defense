@@ -17,10 +17,11 @@ import {
   ReturnState,
   ReviewStatus,
 } from '../../../Shared/Enums/enums';
-import { formatDateTime } from '../../../Shared/Helpers/date.helper';
+import { formatDate, formatDateTime } from '../../../Shared/Helpers/date.helper';
 import { iconByName, isImageFile, openFile } from '../../../Shared/Helpers/file.helper';
 import { buildFileUrl } from '../../../Shared/Utils/file-url';
 
+import { ArDigitsPipe } from '../../../Shared/Pipes/ar-digits.pipe';
 import { LicensingAttachment, LicensingProcessDetails } from '../../Models/licensing-process';
 import { LicensingProcessService } from '../../Services/licensing-process.service';
 
@@ -47,7 +48,7 @@ const ATTACHMENT_FIELDS: { key: AttachmentKey; label: string }[] = [
 @Component({
   selector: 'app-licensing-process-details',
   standalone: true,
-  imports: [MatIconModule],
+  imports: [MatIconModule, ArDigitsPipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
@@ -60,6 +61,7 @@ export class DetailsComponent implements OnChanges {
   readonly openFile = openFile;
   readonly getFileUrl = buildFileUrl;
   readonly iconByName = iconByName;
+  readonly formatDate = formatDate;
 
   details: LicensingProcessDetails | null = null;
   loading = false;

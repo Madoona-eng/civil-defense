@@ -1,12 +1,13 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatIconModule } from '@angular/material/icon';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { LucideAngularModule, EllipsisVertical, Eye, Pencil, CircleArrowLeft, Trash2, ChevronsLeft } from 'lucide-angular';
+import { MatTableModule } from '@angular/material/table';
+import { AppIconComponent } from '../../../Shared/Components/app-icon/app-icon.component';
+import { formatDate } from '../../../Shared/Helpers/date.helper';
 import { NewLicenseListItem } from '../../Models/new-license';
 
 @Component({
@@ -20,18 +21,13 @@ import { NewLicenseListItem } from '../../Models/new-license';
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    LucideAngularModule
+    AppIconComponent,
   ],
   templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  styleUrl: './list.component.scss',
 })
 export class ListComponent {
-  readonly EllipsisVertical = EllipsisVertical;
-  readonly Eye = Eye;
-  readonly Pencil = Pencil;
-  readonly CircleArrowLeft = CircleArrowLeft;
-  readonly Trash2 = Trash2;
-  readonly ChevronsLeft = ChevronsLeft;
+  readonly formatDate = formatDate;
 
   @Input() items: NewLicenseListItem[] = [];
   @Input() isLoading = false;
@@ -58,7 +54,7 @@ export class ListComponent {
     'district',
     'activityType',
     'applicantName',
-    'actions'
+    'actions',
   ];
 
   onPageChange(event: PageEvent): void {

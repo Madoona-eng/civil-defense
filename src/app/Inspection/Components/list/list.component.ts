@@ -14,17 +14,21 @@ import {
 import { InspectionService } from '../../Services/inspection.service';
 
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
 import { DistrictService } from '../../../District/Services/district.service';
 import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
+import { AppIconComponent } from '../../../Shared/Components/app-icon/app-icon.component';
 import { ConfirmDialogComponent } from '../../../Shared/Components/confirm-dialog/confirm-dialog.component';
 import {
   INSPECTION_OPINION_LABELS,
@@ -32,12 +36,8 @@ import {
   RETURN_STATE_LABELS,
   ReturnState,
 } from '../../../Shared/Enums/enums';
-import { AuthService } from '../../../auth/services/auth.service';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { formatDate, formatDateForApi } from '../../../Shared/Helpers/date.helper';
-
+import { AuthService } from '../../../auth/services/auth.service';
 interface SelectOption {
   value: string;
   label: string;
@@ -46,22 +46,23 @@ interface SelectOption {
 @Component({
   selector: 'app-inspection-list',
   standalone: true,
-imports: [
-  CommonModule,
-  FormsModule,
-  MatIconModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatSelectModule,
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatMenuModule,
-  MatButtonModule,
-  MatTooltipModule,
-  MatDialogModule,
-  MatSnackBarModule,
-  MatPaginatorModule,
-],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    MatPaginatorModule,
+    AppIconComponent,
+  ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
 })

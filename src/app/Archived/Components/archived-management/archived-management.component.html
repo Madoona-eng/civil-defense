@@ -1,5 +1,4 @@
 <div class="archived-page" dir="rtl">
-
   <div class="page-header">
     <div>
       <h2>{{ 'archive.title' | t }}</h2>
@@ -9,18 +8,24 @@
 
   <!-- ================= FILTERS ================= -->
   <section class="filters-card archive-filters-card">
-
     <div class="filters-row-primary">
       <mat-form-field appearance="outline" subscriptSizing="dynamic">
         <mat-label>{{ 'archive.searchPlaceholder' | t }}</mat-label>
-        <mat-icon matPrefix class="field-prefix-icon">search</mat-icon>
+        <app-icon matPrefix name="Search" class="field-prefix-icon" />
         <input matInput type="text" [(ngModel)]="filter.searchTerm" (keyup.enter)="search()" />
       </mat-form-field>
 
       <mat-form-field appearance="outline" subscriptSizing="dynamic">
         <mat-label>{{ 'common.dateFrom' | t }}</mat-label>
-        <input matInput [matDatepicker]="submissionDateFromPicker" [(ngModel)]="submissionDateFrom" />
-        <mat-datepicker-toggle matIconSuffix [for]="submissionDateFromPicker"></mat-datepicker-toggle>
+        <input
+          matInput
+          [matDatepicker]="submissionDateFromPicker"
+          [(ngModel)]="submissionDateFrom"
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="submissionDateFromPicker"
+        ></mat-datepicker-toggle>
         <mat-datepicker #submissionDateFromPicker></mat-datepicker>
       </mat-form-field>
 
@@ -75,20 +80,17 @@
 
     <div class="filter-actions">
       <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
-        <mat-icon>search</mat-icon>
+        <app-icon name="Search" />
         <span>{{ 'common.search' | t }}</span>
       </button>
       <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
-        <mat-icon>restart_alt</mat-icon>
+        <app-icon name="RotateCcw" />
         <span>{{ 'archive.reset' | t }}</span>
       </button>
     </div>
-
   </section>
 
-  <app-list
-    (viewRequested)="openDetailsPopup($event)"
-    (deleteRequested)="openDeletePopup($event)">
+  <app-list (viewRequested)="openDetailsPopup($event)" (deleteRequested)="openDeletePopup($event)">
   </app-list>
 
   <!-- ================= DETAILS DIALOG ================= -->
@@ -99,15 +101,20 @@
         <div class="dialog-header">
           <div class="header-content-group">
             <div class="dialog-icon primary">
-              <mat-icon>visibility</mat-icon>
+              <app-icon name="Eye" />
             </div>
             <div class="header-text">
               <span class="eyebrow">{{ 'archive.title' | t }}</span>
               <h2>{{ 'archive.details' | t }}</h2>
             </div>
           </div>
-          <button type="button" class="btn-dialog-close" (click)="closeDetailsPopup()" [attr.aria-label]="'common.close' | t">
-            <mat-icon>close</mat-icon>
+          <button
+            type="button"
+            class="btn-dialog-close"
+            (click)="closeDetailsPopup()"
+            [attr.aria-label]="'common.close' | t"
+          >
+            <app-icon name="X" />
           </button>
         </div>
 

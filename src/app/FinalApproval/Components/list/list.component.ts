@@ -5,17 +5,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
-import {
-  Archive,
-  EllipsisVertical,
-  FileCheck,
-  LucideAngularModule,
-  RotateCcw,
-  Trash2,
-} from 'lucide-angular';
-
-import { AuthService } from '../../../auth/services/auth.service';
+import { AppIconComponent } from '../../../Shared/Components/app-icon/app-icon.component';
 import { RETURN_STATE_LABELS, ReturnState } from '../../../Shared/Enums/enums';
+import { formatDate } from '../../../Shared/Helpers/date.helper';
+import { AuthService } from '../../../auth/services/auth.service';
 import { FinalApprovalItem } from '../../Models/final-approval';
 
 @Component({
@@ -23,12 +16,12 @@ import { FinalApprovalItem } from '../../Models/final-approval';
   standalone: true,
   imports: [
     CommonModule,
-    LucideAngularModule,
     MatButtonModule,
     MatMenuModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatTableModule,
+    AppIconComponent,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
@@ -59,12 +52,7 @@ export class ListComponent {
     'applicantName',
     'actions',
   ];
-
-  readonly EllipsisVertical = EllipsisVertical;
-  readonly FileCheck = FileCheck;
-  readonly RotateCcw = RotateCcw;
-  readonly Archive = Archive;
-  readonly Trash2 = Trash2;
+  readonly formatDate = formatDate;
 
   constructor(private readonly authService: AuthService) {}
 

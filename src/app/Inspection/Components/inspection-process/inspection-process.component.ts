@@ -20,7 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { Observable, catchError, concatMap, from, map, throwError, toArray } from 'rxjs';
+import { catchError, concatMap, from, map, Observable, throwError, toArray } from 'rxjs';
 
 import {
   ApiResponse,
@@ -34,6 +34,7 @@ import {
 
 import { InspectionService } from '../../Services/inspection.service';
 
+import { AuthService } from '../../../auth/services/auth.service';
 import {
   INSPECTION_OPINION_LABELS,
   InspectionOpinion,
@@ -51,9 +52,8 @@ import {
   openFile,
   validateFile,
 } from '../../../Shared/Helpers/file.helper';
-import { buildFileUrl } from '../../../Shared/Utils/file-url';
-import { AuthService } from '../../../auth/services/auth.service';
 import { SelectOption } from '../../../Shared/Models/SelectOption';
+import { buildFileUrl } from '../../../Shared/Utils/file-url';
 
 // ============================================================
 // Types & constants
@@ -217,17 +217,21 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
     return this.form.controls['opinion'].value === InspectionOpinion.NonCompliant;
   }
 
-  // الملاحظة مطلوبة لو غير مستوفي أو المعاملة مرتجعة
+  private get hasInspectionNote(): boolean {
+    return !!this.details?.notes?.some((n) => n.processStep === ProcessStep.Inspection);
+  }
+
+  // الملاحظة مطلوبة لو المعاملة مرتجعة، أو غير مستوفي ومفيش ملاحظة معاينة سابقة
   get isNoteRequired(): boolean {
-    return this.isNonCompliant || !!this.details?.isReturned;
+    if (this.details?.isReturned) return true;
+    return this.isNonCompliant && !this.hasInspectionNote;
   }
 
   get noteRequiredMessage(): string {
-    return this.isNonCompliant
-      ? 'يجب إدخال السبب عند عدم الاستيفاء'
-      : 'الملاحظة مطلوبة لأن المعاملة مرتجعة';
+    return this.details?.isReturned
+      ? 'الملاحظة مطلوبة لأن المعاملة مرتجعة'
+      : 'يجب إدخال السبب عند عدم الاستيفاء';
   }
-
   private updateNoteValidators(): void {
     const note = this.form.controls['inspectionNote'];
 
@@ -496,25 +500,23 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
   ): Observable<void> {
     const fallback = 'تعذر حذف المرفق';
 
-    return this.inspectionService
-      .deleteAttachment(attachment.id, ATTACHMENT_API_TYPES[type])
-      .pipe(
-        map((res) => {
-          if (!res.isSuccess) {
-            throw new Error(`حذف "${attachment.fileName}": ${res.message || fallback}`);
-          }
-          this.pendingDeleteIds.delete(attachment.id);
-        }),
-        catchError((err) => {
-          // الـ Error اللي فوق مجهّزة بالفعل، أي حاجة تانية (HTTP error) بنجهّز لها رسالة
-          const message =
-            err instanceof Error
-              ? err.message
-              : `حذف "${attachment.fileName}": ${extractErrorMessage(err, fallback)}`;
+    return this.inspectionService.deleteAttachment(attachment.id, ATTACHMENT_API_TYPES[type]).pipe(
+      map((res) => {
+        if (!res.isSuccess) {
+          throw new Error(`حذف "${attachment.fileName}": ${res.message || fallback}`);
+        }
+        this.pendingDeleteIds.delete(attachment.id);
+      }),
+      catchError((err) => {
+        // الـ Error اللي فوق مجهّزة بالفعل، أي حاجة تانية (HTTP error) بنجهّز لها رسالة
+        const message =
+          err instanceof Error
+            ? err.message
+            : `حذف "${attachment.fileName}": ${extractErrorMessage(err, fallback)}`;
 
-          return throwError(() => new Error(message));
-        }),
-      );
+        return throwError(() => new Error(message));
+      }),
+    );
   }
 
   // ---------- بعد الحفظ والحذف ----------

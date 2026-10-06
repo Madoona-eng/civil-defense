@@ -6,7 +6,7 @@ const translations: Record<string, string> = {
   'app.activityTypes': 'أنواع الأنشطة',
   'app.requestingEntities': 'الجهات الطالبة',
   'app.districts': 'المراكز',
-  'app.shopLicenses': 'اضافه ترخيص جديد',
+  'app.shopLicenses': 'إضافة ترخيص جديد',
   'app.allProcesses': 'جميع المعاملات',
   'app.inspections': 'المعاينات',
   'app.finalApproval': 'الموافقة النهائية',
@@ -16,7 +16,7 @@ const translations: Record<string, string> = {
   'app.greeting': 'مرحبًا بك',
 
   'common.systemManagement': 'إدارة النظام',
-  'common.requestCode': 'رقم الطلب',
+  'common.requestCode': 'كود المعاملة',
   'common.code': 'الكود',
   'common.name': 'الاسم',
   'common.actions': 'الإجراءات',
@@ -48,7 +48,7 @@ const translations: Record<string, string> = {
   'common.address': 'العنوان',
   'common.entity': 'الجهة',
   'common.requestingEntity': 'الجهة الطالبة',
-  'common.district': 'الحي',
+  'common.district': 'المركز',
   'common.activity': 'النشاط',
   'common.applicantData': 'بيانات مقدم الطلب',
   'common.applicant': 'مقدم الطلب',
@@ -80,7 +80,7 @@ const translations: Record<string, string> = {
   'common.yes': 'نعم',
   'common.no': 'لا',
   'common.chooseEntity': 'اختر الجهة',
-  'common.chooseDistrict': 'اختر الحي',
+  'common.chooseDistrict': 'اختر المركز',
   'common.chooseActivity': 'اختر النشاط',
   'common.dateFrom': 'من تاريخ',
   'common.dateTo': 'إلى تاريخ',
@@ -282,7 +282,7 @@ const translations: Record<string, string> = {
   'newLicense.nextStep': 'المرحلة التالية',
   'newLicense.clear': 'إلغاء الطلب',
   'newLicense.empty': 'لا توجد طلبات ترخيص',
-  'newLicense.searchPlaceholder': 'ابحث برقم الطلب أو اسم المنشأة',
+  'newLicense.searchPlaceholder': 'ابحث بكود المعاملة أو اسم المنشأة',
   'newLicense.allEntities': 'كل الجهات',
   'newLicense.allDistricts': 'كل المراكز',
   'newLicense.allActivities': 'كل الأنشطة',
@@ -321,7 +321,7 @@ const fallbackWords: Record<string, string> = {
   description: 'الوصف',
   detail: 'تفاصيل',
   details: 'التفاصيل',
-  district: 'الحي',
+  district: 'المركز',
   districts: 'المراكز',
   edit: 'تعديل',
   empty: 'لا توجد بيانات',
@@ -392,7 +392,7 @@ function fallbackTranslation(key: string): string {
     .toLowerCase()
     .split(/\s+/);
   const translatedWords = words
-    .map(word => fallbackWords[word])
+    .map((word) => fallbackWords[word])
     .filter((word): word is string => Boolean(word));
 
   return translatedWords.length ? translatedWords.join(' ') : 'نص غير متاح';

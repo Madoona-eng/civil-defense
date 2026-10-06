@@ -10,7 +10,6 @@ import { MatInputModule } from '@angular/material/input';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { LucideAngularModule, Plus, RotateCcw, Search } from 'lucide-angular';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -22,6 +21,7 @@ import { ListComponent } from '../list/list.component';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
 import { DistrictService } from '../../../District/Services/district.service';
 import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
+import { AppIconComponent } from '../../../Shared/Components/app-icon/app-icon.component';
 import { formatDateForApi } from '../../../Shared/Helpers/date.helper';
 import { ApiResponse } from '../../../Shared/Models/ApiResponse';
 import { LookupItem } from '../../../Shared/Models/LookupItem';
@@ -37,7 +37,6 @@ import { EditComponent, EditDialogData } from '../edit/edit.component';
     CommonModule,
     FormsModule,
     ListComponent,
-    LucideAngularModule,
     MatButtonModule,
     MatDatepickerModule,
     MatNativeDateModule,
@@ -46,6 +45,7 @@ import { EditComponent, EditDialogData } from '../edit/edit.component';
     MatSelectModule,
     MatDialogModule,
     MatSnackBarModule,
+    AppIconComponent,
   ],
   templateUrl: './new-license-management.component.html',
   styleUrl: './new-license-management.component.scss',
@@ -74,10 +74,6 @@ export class NewLicenseManagementComponent implements OnInit {
   pageSize = 10;
   totalCount = 0;
   totalPages = 0;
-
-  readonly Search = Search;
-  readonly RotateCcw = RotateCcw;
-  readonly Plus = Plus;
 
   constructor(
     private readonly newLicenseService: NewLicenseService,

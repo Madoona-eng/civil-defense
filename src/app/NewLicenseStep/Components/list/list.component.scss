@@ -18,3 +18,13 @@
     }
   }
 }
+.code-pill {
+  display: inline-flex;
+  direction: rtl;
+  gap: 4px;
+
+  span + span::before {
+    content: '-';
+    margin-inline-end: 4px;
+  }
+}

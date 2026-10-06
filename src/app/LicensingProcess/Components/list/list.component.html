@@ -23,7 +23,7 @@
 
         <ng-container matColumnDef="submissionDate">
           <th mat-header-cell *matHeaderCellDef>تاريخ التقديم</th>
-          <td mat-cell *matCellDef="let item">{{ item.submissionDate }}</td>
+          <td mat-cell *matCellDef="let item">{{ formatDate(item.submissionDate) }}</td>
         </ng-container>
 
         <ng-container matColumnDef="establishmentName">
