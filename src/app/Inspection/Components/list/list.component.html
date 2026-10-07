@@ -27,15 +27,14 @@
       <mat-datepicker #submissionDateToPicker></mat-datepicker>
     </mat-form-field>
   </div>
-
   <div class="filters-row-secondary">
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <mat-label>الجهة الطالبة</mat-label>
       <mat-select [(ngModel)]="requestingEntityId">
         <mat-option value="">جميع الجهات</mat-option>
-        <mat-option *ngFor="let entity of requestingEntities" [value]="entity.id">
-          {{ entity.name }}
-        </mat-option>
+        @for (entity of requestingEntities; track entity.id) {
+          <mat-option [value]="entity.id">{{ entity.name }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
 
@@ -43,9 +42,9 @@
       <mat-label>المركز</mat-label>
       <mat-select [(ngModel)]="districtId" [disabled]="isDistrictLocked">
         <mat-option value="">جميع المراكز</mat-option>
-        <mat-option *ngFor="let district of districts" [value]="district.id">
-          {{ district.name }}
-        </mat-option>
+        @for (district of districts; track district.id) {
+          <mat-option [value]="district.id">{{ district.name }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
 
@@ -53,9 +52,9 @@
       <mat-label>النشاط</mat-label>
       <mat-select [(ngModel)]="activityTypeId">
         <mat-option value="">جميع الأنشطة</mat-option>
-        <mat-option *ngFor="let activity of activityTypes" [value]="activity.id">
-          {{ activity.name }}
-        </mat-option>
+        @for (activity of activityTypes; track activity.id) {
+          <mat-option [value]="activity.id">{{ activity.name }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
 
@@ -63,9 +62,9 @@
       <mat-label>الحالة</mat-label>
       <mat-select [(ngModel)]="isReturned">
         <mat-option value="">الكل</mat-option>
-        <mat-option *ngFor="let opt of returnStateOptions" [value]="opt.value">
-          {{ opt.label }}
-        </mat-option>
+        @for (opt of returnStateOptions; track opt.value) {
+          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
 
@@ -73,13 +72,12 @@
       <mat-label>الرأي</mat-label>
       <mat-select [(ngModel)]="opinion">
         <mat-option value="">جميع الحالات</mat-option>
-        <mat-option *ngFor="let opt of opinionOptions" [value]="opt.value">
-          {{ opt.label }}
-        </mat-option>
+        @for (opt of opinionOptions; track opt.value) {
+          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </div>
-
   <div class="filter-actions">
     <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
       <app-icon name="Search" />
@@ -102,113 +100,149 @@
     </div>
   </div>
 
-  <div class="loading-box" *ngIf="isLoading || isMovingAll">
-    <app-icon class="spin-icon" name="RefreshCw" />
-    <span>{{ isMovingAll ? 'جاري نقل المعاملات...' : 'جاري تحميل المعاينات...' }}</span>
-  </div>
+  @if (errorMessage) {
+    <div class="message-banner error">
+      <app-icon name="CircleAlert" />
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
 
-  <div class="message-banner error" *ngIf="errorMessage">
-    <app-icon name="CircleAlert" />
-    <span>{{ errorMessage }}</span>
-  </div>
+  @if (isLoading || isMovingAll) {
+    <div class="loading-box">
+      <app-icon class="spin-icon" name="RefreshCw" />
+      <span>{{ isMovingAll ? 'جاري نقل المعاملات...' : 'جاري تحميل المعاينات...' }}</span>
+    </div>
+  }
 
-  <div class="empty-box" *ngIf="!isLoading && items.length === 0 && !errorMessage">
-    <app-icon name="Inbox" variant="lg" />
-    <span>لا توجد معاينات</span>
-  </div>
+  <div class="table-scroll">
+    <table mat-table [dataSource]="items" class="mat-mdc-table">
+      <ng-container matColumnDef="transactionCode">
+        <th mat-header-cell *matHeaderCellDef>كود المعاملة</th>
+        <td mat-cell *matCellDef="let item">
+          <span class="transaction-code">
+            @for (part of item.transactionCode | transactionCode; track $index) {
+              <span class="code-part">{{ part }}</span>
+            }
+          </span>
+        </td>
+      </ng-container>
 
-  <div class="table-scroll" *ngIf="!isLoading && items.length > 0">
-    <table class="mat-mdc-table">
-      <thead>
-        <tr class="mat-mdc-header-row">
-          <th class="mat-mdc-header-cell">كود المعاملة</th>
-          <th class="mat-mdc-header-cell">تاريخ التقديم</th>
-          <th class="mat-mdc-header-cell">المنشأة</th>
-          <th class="mat-mdc-header-cell">العنوان</th>
-          <th class="mat-mdc-header-cell">الجهة الطالبة</th>
-          <th class="mat-mdc-header-cell">المركز</th>
-          <th class="mat-mdc-header-cell">النشاط</th>
-          <th class="mat-mdc-header-cell">مقدم الطلب</th>
-          <th class="mat-mdc-header-cell">الحالة</th>
-          <th class="mat-mdc-header-cell">الإجراءات</th>
-        </tr>
-      </thead>
+      <ng-container matColumnDef="submissionDate">
+        <th mat-header-cell *matHeaderCellDef>تاريخ التقديم</th>
+        <td mat-cell *matCellDef="let item">{{ formatDate(item.submissionDate) }}</td>
+      </ng-container>
 
-      <tbody>
-        <tr
-          class="mat-mdc-row"
-          *ngFor="let item of items"
-          [class.last-opened]="item.id === lastOpenedId"
-        >
-          <td class="mat-mdc-cell">
-            <span class="transaction-code">
-              @for (part of item.transactionCode | transactionCode; track $index) {
-                <span class="code-part">{{ part }}</span>
-              }
-            </span>
-          </td>
-          <td class="mat-mdc-cell">{{ formatDate(item.submissionDate) }}</td>
-          <td class="mat-mdc-cell font-medium">{{ item.establishmentName }}</td>
-          <td class="mat-mdc-cell">{{ item.establishmentAddress }}</td>
-          <td class="mat-mdc-cell">{{ item.requestingEntity }}</td>
-          <td class="mat-mdc-cell">{{ item.district }}</td>
-          <td class="mat-mdc-cell">{{ item.activityType }}</td>
-          <td class="mat-mdc-cell">{{ item.applicantName }}</td>
-          <td class="mat-mdc-cell">
-            <span class="status-pill" [class.returned]="item.isReturned">
-              {{ getReturnStateLabel(item.isReturned) }}
-            </span>
-          </td>
+      <ng-container matColumnDef="establishmentName">
+        <th mat-header-cell *matHeaderCellDef>المنشأة</th>
+        <td mat-cell *matCellDef="let item">{{ item.establishmentName }}</td>
+      </ng-container>
 
-          <td class="mat-mdc-cell action-cell">
-            <button mat-icon-button class="table-btn menu-btn" [matMenuTriggerFor]="actionMenu">
-              <app-icon name="EllipsisVertical" />
+      <ng-container matColumnDef="establishmentAddress">
+        <th mat-header-cell *matHeaderCellDef>العنوان</th>
+        <td mat-cell *matCellDef="let item">{{ item.establishmentAddress }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="requestingEntity">
+        <th mat-header-cell *matHeaderCellDef>الجهة الطالبة</th>
+        <td mat-cell *matCellDef="let item">{{ item.requestingEntity }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="district">
+        <th mat-header-cell *matHeaderCellDef>المركز</th>
+        <td mat-cell *matCellDef="let item">{{ item.district }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="activityType">
+        <th mat-header-cell *matHeaderCellDef>النشاط</th>
+        <td mat-cell *matCellDef="let item">{{ item.activityType }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="applicantName">
+        <th mat-header-cell *matHeaderCellDef>مقدم الطلب</th>
+        <td mat-cell *matCellDef="let item">{{ item.applicantName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="isReturned">
+        <th mat-header-cell *matHeaderCellDef>الحالة</th>
+        <td mat-cell *matCellDef="let item">
+          <span class="status-pill" [class.returned]="item.isReturned">
+            {{ getReturnStateLabel(item.isReturned) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>الإجراءات</th>
+        <td mat-cell *matCellDef="let item">
+          <button mat-icon-button class="table-btn menu-btn" [matMenuTriggerFor]="actionMenu">
+            <app-icon name="EllipsisVertical" />
+          </button>
+
+          <mat-menu #actionMenu="matMenu" xPosition="before">
+            <button mat-menu-item (click)="requestEdit(item)">
+              <app-icon name="ClipboardCheck" />
+              <span>إجراء المعاينة</span>
             </button>
 
-            <mat-menu #actionMenu="matMenu" xPosition="before">
-              <button mat-menu-item (click)="requestEdit(item)">
-                <app-icon name="ClipboardCheck" />
-                <span>إجراء المعاينة</span>
-              </button>
-
+            @if (canMoveToFinalApproval) {
               <button
                 mat-menu-item
-                *ngIf="canMoveToFinalApproval"
                 (click)="moveToFinalApproval(item)"
                 [disabled]="movingToFinalApprovalId === item.id"
               >
                 <app-icon name="CircleArrowLeft" />
                 <span>إنتقال لخطوة الموافقة النهائية</span>
               </button>
-            </mat-menu>
-          </td>
-        </tr>
-      </tbody>
+            }
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        class="table-row-hover"
+        [class.last-opened]="row.id === lastOpenedId"
+      ></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          @if (!isLoading && !errorMessage) {
+            <div class="empty-box">
+              <app-icon name="Inbox" variant="lg" />
+              <span>لا توجد معاينات</span>
+            </div>
+          }
+        </td>
+      </tr>
     </table>
   </div>
 
-  <div class="bulk-actions" *ngIf="canMoveToFinalApproval && !errorMessage && items.length > 0">
-    <button
-      type="button"
-      class="btn-custom move-all-to-next"
-      [disabled]="isLoading || isMovingAll"
-      (click)="moveAllToFinalApproval()"
-    >
-      <span>{{ isMovingAll ? 'جاري النقل...' : 'نقل الكل للموافقة النهائية' }}</span>
-      <app-icon name="ChevronsLeft" />
-    </button>
-  </div>
+  @if (canMoveToFinalApproval && !errorMessage && items.length > 0) {
+    <div class="bulk-actions">
+      <button
+        type="button"
+        class="btn-custom move-all-to-next"
+        [disabled]="isLoading || isMovingAll"
+        (click)="moveAllToFinalApproval()"
+      >
+        <span>{{ isMovingAll ? 'جاري النقل...' : 'نقل الكل للموافقة النهائية' }}</span>
+        <app-icon name="ChevronsLeft" />
+      </button>
+    </div>
+  }
 
-  <!-- الترقيم السفلي -->
-  <mat-paginator
-    dir="rtl"
-    *ngIf="totalCount > 0"
-    [length]="totalCount"
-    [pageSize]="pageSize"
-    [pageIndex]="pageNumber - 1"
-    [pageSizeOptions]="[10, 25, 50, 100]"
-    (page)="onPageChange($event)"
-    showFirstLastButtons
-  >
-  </mat-paginator>
+  @if (totalCount > 0) {
+    <mat-paginator
+      dir="rtl"
+      [length]="totalCount"
+      [pageSize]="pageSize"
+      [pageIndex]="pageNumber - 1"
+      [pageSizeOptions]="[10, 25, 50, 100]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+    >
+    </mat-paginator>
+  }
 </section>

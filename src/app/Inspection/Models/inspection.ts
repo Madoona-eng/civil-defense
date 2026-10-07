@@ -72,12 +72,6 @@ export interface InspectionStepDetails {
   notes?: InspectionNote[];
 }
 
-export interface InspectionFormModel {
-  inspectorName: string;
-  opinion: InspectionOpinion;
-  inspectionNote: string;
-}
-
 export type AttachmentType =
   | 'entityLetters'
   | 'proofDocuments'

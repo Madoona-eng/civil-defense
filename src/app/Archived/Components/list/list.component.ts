@@ -1,8 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 import { AppIconComponent } from '../../../Shared/Components/app-icon/app-icon.component';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 import { formatDate } from '../../../Shared/Helpers/date.helper';
@@ -14,13 +14,13 @@ import { ArchivedService } from '../../Services/archived.service';
   selector: 'app-list',
   standalone: true,
   imports: [
-    CommonModule,
     TranslatePipe,
     MatButtonModule,
     MatMenuModule,
     MatPaginatorModule,
     AppIconComponent,
     TransactionCodePipe,
+    MatTableModule,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
@@ -41,6 +41,16 @@ export class ListComponent implements OnInit {
 
   totalCount = 0;
   readonly formatDate = formatDate;
+
+  readonly displayedColumns = [
+    'transactionCode',
+    'submissionDate',
+    'establishmentName',
+    'requestingEntity',
+    'district',
+    'activityType',
+    'actions',
+  ];
 
   constructor(private readonly archivedService: ArchivedService) {}
 

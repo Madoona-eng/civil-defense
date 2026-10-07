@@ -1,14 +1,9 @@
-<section class="mat-table-container" dir="rtl">
+<section class="mat-table-container">
   <div class="table-header-row">
     <div>
       <h3>{{ 'archive.results' | t }}</h3>
       <span class="results-count">{{ 'archive.totalRecords' | t: { count: totalCount } }}</span>
     </div>
-
-    <!-- <button type="button" class="refresh-btn" (click)="loadData()">
-      <app-icon name="RefreshCw" />
-      <span>{{ 'common.refresh' | t }}</span>
-    </button> -->
   </div>
 
   @if (errorMessage) {
@@ -23,79 +18,95 @@
       <app-icon class="spin-icon" name="RefreshCw" />
       <span>{{ 'common.loadingDataWithEllipsis' | t }}</span>
     </div>
-  } @else if (items.length === 0 && !errorMessage) {
-    <div class="empty-box">
-      <app-icon name="Inbox" variant="lg" />
-      <span>{{ 'archive.empty' | t }}</span>
-    </div>
-  } @else if (items.length > 0) {
-    <div class="table-scroll">
-      <table class="mat-mdc-table">
-        <thead>
-          <tr class="mat-mdc-header-row">
-            <th class="mat-mdc-header-cell">{{ 'common.requestCode' | t }}</th>
-            <th class="mat-mdc-header-cell">{{ 'common.submissionDate' | t }}</th>
-            <th class="mat-mdc-header-cell">{{ 'common.establishment' | t }}</th>
-            <th class="mat-mdc-header-cell">{{ 'common.requestingEntity' | t }}</th>
-            <th class="mat-mdc-header-cell">{{ 'common.district' | t }}</th>
-            <th class="mat-mdc-header-cell">{{ 'common.activity' | t }}</th>
-            <th class="mat-mdc-header-cell">{{ 'common.actions' | t }}</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          @for (item of items; track item.id) {
-            <tr class="mat-mdc-row" [class.last-opened]="item.id === lastOpenedId">
-              <td class="mat-mdc-cell">
-                <span class="transaction-code">
-                  @for (part of item.transactionCode | transactionCode; track $index) {
-                    <span class="code-part">{{ part }}</span>
-                  }
-                </span>
-              </td>
-              <td class="mat-mdc-cell">{{ formatDate(item.submissionDate) }}</td>
-              <td class="mat-mdc-cell font-medium">{{ item.establishmentName }}</td>
-              <td class="mat-mdc-cell">{{ item.requestingEntity }}</td>
-              <td class="mat-mdc-cell">{{ item.district }}</td>
-              <td class="mat-mdc-cell">{{ item.activityType }}</td>
-
-              <td class="mat-mdc-cell action-cell">
-                <button
-                  mat-icon-button
-                  type="button"
-                  class="table-btn menu-btn"
-                  [matMenuTriggerFor]="actionsMenu"
-                  [attr.aria-label]="'common.options' | t"
-                >
-                  <app-icon name="EllipsisVertical" />
-                </button>
-
-                <mat-menu #actionsMenu="matMenu" xPosition="before">
-                  <button mat-menu-item (click)="requestView(item.id)">
-                    <app-icon name="Eye" />
-                    <span>{{ 'archive.details' | t }}</span>
-                  </button>
-                  <button mat-menu-item class="danger" (click)="requestDelete(item)">
-                    <app-icon name="Trash2" />
-                    <span>{{ 'common.delete' | t }}</span>
-                  </button>
-                </mat-menu>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-
-    <mat-paginator
-      dir="rtl"
-      [length]="totalCount"
-      [pageSize]="filter.pageSize"
-      [pageIndex]="filter.pageNumber - 1"
-      [pageSizeOptions]="[10, 25, 50, 100]"
-      (page)="onPageChange($event)"
-      showFirstLastButtons
-    >
-    </mat-paginator>
   }
+
+  <div class="table-scroll">
+    <table mat-table [dataSource]="items" class="mat-mdc-table">
+      <ng-container matColumnDef="transactionCode">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.requestCode' | t }}</th>
+        <td mat-cell *matCellDef="let item">
+          <span class="transaction-code">
+            @for (part of item.transactionCode | transactionCode; track $index) {
+              <span class="code-part">{{ part }}</span>
+            }
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="submissionDate">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.submissionDate' | t }}</th>
+        <td mat-cell *matCellDef="let item">{{ formatDate(item.submissionDate) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="establishmentName">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.establishment' | t }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.establishmentName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="requestingEntity">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.requestingEntity' | t }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.requestingEntity }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="district">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.district' | t }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.district }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="activityType">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.activity' | t }}</th>
+        <td mat-cell *matCellDef="let item">{{ item.activityType }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | t }}</th>
+        <td mat-cell *matCellDef="let item">
+          <button mat-icon-button class="table-btn menu-btn" [matMenuTriggerFor]="actionsMenu">
+            <app-icon name="EllipsisVertical" />
+          </button>
+
+          <mat-menu #actionsMenu="matMenu" xPosition="before">
+            <button mat-menu-item (click)="requestView(item.id)">
+              <app-icon name="Eye" />
+              <span>{{ 'archive.details' | t }}</span>
+            </button>
+            <button mat-menu-item class="danger" (click)="requestDelete(item)">
+              <app-icon name="Trash2" />
+              <span>{{ 'common.delete' | t }}</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        class="table-row-hover"
+        [class.last-opened]="row.id === lastOpenedId"
+      ></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          @if (!isLoading && !errorMessage) {
+            <div class="empty-box">
+              <app-icon name="Inbox" variant="lg" />
+              <span>{{ 'archive.empty' | t }}</span>
+            </div>
+          }
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <mat-paginator
+    dir="rtl"
+    [length]="totalCount"
+    [pageSize]="filter.pageSize"
+    [pageIndex]="filter.pageNumber - 1"
+    [pageSizeOptions]="[10, 25, 50, 100]"
+    (page)="onPageChange($event)"
+    showFirstLastButtons
+  >
+  </mat-paginator>
 </section>
