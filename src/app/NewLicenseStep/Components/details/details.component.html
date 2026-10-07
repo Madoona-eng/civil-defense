@@ -32,9 +32,13 @@
           <div class="form-grid info-grid">
             <div class="form-group">
               <label>كود المعاملة</label>
-              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate">{{
-                details.transactionCode
-              }}</span>
+              <span class="dialog-input readonly-value">
+                <span class="transaction-code">
+                  @for (part of details.transactionCode | transactionCode; track $index) {
+                    <span class="code-part">{{ part }}</span>
+                  }
+                </span>
+              </span>
             </div>
             <div class="form-group">
               <label>تاريخ التقديم</label>
@@ -80,9 +84,7 @@
             </div>
             <div class="form-group">
               <label>الرقم القومي</label>
-              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate">{{
-                details.nationalId | arDigits
-              }}</span>
+              <span class="dialog-input readonly-value">{{ details.nationalId | arDigits }}</span>
             </div>
             <div class="form-group">
               <label>المسؤول</label>
@@ -90,9 +92,7 @@
             </div>
             <div class="form-group">
               <label>رقم الهاتف</label>
-              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate">{{
-                details.phone | arDigits
-              }}</span>
+              <span class="dialog-input readonly-value">{{ details.phone | arDigits }}</span>
             </div>
           </div>
         </section>

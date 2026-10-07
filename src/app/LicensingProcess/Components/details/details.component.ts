@@ -22,6 +22,7 @@ import { iconByName, isImageFile, openFile } from '../../../Shared/Helpers/file.
 import { buildFileUrl } from '../../../Shared/Utils/file-url';
 
 import { ArDigitsPipe } from '../../../Shared/Pipes/ar-digits.pipe';
+import { TransactionCodePipe } from '../../../Shared/Pipes/transaction-code.pipe';
 import { LicensingAttachment, LicensingProcessDetails } from '../../Models/licensing-process';
 import { LicensingProcessService } from '../../Services/licensing-process.service';
 
@@ -48,7 +49,7 @@ const ATTACHMENT_FIELDS: { key: AttachmentKey; label: string }[] = [
 @Component({
   selector: 'app-licensing-process-details',
   standalone: true,
-  imports: [MatIconModule, ArDigitsPipe],
+  imports: [MatIconModule, ArDigitsPipe, TransactionCodePipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })

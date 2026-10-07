@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiResponse, PagedResult, Archived, ArchivedDetails, ArchivedFilter } from '../Models/archived';
 import { BaseAPI } from '../../Shared/Env/env';
+import { ApiResponse } from '../../Shared/Models/ApiResponse';
+import { PagedResult } from '../../Shared/Models/PagedResult';
+import { Archived, ArchivedDetails, ArchivedFilter } from '../Models/archived';
 
 @Injectable({ providedIn: 'root' })
 export class ArchivedService {
@@ -16,13 +18,13 @@ export class ArchivedService {
       .set('pageSize', filter.pageSize);
 
     if (filter.districtId) params = params.set('districtId', filter.districtId);
-    if (filter.requestingEntityId) params = params.set('requestingEntityId', filter.requestingEntityId);
+    if (filter.requestingEntityId)
+      params = params.set('requestingEntityId', filter.requestingEntityId);
     if (filter.activityTypeId) params = params.set('activityTypeId', filter.activityTypeId);
     if (filter.reviewStatus) params = params.set('reviewStatus', filter.reviewStatus);
     if (filter.submissionDateFrom)
       params = params.set('submissionDateFrom', filter.submissionDateFrom);
-    if (filter.submissionDateTo)
-      params = params.set('submissionDateTo', filter.submissionDateTo);
+    if (filter.submissionDateTo) params = params.set('submissionDateTo', filter.submissionDateTo);
     if (filter.searchTerm) params = params.set('searchTerm', filter.searchTerm);
 
     return this.http.get<ApiResponse<PagedResult<Archived>>>(`${this.url}/archive`, { params });

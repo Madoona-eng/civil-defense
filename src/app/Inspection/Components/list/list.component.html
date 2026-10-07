@@ -141,7 +141,11 @@
           [class.last-opened]="item.id === lastOpenedId"
         >
           <td class="mat-mdc-cell">
-            <span class="transaction-code-pill">{{ item.transactionCode }}</span>
+            <span class="transaction-code">
+              @for (part of item.transactionCode | transactionCode; track $index) {
+                <span class="code-part">{{ part }}</span>
+              }
+            </span>
           </td>
           <td class="mat-mdc-cell">{{ formatDate(item.submissionDate) }}</td>
           <td class="mat-mdc-cell font-medium">{{ item.establishmentName }}</td>

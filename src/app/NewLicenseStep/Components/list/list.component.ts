@@ -6,6 +6,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { AppIconComponent } from '../../../Shared/Components/app-icon/app-icon.component';
 import { formatDate } from '../../../Shared/Helpers/date.helper';
+import { TransactionCodePipe } from '../../../Shared/Pipes/transaction-code.pipe';
 import { NewLicenseListItem } from '../../Models/new-license';
 
 @Component({
@@ -18,6 +19,7 @@ import { NewLicenseListItem } from '../../Models/new-license';
     MatMenuModule,
     MatButtonModule,
     AppIconComponent,
+    TransactionCodePipe,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
@@ -74,11 +76,10 @@ export class ListComponent {
   }
 
   onDelete(item: NewLicenseListItem): void {
-    this.lastOpenedId = item.id;    
+    this.lastOpenedId = item.id;
     this.deleteRequested.emit(item);
   }
   onMoveAllToNextStep(): void {
     this.moveAllToNextStepRequested.emit();
-    
   }
 }

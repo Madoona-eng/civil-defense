@@ -1,12 +1,24 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { ArchivedService } from '../../Services/archived.service';
-import { ArchivedDetails } from '../../Models/archived';
-import { APPLICATION_STATUS_LABELS, APPLICANT_ROLE_LABELS, INSPECTION_OPINION_LABELS, PROCESS_STEP_LABELS, REVIEW_STATUS_LABELS } from '../../../Shared/Enums/enums';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
+import {
+  APPLICANT_ROLE_LABELS,
+  APPLICATION_STATUS_LABELS,
+  INSPECTION_OPINION_LABELS,
+  PAYMENT_STATE_LABELS,
+  PROCESS_STEP_LABELS,
+  PaymentState,
+  RETURN_STATE_LABELS,
+  REVIEW_STATUS_LABELS,
+  ReturnState,
+} from '../../../Shared/Enums/enums';
+import { formatDate, formatDateTime } from '../../../Shared/Helpers/date.helper';
 import { iconByName, isImageFile, openFile } from '../../../Shared/Helpers/file.helper';
+import { ArDigitsPipe } from '../../../Shared/Pipes/ar-digits.pipe';
+import { TransactionCodePipe } from '../../../Shared/Pipes/transaction-code.pipe';
 import { buildFileUrl } from '../../../Shared/Utils/file-url';
+import { ArchivedDetails } from '../../Models/archived';
+import { ArchivedService } from '../../Services/archived.service';
 
 type AttachmentKey =
   | 'entityLetters'
@@ -31,7 +43,7 @@ const ATTACHMENT_FIELDS: { key: AttachmentKey; label: string }[] = [
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [DatePipe, MatIconModule, TranslatePipe],
+  imports: [MatIconModule, TranslatePipe, TransactionCodePipe, ArDigitsPipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
@@ -42,7 +54,8 @@ export class DetailsComponent implements OnInit {
   readonly openFile = openFile;
   readonly getFileUrl = buildFileUrl;
   readonly iconByName = iconByName;
-
+  readonly formatDate = formatDate;
+  readonly formatDateTime = formatDateTime;
   details: ArchivedDetails | null = null;
   isLoading = false;
   errorMessage = '';
@@ -63,7 +76,7 @@ export class DetailsComponent implements OnInit {
     this.archivedService.getById(this.id).subscribe({
       next: (res) => {
         this.isLoading = false;
-        if (!res.isSuccess) {
+        if (!res.isSuccess || !res.data) {
           this.errorMessage = res.message || 'فشل تحميل تفاصيل الأرشيف';
           return;
         }
@@ -89,9 +102,7 @@ export class DetailsComponent implements OnInit {
   }
 
   getApplicantRoleLabel(role: string): string {
-    return role === 'Agent'
-      ? 'وكيل'
-      : APPLICANT_ROLE_LABELS[role as keyof typeof APPLICANT_ROLE_LABELS] ?? role;
+    return APPLICANT_ROLE_LABELS[role as keyof typeof APPLICANT_ROLE_LABELS] ?? role;
   }
 
   getReviewStatusLabel(status: string): string {
@@ -119,5 +130,12 @@ export class DetailsComponent implements OnInit {
 
   onImageError(filePath: string): void {
     this.failedImages.add(filePath);
+  }
+
+  getPaymentLabel(isPaid: boolean): string {
+    return PAYMENT_STATE_LABELS[isPaid ? PaymentState.Paid : PaymentState.NotPaid];
+  }
+  getReturnStateLabel(isReturned: boolean | undefined): string {
+    return RETURN_STATE_LABELS[isReturned ? ReturnState.Returned : ReturnState.NotReturned];
   }
 }

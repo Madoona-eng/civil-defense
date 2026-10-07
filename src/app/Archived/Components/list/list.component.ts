@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { AppIconComponent } from '../../../Shared/Components/app-icon/app-icon.component';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 import { formatDate } from '../../../Shared/Helpers/date.helper';
+import { TransactionCodePipe } from '../../../Shared/Pipes/transaction-code.pipe';
 import { Archived, ArchivedFilter } from '../../Models/archived';
 import { ArchivedService } from '../../Services/archived.service';
 
@@ -17,10 +17,10 @@ import { ArchivedService } from '../../Services/archived.service';
     CommonModule,
     TranslatePipe,
     MatButtonModule,
-    MatIconModule,
     MatMenuModule,
     MatPaginatorModule,
     AppIconComponent,
+    TransactionCodePipe,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
@@ -55,10 +55,12 @@ export class ListComponent implements OnInit {
     this.archivedService.getAll(this.filter).subscribe({
       next: (res) => {
         this.isLoading = false;
-        if (!res.isSuccess) {
+
+        if (!res.isSuccess || !res.data) {
           this.errorMessage = res.message || 'فشل تحميل بيانات الأرشيف';
           return;
         }
+
         this.items = res.data.items;
         this.totalCount = res.data.totalCount;
       },

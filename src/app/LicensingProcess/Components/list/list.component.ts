@@ -16,6 +16,7 @@ import {
   ReturnState,
 } from '../../../Shared/Enums/enums';
 import { LicensingProcessItem } from '../../Models/licensing-process';
+import { TransactionCodePipe } from '../../../Shared/Pipes/transaction-code.pipe';
 
 @Component({
   selector: 'app-licensing-process-list',
@@ -29,7 +30,8 @@ import { LicensingProcessItem } from '../../Models/licensing-process';
     MatTableModule,
     MatNativeDateModule,
     MatDatepickerModule,
-  ],
+    TransactionCodePipe
+],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
 })

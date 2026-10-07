@@ -3,13 +3,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { catchError, forkJoin, from, map, mergeMap, of, toArray } from 'rxjs';
 
-import {
-  ApiResponse,
-  InspectionItem,
-  InspectionList,
-  LookupItem,
-  PagedResult,
-} from '../../Models/inspection';
+import { InspectionItem, InspectionList } from '../../Models/inspection';
 
 import { InspectionService } from '../../Services/inspection.service';
 
@@ -24,6 +18,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ApiResponse } from '../../../ActivityType/Models/activity-type';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
 import { DistrictService } from '../../../District/Services/district.service';
 import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
@@ -36,7 +31,10 @@ import {
   ReturnState,
 } from '../../../Shared/Enums/enums';
 import { formatDate, formatDateForApi } from '../../../Shared/Helpers/date.helper';
+import { LookupItem } from '../../../Shared/Models/LookupItem';
+import { PagedResult } from '../../../Shared/Models/PagedResult';
 import { SelectOption } from '../../../Shared/Models/SelectOption';
+import { TransactionCodePipe } from '../../../Shared/Pipes/transaction-code.pipe';
 import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
@@ -57,6 +55,7 @@ import { AuthService } from '../../../auth/services/auth.service';
     MatSnackBarModule,
     MatPaginatorModule,
     AppIconComponent,
+    TransactionCodePipe,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',

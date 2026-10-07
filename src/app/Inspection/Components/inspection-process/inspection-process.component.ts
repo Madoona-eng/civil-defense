@@ -20,10 +20,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { catchError, concatMap, from, map, Observable, throwError, toArray } from 'rxjs';
+import { Observable, catchError, concatMap, from, map, throwError, toArray } from 'rxjs';
 
 import {
-  ApiResponse,
   ATTACHMENT_API_TYPES,
   AttachmentGroup,
   AttachmentType,
@@ -34,7 +33,6 @@ import {
 
 import { InspectionService } from '../../Services/inspection.service';
 
-import { AuthService } from '../../../auth/services/auth.service';
 import {
   INSPECTION_OPINION_LABELS,
   InspectionOpinion,
@@ -52,8 +50,11 @@ import {
   openFile,
   validateFile,
 } from '../../../Shared/Helpers/file.helper';
+import { ApiResponse } from '../../../Shared/Models/ApiResponse';
 import { SelectOption } from '../../../Shared/Models/SelectOption';
+import { TransactionCodePipe } from '../../../Shared/Pipes/transaction-code.pipe';
 import { buildFileUrl } from '../../../Shared/Utils/file-url';
+import { AuthService } from '../../../auth/services/auth.service';
 
 // ============================================================
 // Types & constants
@@ -93,6 +94,7 @@ function extractErrorMessage(err: any, fallback: string): string {
     MatInputModule,
     MatSelectModule,
     MatIconModule,
+    TransactionCodePipe,
   ],
   templateUrl: './inspection-process.component.html',
   styleUrl: './inspection-process.component.scss',
@@ -283,7 +285,7 @@ export class InspectionProcessComponent implements OnChanges, OnDestroy {
       next: (response: ApiResponse<InspectionStepDetails>) => {
         this.loading = false;
 
-        if (!response.isSuccess) {
+        if (!response.isSuccess || !response.data) {
           this.errorMessage = response.message || 'تعذر تحميل بيانات المعاينة';
           return;
         }

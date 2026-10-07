@@ -31,47 +31,50 @@
 
       <ng-container *ngIf="!loading && details as d">
         <!-- 1) البيانات الأساسية -->
-        <section class="info-section" *ngIf="item">
+        <section class="info-section">
           <h3 class="section-title">البيانات الأساسية</h3>
 
           <div class="form-grid info-grid">
             <div class="form-group">
               <label>كود المعاملة</label>
-              <span class="dialog-input readonly-value" dir="ltr" style="unicode-bidi: isolate">{{
-                item.transactionCode
-              }}</span>
+              <span class="dialog-input readonly-value">
+                <span class="transaction-code">
+                  @for (part of d.transactionCode | transactionCode; track $index) {
+                    <span class="code-part">{{ part }}</span>
+                  }
+                </span>
+              </span>
             </div>
             <div class="form-group">
               <label>تاريخ التقديم</label>
-              <span class="dialog-input readonly-value">{{ formatDate(item.submissionDate) }}</span>
+              <span class="dialog-input readonly-value">{{ formatDate(d.submissionDate) }}</span>
             </div>
             <div class="form-group">
               <label>اسم المنشأة</label>
-              <span class="dialog-input readonly-value">{{ item.establishmentName }}</span>
+              <span class="dialog-input readonly-value">{{ d.establishmentName }}</span>
             </div>
             <div class="form-group">
               <label>عنوان المنشأة</label>
-              <span class="dialog-input readonly-value">{{ item.establishmentAddress }}</span>
+              <span class="dialog-input readonly-value">{{ d.establishmentAddress }}</span>
             </div>
             <div class="form-group">
               <label>الجهة الطالبة</label>
-              <span class="dialog-input readonly-value">{{ item.requestingEntity }}</span>
+              <span class="dialog-input readonly-value">{{ d.requestingEntity }}</span>
             </div>
             <div class="form-group">
               <label>المركز</label>
-              <span class="dialog-input readonly-value">{{ item.district }}</span>
+              <span class="dialog-input readonly-value">{{ d.district }}</span>
             </div>
             <div class="form-group">
               <label>نوع النشاط</label>
-              <span class="dialog-input readonly-value">{{ item.activityType }}</span>
+              <span class="dialog-input readonly-value">{{ d.activityType }}</span>
             </div>
             <div class="form-group">
               <label>مقدم الطلب</label>
-              <span class="dialog-input readonly-value">{{ item.applicantName }}</span>
+              <span class="dialog-input readonly-value">{{ d.applicantName }}</span>
             </div>
           </div>
         </section>
-
         <!-- 2) نتيجة المعاينة -->
         <section class="info-section">
           <h3 class="section-title">نتيجة المعاينة</h3>

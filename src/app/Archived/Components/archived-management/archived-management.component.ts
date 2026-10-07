@@ -14,7 +14,8 @@ import { ConfirmDialogComponent } from '../../../Shared/Components/confirm-dialo
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 import { BaseAPI } from '../../../Shared/Env/env';
 import { formatDateForApi } from '../../../Shared/Helpers/date.helper';
-import { Archived, ArchivedFilter, LookupItem } from '../../Models/archived';
+import { LookupItem } from '../../../Shared/Models/LookupItem';
+import { Archived, ArchivedFilter } from '../../Models/archived';
 import { ArchivedService } from '../../Services/archived.service';
 import { DetailsComponent } from '../details/details.component';
 import { ListComponent } from '../list/list.component';

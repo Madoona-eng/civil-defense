@@ -1,12 +1,4 @@
-import { InspectionOpinion } from "../../Shared/Enums/enums";
-
-export interface ApiResponse<T> {
-  data: T;
-  isSuccess: boolean;
-  errorCode: string;
-  message: string;
-}
-
+import { InspectionOpinion } from '../../Shared/Enums/enums';
 export interface InspectionItem {
   id: string;
   transactionCode: string;
@@ -28,16 +20,6 @@ export const ATTACHMENT_API_TYPES: Record<AttachmentType, string> = {
   otherAttachments: 'OtherAttachment',
 };
 
-export interface PagedResult<T> {
-  items: T[];
-  pageNumber: number;
-  pageSize: number;
-  totalCount: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-}
-
 export interface InspectionList {
   districtId?: string;
   requestingEntityId?: string;
@@ -49,12 +31,6 @@ export interface InspectionList {
   searchTerm?: string;
   pageNumber: number;
   pageSize: number;
-}
-
-export interface LookupItem {
-  id: string;
-  name: string;
-  code?: number;
 }
 
 export interface InspectionAttachment {
@@ -76,6 +52,13 @@ export interface InspectionStepDetails {
   submissionDate: string;
   transactionCode: string;
 
+  establishmentName: string;
+  establishmentAddress: string;
+  requestingEntity: string;
+  district: string;
+  activityType: string;
+  applicantName: string;
+
   inspectorName?: string | null;
   opinion?: InspectionOpinion | null;
   isReturned?: boolean;
@@ -95,7 +78,6 @@ export interface InspectionFormModel {
   inspectionNote: string;
 }
 
-
 export type AttachmentType =
   | 'entityLetters'
   | 'proofDocuments'
@@ -103,8 +85,7 @@ export type AttachmentType =
   | 'inspectionReports'
   | 'otherAttachments';
 
-
-  export interface AttachmentGroup {
+export interface AttachmentGroup {
   title: string;
   files: InspectionAttachment[];
 }

@@ -16,7 +16,11 @@
       <ng-container matColumnDef="transactionCode">
         <th mat-header-cell *matHeaderCellDef>كود المعاملة</th>
         <td mat-cell *matCellDef="let item">
-          <span class="code-pill" dir="ltr">{{ item.transactionCode }}</span>
+          <span class="transaction-code">
+            @for (part of item.transactionCode | transactionCode; track $index) {
+              <span class="code-part">{{ part }}</span>
+            }
+          </span>
         </td>
       </ng-container>
 
@@ -91,7 +95,7 @@
         class="table-row-hover"
         [class.last-opened]="row.id === lastOpenedId"
       ></tr>
-      
+
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" [attr.colspan]="displayedColumns.length">
           <div class="empty-state" *ngIf="!isLoading">

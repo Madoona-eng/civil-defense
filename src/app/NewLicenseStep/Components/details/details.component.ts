@@ -7,6 +7,7 @@ import { APPLICANT_ROLE_LABELS, ApplicantRole } from '../../../Shared/Enums/enum
 import { formatDate } from '../../../Shared/Helpers/date.helper';
 import { ApiResponse } from '../../../Shared/Models/ApiResponse';
 import { ArDigitsPipe } from '../../../Shared/Pipes/ar-digits.pipe';
+import { TransactionCodePipe } from '../../../Shared/Pipes/transaction-code.pipe';
 import { buildFileUrl } from '../../../Shared/Utils/file-url';
 import { AttachmentGroup, NewLicenseDetails } from '../../Models/new-license';
 import { NewLicenseService } from '../../Services/new-license.service';
@@ -18,7 +19,7 @@ export interface DetailsDialogData {
 @Component({
   selector: 'app-new-license-details',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatIconModule, ArDigitsPipe],
+  imports: [CommonModule, MatDialogModule, MatIconModule, ArDigitsPipe, TransactionCodePipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })

@@ -1,4 +1,6 @@
 @import '../../../Shared/Styles/tablesstyle.scss';
+@import '../../../Shared/Styles/transaction-code.scss';
+
 
 .bulk-actions {
   display: flex;
@@ -28,3 +30,4 @@
     margin-inline-end: 4px;
   }
 }
+

@@ -3,14 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
   showPassword = false;
@@ -20,13 +19,13 @@ export class LoginComponent implements OnInit {
 
   form = this.fb.nonNullable.group({
     username: ['', Validators.required],
-    password: ['', Validators.required]
+    password: ['', Validators.required],
   });
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +69,7 @@ export class LoginComponent implements OnInit {
         this.isLoading = false;
         this.errorMessage = 'حدث خطأ في الاتصال بالسيرفر';
         console.error('Login API error:', err);
-      }
+      },
     });
   }
 
@@ -99,13 +98,16 @@ export class LoginComponent implements OnInit {
 
     console.log(`Navigating to target route: ${targetPath}`);
 
-    this.router.navigateByUrl(targetPath).then(success => {
-      console.log('Navigation Status:', success);
-      if (!success) {
-        console.error(`خطأ: المسار ${targetPath} غير معرف في app.routes.ts`);
-      }
-    }).catch(err => {
-      console.error('Navigation error caught:', err);
-    });
+    this.router
+      .navigateByUrl(targetPath)
+      .then((success) => {
+        console.log('Navigation Status:', success);
+        if (!success) {
+          console.error(`خطأ: المسار ${targetPath} غير معرف في app.routes.ts`);
+        }
+      })
+      .catch((err) => {
+        console.error('Navigation error caught:', err);
+      });
   }
 }
