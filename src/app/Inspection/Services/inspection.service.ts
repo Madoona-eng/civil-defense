@@ -2,14 +2,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { ApiResponse } from '../../ActivityType/Models/activity-type';
 import { BaseAPI } from '../../Shared/Env/env';
-import {
-  ApiResponse,
-  InspectionItem,
-  InspectionList,
-  InspectionStepDetails,
-  PagedResult,
-} from '../Models/inspection';
+import { PagedResult } from '../../Shared/Models/PagedResult';
+import { InspectionItem, InspectionList, InspectionStepDetails } from '../Models/inspection';
 
 @Injectable({
   providedIn: 'root',

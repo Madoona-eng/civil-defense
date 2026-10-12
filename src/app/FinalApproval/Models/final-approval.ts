@@ -27,7 +27,6 @@ export interface FinalApprovalFilter {
   pageSize: number;
 }
 
-
 export type AttachmentType =
   | 'entityLetters'
   | 'proofDocuments'
@@ -81,6 +80,12 @@ export interface FinalApprovalStepNote {
 export interface FinalApprovalStepDetails {
   transactionCode: string;
   submissionDate: string;
+  establishmentName: string;
+  establishmentAddress: string;
+  requestingEntity: string;
+  district: string;
+  activityType: string;
+  applicantName: string;
   inspectorName: string | null;
   opinion: InspectionOpinion | null;
   finalStatus: ApplicationStatus | null;

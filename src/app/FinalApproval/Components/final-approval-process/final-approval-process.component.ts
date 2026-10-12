@@ -39,6 +39,7 @@ import {
 import { SelectOption } from '../../../Shared/Models/SelectOption';
 import { buildFileUrl } from '../../../Shared/Utils/file-url';
 
+import { TransactionCodePipe } from '../../../Shared/Pipes/transaction-code.pipe';
 import {
   ATTACHMENT_API_TYPES,
   AttachmentGroup,
@@ -81,6 +82,7 @@ function extractErrorMessage(err: any, fallback: string): string {
     MatInputModule,
     MatSelectModule,
     MatIconModule,
+    TransactionCodePipe,
   ],
   templateUrl: './final-approval-process.component.html',
   styleUrl: './final-approval-process.component.scss',

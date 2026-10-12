@@ -1,15 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { catchError, forkJoin, from, map, mergeMap, of, toArray } from 'rxjs';
 
-import {
-  ApiResponse,
-  InspectionItem,
-  InspectionList,
-  LookupItem,
-  PagedResult,
-} from '../../Models/inspection';
+import { InspectionItem, InspectionList } from '../../Models/inspection';
 
 import { InspectionService } from '../../Services/inspection.service';
 
@@ -18,13 +11,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTableModule } from '@angular/material/table';
 import { ActivityTypeService } from '../../../ActivityType/Services/activity-type.service';
 import { DistrictService } from '../../../District/Services/district.service';
 import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
@@ -37,19 +29,18 @@ import {
   ReturnState,
 } from '../../../Shared/Enums/enums';
 import { formatDate, formatDateForApi } from '../../../Shared/Helpers/date.helper';
+import { ApiResponse } from '../../../Shared/Models/ApiResponse';
+import { LookupItem } from '../../../Shared/Models/LookupItem';
+import { PagedResult } from '../../../Shared/Models/PagedResult';
+import { SelectOption } from '../../../Shared/Models/SelectOption';
+import { TransactionCodePipe } from '../../../Shared/Pipes/transaction-code.pipe';
 import { AuthService } from '../../../auth/services/auth.service';
-interface SelectOption {
-  value: string;
-  label: string;
-}
 
 @Component({
   selector: 'app-inspection-list',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
-    MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -57,17 +48,19 @@ interface SelectOption {
     MatNativeDateModule,
     MatMenuModule,
     MatButtonModule,
-    MatTooltipModule,
     MatDialogModule,
     MatSnackBarModule,
     MatPaginatorModule,
     AppIconComponent,
+    TransactionCodePipe,
+    MatTableModule,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
 })
 export class ListComponent implements OnInit {
   readonly formatDate = formatDate;
+  lastOpenedId: string | null = null;
 
   @Output() editRequested = new EventEmitter<InspectionItem>();
 
@@ -77,7 +70,6 @@ export class ListComponent implements OnInit {
   districts: LookupItem[] = [];
   activityTypes: LookupItem[] = [];
 
-  // خيارات الفلاتر متولدة من نفس الـ enums والـ labels
   readonly returnStateOptions: SelectOption[] = Object.values(ReturnState).map((value) => ({
     value,
     label: RETURN_STATE_LABELS[value],
@@ -100,13 +92,26 @@ export class ListComponent implements OnInit {
   searchTerm = '';
   isReturned = '';
   submissionDateFrom: Date | null = null;
-  submissionDateTo = '';
+  submissionDateTo: Date | null = null;
   opinion: InspectionOpinion | '' = '';
 
   pageNumber = 1;
   pageSize = 10;
   totalCount = 0;
   movingToFinalApprovalId: string | null = null;
+
+  readonly displayedColumns = [
+    'transactionCode',
+    'submissionDate',
+    'establishmentName',
+    'establishmentAddress',
+    'requestingEntity',
+    'district',
+    'activityType',
+    'applicantName',
+    'isReturned',
+    'actions',
+  ];
 
   constructor(
     private readonly inspectionService: InspectionService,
@@ -168,7 +173,7 @@ export class ListComponent implements OnInit {
       isReturned: this.isReturned === '' ? undefined : this.isReturned === ReturnState.Returned,
       opinion: this.opinion || undefined,
       submissionDateFrom: formatDateForApi(this.submissionDateFrom),
-      submissionDateTo: this.submissionDateTo || undefined,
+      submissionDateTo: formatDateForApi(this.submissionDateTo),
       searchTerm: this.searchTerm.trim() || undefined,
       pageNumber: this.pageNumber,
       pageSize: this.pageSize,
@@ -178,11 +183,12 @@ export class ListComponent implements OnInit {
       next: (response: ApiResponse<PagedResult<InspectionItem>>) => {
         this.isLoading = false;
 
-        if (!response.isSuccess) {
+        if (!response.isSuccess || !response.data) {
           this.errorMessage = response.message || 'تعذر تحميل قائمة المعاينات';
           return;
         }
 
+<<<<<<< HEAD
         this.items = response.data.items || [];
         if (this.isInspector && !this.inspectorDistrictName) {
           this.inspectorDistrictName = [
@@ -193,6 +199,9 @@ export class ListComponent implements OnInit {
             ),
           ].join('، ');
         }
+=======
+        this.items = response.data.items;
+>>>>>>> 4e1cffa47157b9337a79ab5bd73080001d2772cc
         this.pageNumber = response.data.pageNumber;
         this.pageSize = response.data.pageSize;
         this.totalCount = response.data.totalCount;
@@ -223,7 +232,7 @@ export class ListComponent implements OnInit {
     this.isReturned = '';
     this.opinion = '';
     this.submissionDateFrom = null;
-    this.submissionDateTo = '';
+    this.submissionDateTo = null;
     this.pageNumber = 1;
     this.loadInspections();
   }
@@ -239,6 +248,7 @@ export class ListComponent implements OnInit {
   }
 
   requestEdit(item: InspectionItem): void {
+    this.lastOpenedId = item.id;
     this.editRequested.emit(item);
   }
 
@@ -252,6 +262,7 @@ export class ListComponent implements OnInit {
       return;
     }
 
+    this.lastOpenedId = item.id;
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '360px',
       data: {

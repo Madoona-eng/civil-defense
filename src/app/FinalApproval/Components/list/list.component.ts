@@ -8,6 +8,7 @@ import { MatTableModule } from '@angular/material/table';
 import { AppIconComponent } from '../../../Shared/Components/app-icon/app-icon.component';
 import { RETURN_STATE_LABELS, ReturnState } from '../../../Shared/Enums/enums';
 import { formatDate } from '../../../Shared/Helpers/date.helper';
+import { TransactionCodePipe } from '../../../Shared/Pipes/transaction-code.pipe';
 import { AuthService } from '../../../auth/services/auth.service';
 import { FinalApprovalItem } from '../../Models/final-approval';
 
@@ -22,6 +23,7 @@ import { FinalApprovalItem } from '../../Models/final-approval';
     MatProgressSpinnerModule,
     MatTableModule,
     AppIconComponent,
+    TransactionCodePipe,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
@@ -53,6 +55,7 @@ export class ListComponent {
     'actions',
   ];
   readonly formatDate = formatDate;
+  lastOpenedId: string | null = null;
 
   constructor(private readonly authService: AuthService) {}
 
@@ -68,16 +71,17 @@ export class ListComponent {
   onPageChange(event: PageEvent): void {
     this.pageChanged.emit(event);
   }
-
   requestEdit(item: FinalApprovalItem): void {
+    this.lastOpenedId = item.id;
     this.editRequested.emit(item);
   }
 
+  // UNUSED
   requestDelete(item: FinalApprovalItem): void {
     this.deleteRequested.emit(item);
   }
-
   requestReturn(item: FinalApprovalItem): void {
+    this.lastOpenedId = item.id;
     this.returnRequested.emit(item);
   }
 

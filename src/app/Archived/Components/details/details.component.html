@@ -16,16 +16,52 @@
         <h3 class="section-title">{{ 'archive.transactionData' | t }}</h3>
         <div class="form-grid info-grid">
           <div class="form-group">
+            <label>{{ 'common.requestCode' | t }}</label>
+            <span class="dialog-input readonly-value">
+              <span class="transaction-code">
+                @for (part of d.transactionCode | transactionCode; track $index) {
+                  <span class="code-part">{{ part }}</span>
+                }
+              </span>
+            </span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'common.submissionDate' | t }}</label>
+            <span class="dialog-input readonly-value">{{ formatDate(d.submissionDate) }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'common.establishment' | t }}</label>
+            <span class="dialog-input readonly-value">{{ d.establishmentName }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'common.establishmentAddress' | t }}</label>
+            <span class="dialog-input readonly-value">{{ d.establishmentAddress }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'common.requestingEntity' | t }}</label>
+            <span class="dialog-input readonly-value">{{ d.requestingEntity }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'common.district' | t }}</label>
+            <span class="dialog-input readonly-value">{{ d.district }}</span>
+          </div>
+          <div class="form-group">
+            <label>{{ 'common.activity' | t }}</label>
+            <span class="dialog-input readonly-value">{{ d.activityType }}</span>
+          </div>
+          <div class="form-group">
             <label>{{ 'common.applicant' | t }}</label>
-            <span class="dialog-input readonly-value">{{ d.applicantName || '-' }}</span>
+            <span class="dialog-input readonly-value">{{ d.applicantName }}</span>
           </div>
           <div class="form-group">
             <label>{{ 'common.applicantRole' | t }}</label>
-            <span class="dialog-input readonly-value">{{ getApplicantRoleLabel(d.applicantRole) }}</span>
+            <span class="dialog-input readonly-value">{{
+              getApplicantRoleLabel(d.applicantRole)
+            }}</span>
           </div>
           <div class="form-group">
             <label>{{ 'archive.nationalId' | t }}</label>
-            <span class="dialog-input readonly-value" dir="ltr">{{ d.nationalId || '-' }}</span>
+            <span class="dialog-input readonly-value">{{ d.nationalId | arDigits }}</span>
           </div>
           <div class="form-group">
             <label>{{ 'common.responsibleManager' | t }}</label>
@@ -33,7 +69,7 @@
           </div>
           <div class="form-group">
             <label>{{ 'common.phone' | t }}</label>
-            <span class="dialog-input readonly-value" dir="ltr">{{ d.phone || '-' }}</span>
+            <span class="dialog-input readonly-value">{{ d.phone | arDigits }}</span>
           </div>
           <div class="form-group">
             <label>{{ 'common.createdBy' | t }}</label>
@@ -41,7 +77,7 @@
           </div>
           <div class="form-group">
             <label>{{ 'archive.createdAt' | t }}</label>
-            <span class="dialog-input readonly-value">{{ d.createdAt | date: 'yyyy-MM-dd' }}</span>
+            <span class="dialog-input readonly-value">{{ formatDate(d.createdAt) }}</span>
           </div>
         </div>
       </section>
@@ -64,7 +100,7 @@
           </div>
           <div class="form-group">
             <label>{{ 'common.returnState' | t }}</label>
-            <span class="dialog-input readonly-value">{{ d.isReturned ? ('common.yes' | t) : ('common.no' | t) }}</span>
+            <span class="dialog-input readonly-value">{{ getReturnStateLabel(d.isReturned) }}</span>
           </div>
         </div>
       </section>
@@ -75,7 +111,9 @@
         <div class="form-grid info-grid">
           <div class="form-group">
             <label>{{ 'archive.finalStatus' | t }}</label>
-            <span class="dialog-input readonly-value">{{ getFinalStatusLabel(d.finalStatus) }}</span>
+            <span class="dialog-input readonly-value">{{
+              getFinalStatusLabel(d.finalStatus)
+            }}</span>
           </div>
           <div class="form-group">
             <label>{{ 'archive.approvedBy' | t }}</label>
@@ -125,7 +163,7 @@
                         <span class="file-name" [title]="file.fileName">{{ file.fileName }}</span>
                         <div class="file-size">
                           <span class="file-badge">{{ getStepLabel(file.uploadedAtStep) }}</span>
-                          <span>{{ file.uploadedAt | date: 'yyyy-MM-dd' }}</span>
+                          <span>{{ formatDateTime(file.uploadedAt) }}</span>
                         </div>
                       </div>
                     </div>
@@ -148,9 +186,9 @@
               <div class="attachment-field">
                 <div class="file-size">
                   <span class="file-badge">{{ getStepLabel(note.processStep) }}</span>
-                  <span>{{ note.writtenBy || '-' }}</span>
+                  <span>{{ note.createdByUserName || '-' }}</span>
                   <span>•</span>
-                  <span>{{ note.writtenAt | date: 'yyyy-MM-dd' }}</span>
+                  <span>{{ formatDateTime(note.createdAt) }}</span>
                 </div>
                 <p class="note-content">{{ note.content }}</p>
               </div>
@@ -170,7 +208,7 @@
               <thead>
                 <tr>
                   <th>{{ 'archive.reviewState' | t }}</th>
-                  <th>{{ 'archive.paid' | t }}</th>
+                  <th>{{ 'archive.paymentStatus' | t }}</th>
                   <th>{{ 'archive.reviewedBy' | t }}</th>
                   <th>{{ 'archive.reviewDate' | t }}</th>
                 </tr>
@@ -184,9 +222,9 @@
                         <span class="latest-tag">الأحدث</span>
                       }
                     </td>
-                    <td>{{ review.isPaid ? ('common.yes' | t) : ('common.no' | t) }}</td>
+                    <td>{{ getPaymentLabel(review.isPaid) }}</td>
                     <td>{{ review.reviewedBy || '-' }}</td>
-                    <td>{{ review.reviewedAt | date: 'yyyy-MM-dd' }}</td>
+                    <td>{{ formatDateTime(review.reviewedAt) }}</td>
                   </tr>
                 }
               </tbody>

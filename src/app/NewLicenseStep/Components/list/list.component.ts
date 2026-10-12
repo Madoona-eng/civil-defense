@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { AppIconComponent } from '../../../Shared/Components/app-icon/app-icon.component';
 import { formatDate } from '../../../Shared/Helpers/date.helper';
+import { TransactionCodePipe } from '../../../Shared/Pipes/transaction-code.pipe';
 import { NewLicenseListItem } from '../../Models/new-license';
 
 @Component({
@@ -18,10 +17,9 @@ import { NewLicenseListItem } from '../../Models/new-license';
     MatTableModule,
     MatPaginatorModule,
     MatMenuModule,
-    MatIconModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
     AppIconComponent,
+    TransactionCodePipe,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
@@ -56,28 +54,32 @@ export class ListComponent {
     'applicantName',
     'actions',
   ];
+  lastOpenedId: string | null = null;
 
   onPageChange(event: PageEvent): void {
     this.pageChanged.emit(event);
   }
 
   onDetails(item: NewLicenseListItem): void {
+    this.lastOpenedId = item.id;
     this.detailsRequested.emit(item);
   }
 
   onEdit(item: NewLicenseListItem): void {
+    this.lastOpenedId = item.id;
     this.editRequested.emit(item);
   }
 
   onMoveToNextStep(item: NewLicenseListItem): void {
+    this.lastOpenedId = item.id;
     this.moveToNextStepRequested.emit(item);
   }
 
+  onDelete(item: NewLicenseListItem): void {
+    this.lastOpenedId = item.id;
+    this.deleteRequested.emit(item);
+  }
   onMoveAllToNextStep(): void {
     this.moveAllToNextStepRequested.emit();
-  }
-
-  onDelete(item: NewLicenseListItem): void {
-    this.deleteRequested.emit(item);
   }
 }

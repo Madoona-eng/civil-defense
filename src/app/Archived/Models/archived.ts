@@ -1,26 +1,3 @@
-export interface ApiResponse<T> {
-  data: T;
-  isSuccess: boolean;
-  errorCode: string;
-  message: string;
-}
-
-export interface PagedResult<T> {
-  items: T[];
-  pageNumber: number;
-  pageSize: number;
-  totalCount: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-}
-
-export interface LookupItem {
-  id: string;
-  code: number;
-  name: string;
-}
-
 export interface Archived {
   id: string;
   transactionCode: string;
@@ -56,9 +33,9 @@ export interface ArchivedAttachment {
 
 export interface ArchivedNote {
   content: string;
-  writtenBy: string;
+  createdByUserName: string;
   processStep: string;
-  writtenAt: string;
+  createdAt: string;
 }
 
 export interface ArchivedReview {
@@ -70,6 +47,13 @@ export interface ArchivedReview {
 
 export interface ArchivedDetails {
   applicantName: string;
+  transactionCode: string;
+  establishmentName: string;
+  establishmentAddress: string;
+  requestingEntity: string;
+  district: string;
+  activityType: string;
+  submissionDate: string;
   applicantRole: string;
   nationalId: string;
   responsibleManager: string;
