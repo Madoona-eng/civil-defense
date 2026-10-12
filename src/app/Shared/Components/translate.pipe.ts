@@ -12,6 +12,7 @@ const translations: Record<string, string> = {
   'app.finalApproval': 'الموافقة النهائية',
   'app.archive': 'الأرشيف',
   'app.licenses': 'طلبات الترخيص',
+  'app.deletedProcesses': 'المعاملات المحذوفة',
   'app.logout': 'تسجيل الخروج',
   'app.greeting': 'مرحبًا بك',
   'users.create': 'إضافة مستخدم جديد',

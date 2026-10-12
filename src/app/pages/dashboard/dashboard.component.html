@@ -1,32 +1,66 @@
-<div class="welcome-card">
-  <h3>{{ 'dashboard.mainTitle' | t }}</h3>
-  <p>
-    {{ 'dashboard.description' | t }}
-  </p>
-</div>
+<section class="filters-card" dir="rtl">
+  <div class="filters-row-primary">
+    <div class="range-buttons">
+      @for (r of ranges; track r.key) {
+        <button
+          type="button"
+          class="filter-btn"
+          [class.filter-btn--primary]="activeRange === r.key"
+          [class.filter-btn--ghost]="activeRange !== r.key"
+          (click)="setRange(r.key)"
+        >
+          {{ r.label }}
+        </button>
+      }
+    </div>
 
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group">
+      <mat-label>المركز</mat-label>
+      <mat-select [(ngModel)]="districtId" (selectionChange)="loadSummary()">
+        <mat-option value="">كل المراكز</mat-option>
+        @for (district of districts; track district.id) {
+          <mat-option [value]="district.id">{{ district.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group date-field">
+      <mat-label>التاريخ من</mat-label>
+      <input
+        matInput
+        [matDatepicker]="pickerFrom"
+        [(ngModel)]="dateFrom"
+        (dateChange)="onCustomDateChange()"
+      />
+      <mat-datepicker-toggle matIconSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+      <mat-datepicker #pickerFrom></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group date-field">
+      <mat-label>التاريخ إلى</mat-label>
+      <input
+        matInput
+        [matDatepicker]="pickerTo"
+        [(ngModel)]="dateTo"
+        (dateChange)="onCustomDateChange()"
+      />
+      <mat-datepicker-toggle matIconSuffix [for]="pickerTo"></mat-datepicker-toggle>
+      <mat-datepicker #pickerTo></mat-datepicker>
+    </mat-form-field>
+  </div>
+</section>
+
+@if (errorMessage) {
+  <div class="message error">{{ errorMessage }}</div>
+}
 <div class="stats-grid">
-  <div class="stat-card">
-    <span>📄</span>
-    <h4>120</h4>
-    <p>{{ 'dashboard.totalRequests' | t }}</p>
-  </div>
-
-  <div class="stat-card">
-    <span>⏳</span>
-    <h4>34</h4>
-    <p>{{ 'dashboard.underReview' | t }}</p>
-  </div>
-
-  <div class="stat-card">
-    <span>✅</span>
-    <h4>76</h4>
-    <p>{{ 'dashboard.completedInspections' | t }}</p>
-  </div>
-
-  <div class="stat-card">
-    <span>❌</span>
-    <h4>10</h4>
-    <p>{{ 'dashboard.rejectedRequests' | t }}</p>
-  </div>
+  @for (item of steps; track item.step) {
+    <div class="stat-card">
+      <span>
+        <app-icon [name]="stepIcons[item.step]" variant="lg"></app-icon>
+      </span>
+      <h4>{{ isLoading ? '—' : item.count }}</h4>
+      <p>{{ stepLabels[item.step] }}</p>
+    </div>
+  }
 </div>

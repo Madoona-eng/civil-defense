@@ -113,3 +113,38 @@ export interface LicensingProcessDetails {
   notes: LicensingNote[];
   reviews: LicensingReview[];
 }
+
+export interface StepCount {
+  step: ProcessStep;
+  count: number;
+}
+
+export interface DashboardSummaryQuery {
+  districtId?: string;
+  dateFrom?: string;
+  dateTo?: string;
+}
+
+export interface DeletedProcessItem {
+  id: string;
+  transactionCode: string;
+  submissionDate: string;
+  establishmentName: string;
+  establishmentAddress: string;
+  requestingEntity: string;
+  district: string;
+  activityType: string;
+  applicantName: string;
+  currentStep: ProcessStep;
+  deletedAt: string | null;
+  deletedBy: string | null;
+}
+
+export interface DeletedProcessQuery {
+  processStep?: ProcessStep;
+  dateFrom?: string;
+  dateTo?: string;
+  searchTerm?: string;
+  pageNumber: number;
+  pageSize: number;
+}

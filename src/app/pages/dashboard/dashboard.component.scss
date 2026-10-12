@@ -1,23 +1,53 @@
-.welcome-card {
-  background: linear-gradient(135deg, #ffffff, #e0f2fe);
-  border-radius: 24px;
-  padding: 26px;
-  box-shadow: 0 12px 35px rgba(15, 61, 94, 0.08);
-  margin-bottom: 22px;
+@import '../../Shared/Styles/filters.scss';
+
+/* ============================================================
+   الصف الأول: الأزرار + 3 فلاتر
+   (filters.scss معمول لـ 3 أعمدة، وهنا عندنا 4 عناصر)
+   ============================================================ */
+.filters-row-primary {
+  grid-template-columns: auto repeat(3, 1fr);
+  align-items: center;
 }
 
-.welcome-card h3 {
-  margin: 0 0 10px;
-  color: #0f3d5e;
-  font-size: 24px;
+.range-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.welcome-card p {
-  margin: 0;
-  color: #475569;
-  line-height: 1.8;
+@media (max-width: 1100px) {
+  .filters-row-primary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  // الأزرار تاخد صف لوحدها فوق
+  .range-buttons {
+    grid-column: 1 / -1;
+  }
 }
 
+@media (max-width: 768px) {
+  .filters-row-primary {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   رسالة الخطأ
+   ============================================================ */
+.message.error {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+/* ============================================================
+   كروت الإحصائيات
+   ============================================================ */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -25,39 +55,33 @@
 }
 
 .stat-card {
-  background: #ffffff;
+  background: var(--color-bg-card);
   border-radius: 22px;
   padding: 22px;
-  box-shadow: 0 12px 35px rgba(15, 61, 94, 0.08);
-  transition: 0.25s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
 }
 
 .stat-card span {
   width: 52px;
   height: 52px;
-  background: #e0f2fe;
-  color: #0f3d5e;
+  background: var(--color-sidebar-bg);
+  color: var(--color-primary);
   border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
   margin-bottom: 14px;
 }
 
 .stat-card h4 {
   margin: 0;
   font-size: 30px;
-  color: #0f3d5e;
+  color: var(--color-primary);
 }
 
 .stat-card p {
   margin: 6px 0 0;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
 @media (max-width: 1100px) {

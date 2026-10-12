@@ -26,6 +26,8 @@ import {
   ShieldCheck,
   Archive,
   UserPlus,
+  LayoutDashboard,
+  Trash2,
 } from 'lucide-angular';
 
 @Component({
@@ -58,6 +60,8 @@ export class DashboardLayoutComponent implements OnInit {
   readonly ShieldCheck = ShieldCheck;
   readonly Archive = Archive;
   readonly UserPlus = UserPlus;
+  readonly LayoutDashboard = LayoutDashboard;
+  readonly Trash2 = Trash2;
 
   title = 'لوحة التحكم';
   username = '';

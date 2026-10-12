@@ -16,6 +16,17 @@
 
     <nav class="sidebar-menu">
       <a
+        *ngIf="userRole === 'SuperAdmin'"
+        routerLink="/civil-defense/dashboard"
+        routerLinkActive="active"
+        [matTooltip]="isCollapsed ? ('app.dashboard' | t) : ''"
+        matTooltipPosition="left"
+      >
+        <lucide-angular class="icon" [img]="LayoutDashboard" [size]="18"></lucide-angular>
+        <span class="label">{{ 'app.dashboard' | t }}</span>
+      </a>
+
+      <a
         *ngIf="hasRole(['Admin'])"
         routerLink="/civil-defense/activity-types"
         routerLinkActive="active"
@@ -59,8 +70,6 @@
         <span class="label">{{ 'app.shopLicenses' | t }}</span>
       </a>
 
-     
-
       <a
         *ngIf="hasRole(['Inspector'])"
         routerLink="/civil-defense/inspection"
@@ -93,7 +102,7 @@
         <lucide-angular class="icon" [img]="Archive" [size]="18"></lucide-angular>
         <span class="label">{{ 'app.archive' | t }}</span>
       </a>
-       <a
+      <a
         *ngIf="userRole === 'SuperAdmin'"
         routerLink="/civil-defense/all-licensing-processes"
         routerLinkActive="active"
@@ -104,6 +113,16 @@
         <span class="label">{{ 'app.allProcesses' | t }}</span>
       </a>
 
+      <a
+        *ngIf="userRole === 'SuperAdmin'"
+        routerLink="/civil-defense/deleted-licensing-processes"
+        routerLinkActive="active"
+        [matTooltip]="isCollapsed ? ('app.deletedProcesses' | t) : ''"
+        matTooltipPosition="left"
+      >
+        <lucide-angular class="icon" [img]="Trash2" [size]="18"></lucide-angular>
+        <span class="label">{{ 'app.deletedProcesses' | t }}</span>
+      </a>
       <a
         *ngIf="hasRole(['Admin'])"
         routerLink="/civil-defense/users/add"

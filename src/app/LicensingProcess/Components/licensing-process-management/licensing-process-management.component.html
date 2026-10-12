@@ -119,20 +119,6 @@
     (deleteRequested)="onDelete($event)"
   ></app-licensing-process-list>
 
-  <!-- Popups -->
-  <!-- @if (isAddPopupOpen) {
-    <div class="popup-backdrop" (click)="closeAddPopup()">
-      <div class="popup-card" (click)="$event.stopPropagation()">
-        <button type="button" class="popup-close" (click)="closeAddPopup()">×</button>
-
-        <app-licensing-process-add
-          (saved)="onAddSaved()"
-          (cancelled)="closeAddPopup()"
-        ></app-licensing-process-add>
-      </div>
-    </div>
-  } -->
-
   @if (isDetailsPopupOpen) {
     <app-licensing-process-details
       [processId]="selectedProcessId"

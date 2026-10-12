@@ -29,6 +29,7 @@ export const routes: Routes = [
       },
       {
         path: 'dashboard',
+        canActivate: [superAdminGuard],
         loadComponent: () =>
           import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
@@ -80,6 +81,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./LicensingProcess/Components/licensing-process-management/licensing-process-management.component').then(
             (m) => m.LicensingProcessManagementComponent,
+          ),
+      },
+      {
+        path: 'deleted-licensing-processes',
+        canActivate: [superAdminGuard],
+        loadComponent: () =>
+          import('./LicensingProcess/Components/deleted-management/deleted-management.component').then(
+            (m) => m.DeletedManagementComponent,
           ),
       },
       {
