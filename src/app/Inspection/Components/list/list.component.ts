@@ -94,6 +94,7 @@ export class ListComponent implements OnInit {
   errorMessage = '';
 
   districtId = '';
+  inspectorDistrictName = '';
   requestingEntityId = '';
   activityTypeId = '';
   searchTerm = '';
@@ -101,7 +102,6 @@ export class ListComponent implements OnInit {
   submissionDateFrom: Date | null = null;
   submissionDateTo = '';
   opinion: InspectionOpinion | '' = '';
-  isDistrictLocked = false;
 
   pageNumber = 1;
   pageSize = 10;
@@ -121,6 +121,10 @@ export class ListComponent implements OnInit {
   ngOnInit(): void {
     this.loadLookups();
     this.loadInspections();
+  }
+
+  get isInspector(): boolean {
+    return this.authService.getRole() === 'Inspector';
   }
 
   loadLookups(): void {
@@ -158,7 +162,7 @@ export class ListComponent implements OnInit {
     this.errorMessage = '';
 
     const query: InspectionList = {
-      districtId: this.districtId || undefined,
+      districtId: this.isInspector ? undefined : this.districtId || undefined,
       requestingEntityId: this.requestingEntityId || undefined,
       activityTypeId: this.activityTypeId || undefined,
       isReturned: this.isReturned === '' ? undefined : this.isReturned === ReturnState.Returned,
@@ -180,6 +184,15 @@ export class ListComponent implements OnInit {
         }
 
         this.items = response.data.items || [];
+        if (this.isInspector && !this.inspectorDistrictName) {
+          this.inspectorDistrictName = [
+            ...new Set(
+              this.items
+                .map((item) => item.district?.trim())
+                .filter((district): district is string => !!district),
+            ),
+          ].join('، ');
+        }
         this.pageNumber = response.data.pageNumber;
         this.pageSize = response.data.pageSize;
         this.totalCount = response.data.totalCount;
@@ -203,7 +216,7 @@ export class ListComponent implements OnInit {
   }
 
   resetFilters(): void {
-    this.districtId = this.isDistrictLocked ? this.districtId : '';
+    this.districtId = '';
     this.requestingEntityId = '';
     this.activityTypeId = '';
     this.searchTerm = '';

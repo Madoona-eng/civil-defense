@@ -1,0 +1,92 @@
+<section class="create-user-page" dir="rtl">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">{{ 'common.systemManagement' | t }}</span>
+      <h1>{{ 'users.createTitle' | t }}</h1>
+      <p>{{ 'users.createDescription' | t }}</p>
+    </div>
+  </header>
+
+  <form class="user-form" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-grid">
+      <div class="field">
+        <label for="userName">{{ 'users.userName' | t }}</label>
+        <input id="userName" type="text" formControlName="userName" autocomplete="username" />
+        <small class="field-error" *ngIf="form.controls.userName.touched && form.controls.userName.invalid">
+          {{ 'users.userNameRequired' | t }}
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="role">{{ 'users.role' | t }}</label>
+        <select id="role" formControlName="role" (change)="onRoleChange()">
+          <option value="" disabled>{{ 'users.selectRole' | t }}</option>
+          <option *ngFor="let role of roles" [value]="role">{{ ('users.roles.' + role) | t }}</option>
+        </select>
+        <small class="field-error" *ngIf="form.controls.role.touched && form.controls.role.invalid">
+          {{ 'users.roleRequired' | t }}
+        </small>
+      </div>
+
+      <div class="field" *ngIf="isInspector">
+        <label for="districtId">{{ 'common.district' | t }}</label>
+        <select
+          id="districtId"
+          formControlName="districtId"
+          [disabled]="loadingDistricts || districts.length === 0"
+        >
+          <option value="" disabled>
+            {{ loadingDistricts ? ('users.loadingDistricts' | t) : ('users.selectDistrict' | t) }}
+          </option>
+          <option *ngFor="let district of districts" [value]="district.id">
+            {{ district.name }}
+          </option>
+        </select>
+        <small
+          class="field-error"
+          *ngIf="form.controls.districtId.touched && form.controls.districtId.invalid"
+        >
+          {{ 'users.districtRequired' | t }}
+        </small>
+        <button
+          *ngIf="errorMessage && !loadingDistricts && districts.length === 0"
+          class="retry-button"
+          type="button"
+          (click)="loadDistricts()"
+        >
+          {{ 'users.retryDistricts' | t }}
+        </button>
+      </div>
+
+      <div class="field">
+        <label for="password">{{ 'users.password' | t }}</label>
+        <input id="password" type="password" formControlName="password" autocomplete="new-password" />
+        <small class="field-error" *ngIf="form.controls.password.touched && form.controls.password.invalid">
+          {{ 'users.passwordRequired' | t }}
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">{{ 'users.confirmPassword' | t }}</label>
+        <input id="confirmPassword" type="password" formControlName="confirmPassword" autocomplete="new-password" />
+        <small class="field-error" *ngIf="form.controls.confirmPassword.touched && form.controls.confirmPassword.hasError('required')">
+          {{ 'users.confirmPasswordRequired' | t }}
+        </small>
+        <small class="field-error" *ngIf="form.controls.confirmPassword.touched && form.hasError('passwordMismatch')">
+          {{ 'users.passwordMismatch' | t }}
+        </small>
+      </div>
+    </div>
+
+    <div class="message error" role="alert" *ngIf="errorMessage">{{ errorMessage }}</div>
+    <div class="message success" role="status" *ngIf="successMessage">{{ successMessage }}</div>
+
+    <button
+      class="submit-button"
+      type="submit"
+      [disabled]="saving || (isInspector && loadingDistricts)"
+    >
+      {{ saving ? ('users.creating' | t) : ('users.create' | t) }}
+    </button>
+  </form>
+</section>

@@ -39,9 +39,18 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-form-field *ngIf="isInspector" appearance="outline" subscriptSizing="dynamic">
+      <mat-label>المركز المسجل للمفتش</mat-label>
+      <input
+        matInput
+        [value]="inspectorDistrictName || (isLoading ? 'جارٍ تحميل المركز...' : 'يحدده النظام تلقائيًا')"
+        readonly
+      />
+    </mat-form-field>
+
+    <mat-form-field *ngIf="!isInspector" appearance="outline" subscriptSizing="dynamic">
       <mat-label>المركز</mat-label>
-      <mat-select [(ngModel)]="districtId" [disabled]="isDistrictLocked">
+      <mat-select [(ngModel)]="districtId">
         <mat-option value="">جميع المراكز</mat-option>
         <mat-option *ngFor="let district of districts" [value]="district.id">
           {{ district.name }}

@@ -9,6 +9,14 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface RegisterRequest {
+  userName: string;
+  password: string;
+  confirmPassword: string;
+  role: string;
+  districtId: string;
+}
+
 export interface LoginResult {
   success: boolean;
   message: string;
@@ -29,11 +37,19 @@ interface ApiLoginResponse {
   message: string;
 }
 
+export interface ApiRegisterResponse {
+  data?: unknown;
+  isSuccess: boolean;
+  errorCode?: string;
+  message: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly apiUrl = `${BaseAPI}/api/Account/login`;
+  private readonly registerUrl = `${BaseAPI}/api/Account/register`;
 
   private readonly tokenKey = 'token';
   private readonly usernameKey = 'username';
@@ -75,6 +91,10 @@ export class AuthService {
         });
       })
     );
+  }
+
+  register(data: RegisterRequest): Observable<ApiRegisterResponse> {
+    return this.http.post<ApiRegisterResponse>(this.registerUrl, data);
   }
 
   logout(): void {

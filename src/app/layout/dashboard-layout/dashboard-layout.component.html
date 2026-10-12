@@ -104,6 +104,17 @@
         <span class="label">{{ 'app.allProcesses' | t }}</span>
       </a>
 
+      <a
+        *ngIf="hasRole(['Admin'])"
+        routerLink="/civil-defense/users/add"
+        routerLinkActive="active"
+        [matTooltip]="isCollapsed ? ('users.create' | t) : ''"
+        matTooltipPosition="left"
+      >
+        <lucide-angular class="icon" [img]="UserPlus" [size]="18"></lucide-angular>
+        <span class="label">{{ 'users.create' | t }}</span>
+      </a>
+
     </nav>
 
     <button

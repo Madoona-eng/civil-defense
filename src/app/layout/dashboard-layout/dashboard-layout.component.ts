@@ -25,6 +25,7 @@ import {
   ClipboardCheck,
   ShieldCheck,
   Archive,
+  UserPlus,
 } from 'lucide-angular';
 
 @Component({
@@ -56,6 +57,7 @@ export class DashboardLayoutComponent implements OnInit {
   readonly ClipboardList = ClipboardList;
   readonly ShieldCheck = ShieldCheck;
   readonly Archive = Archive;
+  readonly UserPlus = UserPlus;
 
   title = 'لوحة التحكم';
   username = '';
