@@ -188,7 +188,6 @@ export class ListComponent implements OnInit {
           return;
         }
 
-<<<<<<< HEAD
         this.items = response.data.items || [];
         if (this.isInspector && !this.inspectorDistrictName) {
           this.inspectorDistrictName = [
@@ -199,9 +198,6 @@ export class ListComponent implements OnInit {
             ),
           ].join('، ');
         }
-=======
-        this.items = response.data.items;
->>>>>>> 4e1cffa47157b9337a79ab5bd73080001d2772cc
         this.pageNumber = response.data.pageNumber;
         this.pageSize = response.data.pageSize;
         this.totalCount = response.data.totalCount;

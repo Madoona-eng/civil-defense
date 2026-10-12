@@ -11,19 +11,27 @@ import {
 import { District } from '../../../District/Models/district';
 import { DistrictService } from '../../../District/Services/district.service';
 import { TranslatePipe } from '../../../Shared/Components/translate.pipe';
-import {
-  ApiRegisterResponse,
-  AuthService,
-  RegisterRequest,
-} from '../../services/auth.service';
+import { ApiRegisterResponse, AuthService, RegisterRequest } from '../../services/auth.service';
 
 function passwordsMatchValidator(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password')?.value;
   const confirmPassword = control.get('confirmPassword')?.value;
 
-  return confirmPassword && password !== confirmPassword
-    ? { passwordMismatch: true }
-    : null;
+  return confirmPassword && password !== confirmPassword ? { passwordMismatch: true } : null;
+}
+
+function strongPasswordValidator(control: AbstractControl): ValidationErrors | null {
+  const value: string = control.value ?? '';
+  if (!value) return null;
+
+  const errors: ValidationErrors = {};
+  if (value.length < 8) errors['minLength'] = true;
+  if (!/[a-z]/.test(value)) errors['lowercase'] = true;
+  if (!/[A-Z]/.test(value)) errors['uppercase'] = true;
+  if (!/[0-9]/.test(value)) errors['digit'] = true;
+  if (!/[^a-zA-Z0-9]/.test(value)) errors['special'] = true;
+
+  return Object.keys(errors).length ? errors : null;
 }
 
 @Component({
@@ -35,27 +43,30 @@ function passwordsMatchValidator(control: AbstractControl): ValidationErrors | n
 })
 export class CreateUserComponent {
   readonly roles = ['Admin', 'DataEntry', 'Inspector', 'FinalApprover', 'Archive'];
-  readonly form = new FormGroup({
-    userName: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    password: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    confirmPassword: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    role: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    districtId: new FormControl('', {
-      nonNullable: true,
-    }),
-  }, { validators: passwordsMatchValidator });
+  readonly form = new FormGroup(
+    {
+      userName: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.pattern(/^[a-zA-Z0-9\-._@+]+$/)],
+      }),
+      password: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, strongPasswordValidator],
+      }),
+      confirmPassword: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      role: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      districtId: new FormControl('', {
+        nonNullable: true,
+      }),
+    },
+    { validators: passwordsMatchValidator },
+  );
 
   districts: District[] = [];
   loadingDistricts = false;
@@ -135,13 +146,12 @@ export class CreateUserComponent {
       this.errorMessage = 'لا توجد مراكز متاحة لإسناد المستخدم إليها';
       return;
     }
-
     const payload: RegisterRequest = {
       userName: this.form.controls.userName.value.trim(),
       password: this.form.controls.password.value,
       confirmPassword: this.form.controls.confirmPassword.value,
       role: this.form.controls.role.value,
-      districtId: this.isInspector ? this.form.controls.districtId.value : '',
+      districtId: this.isInspector ? this.form.controls.districtId.value : null,
     };
 
     this.saving = true;

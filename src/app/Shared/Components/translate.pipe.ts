@@ -39,6 +39,13 @@ const translations: Record<string, string> = {
   'users.roles.FinalApprover': 'معتمد نهائي',
   'users.roles.Archive': 'الأرشيف',
 
+  'users.passwordMinLength': 'كلمة المرور يجب ألا تقل عن 8 أحرف',
+  'users.passwordLowercase': 'يجب أن تحتوي على حرف صغير (a-z)',
+  'users.passwordUppercase': 'يجب أن تحتوي على حرف كبير (A-Z)',
+  'users.passwordDigit': 'يجب أن تحتوي على رقم',
+  'users.passwordSpecial': 'يجب أن تحتوي على رمز خاص (مثل @ # $ !)',
+  'users.userNamePattern': 'اسم المستخدم يقبل حروف إنجليزية وأرقام و - . _ @ + فقط',
+
   'common.systemManagement': 'إدارة النظام',
   'common.requestCode': 'كود المعاملة',
   'common.code': 'الكود',

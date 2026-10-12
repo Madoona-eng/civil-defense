@@ -1,0 +1,74 @@
+<div class="deleted-page" dir="rtl">
+  <div class="page-header">
+    <h2>المعاملات المحذوفة</h2>
+  </div>
+
+  <section class="filters-card" dir="rtl">
+    <div class="filters-row-primary">
+      <mat-form-field
+        appearance="outline"
+        subscriptSizing="dynamic"
+        class="form-group search-field"
+      >
+        <mat-label>بحث</mat-label>
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="ابحث بكود المعاملة، اسم المنشأة، اسم مقدم الطلب..."
+          (keyup.enter)="search()"
+        />
+        <app-icon matPrefix name="Search" variant="sm" class="field-prefix-icon"></app-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group date-field">
+        <mat-label>تاريخ الحذف من</mat-label>
+        <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="dateFrom" />
+        <mat-datepicker-toggle matIconSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+        <mat-datepicker #pickerFrom></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group date-field">
+        <mat-label>تاريخ الحذف إلى</mat-label>
+        <input matInput [matDatepicker]="pickerTo" [(ngModel)]="dateTo" />
+        <mat-datepicker-toggle matIconSuffix [for]="pickerTo"></mat-datepicker-toggle>
+        <mat-datepicker #pickerTo></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="filters-row-secondary">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="form-group">
+        <mat-label>الخطوة الحالية</mat-label>
+        <mat-select [(ngModel)]="processStep">
+          <mat-option value="">كل الخطوات</mat-option>
+          @for (opt of processStepOptions; track opt.value) {
+            <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="filter-actions">
+      <button type="button" class="filter-btn filter-btn--primary" (click)="search()">
+        <app-icon name="Search" variant="sm"></app-icon>
+        <span>بحث</span>
+      </button>
+
+      <button type="button" class="filter-btn filter-btn--ghost" (click)="resetFilters()">
+        <app-icon name="RotateCcw" variant="sm"></app-icon>
+        <span>إعادة ضبط</span>
+      </button>
+    </div>
+  </section>
+
+  <app-licensing-process-deleted-list
+    [items]="items"
+    [isLoading]="isLoading"
+    [errorMessage]="errorMessage"
+    [pageNumber]="pageNumber"
+    [pageSize]="pageSize"
+    [totalCount]="totalCount"
+    (pageChanged)="onPageChange($event)"
+    (restoreRequested)="onRestore($event)"
+  ></app-licensing-process-deleted-list>
+</div>

@@ -14,7 +14,7 @@ export interface RegisterRequest {
   password: string;
   confirmPassword: string;
   role: string;
-  districtId: string;
+ districtId: string | null;
 }
 
 export interface LoginResult {
