@@ -42,7 +42,9 @@
       <mat-label>المركز المسجل للمفتش</mat-label>
       <input
         matInput
-        [value]="inspectorDistrictName || (isLoading ? 'جارٍ تحميل المركز...' : 'يحدده النظام تلقائيًا')"
+        [value]="
+          inspectorDistrictName || (isLoading ? 'جارٍ تحميل المركز...' : 'يحدده النظام تلقائيًا')
+        "
         readonly
       />
     </mat-form-field>
@@ -228,7 +230,7 @@
     </table>
   </div>
 
-  @if (canMoveToFinalApproval && !errorMessage && items.length > 0) {
+  <!-- @if (canMoveToFinalApproval && !errorMessage && items.length > 0) {
     <div class="bulk-actions">
       <button
         type="button"
@@ -240,7 +242,7 @@
         <app-icon name="ChevronsLeft" />
       </button>
     </div>
-  }
+  } -->
 
   @if (totalCount > 0) {
     <mat-paginator
