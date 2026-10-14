@@ -43,26 +43,24 @@
           </td>
           <td class="mat-mdc-cell font-medium">{{ item.name }}</td>
           <td class="mat-mdc-cell action-cell">
-            
             <button
               type="button"
               class="btn-action-more"
               [matMenuTriggerFor]="actionMenu"
-              [attr.aria-label]="'common.options' | t">
+              [attr.aria-label]="'common.options' | t"
+            >
               <mat-icon>more_vert</mat-icon>
             </button>
-
             <mat-menu #actionMenu="matMenu" xPosition="before" class="custom-action-menu">
               <button mat-menu-item (click)="requestEdit(item.id)">
                 <mat-icon class="menu-icon edit-icon">edit</mat-icon>
                 <span>{{ 'common.edit' | t }}</span>
               </button>
-              <button mat-menu-item (click)="requestDelete(item)">
+              <button mat-menu-item class="menu-item--danger" (click)="requestDelete(item)">
                 <mat-icon class="menu-icon delete-icon">delete_outline</mat-icon>
                 <span>{{ 'common.delete' | t }}</span>
               </button>
             </mat-menu>
-
           </td>
         </tr>
       </tbody>

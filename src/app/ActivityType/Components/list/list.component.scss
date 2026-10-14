@@ -24,14 +24,14 @@
 
   h3 {
     margin: 0 0 4px 0;
-    color: #1E1B2E;
+    color: #1e1b2e;
     font-size: 18px;
     font-weight: 800;
   }
 
   p {
     margin: 0;
-    color: #7B7B8F;
+    color: #7b7b8f;
     font-size: 13px;
     font-weight: 500;
   }
@@ -43,9 +43,9 @@
   gap: 6px;
   padding: 8px 16px;
   border-radius: 12px;
-  border: 1px solid #E8DFF5;
-  background: #FAF8FD;
-  color: #5D3A99;
+  border: 1px solid #e8dff5;
+  background: #faf8fd;
+  color: #5d3a99;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -58,8 +58,8 @@
   }
 
   &:hover {
-    background: #E8DFF5;
-    color: #4C2D80;
+    background: #e8dff5;
+    color: #4c2d80;
     transform: translateY(-1px);
   }
 }
@@ -80,16 +80,16 @@
 
   /* Header Row */
   .mat-mdc-header-row {
-    background: #FAF8FD;
+    background: #faf8fd;
     height: 48px;
   }
 
   .mat-mdc-header-cell {
-    color: #7D7D99;
+    color: #7d7d99;
     font-size: 13px;
     font-weight: 700;
     padding: 12px 20px;
-    border-bottom: 1px solid #E8E5F0;
+    border-bottom: 1px solid #e8e5f0;
     text-align: right;
 
     &:first-child {
@@ -113,17 +113,17 @@
     transition: background-color 0.2s ease;
 
     &:not(:last-child) .mat-mdc-cell {
-      border-bottom: 1px solid #F6F4FA;
+      border-bottom: 1px solid #f6f4fa;
     }
 
     &:hover {
-      background-color: #FAF8FD;
+      background-color: #faf8fd;
     }
   }
 
   .mat-mdc-cell {
     padding: 12px 20px;
-    color: #2D2D3F;
+    color: #2d2d3f;
     font-size: 14px;
     vertical-align: middle;
 
@@ -148,8 +148,8 @@
   height: 28px;
   padding: 0 10px;
   border-radius: 8px;
-  background: #E8DFF5;
-  color: #5D3A99;
+  background: #e8dff5;
+  color: #5d3a99;
   font-weight: 800;
   font-size: 13px;
 }
@@ -160,7 +160,7 @@
   border: 0;
   border-radius: 10px;
   background: transparent;
-  color: #7D7D99;
+  color: #7d7d99;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -174,8 +174,8 @@
   }
 
   &:hover {
-    background: #E8DFF5;
-    color: #5D3A99;
+    background: #e8dff5;
+    color: #5d3a99;
   }
 }
 
@@ -197,8 +197,8 @@
 }
 
 .loading-box {
-  background: #FAF8FD;
-  color: #5D3A99;
+  background: #faf8fd;
+  color: #5d3a99;
 
   .spin-icon {
     animation: spin 1.2s linear infinite;
@@ -206,8 +206,8 @@
 }
 
 .empty-box {
-  background: #FAF8FD;
-  color: #7D7D99;
+  background: #faf8fd;
+  color: #7d7d99;
 
   mat-icon {
     font-size: 24px;
@@ -217,14 +217,18 @@
 }
 
 .message.error {
-  background: #FFF1F2;
-  color: #E11D48;
-  border: 1px solid #FECDD3;
+  background: #fff1f2;
+  color: #e11d48;
+  border: 1px solid #fecdd3;
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 /* =========================================================
    MAT TABLE STYLING FIXES
@@ -243,16 +247,16 @@
 
   /* Header Row */
   .mat-mdc-header-row {
-    background: #FAF8FD;
+    background: #faf8fd;
     height: 48px;
   }
 
   .mat-mdc-header-cell {
-    color: #7D7D99;
+    color: #7d7d99;
     font-size: 13px;
     font-weight: 700;
     padding: 12px 20px;
-    border-bottom: 1px solid #E8E5F0;
+    border-bottom: 1px solid #e8e5f0;
     text-align: right;
 
     &:first-child {
@@ -272,17 +276,17 @@
     transition: background-color 0.2s ease;
 
     &:not(:last-child) .mat-mdc-cell {
-      border-bottom: 1px solid #F6F4FA;
+      border-bottom: 1px solid #f6f4fa;
     }
 
     &:hover {
-      background-color: #FAF8FD;
+      background-color: #faf8fd;
     }
   }
 
   .mat-mdc-cell {
     padding: 12px 20px;
-    color: #2D2D3F;
+    color: #2d2d3f;
     font-size: 14px;
     vertical-align: middle;
 
@@ -294,7 +298,7 @@
   /* ---------------------------------------------------------
      تحديد عرض كل عمود لمنع تباعد عمود الإجراءات
   --------------------------------------------------------- */
-  
+
   /* عمود الكود (تحديد عرض ثابت) */
   .col-code {
     width: 100px;
@@ -311,5 +315,47 @@
   .action-cell {
     width: 100px;
     text-align: center !important;
+  }
+}
+
+/* Custom Mat-Menu Styling */
+::ng-deep .custom-action-menu.mat-mdc-menu-panel {
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(240, 238, 245, 0.9) !important;
+  box-shadow: 0 10px 25px rgba(93, 58, 153, 0.1) !important;
+  padding: 6px !important;
+  min-width: 130px !important;
+  direction: rtl;
+
+  .mat-mdc-menu-item {
+    min-height: 38px !important;
+    border-radius: 10px !important;
+    font-family: inherit !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #2d2d3f !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 0 12px !important;
+
+    .menu-icon {
+      margin: 0 !important;
+      font-size: 18px !important;
+      width: 18px !important;
+      height: 18px !important;
+
+      &.edit-icon {
+        color: #7c3aed;
+      }
+      &.delete-icon {
+        color: #e11d48;
+      }
+    }
+
+    &:hover {
+      background-color: #faf8fd !important;
+    }
   }
 }

@@ -23,6 +23,7 @@ import { DistrictService } from '../../../District/Services/district.service';
 import { RequestingEntityService } from '../../../RequestingEntity/Services/requesting-entity.service';
 import { AppIconComponent } from '../../../Shared/Components/app-icon/app-icon.component';
 import { formatDateForApi } from '../../../Shared/Helpers/date.helper';
+import { toEnglishDigits } from '../../../Shared/Helpers/toEnglishDigits';
 import { ApiResponse } from '../../../Shared/Models/ApiResponse';
 import { LookupItem } from '../../../Shared/Models/LookupItem';
 import { PagedResult } from '../../../Shared/Models/PagedResult';
@@ -135,7 +136,7 @@ export class NewLicenseManagementComponent implements OnInit {
       activityTypeId: this.activityTypeId || undefined,
       submissionDateFrom: formatDateForApi(this.submissionDateFrom),
       submissionDateTo: formatDateForApi(this.submissionDateTo),
-      searchTerm: this.searchTerm.trim() || undefined,
+      searchTerm: toEnglishDigits(this.searchTerm.trim()) || undefined,
       pageNumber: this.pageNumber,
       pageSize: this.pageSize,
     };

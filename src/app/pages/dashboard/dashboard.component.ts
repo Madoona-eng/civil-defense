@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 import { DistrictService } from '../../District/Services/district.service';
-import { StepCount } from '../../LicensingProcess/Models/licensing-process';
+import { DistrictCount, StepCount } from '../../LicensingProcess/Models/licensing-process';
 import { LicensingProcessService } from '../../LicensingProcess/Services/licensing-process.service';
 import { AppIconComponent } from '../../Shared/Components/app-icon/app-icon.component';
 import { PROCESS_STEP_LABELS, ProcessStep } from '../../Shared/Enums/enums';
@@ -52,6 +52,10 @@ export class DashboardComponent implements OnInit {
   steps: StepCount[] = Object.values(ProcessStep).map((step) => ({ step, count: 0 }));
   districts: LookupItem[] = [];
 
+  districtCounts: DistrictCount[] = [];
+  maxDistrictCount = 1;
+  isDistrictCountsLoading = false;
+
   isLoading = false;
   errorMessage = '';
 
@@ -68,6 +72,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loadDistricts();
     this.loadSummary();
+    this.loadDistrictCounts();
   }
 
   loadDistricts(): void {
@@ -111,6 +116,44 @@ export class DashboardComponent implements OnInit {
       });
   }
 
+  // الـ chart بيتأثر بالتاريخ بس، مش بفلتر المركز
+  loadDistrictCounts(): void {
+    this.isDistrictCountsLoading = true;
+
+    this.licensingProcessService
+      .getDashboardDistrictSummary({
+        dateFrom: formatDateForApi(this.dateFrom),
+        dateTo: formatDateForApi(this.dateTo),
+      })
+      .subscribe({
+        next: (res) => {
+          this.isDistrictCountsLoading = false;
+
+          if (!res.isSuccess || !res.data) {
+            this.districtCounts = [];
+            return;
+          }
+
+          // من الأقل للأكثر: العرض RTL فالأقل أول عنصر على اليمين
+          this.districtCounts = [...res.data].sort(
+            (a, b) => a.count - b.count || a.districtName.localeCompare(b.districtName, 'ar'),
+          );
+          this.maxDistrictCount = Math.max(1, ...res.data.map((d) => d.count));
+        },
+        error: (err) => {
+          this.isDistrictCountsLoading = false;
+          this.districtCounts = [];
+          console.error('Dashboard district summary error:', err);
+        },
+      });
+  }
+
+  // ضغطة على عمود: يختار المركز، والضغط تاني على نفس العمود يلغي الاختيار
+  selectDistrict(id: string): void {
+    this.districtId = this.districtId === id ? '' : id;
+    this.loadSummary();
+  }
+
   setRange(range: 'all' | 'today' | 'month'): void {
     this.activeRange = range;
     const today = new Date();
@@ -127,10 +170,12 @@ export class DashboardComponent implements OnInit {
     }
 
     this.loadSummary();
+    this.loadDistrictCounts();
   }
 
   onCustomDateChange(): void {
     this.activeRange = 'custom';
     this.loadSummary();
+    this.loadDistrictCounts();
   }
 }

@@ -8,6 +8,7 @@ import {
   DashboardSummaryQuery,
   DeletedProcessItem,
   DeletedProcessQuery,
+  DistrictCount,
   LicensingProcessDetails,
   LicensingProcessItem,
   LicensingProcessQuery,
@@ -93,6 +94,20 @@ export class LicensingProcessService {
     }
 
     return this.http.get<ApiResponse<StepCount[]>>(`${this.apiUrl}/dashboard-summary`, { params });
+  }
+
+  getDashboardDistrictSummary(filter: {
+    dateFrom?: string;
+    dateTo?: string;
+  }): Observable<ApiResponse<DistrictCount[]>> {
+    let params = new HttpParams();
+    if (filter.dateFrom) params = params.set('dateFrom', filter.dateFrom);
+    if (filter.dateTo) params = params.set('dateTo', filter.dateTo);
+
+    return this.http.get<ApiResponse<DistrictCount[]>>(
+      `${this.apiUrl}/dashboard-district-summary`,
+      { params },
+    );
   }
 
   getDeleted(query: DeletedProcessQuery): Observable<ApiResponse<PagedResult<DeletedProcessItem>>> {

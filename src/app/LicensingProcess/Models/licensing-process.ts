@@ -125,6 +125,12 @@ export interface DashboardSummaryQuery {
   dateTo?: string;
 }
 
+export interface DistrictCount {
+  districtId: string;
+  districtName: string;
+  count: number;
+}
+
 export interface DeletedProcessItem {
   id: string;
   transactionCode: string;

@@ -64,3 +64,49 @@
     </div>
   }
 </div>
+
+<section class="district-card" dir="rtl">
+  <div class="district-card-header">
+    <div>
+      <h3>عدد المعاملات حسب المركز</h3>
+      <span class="district-hint">مرتبة من الأقل إلى الأكثر</span>
+    </div>
+
+    @if (districtId) {
+      <button type="button" class="clear-btn" (click)="selectDistrict(districtId)">
+        إلغاء التحديد
+      </button>
+    }
+  </div>
+
+  @if (isDistrictCountsLoading) {
+    <div class="district-empty">جاري التحميل...</div>
+  } @else if (!districtCounts.length) {
+    <div class="district-empty">لا توجد بيانات</div>
+  } @else {
+    <div class="district-columns">
+      @for (d of districtCounts; track d.districtId) {
+        <button
+          type="button"
+          class="district-col"
+          [attr.title]="d.districtName"
+          [attr.aria-label]="d.districtName + ': ' + d.count"
+          [attr.aria-pressed]="districtId === d.districtId"
+          [class.selected]="districtId === d.districtId"
+          [class.dimmed]="districtId && districtId !== d.districtId"
+          (click)="selectDistrict(d.districtId)"
+        >
+          <span class="district-count">{{ d.count }}</span>
+          <span class="col-track">
+            <span
+              class="col-fill"
+              [class.zero]="d.count === 0"
+              [style.height.%]="(d.count / maxDistrictCount) * 100"
+            ></span>
+          </span>
+          <span class="district-name">{{ d.districtName }}</span>
+        </button>
+      }
+    </div>
+  }
+</section>

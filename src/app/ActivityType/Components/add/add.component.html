@@ -1,7 +1,5 @@
 <div class="modal-overlay" dir="rtl" (click)="cancel()">
-
   <div class="dialog-card" (click)="$event.stopPropagation()">
-
     <!-- ========== HEADER ========== -->
     <div class="dialog-header">
       <div class="header-content-group">
@@ -22,9 +20,7 @@
 
     <!-- ========== BODY ========== -->
     <div class="dialog-body">
-
       <div class="form-grid">
-
         <div class="form-group">
           <label for="activity-code">{{ 'activity.code' | t }}</label>
           <input
@@ -45,10 +41,9 @@
             class="dialog-input"
             [(ngModel)]="formModel.name"
             name="name"
-            [placeholder]="'common.exampleActivity' | t"
+            placeholder="محطه الكهرباء"
           />
         </div>
-
       </div>
 
       <div class="message-banner success" *ngIf="successMessage">
@@ -58,12 +53,10 @@
       <div class="message-banner error" *ngIf="errorMessage">
         {{ errorMessage }}
       </div>
-
     </div>
 
     <!-- ========== ACTIONS ========== -->
     <div class="dialog-actions">
-
       <button type="button" class="btn-save" (click)="save()" [disabled]="saving">
         <span *ngIf="!saving">{{ 'activity.save' | t }}</span>
         <span *ngIf="saving">{{ 'common.saving' | t }}</span>
@@ -72,8 +65,6 @@
       <button type="button" class="btn-reset" (click)="cancel()">
         {{ 'common.cancel' | t }}
       </button>
-
     </div>
-
   </div>
 </div>
